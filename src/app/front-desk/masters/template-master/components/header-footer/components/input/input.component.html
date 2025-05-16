@@ -1,0 +1,14 @@
+
+
+<div *ngIf="object.preDefind" class="column-content" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <p id="inputText{{object.uicomponent_name}}" style="font-weight:bold;"  class="gridster-item-content" [innerHTML]="object.preDefinedObj.title+': '">
+    </p>
+    <div class="form-group focus-field ">
+        <label class="control-label"></label>
+        <textarea *ngIf="layoutService.isInstancePreview" type="text" disabled class="form-control" placeholder="Text will be filled during doctor evaluation"></textarea>
+        <textarea type="text" class="form-control" [(ngModel)]="object.preDefinedObj.value" *ngIf="!(object.preDefinedObj?.slug == 'next_appt' || object.preDefinedObj?.slug == 'last_apt') && !layoutService.isInstancePreview  && (layoutService.editorView || layoutService.isShowEditor)"
+            disabled></textarea>
+        <textarea type="text" class="form-control" *ngIf="(object.preDefinedObj?.slug == 'next_appt' || object.preDefinedObj?.slug == 'last_apt') && !layoutService.isInstancePreview && (layoutService.editorView || layoutService.isShowEditor)" disabled>{{object.preDefinedObj.value|date: 'MM/dd/yyyy HH:mm'}}</textarea>
+        <textarea type="text" class="form-control" *ngIf="!layoutService.isInstancePreview && !layoutService.editorView && !layoutService.isShowEditor" disabled>Text will be filled during doctor evaluation</textarea>
+    </div>
+</div>

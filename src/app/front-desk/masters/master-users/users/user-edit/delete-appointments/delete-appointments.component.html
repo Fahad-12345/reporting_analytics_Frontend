@@ -1,0 +1,119 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+
+<div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Delete Appointments/Assignments</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body practice-status">
+    <p><strong>Note:</strong> Clicking the "Delete Appointments/Assignments" button will result in the cancellation of
+        all current
+        and future date appointments, as well as the deletion of assignments associated with those
+        appointments. After cancellation data cannot be restored.</p>
+
+    <div class="row select-all-document align-items-start align-items-sm-center">
+        <div class="col-12 edit-block text-start">
+            <div class="form-group field option-field d-inline-block mb-2">
+                <ul>
+                    <li>Show</li>
+                    <li>
+                        <select class="custom-select height-ul" [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="counter" (change)="changeNoOfEntries(counter)">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </li>
+                    <li>Entries</li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+        <ngx-datatable class="bootstrap" [rows]="dataToShow?.length ? dataToShow : data" [headerHeight]="50"
+            [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'" [virtualization]="false"
+            [externalPaging]="true" [count]="data.length" (page)="changePage($event)"
+            [limit]="counter" [offset]="pageNumber-1">
+            <ngx-datatable-column name="Provider Name" prop="doctor_first_name" [sortable]="false" prop="bill_id"
+                [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+                <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Provider Name" [width]="100"
+                    [minWidth]="100">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span
+                            *ngIf="userName; else noNames"
+                            class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                            ngbTooltip="{{userName}}">
+                            {{userName}}
+                        </span>
+                        <ng-template #noNames>
+                            <span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                                ngbTooltip="N/A">
+                                N/A
+                            </span>
+                        </ng-template>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable-column>
+            <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Date" [width]="80" [minWidth]="80">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                        ngbTooltip="{{row.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+                        {{row.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+                    </span>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Time" [width]="110" [minWidth]="110">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="{{timeConversion(row.scheduled_date_time) | date: 'hh:mm a'}}" container="body">
+                        {{timeConversion(row.scheduled_date_time) | date: 'hh:mm a'}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Specialty" [width]="80"
+                [minWidth]="80">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="	{{row?.speciality_name}}" container="body">
+                        {{row?.speciality_name}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Visit Type" [width]="80"
+                [minWidth]="80">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="{{row?.appointment_type_name}}" container="body">
+                        {{row?.appointment_type_qualifier}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+        <form [formGroup]="myForm">
+            <div class="form-group mt-3">
+                <div class="row justify-content-between">
+                    <label class="col-12 title mb-2">Comments</label>
+                    <div class="col-6" [ngClass]="{'col-md-3':isOtherChecked}">
+                        <select class="form-select select" formControlName="defaultComments" (change)="onSelectValue()">
+                            <option *ngFor="let com of defaultComments 
+                        let i=index" value={{com.name}} [selected]="(com?.slug === 'user_practice_locations_off')">{{com.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-4" [hidden]="!isOtherChecked">
+                        <textarea placeholder="Enter Comments" formControlName="otherComments"
+                            class="form-control form-group coments-text mb-0"></textarea>
+                    </div>
+                    <div class="col-5 btn-train justify-content-end ">
+                        <button (click)="onCancelAppointmentAndAssigments()" class="btn btn-success btn-width">Delete
+                            Appointments/Assignments</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+</div>

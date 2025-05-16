@@ -1,0 +1,29 @@
+
+<div class="modal-header">
+    <h4 class="modal-title" style="text-align: center;">Your Choice</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+<div class="row" style="margin:15px;padding:15px;">
+    <div class="row">
+        <div class="col-4">
+            <button class="btn btn-primary">
+                Add Section
+            </button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary">
+                Add Row
+            </button>
+        </div>
+        <div class="col-4">
+            <button class="btn btn-primary">
+                Add Column
+            </button>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary w-100 save-btn me-15" (click)="activeModal.close()">
+  Cancel </button>
+
+</div>

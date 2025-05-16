@@ -1,0 +1,28 @@
+// center-align
+@mixin center-align {
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+// vertical-align-el
+@mixin vertical-align-el {
+	position: relative;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	transform: translateY(-50%);
+}
+
+// alignment
+@mixin align($align: top) {
+	display: inline-block;
+	vertical-align: $align;
+}
+
+//Display + vertical-align
+@mixin display-v-al($inline-block, $vertical-align: middle){
+	display: $inline-block;
+	vertical-align: $vertical-align;
+}

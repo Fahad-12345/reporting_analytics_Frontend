@@ -1,0 +1,73 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="section-frame reduce-height border-0 pb-md-5">
+    <div [formGroup]="form" class="form h-100">
+        <div class="custom-scrollbar">
+            <div class="row pt-3">
+                <div class="col-12 fields-holder">
+                    <div class="row fields-holder">
+                        <div class="col-12">
+                            <div class="form-group field"
+                                [ngClass]="{'focused': form.get('chiefComplaints').value != '' && form.get('chiefComplaints').value != null }">
+                                <label for="chiefComplaints" class="form-label">Chief Complaints
+                                    <ng-container *ngIf="isRequired(form, 'chiefComplaints');">*</ng-container>
+                                </label>
+                                <textarea id="chiefComplaints" cols="30" rows="8" class="form-control form-input"
+                                    [ngClass]="{'bg-light-pink':checkCarryForward(form,'chiefComplaints')}"
+                                    formControlName="chiefComplaints" style="height: 100px !important;"></textarea>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('chiefComplaints').errors?.required && (form.get('chiefComplaints').dirty || form.get('chiefComplaints').touched)">
+                                    Please enter Chief Complaints!
+                                </small>
+                                <small class="form-text text-muted danger"
+                                    *ngIf=" (form.get('chiefComplaints').errors?.maxlength) && form.get('chiefComplaints').dirty">
+                                    Maximum characters should be {{maxLength}}!
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-0">
+                <div class="col-12">
+                    <div class="form-group field m-0 mt-1"
+                        [ngClass]="{'focused': form.get('illnessHistory').value != '' && form.get('illnessHistory').value != null }">
+                        <label for="illnessHistory" class="form-label">History Of Present Illness
+                            <ng-container *ngIf="isRequired(form, 'illnessHistory');">*</ng-container>
+                        </label>
+                        <textarea id="illnessHistory"
+                            [ngClass]="{'bg-light-pink':checkCarryForward(form,'illnessHistory')}" cols="30" rows="8"
+                            class="form-control form-input" formControlName="illnessHistory"
+                            style="height: 100px !important;"></textarea>
+                        <small class="form-text text-muted danger"
+                            *ngIf="form.get('illnessHistory').errors?.required && (form.get('illnessHistory').dirty || form.get('illnessHistory').touched)">
+                            Please enter History of Patient Illness!
+                        </small>
+                        <small class="form-text text-muted danger"
+                            *ngIf="(form.get('illnessHistory').errors?.maxlength) && form.get('illnessHistory').dirty">
+                            Maximum characters should be {{maxLength}}!
+                        </small>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-btn justify-content-center mt-2">
+            <div class="col-12 text-center">
+                <a href="javascript:void(0)" (click)="previousPage('back')" class="btn btn-primary d-inline-block" disabled><span
+                        class="icon-left-arrow me-1"></span>
+                        Exit</a>
+           
+                        <a *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" (click)="previousPage('saveForLater')"  class="btn btn-info d-inline-block mx-2"
+                        ><span class="icon-save-continue me-1"></span> Save For Later</a>
+            
+                <button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-success d-inline-block" (click)="nextPage()"><span class="icon-save-continue me-1"></span>
+                    Save & Continue</button>
+                </div>
+            <!-- <div class="col-lg-3 col-sm-6 col-7">
+                <button class="btn btn-success" (click)="carryForward(!carryForwarded)"><span
+                        class="icon-save-continue me-2"></span>
+                    {{carryForwarded?'Reset':'Carry Forward'}}</button>
+            </div> -->
+        </div>
+    </div>
+</div>

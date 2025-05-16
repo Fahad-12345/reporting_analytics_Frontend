@@ -1,0 +1,45 @@
+@import './../../../../../../../assets/sass/components/new-search-filters';
+
+.invoice-modal{
+    .form-group{
+        .form-label{
+            width: 30%;
+            font: 500 13px/29px 'Poppins', Arial, Helvetica, sans-serif;
+        }
+        input{
+            width: 70%;
+        }
+    }                        
+}
+
+::ng-deep.invoice-modal-body{
+    &.modal_extraDOc {
+		.modal-dialog {
+			max-width: 450px;
+		}
+	}
+}
+
+@media (max-width: 410px){
+    .invoice-modal{
+        .form-group{
+            .form-label{
+                width: 40%;
+            }
+            input{
+                width: 60%;
+            }
+        }                        
+    }
+}
+
+
+        @media (max-width:575px) {
+            button{
+                &.btn{
+                    &.btn-danger {
+                      float: right;
+                    }
+                }
+            }
+        }

@@ -1,0 +1,100 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+
+<!---------------------------------- original button-------------------------------------------------- -->
+<!-- <div class="back-arrows" (click)="goBack()">
+  <div class="round-button">
+    <span class="arrow-dark"></span>
+    <span class="arrow-line"></span>
+  </div>
+</div> -->
+
+<!------------------------------------- new button -------------------------------------------------------- -->
+<div class="back-button" (click)="goBack()">
+  <div class="button-content">
+    <span class="button-text">Back</span>
+  </div>
+</div>
+
+
+
+
+<div class="col-12">
+    <h4 class="my-0 color-green mt-2">AR Detail Report</h4>
+    <hr class="line-bottom mb-3" />
+  </div>
+
+   <div class="row pom-report">
+     <div class="col-12">
+      <div class="card text-center border-0">
+        <div class="card-body border-pumice border-top-0">
+          <div class="tab-content">
+            <div class="report buttons d-flex justify-content-end mb-3">
+              <div class="export-reports-button">
+                <button
+                  type="button"
+                  (click)="generateExcel()"
+                  class="btn btn-success mx-2 mb-2 mb-sm-0"
+                  [disabled]="rowdata?.length == 0"
+                >
+                  <i class="fa fa-file-excel"></i> Export Report
+                </button>
+              </div>
+            </div>
+  
+            <div class="nf-reports">
+             
+                <ngx-datatable
+                class="bootstrap"
+                [rowHeight]="rowHeight"
+                [rows]="rowdata"
+                [scrollbarH]="true"
+                [scrollbarV]="true"
+                [columns]="columns"
+                [virtualization]="true"
+                [externalPaging]="false"
+                [columnMode]="'force'"
+                >
+                <ngx-datatable-column
+                *ngFor="let column of columns"
+                [name]="column.name"
+                [prop]="column.prop"
+                [width]="85"
+                [canAutoResize]="true"
+                [draggable]="false"
+                [resizeable]="false"
+              > 
+    <!-- Single ng-template for cell content -->
+    <ng-template ngx-datatable-cell-template let-value="value" let-row="row" let-column="column">
+      <div
+        class="tooltip-outer"
+        container="body"
+        tooltipClass="table-custom-tooltip"
+        ngbTooltip="{{ value }}"
+      >
+        <span>
+          {{ formatValue(value, column.prop) }}
+        </span>
+      </div>
+    </ng-template>
+    
+  </ngx-datatable-column>
+    </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

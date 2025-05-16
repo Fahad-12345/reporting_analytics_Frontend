@@ -1,0 +1,147 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="modal-header">
+	<h5 class="modal-title">{{title}} Template</h5>
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body modal-pt-15">
+	<form autocomplete="" [formGroup]="templateForm" (ngSubmit)="onSubmit(templateForm.value)" class="search-label">
+		<div class="row">
+			<div class="col-12">
+
+				<div class="form-group field"
+					[ngClass]="{'focused': templateForm.get('facility_location_id').value != '' && templateForm.get('facility_location_id').value != null}">
+
+					
+					<app-ng-select-shareable  [events]="eventsSubject.asObservable()"
+						[filterFieldName]="'facility_location_id'" #facilityLocation
+						[showSelectFieldList]="selectedMultipleFieldFiter && selectedMultipleFieldFiter['facility_location_id'] ? selectedMultipleFieldFiter['facility_location_id'] : []"
+						[showSelectFieldOnRefresh]="templateForm&&templateForm.get('facility_location_id')?.value"
+						[lableName]="'Practice-Location*'" [bindlable]="'facility_full_name'" [searchLableName]="'facility_location_id'"
+						[bindId]="'id'" [apiPath]="Facility_list_dropdown_GET" [conditionalExtraApiParams]="{ user_id: userId }"
+						(valueChange)="selectionOnValueChange($event,templateForm,'facility_location_id')"
+						[ngSelectShow]="true" [multiple]="is_multiple" [qulifierShown]="true" [showGroupBy]="is_multiple" [forceApiHitonOpen]="true" [clearListOnClick]="true" [showSelectAll]="is_multiple"></app-ng-select-shareable>
+					<small class="form-text text-muted danger" *ngIf="templateForm.get('facility_location_id').errors?.required &&
+					  (templateForm.get('facility_location_id').dirty ||
+					  templateForm.get('facility_location_id').touched)">
+						This field is required</small>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="form-group field"
+					[ngClass]="{'focused': templateForm.get('specialty_id').value != '' && templateForm.get('specialty_id').value != null}">
+					<app-ng-select-shareable  [events]="eventsSubject.asObservable()"
+					[filterFieldName]="'specialty_id'" #specialtyDropDown
+					[showSelectFieldList]="selectedMultipleFieldFiter && selectedMultipleFieldFiter['specialty_id'] ? selectedMultipleFieldFiter['specialty_id'] : []"
+					[showSelectFieldOnRefresh]="templateForm&&templateForm.get('specialty_id')?.value"
+					[lableName]="'Specialty*'" [bindlable]="'name'" [searchLableName]="'specialty_id'"
+					[bindId]="'id'" [apiPath]="TemplateUrlsEnum.facility_specialties" [conditionalExtraApiParams]="{ user_id: userId,facility_location_id:templateForm.get('facility_location_id')?.value }"
+					(valueChange)="selectionOnValueChange($event,templateForm,'specialty_id')" [needToClearOptions]="true"
+					[ngSelectShow]="true" [multiple]="is_multiple" [qulifierShown]="true" [showGroupBy]="is_multiple" [forceApiHitonOpen]="true" [clearListOnClick]="true" [disableField]="disableFieldSpecialty" [showSelectAll]="is_multiple"></app-ng-select-shareable>
+					
+					<small class="form-text text-muted danger" *ngIf="templateForm.get('specialty_id').errors?.required &&
+				   (templateForm.get('specialty_id').dirty ||
+				   templateForm.get('specialty_id').touched)">
+						This field is required</small>
+				</div>
+
+			</div>
+			<div class="col-12">
+				<div class="form-group field"
+					[ngClass]="{'focused': templateForm.get('visit_type_ids').value != '' && templateForm.get('visit_type_ids').value != null}">
+					<app-ng-select-shareable  [events]="eventsSubject.asObservable()"
+					[filterFieldName]="'visit_type_ids'" #visitTypeDropDown
+					[showSelectFieldList]="selectedMultipleFieldFiter && selectedMultipleFieldFiter['visit_type_ids'] ? selectedMultipleFieldFiter['visit_type_ids'] : []"
+					[showSelectFieldOnRefresh]="templateForm&&templateForm.get('visit_type_ids')?.value"
+					[lableName]="'Visit Type*'" [bindlable]="'name'" [searchLableName]="'visit_type_ids'"
+					[bindId]="'id'" [lists]="lstVisitTypes" [dontCallApi]="true" [conditionalExtraApiParams]="{ specialty_id:templateForm.get('specialty_id')?.value }"
+					(valueChange)="selectionOnValueChange($event,templateForm,'visit_type_ids')" (isOpenClose)="onOpenVisitTypes($event)"
+					[ngSelectShow]="true" [multiple]="is_multiple" [qulifierShown]="true" [showGroupBy]="is_multiple" [forceApiHitonOpen]="true" [clearListOnClick]="true" [disableField]="disableFieldVisitType" [showSelectAll]="is_multiple"></app-ng-select-shareable>
+
+					<small class="form-text text-muted danger" *ngIf="templateForm.get('visit_type_ids').errors?.required &&
+					  (templateForm.get('visit_type_ids').dirty ||
+					  templateForm.get('visit_type_ids').touched)">
+						This field is required</small>
+				</div>
+			</div>
+			<div class="col-12">
+				<div class="form-group field">
+					<app-ng-select-shareable #caseTypes [events]="eventsSubject.asObservable()"
+						[filterFieldName]="'case_type_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter && selectedMultipleFieldFiter['case_type_ids'] ? selectedMultipleFieldFiter['case_type_ids'] : []"
+						[showSelectFieldOnRefresh]="templateForm&&templateForm.get('case_type_ids').value"
+						[lableName]="'Case Type*'" [bindlable]="'name'" [searchLableName]="'case_type_ids'"
+						[bindId]="'id'" [apiPath]="CaseTypeUrlsEnum.CaseType_list_GET"
+						(valueChange)="selectionOnValueChange($event,templateForm,'case_type_ids')"
+						[ngSelectShow]="true" [multiple]="is_multiple" [showGroupBy]="is_multiple" [showSelectAll]="is_multiple" [forceApiHitonOpen]="true"></app-ng-select-shareable>
+				</div>
+			</div>
+
+			<div class="col-12">
+				<div class="form-group field d-inline-block"
+					[ngClass]="{'focused': templateForm.get('is_default').value != '' && templateForm.get('is_default').value != null }">
+					<label class="chkbox d-flex align-items-center" for="is_default">
+						<input formControlName="is_default" id="is_default" type="checkbox"
+							[checked]="templateForm.get('is_default').value==1"
+							(change)="isSetDefaultConfirmation($event)">
+						<span class="fake-input position-absolute"></span>
+						<span class="fake-label d-block ms-2">Set as Default</span>
+					</label>
+				</div>
+			</div>
+			<div class="col-12">
+				<div class="form-group field d-inline-block"
+					[ngClass]="{'focused': templateForm.get('is_manual').value != '' && templateForm.get('is_manual').value != null }">
+					<label class="chkbox d-flex align-items-center" for="is_manual">
+						<input formControlName="is_manual" id="is_manual" type="checkbox"
+							[checked]="templateForm.get('is_manual').value==1" (change)="setManualForm($event)">
+						<span class="fake-input position-absolute"></span>
+						<span class="fake-label d-block ms-2">Use Paper template</span>
+					</label>
+				</div>
+			</div>
+			<div class="col-12">
+				<div class="form-group field d-inline-block text-disable-class"
+					[ngClass]="{'focused': templateForm.get('is_static').value != '' && templateForm.get('is_static').value != null }"
+					tooltipClass="table-custom-tooltip"
+					[ngbTooltip]="templateForm.get('is_static').disabled ? 'Static templates are not available as the specialty is dynamic.' : null">
+					<label class="chkbox d-flex align-items-center" for="is_static">
+						<input formControlName="is_static" id="is_static" type="checkbox"
+							[checked]="templateForm.get('is_static').value==1" (change)="setManualForm($event)">
+						<span class="fake-input position-absolute"></span>
+						<span class="fake-label d-block ms-2"
+							[ngClass]="{'disabled-text': templateForm.get('is_static').disabled}">Use Static template
+						</span>
+					</label>
+				</div>
+			</div>
+
+			<div *ngIf="templateForm.get('is_manual').value == 0 && templateForm.get('is_static').value == 0"
+				class="col-12">
+
+				<app-ng-select-shareable #templates [events]="eventsSubjectTemplate.asObservable()"
+					[filterFieldName]="'template_ids'"
+					[showSelectFieldOnRefresh]="templateForm.get('template_ids').value" [lableName]="'Template*'"
+					[bindlable]="'template_name'" [bindId]="'template_id'" [apiPath]="templateUrls"
+					[mainApiPath]="mainApi.templateManagerUrl" [conditionalExtraApiParams]="conditionalExtraApiParams"
+					(valueChange)="selectionOnValueChangeOther($event,'template_ids')"
+					(touched)="templateTouched($event)" [moduleName]="'template'" [ngSelectShow]="true"
+					[showSelectFieldList]="showSelectFieldList['template_ids']" [multiple]="is_multiple" [forceApiHitonOpen]="true"
+					[disableField]="templateForm.get('template_ids').disabled"></app-ng-select-shareable>
+				<!-- <small class="form-text text-muted danger" *ngIf="templateForm.get('template_ids').errors?.required &&
+				 (templateForm.get('template_ids').dirty ||
+				 templateForm.get('template_ids').touched)">
+			 This field is required</small>  -->
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 modal-btn-width text-center">
+				<button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+					(click)="close()">Cancel</button>
+				<button type="submit" [disabled]="isDisabled()" class="btn btn-success">{{buttonTitle}}</button>
+			</div>
+		</div>
+
+	</form>
+</div>

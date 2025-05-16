@@ -1,0 +1,106 @@
+<div class="front-desk-block billing-info nav-tab-block mt-1">
+	<div class="media user-info">
+		<div *ngIf="user?.profile_pic_url">
+			<!-- <div *ngFor="let image of _albums; let i=index">
+				<img [src]="image.src" (click)="open(i)" alt="patient-profile" class="user-img" style="width: 40px;
+				height: 40px; border: 1.5px solid #34c3ee;" />
+			</div> -->
+			<img [src]="album.src" alt="patient-profile" class="user-img" (click)="open(content)" style=" border: 1.5px solid #34c3ee;" />
+		</div>
+
+		<!-- <img *ngIf="user?.profile_pic_url" alt="patient-profile" class="user-img" src="{{user?.profile_pic_url}}" style="width: 40px;
+			height: 40px; border: 1.5px solid #34c3ee;"> -->
+		<img *ngIf="!user?.profile_pic_url" alt="patient-profile" class="user-img" [src]="this.defaultDoctorImageUrl"
+			style="width: 40px; height: 40px; border: 1.5px solid #34c3ee;">
+		<div class="media-body">
+			<div class="row">
+				<div class="col-md-12 pt-2">
+					<h5 class="mt-0 d-inline-block">
+						{{user?.first_name}} {{user?.middle_name}} {{user?.last_name}}
+						<small>
+							<span>(</span>
+							<ng-container *ngIf="user?.date_of_birth">
+								<!-- {{getAgeCalculated(user?.date_of_birth)}} -->
+								{{user?.date_of_birth|calculateAge }} Old
+								<span class="line-space">|
+								</span>
+							</ng-container>
+							{{user?.gender==='M'? 'Male': (user?.gender==='F' ?"Female":
+							(user?.gender==='X'?'X':'N/A'))}}
+							<span>)</span>
+						</small>
+					</h5>
+					<ul class="d-inline-block">
+						<li>
+							<i class="icon-phone ms-1" style="font-size:14px;"></i>
+							<ng-container>
+								{{user?.cell_no|phoneFormatPipe}}
+							</ng-container>
+							<ng-container *ngIf="!user?.cell_no">N/A</ng-container>
+						</li>
+						<li>
+							<i class="icon-envelope"
+								style="font-size: 15px; top: 2px; position: relative;"></i><span>{{user?.email}}</span><span
+								*ngIf="!user?.email">N/A</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-header border-0 px-0 pb-0">
+			<ul class="nav nav-tabs mt-3 text-center" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link" [class.active]="router.url.includes('basic-info')" routerLinkActive="active"
+						(click)="navigate('basic-info')">Basic
+						Information</a>
+				</li>
+				<li *ngIf="!SameUserLogin" class="nav-item">
+					<a class="nav-link" [class.active]="router.url.includes('privileges')" routerLinkActive="active"
+						(click)="navigate('privileges')">Privileges</a>
+				</li>
+
+				<li *ngIf="!SameUserLogin && isMedicalIdentifier && !hasSupervisor" class="nav-item" >
+					<a class="nav-link" [class.active]="router.url.includes('template')" routerLinkActive="active"
+						(click)="navigate('template')">Template</a>
+				</li>
+
+				<!-- *ngIf="medicalIdentifier" -->
+		
+				<li class="nav-item" *ngIf="isMedicalIdentifier">
+					<a class="nav-link" [class.active]="router.url.includes('medical-identifier')"
+						routerLinkActive="active" (click)="navigate('medical-identifier')">Medical
+						Identifier</a>
+				</li>
+				<li *ngIf="SameUserLogin" class="nav-item">
+					<a class="nav-link" [class.active]="router.url.includes('id-proofing')" routerLinkActive="active"
+						(click)="navigate('id-proofing')">ID Proofing</a>
+				</li>
+				<li *ngIf="!SameUserLogin" class="nav-item">
+					<a class="nav-link" [class.active]="router.url.includes('login-information')"
+						routerLinkActive="active" (click)="navigate('login-information')">Login Information</a>
+				</li>
+
+			</ul>
+		</div>
+		<router-outlet></router-outlet>
+	</div>
+
+</div>
+
+
+<ng-template #content let-modal>
+	<div class="modal-hold">
+		<figure class="figure">
+			<img [src]="album.src" alt="patient-profile" class="user-img" (click)="open(content)" />
+			<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			<figcaption class="figcaption mt-2">
+				{{album.caption}}
+			</figcaption>
+		</figure>
+	</div>
+  </ng-template>

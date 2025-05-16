@@ -1,0 +1,4 @@
+// px to rem converter function
+@function strip-unit($num) {
+    @return $num / ($num * 0 + $default-px-value);
+}

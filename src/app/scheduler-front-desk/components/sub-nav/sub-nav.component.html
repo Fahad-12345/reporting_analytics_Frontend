@@ -1,0 +1,39 @@
+<div class="row user-info pt-2">
+	<div class="col-md-12">
+		<h4 class="my-0 color-green">Assignment</h4>
+	</div>
+</div>
+<hr class="line-bottom">
+
+<div class="row align">
+	<div class="col-md-12">
+		<nav class="left-nav p-0 mt-2">
+			<ul class="list-unstyled">
+				<li class="button--wayra ">
+					<a class="d-block" [class.active]="isCheckedSpec" (click)="Spec()"
+						[routerLink]="['/scheduler-front-desk/speciality']">Specialty</a>
+				</li>
+				<li class="button--wayra">
+					<a class="d-block" [class.active]="isCheckedDoc" (click)="Doc()"
+						[routerLink]="['/scheduler-front-desk/doctor']">Provider</a>
+				</li>
+				<li class="button--wayra">
+					<a class="d-block" [class.active]="isCheckedNotf" (click)="Notification()"
+						[routerLink]="['/scheduler-front-desk/notifications_sup']">Notifications</a>
+				</li>
+			</ul>
+		</nav>
+
+	</div>
+</div>
+
+
+<!--<div *ngIf="isCheckedSpec">-->
+<!--<app-home-spec></app-home-spec>-->
+<!--</div>-->
+<!--<div *ngIf="isCheckedDoc">-->
+<!--<app-home-doctor></app-home-doctor>-->
+<!--</div>-->
+<!--<div *ngIf="isCheckedNotf">-->
+<!--<app-supervisor-notification-home></app-supervisor-notification-home>-->
+<!--</div>-->

@@ -1,0 +1,12 @@
+.left-nav.link-style a {
+    width: auto;
+}
+
+#main {
+	height: calc(100% - 136px);	
+
+	@media only screen and (max-width: 767px) {
+		height: 100%;
+	  }
+
+}

@@ -1,0 +1,28 @@
+
+
+.nav-tabs .nav-item .nav-link {
+	font-size: 0.75rem;
+}
+
+
+.nav-tabs .nav-item .nav-link {
+    padding-right: 0.8rem !important;
+    padding-left: 0.8rem !important;
+}
+
+
+.master-tabs {
+	.nav-tabs {
+	overflow: auto;
+    white-space: nowrap;
+	overflow-y: hidden;
+	flex-wrap: inherit;
+
+	&::-webkit-scrollbar {
+		height: 4px !important;
+	}
+
+	}
+}
+
+

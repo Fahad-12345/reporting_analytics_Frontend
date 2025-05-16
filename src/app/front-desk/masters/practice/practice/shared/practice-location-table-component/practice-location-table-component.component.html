@@ -1,0 +1,307 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="card-body p-3 practice-location-table-border master-user ma-location-table">
+  <div class="card data-table mb-0 p-0" style="border:none;">
+    <div class="row">
+      <div class="col-12">
+        <div class="edit-block text-start float-left">
+          <div class="form-group field option-field mb-0 d-inline-block mb-2">
+            <ul>
+              <li>Show</li>
+              <li>
+                <select  class="custom-select" name="limit" id="limit" [(ngModel)]="practiceLocationpage.size" (change)="onPageLimitChange($event.target.value)">
+                  <option [value]="10" selected>10</option>
+                  <option [value]="20">20</option>
+                  <option [value]="30">30</option>
+                  <option [value]="40">40</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                </select>
+              </li>
+              <li class="text-capitalize">entries</li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-end data-table-btn mt-2 float-right mt-2">
+       
+          <!-- <button type="button" *ngIf="selection.selected.length"
+                      (click)="deleteMultipleLocations(facility)"
+                      class="btn btn-default round-btn me-2"><i class="icon-remove me-1"></i>Delete
+                      [{{selection.selected.length}}]</button> -->
+
+          <button *ngIf="!options?.hideAddLocation && aclService.hasPermission(userPermissions.master_practice_add_location)" type="button" class="btn btn-primary round-btn ms-2"
+            data-bs-toggle="modal" (click)="openModal(practiceLocationAdd)">
+            <i class="icon-plus-circle"></i> Add Location</button>
+
+        </div>
+      </div>
+    </div>
+	<ngx-datatable [rows]="practiceLocations?.data" [columnMode]='"force"' class='bootstrap scroll-hide custom-scroll-x'
+      [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [limit]="practiceLocationpage.size" [externalPaging]="true"
+      [offset]="practiceLocationpage.offset" [virtualization]="false" [count]="practiceLocations?.total"
+      (page)="onPageNumberChange($event)">
+
+      <ngx-datatable-column name="Location Name" [sortable]="false" prop="name" [minWidth]="110" [width]="110" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{value  ||'N/A'}}">
+            {{value  ||'N/A'}}</div>
+        </ng-template>
+      </ngx-datatable-column>
+
+	  <ngx-datatable-column name="Short Name" [sortable]="false" prop="facility_location_qualifer" [minWidth]="100" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{value  ||'N/A'}}">
+            {{value  ||'N/A'}}</div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Phone No" [sortable]="false" prop="phone" [minWidth]="90" [width]="90" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-column="column" ngx-dattable-header-template>
+          Phone No
+        </ng-template>
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <ng-container>
+            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A' |phoneFormatPipe}}">
+              {{value ||'N/A' |phoneFormatPipe}}
+            </div>
+          </ng-container>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- 
+  
+        <ngx-datatable-column name="Office Hours Start Time" [sortable]="false" prop="office_hours_start">
+          <ng-template let-column="column" ngx-dattable-header-template>
+            Office Hours Start Time
+          </ng-template>
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <ng-container>
+              {{value | date :'shortTime'}}
+        </ng-container>
+        </ng-template>
+  
+        </ngx-datatable-column> -->
+
+      <!-- 
+        <ngx-datatable-column name="Office Hours End Time" [sortable]="false" prop="office_hours_end">
+  
+  
+          <ng-template let-column="column" ngx-dattable-header-template>
+            Office Hours End Time
+          </ng-template>
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <ng-container>
+              {{value | date :'shortTime'}}
+            </ng-container>
+          </ng-template>
+  
+        </ngx-datatable-column> -->
+      <ngx-datatable-column name="Address" [sortable]="false" prop="address" [minWidth]="110" [width]="110" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{fullAddress(row)}}">
+            {{ fullAddress(row)}}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="City" [sortable]="false" prop="city" [minWidth]="90" [width]="90" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ value ||'N/A'   }}">
+            {{ value ||'N/A'  }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="State" [sortable]="false" prop="state" [minWidth]="70" [width]="70" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ value||'N/A'  }}">
+            {{ value||'N/A'  }}</span>
+        </ng-template>
+	  </ngx-datatable-column>
+	  
+      <ngx-datatable-column name="Zip" [sortable]="false" prop="zip" [minWidth]="70" [width]="70" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ value ||'N/A' }}">
+            {{ value ||'N/A' }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Email" [sortable]="false" prop="email" [minWidth]="100" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip=" {{ value ||'N/A'   }}">
+            {{ value ||'N/A'  }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Fax" [sortable]="false" prop="fax" [minWidth]="80" [width]="80" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ value ||'N/A' | phoneFormatPipe   }}">
+            {{ value ||'N/A' | phoneFormatPipe   }}
+        </div>
+        </ng-template>
+      </ngx-datatable-column>
+	  
+      <ngx-datatable-column name="Actions" [sortable]="false" cellClass="action-icon" [minWidth]="130" [width]="130" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template ngx-datatable-header-template name="Actions">
+          <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_practice_edit_location)" (change)="$event ? masterToggle($event) : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()" disabled>
+          </mat-checkbox>
+          Actions
+        </ng-template>
+        <!-- {{selection.selected|json}} -->
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+          <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_practice_edit_location)"  (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)" disabled>
+          </mat-checkbox>
+
+          <button class="edit-hov mx-1" *ngIf="aclService.hasPermission(userPermissions.master_practice_edit_location)" (click)="updatePracticeLocation(practiceLocationEdit, row, rowIndex)"
+			    tooltip="Edit" role="button"><i class="icon-pencil"></i></button>
+			
+          <button class="edit-hov mx-1" *ngIf="aclService.hasPermission(userPermissions.master_practice_location_view)" (click)="viewLocation(ViewLocation, row, rowIndex)"
+          tooltip="View" role="button"><i class="icon-eye"></i></button>
+          <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="practiceHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+          <mat-slide-toggle class="me-2" [(ngModel)]="row.is_active" tooltip="Location Status" (change)="childStatus(changeStatus1,row,$event)" [labelPosition]="'before'"></mat-slide-toggle>
+		</ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable> 
+
+  </div>
+</div>
+
+
+<ng-template #practiceLocationAdd let-modal>
+  <practice-location (closeModal)="closeModal($event)" (updateMainFacility)="update($event)"  [mainFacility]="mainFacility" [dropDownRegion]="dropDownRegion"
+    disableLocation="practiceForm.controls.name.disabled" 
+    [shortNameFlag]="true"
+    [addLocationFlag]="(mainPracticeStatus ? false : true)"
+    >
+  </practice-location>
+</ng-template>
+
+<ng-template #practiceLocationEdit let-modal>
+  <practice-location  #practiceLocationComponent (closeModal)="closeModal($event)" [locationData]="locationData"
+    [dropDownRegion]="dropDownRegion" disableLocation="practiceForm.controls.name.disabled"
+    [shortNameFlag]="true" (updateButtonClicked)="childStatus(changeStatus1,locationData,false,$event)"
+    [practiceLocationUpdated]="practiceLocationUpdated"
+    >
+  </practice-location>
+</ng-template>
+
+<ng-template #ViewLocation let-modal>
+	<practice-location  [disableForm]="true" (closeModal)="closeModal($event)" [locationData]="locationData"
+	  [dropDownRegion]="dropDownRegion" disableLocation="practiceForm.controls.name.disabled">
+	</practice-location>
+  </ng-template>
+
+<!-- <ng-template #practiceLocationAdd let-modal>
+    <practice-location [id]="id" (closeModal)="closeModal($event)" [locationData]="locationData"
+      [dropDownRegion]="dropDownRegion" disableLocation="practiceForm.controls.name.disabled">
+    </practice-location>
+  </ng-template> -->
+  <ng-template #changeStatus1 let-modal>
+    <div class="modal-header">
+      <h4 id="dialog-sizes-name1" class="modal-title pull-left">Delete Appointments/Assignments</h4>
+      <button type="button" class="close" aria-label="Close" (click)="crossCancel()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+    <div class="modal-body practice-status">
+      <p><strong>Note:</strong> By clicking on "Delete Appointments/Assignments" button will result in cancelation of all the current and future date appointments, as well as the deletion of assignments associated with those appointments. After cancelation data cannot be restored.</p>
+  
+      <div class="row select-all-document align-items-start align-items-sm-center">
+        <div class="col-12 edit-block text-start">
+          <div class="form-group field option-field d-inline-block mb-2">
+            <ul>
+              <li>Show</li>
+              <li>
+                
+                <select [(ngModel)]="this.facilityAppointmentPage.size" (change)="pageLimitAppointment($event.target.value)" class="custom-select" name="limit" class="custom-select" name="limit">
+                  <option [value]="10">10</option>
+                  <option [value]="20">20</option>
+                  <option [value]="30">30</option>
+                  <option [value]="40">40</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                </select>
+              </li>
+              <li>Entries</li>
+            </ul>
+  
+          </div>
+        </div>
+      </div>
+  
+      <ngx-datatable class="bootstrap" [columnMode]="'force'" [rows]="facilityAppointmentsData"  [headerHeight]="50" [footerHeight]="50"
+        [rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true"
+        [count]="this.facilityAppointmentPage?.totalElements" [offset]="this.facilityAppointmentPage?.offset" [limit]="this.facilityAppointmentPage?.size"
+        (page)="onPageChangeNew($event)"
+        [externalPaging]="true"
+        >
+        <ngx-datatable-column name="Provider Name" prop="doctor_first_name" [sortable]="false" prop="bill_id" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+          <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Provider Name" [width]="100" [minWidth]="100">
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span *ngIf="row?.doctor_first_name || row?.doctor_middle_name || row?.doctor_last_name; else noNames" class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.doctor_first_name}} {{row?.doctor_middle_name}} {{row?.doctor_last_name}}">
+                {{row?.doctor_first_name}} {{row?.doctor_middle_name}}
+                {{row?.doctor_last_name}}
+              </span>
+              <ng-template #noNames>
+                <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="N/A">
+                  N/A
+                </span>
+              </ng-template>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable-column>
+        <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Date" [width]="80" [minWidth]="80">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+              {{row.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Time" [width]="110" [minWidth]="110">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{timeConversion(row.scheduled_date_time) | date: 'hh:mm a'}}" container="body">
+              {{timeConversion(row.scheduled_date_time) | date: 'hh:mm a'}}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Specialty" [width]="80" [minWidth]="80">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.speciality_name}}" container="body">
+              {{row?.speciality_qualifier}}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Visit Type" [width]="80" [minWidth]="80">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.appointment_type_name}}" container="body">
+              {{row?.visit_type}}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+      <form [formGroup]="myForm">
+        <div class="form-group mt-3">
+          <div class="row justify-content-between">
+            <label class="col-12 title mb-2">Comments</label>
+            <div class="col-6" [ngClass]="{'col-md-3':isOtherChecked}">
+              <select class="form-select select"  formControlName="defaultComments" (change)="onSelectValue()">
+                <option *ngFor="let com of defaultComments; let i=index" value={{com.name}}
+                [selected]="(com?.slug === 'practice_off')"
+                >{{com.name}}
+                </option>
+              </select>
+            </div>
+            <div class="col-4" [hidden]="!isOtherChecked">
+              <textarea placeholder="Enter Comments" formControlName="otherComments" class="form-control form-group coments-text mb-0"></textarea>
+            </div>
+            <div class="col-5 btn-train justify-content-end ">
+              <button (click)="onCancelAppointmentAndAssigments()" class="btn btn-success btn-width">Delete Appointments/Assignments</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </ng-template>

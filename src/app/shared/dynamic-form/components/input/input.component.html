@@ -1,0 +1,93 @@
+
+<div [ngClass]="field.classes">
+	<div [ngClass]="{'focused': (group.get(field.name).value != '' && group.get(field.name).value != null) || group.get(field.name).hasError('invalid_date') || group.get(field.name).value === 0 || group.get(field.name).hasError('max_date') || group.get(field.name).hasError('min_date')}"
+		class="form-group field" [formGroup]="group">
+		<label class="form-label" *ngIf="field.label" [for]="id">{{field.label}}</label>
+
+
+		<!-- for different types of inputs if needed -->
+		<div [ngSwitch]="field.type" class="display-contents">
+
+
+			<!-- {{field.configs?.mask_validation | json}} -->
+			<!-- In case of text input; adds mask -->
+			<input class="form-input" *ngSwitchCase="'text'" [id]="id" [mask]="field.configs?.mask"
+				[validation]="!field.configs?.skip_validation" [readonly]="field.configs?.readonly" [maxlength]="field.configs?.maxLength" [minlength]="field.configs?.minlength"
+				[class.form-control]="field.type!='checkbox'" [formControlName]="field.name" [type]="field.type" name="{{field.label}}" (keypress)="keyPress($event)">
+			
+			<input class="form-input" *ngSwitchCase="'claim_no'" style="text-transform:uppercase" [id]="id" [mask]="field.configs?.mask"
+				[validation]="!field.configs?.skip_validation" [readonly]="field.configs?.readonly"
+				[class.form-control]="field.type!='checkbox'" [formControlName]="field.name" [type]="field.type" name="{{field.label}}" (input)="onInputChange($event.target.value)">
+
+
+			<!-- In case input type is number -->
+			<input class="form-input" [readonly]="field.configs?.readonly" [class.form-control]="field.type!='checkbox'"
+				*ngSwitchCase="'number'" [id]="id" [min]="field.configs?.min || 1" [max]="field.configs?.max" 
+				[formControlName]="field.name" type="number" name="{{field.name}}" >
+
+
+			<!-- In case input type is range -->
+			<input class="form-input custom-range" [readonly]="field.configs?.readonly" *ngSwitchCase="'range'"
+				[id]="id" [min]="field.configs?.min || 0" [max]="field.configs?.max || 10"
+				[formControlName]="field.name" type="range" name="{{field.label}}">
+
+			<input class="form-input" *ngSwitchCase="'wcb_no'" style="text-transform:uppercase" [id]="id" [mask]="field.configs?.mask"
+				[validation]="!field.configs?.skip_validation" [readonly]="field.configs?.readonly"
+				[class.form-control]="field.type!='checkbox'"onkeydown="return (event.key === 'G' || event.key === 'g' || event.ctrlKey || event.altKey 
+				|| (47<event.keyCode && event.keyCode<58 && event.shiftKey==false) 
+				|| (95<event.keyCode && event.keyCode<106)
+				|| (event.keyCode==8) || (event.keyCode==9) 
+				|| (event.keyCode>34 && event.keyCode<40) 
+				|| (event.keyCode==46) )" [formControlName]="field.name"  type="text" name="{{field.label}}" (input)="onInputChange($event.target.value)">
+
+			<!-- In case input type is date; uses mat datepicker instead of the standard html date input -->
+			<div class="display-contents" *ngSwitchCase="'date'">
+				<input [matDatepicker]="datePickerId" appInputDateMask [appMaskDate]="field.name"
+					class="form-control form-input" [id]="id" [formControlName]="field.name" [min]="min" 
+					[max]="field.configs?.max" matInput name="{{field.label}}">
+				<!-- <input appDateOnly [oldValue]="group.controls[field.name].value" [matDatepicker]="datePickerId"
+					class="form-control form-input" [id]="id" [formControlName]="field.name" [min]="field.configs?.min"
+					[max]="field.configs?.max" (dateChange)="addEvent('change', $event)"> -->
+				<mat-datepicker-toggle matSuffix [for]="datePickerId"></mat-datepicker-toggle>
+				<mat-datepicker #datePickerId></mat-datepicker>
+				<span (click)="group.get(field.name).setValue(null)"
+					*ngIf="(group.get(field.name).value != '' && group.get(field.name).value != null) || group.get(field.name).hasError('invalid_date') "
+					class="icon-plus select-cross-icon" ></span>
+					<small class="form-text text-muted danger"
+					*ngIf="group.get(field.name).hasError('invalid_date') && group.get(field.name).touched">Invalid Date Format</small>
+				<!-- <input type="date" class="form-control form-input" [formControlName]="field.name"
+					[min]="getTimeFormat(field.configs?.min)" [max]="2000-03-03"> -->
+			</div>
+
+			<ng-container *ngSwitchCase="'time'">
+				<!-- <p>ti</p> -->
+				<input *ngIf="field.configs?.custom_time"   (keyup)="changeValue($event)" (keyup.arrowright)="keyuprightarrow($event)"
+					class="form-input" [readonly]="field.configs?.readonly" [id]="field.name"
+					[class.form-control]="field.type!='checkbox'"  placeholder="__:__"  [formControlName]="field.name"
+					[type]="'text'" name="{{field.label}}">
+
+					<input *ngIf="!field.configs?.custom_time" class="form-input" [readonly]="field.configs?.readonly"  [id]="id"
+					[class.form-control]="field.type!='checkbox'" [formControlName]="field.name" [type]="field.type" name="{{field.label}}">
+
+			</ng-container>
+
+
+			<!-- In case of any other input type -->
+			<input class="form-input" [readonly]="field.configs?.readonly" *ngSwitchDefault [id]="field.name"
+				[class.form-control]="field.type!='checkbox'" [formControlName]="field.name" [type]="field.type" name="{{field.label}}">
+		</div>
+
+
+
+
+		<!-- Validation errors -->	
+		<div *ngFor="let validation of field?.validations">
+			<small class="form-text text-muted danger"
+				*ngIf="group?.get(field?.name)?.hasError(validation?.name) && group?.get(field?.name)?.touched">{{validation.message}}</small>
+		</div>
+
+		<!-- Mask errors -->
+		<small class="form-text text-muted danger"
+			*ngIf="group?.get(field?.name)?.hasError('Mask error') && group?.get(field?.name)?.touched">Invalid Format:
+			{{ field?.name === 'wcb_no' ? 'G0000000' : field?.configs?.mask}}</small>
+	</div>

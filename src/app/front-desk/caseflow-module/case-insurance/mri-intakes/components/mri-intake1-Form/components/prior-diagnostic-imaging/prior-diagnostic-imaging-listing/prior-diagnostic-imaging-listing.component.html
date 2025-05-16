@@ -1,0 +1,79 @@
+
+<div class="data-table p-0 mb-2">
+	<div class="row align-items-center">
+		<div class="col-md-6 edit-block mb-2">
+			<div class="form-group field option-field mb-0 text-start">
+				<ul class="text-capitalize">
+					<li>Show</li>
+					<li><select (change)="pageSizeChange($event)" [(ngModel)]="page.size" class="custom-select">
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="30">30</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+					</li>
+					<li>entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-md-6 text-end mt-2">
+			<button class="btn btn-default ms-2 mb-2" (click)="confirmDel()" *ngIf="selection.selected.length">
+				<span class="icon-remove me-1" style="font-size: 14px;"></span>
+				<span> Delete [{{selection.selected.length}}] </span>
+			</button>
+			<button type="button" (click)="AddEditAddDiagnosticImaging()"  class="btn btn-success ms-2 mb-2">
+				<i class="icon-plus-circle"></i> Add New
+			</button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-xl-12 col-lg-12 mb-3">
+			<ngx-datatable class="bootstrap white-space-wrap custom-scroll-x visit-bill-table" [rows]="mriIntake1Data"
+				[scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+				[rowHeight]="'auto'" [count]="page.totalElements" [limit]="page.size" (page)="onPageChange($event)">
+
+				<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false"
+					[resizeable]="false" name="Type Of Study" prop="type_of_study" [width]="40">
+					<ng-template ngx-datatable-cell-template let-value="value">
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+							ngbTooltip="{{value?.name }}">
+							<span> {{value?.name }}</span>
+						</div>
+					</ng-template>
+				</ngx-datatable-column>
+
+				<ngx-datatable-column  [sortable]="false" [canAutoResize]="true"
+					[draggable]="false" [resizeable]="false" name="Bodyparts" prop="mri_body_part" [width]="70">
+					<ng-template ngx-datatable-cell-template let-value="value">
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value?.body_part?.name}}">
+							{{value?.body_part?.name}} 
+							
+						</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false"
+					[resizeable]="false" name="Actions" sortable="false" prop="id" [width]="86">
+					<ng-template let-column="column" ngx-datatable-header-template>
+						<mat-checkbox (change)="allSelected($event)" [(ngModel)]="allChecked">
+						</mat-checkbox>
+						Actions
+					</ng-template>
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<mat-checkbox
+							*ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_create_bill)"
+							(click)="$event.stopPropagation()" [(ngModel)]='row.is_checked'
+							(change)="onChecked($event,row)" [checked]="selection.isSelected(row)">
+						</mat-checkbox>
+						<a href="javascript:void(0)" class="edit-hov mx-1" ngbTooltip="Edit" container="body" role="button"
+							(click)="AddEditAddDiagnosticImaging(row)"><i class="icon-pencil"></i></a>
+						<a class="remove-hov mx-1" (click)="confirmDel(row)" ngbTooltip="Delete" container="body" href="javascript:void(0)" role="button">
+							<i class="icon-remove"></i>
+						</a>
+
+					</ng-template>
+				</ngx-datatable-column>
+			</ngx-datatable>
+		</div>
+	</div>
+</div>

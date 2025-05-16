@@ -1,0 +1,130 @@
+<!-- modal start -->
+<div class="modal-header">
+    <h4 class="modal-title">Appointment Details</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+<form [formGroup]="myForm">
+    <div class="modal-body">
+        <div class="row" *ngIf = "hidetitle">
+            <div class="col-md-12">
+                <label class="title">Appointment Title</label>
+                <input disabled type="text" class="form-control" formControlName="appoint_title" [(ngModel)]="title" />
+            </div>
+        </div>
+        <div class="row" >
+            <div class="col-md-4">
+                <label class="title">Patient Name</label>
+                <input type="text" class="form-control" formControlName="patient" [(ngModel)]="patName" disabled />
+            </div>
+            <!-- <div class="col-md-4">
+                <label class="title">Patient last Name</label>
+                <input type="text" class="form-control" formControlName="patient" [(value)]="patientlast" disabled />
+            </div> -->
+            <div class="col-md-4">
+                <label class="title">Chart Id</label>
+                <input type="text" class="form-control" formControlName="chart" [(ngModel)]="chart" disabled />
+			</div>
+			<div class="col-md-4">
+                <label class="title">Case Id</label>
+                <input type="text" class="form-control" formControlName="caseId" [(ngModel)]="caseId" disabled />
+
+            </div>
+        </div>
+        <div class="row">
+           
+            <!-- <div class="col-md-4">
+                <label class="title">Appt.Type</label>
+                <input type="text" class="form-control" formControlName="patient" [(value)]="details.appointmentType" disabled />
+            </div>
+            <div class="col-md-4">
+                <label class="title">Appt. Priority</label>
+                <input type="text" class="form-control" formControlName="chart" [(value)]="details.priority" disabled />
+            </div> -->
+
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="title">Practice-Location</label>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="details.clinicName">
+
+                <input type="text" class="form-control"  [(value)]="details.practiceLocationQualifier" disabled />
+				</span>
+
+            </div>
+            <div class="col-md-4">
+                <label class="title">Specialty</label>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="details.speciality">
+
+                <input type="text" class="form-control"   [(value)]="details.specialityQualifier" disabled />
+					</span>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Provider</label>
+                <!-- <input type="text" class="form-control" [(value)]="docName" disabled /> -->
+                <input type="text" class="form-control" [(value)]="docName" disabled />
+
+
+            </div>
+        </div>
+
+        <div class="row">
+			<div class="col-md-4">
+                <label class="title">Duration</label>
+                <input type="text" class="form-control" [(value)]="details.timeSlot" disabled />
+            </div>
+            <div class="col-md-4">
+                <label class="title">Appt. Date</label>
+                <!-- <input type="date" class="form-control" value="{{appDate | date:'yyyy-MM-dd'}}" disabled /> -->
+                <input type="text" class="form-control" value="{{apptDateTime | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}" disabled />
+                <!-- <ejs-datepicker placeholder='Appt .Date' [(value)]='appDate' [enabled]="false">
+				</ejs-datepicker> -->
+				<!-- <ejs-datepicker placeholder='Appt .Date' value="{{apptDateTime | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}" [enabled]="false">
+                </ejs-datepicker> -->
+            </div>
+            <div class="col-md-4">
+                <label class="title">Appt. Time</label>
+				<!-- <input type="text" class="form-control" [(value)]="appTime" disabled /> -->
+				<input type="text" class="form-control" value="{{details.startDateTime | date: datePipeService.hourMinAmPmTimeFormat()}}" disabled />
+            </div>
+         
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="title">Forward Date</label>
+                <input type="text" class="form-control" value="{{cancelDateTime | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}" disabled />
+                <!-- <ejs-datepicker placeholder='Deleted Date' value="{{cancelDateTime | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}" [enabled]="false">
+                </ejs-datepicker> -->
+            </div>
+            <div class="col-md-4">
+                <label class="title">Forward Time</label>
+                <input type="text" class="form-control" value="{{details.deletedAt | date: datePipeService.hourMinAmPmTimeFormat()}}" disabled />
+            </div>
+            <div class="col-md-4">
+                <label class="title">Deleted by</label>
+                <input type="text" class="form-control" [(value)]="details.deletedBy" disabled />
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <label class="title">Commments</label>
+                <!-- <textarea class="form-control complaints-height" formControlName="comment" [(value)]="details.complaint" disabled> -->
+                <textarea class="form-control complaints-height" formControlName="comment" [(value)]="compInp" disabled>
+
+        </textarea>
+            </div>
+        </div>
+
+        <!-- <div class="row d-flex justify-content-center mt-4 pt-1">
+            <div class="col-md-2">
+                <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-success w-100" type="submit" (click)="activeModal.close()">Sumbit</button>
+            </div>
+
+        </div> -->
+    </div>
+
+</form>

@@ -1,0 +1,19 @@
+<div class="pull-right custom-tooltip-hov edit-block mt-3"
+    *ngIf="aclService.hasPermission('patient-case-list-personal-information-emergency-contact-view')">
+    <a href="javascript:void(0)"
+        *ngIf="aclService.hasPermission('patient-case-list-personal-information-emergency-contact-edit') && case?.is_finalize"
+        data-original-title="Edit" tooltip="Edit" (click)="enableForm()">
+        <i class="icon-pencil"></i>
+    </a>
+</div>
+<div class="card card-bg w-100 mb-0 mt-0"
+	*ngIf="((this. _route =='emergency-contact' &&aclService.hasPermission(userPermissions.patient_case_list_personal_information_emergency_contact_view))
+	||(this. _route =='form-filler' &&aclService.hasPermission(userPermissions.patient_case_list_personal_information_form_filler_view))
+	||(this. _route =='guarantor' &&aclService.hasPermission(userPermissions.patient_case_list_personal_information_gurantor_view))
+	)">
+    <div class=" pb-0">
+        <!-- {{form?.value | json}} -->
+        <dynamic-form [fields]="fieldConfig" (submit)="onSubmit($event)"></dynamic-form>
+
+    </div>
+</div>

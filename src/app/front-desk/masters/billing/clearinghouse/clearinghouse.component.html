@@ -1,0 +1,299 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="firm-tab"
+	*ngIf="aclService.hasPermission(userPermissions.master_clearinghouse_view)">
+	<div id='firm'>
+		<div class="d-block text-end" *ngIf="aclService.hasPermission(userPermissions.master_clearinghouse_add)">
+			<button *ngIf='hideAddButton' class="btn btn-default round-btn" (click)="addUpdateClearinghouseInfo()">
+				<span class="icon-plus-circle"></span>Add New
+			</button>
+		</div>
+		<form class="form" (keydown.enter)="setPage({offset: 0})" (ngSubmit)="setPage({offset: 0},true)"
+			*ngIf="aclService.hasPermission(userPermissions.master_clearinghouse_filter)">
+			<div class="ng-check">
+				<div class="search-filter search-filter-bg-light filter-grid grid-4"
+				[class.hide-remaining-search-filter]="!isCollapsed">
+				<div class="filter-grid-container">
+					<div class="form-group">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"
+							[lableName]="'Clearinghouse Name'" [bindlable]="'label_id'" [searchLableName]="'name'"
+							[showSelectAll] ="true"
+                            [showGroupBy] = "true"
+							[bindId]="'id'" [apiPath]="EnumApiPath.CH_name_List" [charaterLimit]="true"
+							(valueChange)="selectionOnValueChange($event,'clearing_house_ids')"
+							[multiple]="true"></app-ng-select-shareable>
+					</div>
+					<div class="form-group">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'Payer ID'"
+							[bindlable]="'payer_id'" [searchLableName]="'payer_id'" [bindId]="'payer_id'" [charaterLimit]="true"
+							[showSelectAll] ="true"
+                            [showGroupBy] = "false"
+							(valueChange)="selectionOnValueChange($event,'payer_ids')"
+							[apiPath]="EnumApiPath.CH_Payers_List" [multiple]="true"></app-ng-select-shareable>
+					</div>
+					<div class="form-group">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'Insurance Name'"
+							[bindlable]="'insurance_name'" [searchLableName]="'insurance_name'" [charaterLimit]="true"
+							[showSelectAll] ="true"
+                            [showGroupBy] = "false"
+							(valueChange)="selectionOnValueChange($event,'insurance_ids')" [conditionalExtraApiParams]="{order:'ASC',order_by:'insurance_name'}"
+							[mainApiPath]="requestServerpath.billing_api_url" [bindId]="'id'"
+							[apiPath]="EnumApiPath.insuranceApiPath" [multiple]="true"></app-ng-select-shareable>
+					</div>
+					<div class="form-group">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'States'"
+							[bindlable]="'name'" [bindQualifierLabel]="'code'" [searchLableName]="'name'" [bindId]="'id'" 
+							[showSelectAll] ="true" [qulifierShown]="true"
+                            [showGroupBy] = "true"
+							[conditionalExtraApiParams]="{order:'asc'}" [apiPath]="EnumApiPath.CH_States_List" [charaterLimit]="true"
+							(valueChange)="selectionOnValueChange($event,'states_ids')"
+							[multiple]="true"></app-ng-select-shareable>
+					</div>
+				</div>
+				<div class="collape-btn">
+					<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+						[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"
+						[class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button">
+						<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+					</button>
+				</div>
+				<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+					<button class="btn btn-success">Filter</button>
+					<button class="btn btn-primary" (click)="resetFilters()">Reset</button>
+				</div>
+			</div>
+			</div>
+			
+		</form>
+		<div class="card search-filter-block mt-1">
+			<div *ngIf="showform">
+				<app-clearinghouse-form [clearinghouse]="clearinghouse"
+					(clearinghouseFormEmit)="getEmitData($event)"></app-clearinghouse-form>
+			</div>
+		</div>
+	</div>
+	<div class="document-manager add-user">
+		<div class="document-content-area">
+			<div class="select-all-document overflow-hidden">
+				<div class="edit-block float-left">
+					<div class="form-group field option-field mb-2 d-inline-block">
+						<ul>
+							<li>Show</li>
+							<li>
+								<select (change)="clearinghousePageLimit($event.target.value, $event)"
+									class="custom-select" name="limit" [(ngModel)]="page.size">
+									<option selected [value]="10">10</option>
+									<option [value]="20">20</option>
+									<option [value]="30">30</option>
+									<option [value]="40">40</option>
+									<option [value]="50">50</option>
+									<option [value]="100">100</option>
+								</select>
+							</li>
+							<li>Entries</li>
+						</ul>
+					</div>
+				</div>
+				<div class="float-right d-flex justify-content-end align-items-center mb-1">
+					<div class="d-inline-block">
+					</div>
+				</div>
+			</div>
+			<div class="card mb-0 ma-body-list">
+				<div class="card-header card-header-custom">
+					<div class="row align-items-center h-100">
+						<div class="col-3 pe-0 form">
+							<p class="mb-0 text-start ps-2">
+								<mat-checkbox disabled>
+								</mat-checkbox>
+								<span class="text-white ps-1 justify-content-center d-inline-block"
+									style="position: relative;">Clearinghouse Name</span>
+							</p>
+						</div>
+						<div class="col-6 ">
+							<ul class="list-unstyled social-icon-block " style="font-weight: 600;">
+								<li class="text-white ps-4 w-25 ">Short Name </li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="card-body pb-0 card-body-custom" style="border-radius: 0">
+					<div *ngFor="let clearinghouse of lstClearinghouse;let i = index;" class="card mb-3">
+						<div class="card-header" style="padding: 0px 0.9375rem !important;">
+							<div class="row align-items-center">
+								<div class="col-3 pe-0 form text-start">
+									<mat-checkbox disabled></mat-checkbox>
+									<ul class="d-inline-block custom-btn-tooltip list-unstyled ms-0"
+										style="font-size: 0.875rem; font-weight: 500;">
+										<ng-container
+											*ngIf="clearinghouse && clearinghouse.name && clearinghouse.name.length > 0">
+											{{clearinghouse && clearinghouse.name &&
+											clearinghouse.name.length > 26
+											? clearinghouse.name.substring(0, 26)+'...' :
+											clearinghouse.name}}
+										</ng-container>
+										<li class="btn-tooltip-top text-center"
+											*ngIf="clearinghouse && clearinghouse.name && clearinghouse.name.length > 26">
+											<span>{{clearinghouse.name}}</span>
+											<i></i>
+										</li>
+									</ul>
+								</div>
+								<div class="col-7">
+									<ul class="list-unstyled social-icon-block">
+										<li class="w-25">
+											<ul class="d-inline-block custom-btn-tooltip list-unstyled">
+												<div
+													*ngIf="clearinghouse && clearinghouse.short_name && clearinghouse.short_name.length > 0">
+													{{clearinghouse && clearinghouse.short_name &&
+													clearinghouse.short_name.length > 14 ?
+													clearinghouse.short_name.substring(0, 14)+'...' :
+													clearinghouse.short_name}}
+												</div>
+												<div *ngIf="!clearinghouse.short_name">
+													N/A
+												</div>
+												<li class="btn-tooltip-top text-center"
+													*ngIf="clearinghouse && clearinghouse.short_name && clearinghouse.short_name.length > 14">
+													<span>{{clearinghouse && clearinghouse.short_name &&
+														clearinghouse.short_name}}</span>
+												</li>
+											</ul>
+										</li>
+									</ul>
+								</div>
+								<div class="col-2 text-end">
+									<button type="button" class="btn btn-outline-secondary"
+										*ngIf="aclService.hasPermission(userPermissions.master_clearinghouse_edit)"
+										(click)="UpdateClearinghouse(clearinghouse);triggerScrollTo('firm')">
+										<span class="icon-pencil"></span> Edit
+									</button>
+									<button
+										[disabled]="clearinghouse && clearinghouse.payers && clearinghouse.payers.length<1"
+										(click)="togglePayerInfo(i)" type="button" class="btn slide-btn"
+										[class.btn-primary]="!clearinghouse.isOpen"
+										[class.btn-success]="clearinghouse.isOpen">
+										<i style="background: none;" *ngIf="clearinghouse.isOpen"
+											class="ml-0 icon-minus"></i>
+										<i style="background: none;" *ngIf="!clearinghouse.isOpen"
+											class="ml-0 icon-plus p-0"></i>
+									</button>
+								</div>
+							</div>
+						</div>
+						<div *ngIf="clearinghouse.isOpen" class="card-body p-3 border-top-0">
+							<div class="card data-table border-0 mb-0 p-0">
+								<div class="row">
+									<div class="col-12">
+										<div class="edit-block float-left">
+											<div class="form-group field option-field mb-0 d-inline-block">
+												<ul>
+													<li>Show</li>
+													<li>
+														<select (change)="setPayersPageLimit(clearinghouse,$event)"
+															class="custom-select" name="limit">
+															<option selected [value]="10">10</option>
+															<option [value]="20">20</option>
+															<option [value]="30">30</option>
+															<option [value]="40">40</option>
+															<option [value]="50">50</option>
+															<option [value]="100">100</option>
+														</select>
+													</li>
+													<li class="text-capitalize">entries</li>
+												</ul>
+											</div>
+										</div>
+										<div class="float-right mt-2">
+											<button (keydown.enter)="$event.preventDefault()"
+												class="btn btn-primary round-btn ms-2" type="button"
+												(click)="AddUpdatePayersInfo(null,clearinghouse,i)"><i
+													class="icon-plus-circle"></i>
+												Add New
+												Payer</button>
+										</div>
+									</div>
+								</div>
+								<ngx-datatable class="bootstrap" [rows]="clearinghouse.payers" [scrollbarH]="true"
+									[columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+									[limit]="clearinghouse.pageLimit || 10">
+
+									<ngx-datatable-column name="Insurance Name" prop="insurance" [width]="100"
+										[canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+										<ng-template ngx-datatable-cell-template let-row="row">
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.insurance?row.insurance.insurance_name:'N/A'}}"
+												container="body">
+												{{row.insurance?row.insurance.insurance_name : 'N/A'}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column name="Payer ID" prop="payer_id" [width]="100"
+										[canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+										<ng-template ngx-datatable-cell-template let-row="row">
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.payer_id || 'N/A'}}" container="body">
+												{{row.payer_id || 'N/A'}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column name="States" prop="states" [width]="280"
+										[canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+										<ng-template ngx-datatable-cell-template let-row="row">
+											<div *ngIf="row && row.states && row.states.length != 52;else all">
+												<span 
+													tooltipClass="table-custom-tooltip"
+													ngbTooltip="{{(row.states | commaSeparatedValueFromArr:'name') || 'N/A'}}"
+													container="body">
+													{{(row.states | commaSeparatedValueFromArr:'name') || 'N/A'}}
+												</span>
+											</div>
+											<ng-template #all>
+												<div class="action-icon">
+													<span
+														class="badge badge-info tooltip-outer d-inline-block wrap-text"
+														tooltipClass="table-custom-tooltip" ngbTooltip="All"
+														container="body">
+														All
+													</span>
+												</div>
+											</ng-template>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column name="Action" [width]="20" [canAutoResize]="true"
+										[draggable]="false" [resizeable]="false">
+										<ng-template ngx-datatable-header-template>
+											Actions
+										</ng-template>
+										<ng-template ngx-datatable-cell-template let-row="row" let-rowCount="rowCount">
+											<a class="edit-hov mx-1" href="javascript:void(0)"
+												(click)="AddUpdatePayersInfo(row.id,null,i,row)" role="button"
+												ngbTooltip="Edit" triggers="mouseenter:mouseleave">
+												<i class="icon-pencil"></i></a>
+											<a class="remove-hov mx-1" href="javascript:void(0)"
+												(click)="deletePayer(row.id,row,i)" role="button"
+												ngbTooltip="Delete" triggers="mouseenter:mouseleave">
+												<i class="icon-remove"></i></a>
+												<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="billingHistoryStats(row)">
+													<i class="fa fa-history"></i>
+												  </a>
+										</ng-template>
+									</ngx-datatable-column>
+								</ngx-datatable>
+							</div>
+						</div>
+					</div>
+					<div class="mb-3" *ngIf="lstClearinghouse && lstClearinghouse.length==0">
+						{{result}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="custom-pagination text-capitalize" *ngIf="lstClearinghouse && lstClearinghouse.length > 0">
+		<span>{{page.totalElements}} total </span>
+		<div *ngIf="lstClearinghouse && lstClearinghouse.length &&( page.totalElements > page.size)">
+			<pagination [boundaryLinks]="true" [(ngModel)]="page.pageNumber" [totalItems]="page.totalElements"
+				[itemsPerPage]="page.size" (pageChanged)="setPage({offset:$event.page - 1},true)"
+				previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+				[maxSize]="page.maxPaginationContentSize"></pagination>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,107 @@
+
+	<!-- searchFilter() -->
+	<form class="form" [formGroup]="clinicFilterForm">
+		<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('clinic_name').value != '' && clinicFilterForm.get('clinic_name').value != null }">
+					<label class="form-label" for="clinicName">Clinic Name</label>
+					<input id="clinicName" type="text" class="form-control form-input" formControlName="clinic_name">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('street_address').value != '' && clinicFilterForm.get('street_address').value != null }">
+					<label class="form-label" for="street">Street Address</label>
+					<input id="street" type="text" class="form-control form-input" formControlName="street_address">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('floor').value != '' && clinicFilterForm.get('floor').value != null }">
+					<label class="form-label" for="suit">Suite/Floor</label>
+					<input id="suit" type="text" class="form-control form-input" formControlName="floor">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('city').value != '' && clinicFilterForm.get('city').value != null }">
+					<label class="form-label" for="city">City</label>
+					<input id="city" type="text" class="form-control form-input" formControlName="city">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('state').value != '' && clinicFilterForm.get('state').value != null }">
+					<label class="form-label" for="state">State</label>
+					<input id="state" type="text" class="form-control form-input" formControlName="state">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('zip').value != '' && clinicFilterForm.get('zip').value != null }">
+					<label class="form-label" for="zip">Zip</label>
+					<input id="zip" type="text" class="form-control form-input" formControlName="zip">
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+				<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success" [disabled]="loading" (click)="applyFilter()">Filter</button>
+				<button class="btn btn-primary" (click)="resetFilter()">Reset</button>
+			</div>
+		</div>
+	</form>
+	<!-- <div class="search-filter-body">
+		<form class="form" [formGroup]="clinicFilterForm">
+			<div class="row px-2">
+				<div class="field-block">
+					<div class="row pb-1" [class.dynamic-collapse]="!isCollapsed">
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('clinic_name').value != '' && clinicFilterForm.get('clinic_name').value != null }">
+								<label class="form-label" for="clinicName">Clinic Name</label>
+								<input id="clinicName" type="text" class="form-control form-input" formControlName="clinic_name">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('street_address').value != '' && clinicFilterForm.get('street_address').value != null }">
+								<label class="form-label" for="street">Street Address</label>
+								<input id="street" type="text" class="form-control form-input" formControlName="street_address">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('floor').value != '' && clinicFilterForm.get('floor').value != null }">
+								<label class="form-label" for="suit">Suite/Floor</label>
+								<input id="suit" type="text" class="form-control form-input" formControlName="floor">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('city').value != '' && clinicFilterForm.get('city').value != null }">
+								<label class="form-label" for="city">City</label>
+								<input id="city" type="text" class="form-control form-input" formControlName="city">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('state').value != '' && clinicFilterForm.get('state').value != null }">
+								<label class="form-label" for="state">State</label>
+								<input id="state" type="text" class="form-control form-input" formControlName="state">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group" [ngClass]="{'focused': clinicFilterForm.get('zip').value != '' && clinicFilterForm.get('zip').value != null }">
+								<label class="form-label" for="zip">Zip</label>
+								<input id="zip" type="text" class="form-control form-input" formControlName="zip">
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="row justify-content-center mb-3">
+							<div class="col-6 col-sm-3 col-md-2 col-xl-1 align-self-center">
+								<button class="btn btn-success w-100 me-3" [disabled]="loading" (click)="applyFilter()"> Filter
+							  </button>
+							</div>
+							<div class="col-6 col-sm-3 col-md-2 col-xl-1 align-self-center">
+							  <button class="btn btn-primary w-100" (click)="resetFilter()">Reset</button>
+							</div>
+							</div>
+						  </div>
+					</div>
+				</div>
+				<div class="colps-btn-block">
+					<button class="btn plus-btn float-right mt-0" (click)="isCollapsed = !isCollapsed"
+						[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"
+						[class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button"><span
+							class="" [class.icon-plus]="!isCollapsed"
+							[class.icon-minus]="isCollapsed"></span></button>
+				</div>
+			</div>
+		</form>
+	</div> -->

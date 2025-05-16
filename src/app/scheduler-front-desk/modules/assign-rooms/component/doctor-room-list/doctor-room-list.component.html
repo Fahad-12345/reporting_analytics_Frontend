@@ -1,0 +1,329 @@
+<form [formGroup]="myForm" (ngSubmit)="submitFormAndClose()">
+	<div class="row mt-2">
+		<div class="col-md-12">
+			<select class="form-select" (change)="selectClinicS($event)" style="cursor: pointer;"
+				formControlName="clinicName">
+				<option value="{{clinic.id}}" *ngFor="let clinic of clinics" [selected]="selectedClinicId===clinic.id">
+					{{clinic.name}}</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="row d-flex justify-content-center">
+		<div class="col-md-5 col-sm-5 text-center btn-filter" style="cursor: pointer;" (click)="clinicClicked()"
+			[ngClass]="{'btn-filter-selected' : isClinicClicked}">
+			Rooms
+		</div>
+		<div class="col-md-5 col-sm-5 text-center btn-filter" style="cursor: pointer;" (click)="doctorClicked()"
+			[ngClass]="{'btn-filter-selected' : click}">
+			Provider
+		</div>
+	</div>
+
+	<div class="row assignment-modal text-center mt-2 mb-1">
+		<div *ngIf="isClinicClicked" class="col-md-5 offset-md-1 form">
+			<label class="d-inline-block chkbox position-relative m-0 mb-2 mt-1">
+				<input type="checkbox" id="roomFilter" [ngModelOptions]="{standalone: true}" [(ngModel)]="isClinicCheck"
+					(click)="showClinicFilter($event)">
+				<span class="fake-input position-absolute"></span>
+				<label class="fake-label d-block mb-0 py-0" for="roomFilter">Add filter</label>
+			</label>
+
+			<!-- <input *ngIf="isClinicClicked" style="margin-top:8px" type="checkbox" id="roomFilter"
+				[ngModelOptions]="{standalone: true}" [(ngModel)]="isClinicCheck" (click)="showClinicFilter($event)" />
+			<label *ngIf="isClinicClicked" class="filterlabel" for="roomFilter">&nbsp;Add filter</label> -->
+		</div>
+		<div *ngIf="click" class="col-md-5 offset-md-6 form">
+			<label class="d-inline-block chkbox position-relative m-0 mb-2 mt-1">
+				<input type="checkbox" id="doctorFilter" [ngModelOptions]="{standalone: true}" [(ngModel)]="isDocCheck"
+					(click)="showDocFilter($event)">
+				<span class="fake-input position-absolute"></span>
+				<label class="fake-label d-block mb-0 py-0" for="doctorFilter">Add filter</label>
+			</label>
+
+			<!-- <input *ngIf="click" style="margin-top:8px" type="checkbox" id="doctorFilter"
+				[ngModelOptions]="{standalone: true}" [(ngModel)]="isDocCheck" (click)="showDocFilter($event)" />
+			<label *ngIf="click" class="filterlabel" for="doctorFilter">&nbsp;Add filter</label> -->
+		</div>
+	</div>
+
+	<div *ngIf="isShowFilter" style="margin-top:3px;">
+		<form (ngSubmit)="onSearchClinic(f)" #f="ngForm">
+			<div class="row" style="margin-left: 0;    width: 100%;">
+				<input type="search" class="col-md-12 form-control" placeholder="Room Name"
+					[ngModelOptions]="{standalone: true}" [(ngModel)]="clinicName" (keypress)="searchRoomByName($event)"
+					(input)="searchRoomByName($event)" (keydown)="searchRoomByName($event)"
+					(change)="searchRoomByName($event)" (keyup)="searchRoomByName($event)" />
+			</div>
+		</form>
+		<br>
+	</div>
+
+	<!-- list of speciality and Clinics -->
+
+	<div class="docList">
+		<div id="list">
+			<div style="padding-left: 0%; padding-right: 0%;">
+
+				<div style="background-color:white;">
+					<div [hidden]="isShowList" class="w3-ul list-group p-2"
+						style="background-color:white; height: 50vh; border: 1px solid #e5e5e5;  overflow-y: scroll; overflow-x: hidden;">
+						<div class="w3-bar list-group-item bar mb-2" [ngStyle]="{'background-color': room.color}" style="width: 100%;
+							padding-left: 0px;
+							box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;
+							border-top-width: inherit;
+							padding-right: 0px;
+							border-left-width: 6px;
+							border-radius: 4px;
+							height: 69px;
+							margin: 0px;
+							border-left-color: rgb(157, 157, 157);" *ngFor="let room of loadmoretemparray; let i = index">
+							<!-- <div class="col-md-1 col-sm-1"
+								style="height: 68px; float: left; margin-top: -12px;margin-bottom: -12px;"
+								[ngStyle]="{'background-color': room.color}"></div> -->
+							<div class="col-md-10 col-sm-10 text-start float-left">
+								<span class="w3-large d-inline-block text-truncate"
+									style="font-weight: 600;max-width: 100%;margin-left:10px"><strong>{{room.name}}</strong></span>
+							</div>
+							<div class="col-md-2 col-sm-2 float-right">
+								<label class="customcheck">
+									<input id="selected-Specialty" type="checkbox" [checked]="room.isChecked"
+										(change)="selectRoom.emit(room)" />
+									<span class="checkmark checkmark1 checkmark-for-clinic "></span>
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<div [hidden]="isShowfilterarray" class="w3-ul list-group p-2"
+						style="background-color:white; border: 1px solid #e5e5e5; height: 50vh;  overflow-y: scroll; overflow-x: hidden;">
+						<div class="w3-bar list-group-item bar"
+							style="width: 100%; padding-left: 0; padding-right: 0;height:70px;margin-left: 2px !important;"
+							*ngFor="let filterdoc of tempTemp; let i = index">
+							<div class="col-md-1 col-sm-1"
+								style="height: 68px; float: left; margin-top: -12px;margin-bottom: -12px;"
+								[ngStyle]="{'background-color': filterdoc.color}">
+							</div>
+							<div class="col-md-8 col-sm-8" style="text-align: left;float: left">
+								<span class="d-inline-block text-truncate w3-large" style="font-weight: 600"
+									style="max-width: 98px;margin-left:10px"><strong>{{filterdoc.name}}</strong></span>
+								<br>
+							</div>
+							<div class="col-md-2 col-sm-2 bulits doc-img-pad small large"
+								style="float:right; padding-left: 0px;">
+								<label class="customcheck">
+									<input id="selected-Doctor" type="checkbox" [checked]="filterdoc.isChecked"
+										(change)="selectRoom.emit(filterdoc)" />
+									<span class="checkmark"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div [hidden]="isShowList" class="row">
+						<div class="col-md-2 col-sm-2"></div>
+						<a class="col-md-4 col-sm-4" [hidden]="isShowMore" style="width:50%;"
+							(click)="loadMoreClinicItems()"><i class="fa fa-angle-down fa-3x"></i></a>
+						<a class="col-md-4 col-sm-4" [hidden]="isShowLess" style="width:50%;"
+							(click)="ShowLessClinicItems()"><i class="fa fa-angle-up fa-3x"></i></a>
+						<div class="col-md-2 col-sm-2"></div>
+					</div>
+
+					<div [hidden]="isDoctorClicked" class="w3-ul list-group p-2"
+						style="background-color:white; border: 1px solid #e5e5e5; height: 50vh;  overflow-y: scroll; overflow-x: hidden;">
+
+						<div *ngIf="isShowDocFilter">
+							<div class="row mb-1">
+								<div class='col-md-5'>
+									<ejs-datepicker [(value)]='startdate1' placeholder='Enter date'
+										(change)="changeStartDate()"></ejs-datepicker>
+								</div>
+								<label class="col-md-2 text-center" style="margin-top: 6px;">To </label>
+								<div class='col-md-5' style="padding-left: 0 !important;">
+									<ejs-datepicker [min]='minDate' [(value)]='enddate1' placeholder='Enter date'
+										(change)="changeEndDate()"></ejs-datepicker>
+								</div>
+							</div>
+							<div class="row">
+								<div class='col-md-5'>
+									<ejs-timepicker [step]='interval' [(value)]='startTime' placeholder='Enter time'
+										(change)="changeStartTime()"></ejs-timepicker>
+								</div>
+								<label class="col-md-2 text-center" style="margin-top: 6px;">To</label>
+								<div class='col-md-5' style="padding-left: 0 !important;">
+									<ejs-timepicker [step]='interval' [min]='minTime' [(value)]='endTime'
+										placeholder='Enter time' (change)="changeEndTime()"></ejs-timepicker>
+								</div>
+							</div>
+							<div class="row my-3">
+								<div class="col-md-12 col-lg-6 text-end">
+									<button [disabled]="isHide" class="btn btn-primary custom-btn"
+										(click)="Remove()">Reset</button>
+								</div>
+								<div class="col-md-12 col-lg-6 ">
+									<button [disabled]="isCheckDisabled" class=" btn btn-success custom-btn"
+										(click)="checkAvailability()">Check</button>
+								</div>
+							</div>
+						</div>
+
+						<div *ngIf="isShowDocFilter">
+							<form (ngSubmit)="onSearchClinic(f)" #f="ngForm" class="row">
+								<div class="col-md-6 pe-2">
+									<input type="search" class="form-control doc-search-bar" placeholder="Provider Name"
+										[ngModelOptions]="{standalone: true}" [(ngModel)]="docName"
+										(keypress)="searchDocByName($event)" (input)="searchDocByName($event)"
+										(keydown)="searchDocByName($event)" (change)="searchDocByName($event)"
+										(keyup)="searchDocByName($event)" />
+								</div>
+								<div class="col-md-6 ps-2">
+									<input type="search" class="form-control doc-search-bar"
+										placeholder="Provider Specialty" [ngModelOptions]="{standalone: true}"
+										[(ngModel)]="docspec" (keypress)="searchDocBySpec($event)"
+										(input)="searchDocBySpec($event)" (keydown)="searchDocBySpec($event)"
+										(change)="searchDocBySpec($event)" (keyup)="searchDocBySpec($event)" />
+									<br />
+								</div>
+							</form>
+						</div>
+
+						<div [hidden]="isShowDoclist" class="w3-bar list-group-item specItem tablet-mode bar mb-2"
+							style="padding-left: 0;
+							padding-right: 0;
+							height: 70px;
+							border-radius: 4px;
+							border-top-width: inherit;
+							box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;" *ngFor="let doc of loadmoredocarray; let i=index">
+							<div *ngIf="doc.doctor" style="height: 69px;
+								float: left;
+								margin-top: -13px;
+								margin-bottom: -12px;
+								width: 6px;
+								border-radius: 3px 0px 0px 3px;" [ngStyle]="{'background-color': doc.doctor.specialities.color}"></div>
+							<div class="col-md-3 doc-img doc-img-pad float-left">
+								<img style="height: 60px;width: 57px;margin-top: -7px" alt="Avatar"
+									src={{doc.doctor.URI}}>
+							</div>
+							<div class="col-md-7 float-left text-start">
+								<span style="font-weight: 500;"
+									class="w3-large">{{doc.doctor.first_name}}&nbsp;{{doc.doctor.last_name}}</span><br>
+								<span style="font-weight: 500" class="w3-large">{{doc.doctor.specialities.name}}</span>
+							</div>
+							<div class="col-md-1 col-sm-1 float-left pt-2">
+								<label class="customcheck">
+									<input id="selected-Clinic" type="checkbox" [checked]="doc.isChecked"
+										(change)="selectDoctor.emit( doc)" />
+									<span class="checkmark" style="    top: 0px;"></span>
+								</label>
+							</div>
+						</div>
+
+						<div [hidden]="isShowCheckArray" class="w3-bar list-group-item specItem bar mb-2" style="padding-left: 0;
+							padding-right: 0;
+							height: 70px;
+							border-radius: 4px;
+							border-top-width: inherit;
+							box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;" *ngFor="let doc of loadmoredocarray; let i=index">
+							<div *ngIf="doc.doctor" style="height: 69px;
+								float: left;
+								margin-top: -13px;
+								margin-bottom: -12px;
+								width: 6px;
+								border-radius: 3px 0px 0px 3px;" [ngStyle]="{'background-color': doc.doctor.specialities.color}"></div>
+							<div class="col-md-3 doc-img doc-img-pad float-left">
+								<img style="height: 60px;width: 50px;margin-top: -7px;margin-left: 4px; " alt="Avatar"
+									src={{doc.doctor.URI}}>
+							</div>
+							<div class="col-md-7 float-left text-start"
+								style="text-align: left;float: left;padding-left: 10px;">
+								<span style="font-weight: 500;"
+									class="w3-large">{{doc.doctor.first_name}}&nbsp;{{doc.doctor.last_name}}</span><br>
+								<span style="font-weight: 500" class="w3-large ">{{doc.doctor.specialities.name}}</span>
+							</div>
+							<div class="col-md-1 col-sm-1 float-left pt-2">
+								<label class="customcheck">
+									<input id="selected-Clinic" type="checkbox" [checked]="doc.isChecked"
+										(change)="selectDoctor.emit( doc)" />
+									<span class="checkmark" style="    top: 0px;"></span>
+								</label>
+							</div>
+						</div>
+						<!-- <div [hidden]="isShowCheckArray">
+							<div class="row">
+								<div class="col-md-2 col-sm-2"></div>
+								<a class="col-md-4 col-sm-4" [hidden]="isShowDocMore" style="width:50%;" (click)="loadMoreAvaiableDocItems()"><i
+									 class="fa fa-angle-down fa-3x"></i></a>
+								<a class="col-md-4 col-sm-4" [hidden]="isShowDocLess" style="width:50%;" (click)="ShowLessAvailableDocItems()"><i
+									 class="fa fa-angle-up fa-3x"></i></a>
+								<div class="col-md-2 col-sm-2"></div>
+							</div>
+						</div>
+
+						<div [hidden]="isShowDoclist">
+							<div class="row">
+								<div class="col-md-2 col-sm-2"></div>
+								<a class="col-md-4 col-sm-4" [hidden]="isShowDocMore" style="width:50%;" (click)="loadMoreDocItems()"><i class="fa fa-angle-down fa-3x"></i></a>
+								<a class="col-md-4 col-sm-4" [hidden]="isShowDocLess" style="width:50%;" (click)="ShowLessDocItems()"><i class="fa fa-angle-up fa-3x"></i></a>
+								<div class="col-md-2 col-sm-2"></div>
+							</div>
+
+						</div> -->
+
+						<div [hidden]="isShowDocFilterList"
+							class=" w3-bar list-group-item specItem bar doc-filter-search mb-2" style="padding-left: 0;
+							padding-right: 0;
+							height: 70px;
+							border-radius: 4px;
+							border-top-width: inherit;
+							box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;" *ngFor="let doc of temptemp; let i=index">
+							<div *ngIf="doc.doctor" style="height: 69px;
+								float: left;
+								margin-top: -13px;
+								margin-bottom: -12px;
+								width: 6px;
+								border-radius: 3px 0px 0px 3px;" [ngStyle]="{'background-color': doc.doctor.specialities.color}"></div>
+							<div class="col-md-3 doc-img doc-img-pad float-left">
+								<img style="height: 60px;width: 52px;margin-top: -7px" alt="Avatar"
+									src={{doc.doctor.URI}}>
+							</div>
+							<div class="col-md-7 float-left text-start"
+								style="text-align: left;float: left;padding-left: 10px;">
+								<span style="font-weight: 500;"
+									class="w3-large">{{doc.doctor.first_name}}&nbsp;{{doc.doctor.last_name}}</span><br>
+								<span style="font-weight: 500" class="w3-large">{{doc.doctor.specialities.name}}</span>
+							</div>
+							<div class="col-md-1 bulits check_small small float-left pt-2">
+								<label class="customcheck">
+									<input id="selected-Clinic" type="checkbox" [checked]="doc.isChecked"
+										(change)="selectDoctor.emit( doc)" />
+									<span class="checkmark"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div [hidden]="isDoctorClicked">
+					<div [hidden]="isShowCheckArray" class="row">
+						<div class="col-md-2 col-sm-2"></div>
+						<a class="col-md-4 col-sm-4" [hidden]="isShowDocMore" style="width:50%;"
+							(click)="loadMoreAvaiableDocItems()"><i class="fa fa-angle-down fa-3x"></i></a>
+						<a class="col-md-4 col-sm-4" [hidden]="isShowDocLess" style="width:50%;"
+							(click)="ShowLessAvailableDocItems()"><i class="fa fa-angle-up fa-3x"></i></a>
+						<div class="col-md-2 col-sm-2"></div>
+					</div>
+				</div>
+
+				<div [hidden]="isDoctorClicked">
+					<div [hidden]="isShowDoclist" class="row">
+						<div class="col-md-2 col-sm-2"></div>
+						<a class="col-md-4 col-sm-4" [hidden]="isShowDocMore" style="width:50%;"
+							(click)="loadMoreDocItems()"><i class="fa fa-angle-down fa-3x"></i></a>
+						<a class="col-md-4 col-sm-4" [hidden]="isShowDocLess" style="width:50%;"
+							(click)="ShowLessDocItems()"><i class="fa fa-angle-up fa-3x"></i></a>
+						<div class="col-md-2 col-sm-2"></div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

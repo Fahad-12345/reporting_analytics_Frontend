@@ -1,0 +1,5 @@
+<div class="column-content" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <angular-editor *ngIf="!object.emptyCell"  class="gridster-item-content text-editor-box rows-{{item.rows}} " id="{{object.uicomponent_name}}Editor"
+        [(obj)]="object" [(text)]="text" [(ngModel)]="object.statement">
+    </angular-editor>
+</div>

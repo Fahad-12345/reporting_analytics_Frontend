@@ -1,0 +1,2332 @@
+<div class="page-scroller">
+    <div class="front-desk-block">
+        <div class="row user-info pt-2">
+            <div class="col-12">
+                <h4 class="my-0 color-green float-left">View Summary</h4>
+                <div *ngIf="_service.data && _service.data.task_list" class="float-right">
+                    <button class="mt-0 btn btn-primary text-white" type="submit" (click)="cancel()">Back</button>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{cancelReason}}" placement="bottom" container="body">
+                    <button class="mt-0 btn btn-primary text-white  ms-2" type="submit"  [disabled]="disableCancel"
+                        *ngIf="taskdetail.medicationPrescribed && taskdetail.medicationPrescribed.length>0 && taskdetail.pharmacy && taskdetail.task&& taskdetail.task.numAction!=8"
+                        (click)="openCancelRX(contentCancel)">Cancel
+                        RX</button>
+                    </span>
+                   
+                        <button class="mt-0 btn btn-danger text-white ms-2"
+                            *ngIf="taskdetail.task && taskdetail.task.numAction==8 && _router.url.includes('template-manager')"
+                            (click)="taskDeleteDicclaimer()">Delete</button>
+                          
+
+                    
+                    <button *ngIf="taskdetail?.task?.numType==3 && taskdetail?.task?.numStatus==3" class="mt-0 btn btn-success text-white ms-2"
+                        type="submit"
+                        (click)="twoFactorValidateAuth()">Validate</button>
+                    <button class="mt-0 btn btn-success text-white ms-2" type="submit"
+                        *ngIf="taskdetail?.task?.numType==0 && (taskdetail?.task?.numAction==8 || taskdetail?.task?.numAction==7  || taskdetail?.task?.numAction==1)"
+                        (click)="getAllSignatures()">Print</button>
+                    <button class="mt-0 btn btn-success text-white ms-2"
+                        *ngIf="taskdetail!='' && taskdetail?.task?.numType==5 && taskdetail?.task?.numStatus==3"
+                        (click)="modalService.open(contentApprove, { size: 'sm' })">Approve</button>
+                    <button class="mt-0 btn btn-danger text-white ms-2"
+                        *ngIf="taskdetail!='' && (taskdetail?.task?.numType==5 || taskdetail?.task?.numType==3) && taskdetail?.task?.numStatus==3"
+                        (click)="modalService.open(content, { size: 'sm' })">Deny</button>
+                        <button class="mt-0 btn btn-danger text-white ms-2"
+                        *ngIf="_router.url.includes('template-manager')"
+                        (click)="closeTMModal()">X</button>
+                        
+                </div>
+
+                <div *ngIf="!_service.data.task_list" class="float-right">
+                    <button class="mt-0 btn btn-primary text-white" type="submit" (click)="backPre()">Back</button>
+                    <button class="mt-0 btn btn-success text-white ms-2" type="submit" *ngIf="(taskdetail?.task?.numType==0 ||!taskdetail?.task)"
+                        (click)="getAllSignatures()"
+                        [disabled]="enablePrint==false">Print</button> 
+                   <span ngbTooltip="{{orderReason}}" placement="bottom" container="body">
+                    <button class="mt-0 btn btn-success text-white ms-2" type="submit"
+                        *ngIf="(taskdetail?.draftOrder && _service.action=='normal' && _service.erxCheck!=1  && printed==false)"
+                        (click)="twoFactorAuthERX()" [disabled]="clickOrderRx==false || disableControlled || disableNew ">Order
+                        RX</button>
+                    </span>
+                    <button *ngIf="taskdetail?.task?.numType!=3  && _service.action!='normal'
+                         && taskdetail?.task?.numType!=5" class="mt-0 btn btn-success text-white ms-2" type="submit"
+                        (click)="confirm(contentOpt)">Confirm</button>
+                    
+                    <button class="mt-0 btn btn-danger text-white ms-2"
+                        *ngIf="_router.url.includes('template-manager')"
+                        (click)="closeTMModal()">X</button>
+
+
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <hr class="line-bottom" />
+        <ng-template #contentAuthenticate let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title"> Authentication</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-md-12 col-lg-12">
+                        <input class="form-control mt-2" placeholder="Enter Password" type="password"
+                            [(ngModel)]="passAuth" />
+                    </div>
+                </div>
+            </div>
+            <div class="justify-content-end modal-footer">
+                <button class="btn btn-danger" (click)=" modal.close('Close click')">Cancel</button>
+                <button class="btn btn-success" [disabled]="passAuth=='' || disableConfirmPass==true"
+                    (click)="passwordAuthentication(modal)">Confirm</button>
+
+            </div>
+        </ng-template>
+
+
+        <ng-template #contentAuthenticatetwo let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title"> Authentication</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-md-12 col-lg-12">
+                        <input class="form-control mt-2" placeholder="Enter Password" type="password"
+                            [(ngModel)]="passAuth" />
+                    </div>
+                </div>
+            </div>
+            <div class="justify-content-end modal-footer">
+                <button class="btn btn-danger" (click)=" modal.close('Close click')">Cancel</button>
+                <button class="btn btn-success" [disabled]="passAuth=='' || disableConfirmPass==true"
+                    (click)="passwordAuthenticationValidate(modal)">Confirm</button>
+
+            </div>
+        </ng-template>
+        <!-- this one is common for approveRx and approve ChangeRx -->
+        <ng-template #contentAuthenticatethree let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title"> Authentication</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-md-12 col-lg-12">
+                        <input class="form-control mt-2" placeholder="Enter Password" type="password"
+                            [(ngModel)]="passAuth" />
+                    </div>
+                </div>
+            </div>
+            <div class="justify-content-end modal-footer">
+                <button class="btn btn-danger" (click)=" modal.close('Close click')">Cancel</button>
+                <button class="btn btn-success" [disabled]="passAuth=='' || disableConfirmPass==true"
+                    (click)="passwordAuthenticationRefill(modal)">Confirm</button>
+
+            </div>
+        </ng-template>
+        <ng-template #contentDeleteDisclaimer let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title"> Delete</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-md-12 col-lg-12">
+
+                       
+                         <p class="mb-0 fs-13">
+                            This will permanently delete the medication record, due you want to continue. 
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="justify-content-end modal-footer">
+                <button class="btn btn-danger" 
+                    (click)="modal.close('Cross Click')">Cancel</button>
+                <button class="btn btn-success" 
+                    (click)="modal.close('Save click')">Confirm</button>
+
+            </div>
+        </ng-template>
+        <ng-template #contentDisclaimer let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title"> Practitioner Notice</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-md-12 col-lg-12">
+
+                        <p>
+                            It is not allowed to use the same  <b> Device </b> for two-factor authentication and to access the application. Please use two <b>Two Different Devices </b>.
+                         </p>
+                         <p class="mb-0 fs-13">
+                           <b>Disclaimer:</b>  By completing the two-factor authentication protocol at this time, you are legally
+                            signing the prescription(s) and authorizing the transmission of the above information to the
+                            pharmacy for dispensing. The two-factor authentication protocol may only be completed by the
+                            practitioner whose name and DEA registration number appear above
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="justify-content-end modal-footer">
+                <button class="btn btn-danger" 
+                    (click)="modal.close('Cross Click')">Cancel</button>
+                <button class="btn btn-primary" 
+                    (click)="modal.close('Save click')">Proceed</button>
+
+            </div>
+        </ng-template>
+
+        <ng-template #contentCancel let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title">Cancel RX</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="_router.url.includes('template-manager')">
+                    <p class="mb-0"> Disclaimer:</p>
+                    <p class="fs-12">The Cancel Rx will be sent to pharmacy and the medication will be remove from patient evaluation.</p>
+                </div>
+                <textarea class="form-control mt-2" placeholder="Cancel Reason"  maxlength="70"
+                    [(ngModel)]="cancelValidate"></textarea>
+            </div>
+            <div class="justify-content-center modal-footer">
+                <button class="btn btn-success" (click)="cancelRX(contentCancel)">Confirm</button>
+                <button class="btn btn-danger" (click)="modal.close('Close click')">Cancel</button>
+            </div>
+        </ng-template>
+
+        <ng-template #printPdf let-modal>
+            <div class="modal-header">
+                <h5 class="modal-title">Preview</h5>
+                <button type="button" class="close" (click)="modal.close('Close click');closePrintModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body py-4">
+                <div class="row mb-3">
+                    <div class="col-md-4 text-center">
+                        <label class="radiobox w-100" name="radio" (click)="optionChange(1)">
+                            <input style="white-space: pre;" type="radio" [checked]="printType==1" id="abc">
+                            <span class="fake-input position-absolute"></span>
+                            <span style="white-space: pre;" class="fake-label d-block" for="abc1">Standard</span>
+                        </label>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <label class="radiobox w-100" name="radio" (click)="optionChange(2)">
+                            <input style="white-space: pre;" type="radio" [checked]="printType==2" id="abc">
+                            <span class="fake-input position-absolute"></span>
+                            <span style="white-space: pre;" class="fake-label d-block" for="abc2">Ohio</span>
+                        </label>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <label class="radiobox w-100" name="radio" (click)="optionChange(3)">
+                            <input style="white-space: pre;" type="radio" [checked]="printType==3" id="abc">
+                            <span class="fake-input position-absolute"></span>
+                            <span style="white-space: pre;" class="fake-label d-block" for="abc3">New York</span>
+                        </label>
+                    </div>
+                </div>
+                <iframe id="pdf-frame"
+                    style="width: 100%; height: 100%; min-height: 400px; z-index: 2; border: none;"></iframe>
+            </div>
+
+            <div class="justify-content-center modal-footer">
+                <button class="btn btn-primary" *ngIf="taskdetail?.task?.action!='Sent'" (click)="print(true)"
+                    >Save</button>
+                <button class="btn btn-primary" (click)="closePrintModal()"
+                    >Cancel</button>
+            </div>
+        </ng-template>
+
+        <ng-template #content let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title">Deny</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select" [(ngModel)]="selectedReasonValue">
+                    <option *ngFor="let item of reasonCode" [ngValue]="item.code">
+                        {{item.code}} - {{item.description}}</option>
+                </select>
+                <textarea class="form-control mt-2" placeholder="Comments" type="text"
+                    [(ngModel)]="presResponseReason"></textarea>
+            </div>
+            <div class="justify-content-center modal-footer">
+                <button class="btn btn-success" (click)="modal.close('Close click');denyConfirm()">Confirm</button>
+                <button class="btn btn-danger" (click)="modal.close('Close click')">Cancel</button>
+            </div>
+        </ng-template>
+
+        <ng-template #contentApprove let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title">Approve</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control mt-2" placeholder="Prior Auth Number" type="text" maxlength="35"
+                    [(ngModel)]="priorAuth"></textarea>
+            </div>
+            <div class="justify-content-center modal-footer">
+                <button class="btn btn-success" (click)="modal.close('Close click');approveConfirm()">Confirm</button>
+                <button class="btn btn-danger" (click)="modal.close('Close click')">Cancel</button>
+            </div>
+        </ng-template>
+
+        <!-- This is the otp model I would work on -->
+        <ng-template #contentOpt let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title">Two Factor Authentication</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-9">
+                        <h6 class="mb-1">Waiting For One Touch Approval</h6>
+                        <div class="flex-class">
+
+                            <div class="progress mt-1" style="width: 95%;">
+
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                    role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"
+                                    [ngStyle]="{'width': loadingBar}">
+                                    <span class="sr-only">70% Complete</span>
+                                </div>
+                            </div>
+
+                            <a *ngIf="disableTouch" href="javascript:voide(0)" (click)="cancelQuery()"
+                                class="text-danger" data-placement="top" title="Cancel"><i class="fa fa-times"></i></a>
+
+                        </div>
+                        <p><small> Click on the 'X' to Enter OTP</small></p>
+                    </div>
+                    <div class="col-3 text-end">
+                        <div class="touch-btn mt-4 justify-content-end">
+                            <button type="button" [disabled]="disableTouch" class="btn btn-success" aria-label="Close"
+                                (click)="sendERX()">One-Touch</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-md-6 col-lg-4">
+                        <input class="form-control mt-2" placeholder="Otp Code" pattern="[0-9]{1,6}" type="text"
+                            minlength="6" maxlength="6" [(ngModel)]="optAuth" [disabled]="!enableOtp" />
+                    </div>
+                </div>
+
+               
+            </div>
+
+            <div class="justify-content-end modal-footer">
+                <button class="btn btn-danger" (click)="cancelQuery(); modal.close('Close click')">Cancel</button>
+                <button class="btn btn-success" [disabled]="optAuth.length!=6 || disableTouch"
+                    (click)="modal.close('Save click')">Confirm</button>
+
+            </div>
+        </ng-template>
+
+        <ng-template #contentOptTwo let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title">Two Factor Authentication</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-9">
+                        <h6 class="mb-1">Waiting For One Touch Approval</h6>
+                        <div class="flex-class">
+
+                            <div class="progress mt-1" style="width: 95%;">
+
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                    role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"
+                                    [ngStyle]="{'width': loadingBar}">
+                                    <span class="sr-only">70% Complete</span>
+                                </div>
+                            </div>
+
+                            <a *ngIf="disableTouch" href="javascript:voide(0)" (click)="cancelQuery()"
+                                class="text-danger" data-placement="top" title="Cancel"><i class="fa fa-times"></i></a>
+
+                        </div>
+                        <p><small> Click on the 'X' to Enter OTP</small></p>
+                    </div>
+                    <div class="col-3 text-end">
+                        <div class="touch-btn mt-4 justify-content-end">
+                            <button type="button" [disabled]="disableTouch" class="btn btn-success" aria-label="Close"
+                                (click)="sendValidateAuth()">One-Touch</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-md-6 col-lg-4">
+                        <input class="form-control mt-2" placeholder="Otp Code" pattern="[0-9]{1,6}" type="text"
+                            minlength="6" maxlength="6" [(ngModel)]="optAuth" [disabled]="!enableOtp" />
+                    </div>
+                </div>
+
+               
+            </div>
+
+            <div class="justify-content-end modal-footer">
+                <button class="btn btn-danger" (click)="cancelQuery(); modal.close('Close click')">Cancel</button>
+                <button class="btn btn-success" [disabled]="optAuth.length!=6 || disableTouch"
+                    (click)="modal.close('Save click')">Confirm</button>
+
+            </div>
+        </ng-template>
+
+        <ng-template #contentOptThree let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title">Two Factor Authentication</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-9">
+                        <h6 class="mb-1">Waiting For One Touch Approval</h6>
+                        <div class="flex-class">
+
+                            <div class="progress mt-1" style="width: 95%;">
+
+                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                    role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"
+                                    [ngStyle]="{'width': loadingBar}">
+                                    <span class="sr-only">70% Complete</span>
+                                </div>
+                            </div>
+
+                            <a *ngIf="disableTouch" href="javascript:voide(0)" (click)="cancelQuery()"
+                                class="text-danger" data-placement="top" title="Cancel"><i class="fa fa-times"></i></a>
+
+                        </div>
+                        <p><small> Click on the 'X' to Enter OTP</small></p>
+                    </div>
+                    <div class="col-3 text-end">
+                        <div class="touch-btn mt-4 justify-content-end">
+                            <button type="button" [disabled]="disableTouch" class="btn btn-success" aria-label="Close"
+                                (click)="sendRequestERx()">One-Touch</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-md-6 col-lg-4">
+                        <input class="form-control mt-2" placeholder="Otp Code" pattern="[0-9]{1,6}" type="text"
+                            minlength="6" maxlength="6" [(ngModel)]="optAuth" [disabled]="!enableOtp" />
+                    </div>
+                </div>
+
+               
+            </div>
+
+            <div class="justify-content-end modal-footer">
+                <button class="btn btn-danger" (click)="cancelQuery(); modal.close('Close click')">Cancel</button>
+                <button class="btn btn-success" [disabled]="optAuth.length!=6 || disableTouch"
+                    (click)="modal.close('Save click')">Confirm</button>
+
+            </div>
+        </ng-template>
+
+        <ng-template #contentPrescribeAuth let-modal>
+            <div class="modal-header">
+                <h4 class="modal-title">Prescriber Auth</h4>
+                <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <label class="title">Prescriber Auth Code</label>
+                        <select class="form-select" [(ngModel)]="selectedReasonValueValidate">
+                            <option *ngFor="let item of reasonCodeValidate" [ngValue]="item.code">
+                                {{item.code}} - {{item.description}}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="title"> DEA</label>
+
+                        <textarea *ngIf="identification.dean" [disabled]="identification!=null" class="form-control" placeholder="Identification"
+                            type="number" [(ngModel)]="identification.dean"></textarea>
+                           
+                    </div>
+                    <div class="col-md-12" *ngIf="identification.nadean">
+                        <label class="title"> NA DEA</label>
+
+                        <textarea  [disabled]="identification!=null" class="form-control" placeholder="Identification"
+                            type="number" [(ngModel)]="identification.nadean"></textarea>
+                           
+                    </div>
+                    <div class="col-md-12" *ngIf="identification.npi">
+                        <label class="title"> NPI</label>
+
+                       
+                            <textarea  [disabled]="identification!=null" class="form-control" placeholder="Identification"
+                            type="number" [(ngModel)]="identification.npi"></textarea>
+                            
+                    </div>
+                    <div class="col-md-12" *ngIf="effectiveDate!=null">
+                        <label class="title"> Effective Date</label>
+                        <input *ngIf="effectiveDate!=''" class="form-control" disabled placeholder="Effective Date"
+                            type="text" [(ngModel)]="effectiveDate" />
+                        <ejs-datepicker *ngIf="effectiveDate==''" placeholder="Effective Date" [value]="effectiveDate"
+                            [(ngModel)]="effectiveDate">
+                        </ejs-datepicker>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12" *ngIf="specialty!=null">
+                        <label class="title">Specialty</label>
+                        <input class="form-control" [disabled]="specialty!=''" placeholder="Specialty" type="text"
+                            [(ngModel)]="specialty" />
+                    </div>
+                    <div class="col-md-12" *ngIf="supervisor!=null">
+                        <label class="title"> Supervisor</label>
+
+                        <input [disabled]="supervisor!=''" class="form-control" placeholder="Supervisor" type="text"
+                            [(ngModel)]="supervisor" />
+                    </div>
+                </div>
+            </div>
+            <div class="justify-content-center modal-footer">
+                <button class="btn btn-success" (click)="modal.close('Save click'); validateAuth()">Confirm</button>
+                <button class="btn btn-danger" (click)="modal.close('Close click')">Cancel</button>
+            </div>
+        </ng-template>
+        <div *ngIf="taskdetail?.task?.status=='Error'">
+            <h5 style="color: red;"> Error: {{taskdetail.error.error_message}} </h5>
+        </div>
+        <div>
+            
+            <h6 *ngIf="taskdetail?.validate?.prescriberResponseReason"><strong>{{this.taskdetail.task.action == 'Denied' ? 'Denied': 'Cancel'}} Reason:</strong>
+                {{taskdetail.validate.prescriberResponseReason}} 
+             </h6>
+             <h6 *ngIf="taskdetail?.validate?.pharmacyRequestCodeDesc || taskdetail?.validate?.pharmacyRequestCode">
+                <strong>Pharmacy Request Code:</strong>
+                {{taskdetail.validate.pharmacyRequestCode}}
+                <span *ngIf="taskdetail?.validate?.pharmacyRequestCode">-</span> 
+                {{taskdetail.validate.pharmacyRequestCodeDesc}} 
+             </h6>
+            <h6 *ngIf="taskdetail?.validate?.pharmacyRequestReason"><strong>Pharmacy Response:</strong>  
+                {{taskdetail.validate.pharmacyRequestReason}} 
+             </h6>
+             
+        </div>
+        <div class="card card-grey" *ngIf="taskdetail.draftOrder && taskdetail.draftOrder!='' && _service.erxCheck!=2">
+            <div class="card-header">
+                <h5 class="card-title">Medications</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail?.draftOrder; let i = index">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.medication?.rawMed?.drugName}} <span
+                                    *ngIf="item?.medication?.rawMed?.rawData?.FederalDEAClassCode!='0'">
+                                    ({{item.medication?.rawMed?.rawData?.FederalDEAClassCodeDesc}})</span>
+                                <a class="float-right" title="Delete Medication"
+                                    *ngIf="(!taskdetail?.task?.numType || taskdetail?.task?.numType==0) && taskdetail.draftOrder.length>1"
+                                    (click)="removeMedicine(i)"><i class="icon2-trashcan1"></i></a>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.medication.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.medication.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.medication.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.medication.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.medication.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item.medication.rawMed?.rawData?.ClinicalQuantity.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Associate diagnoses:</b>
+                                <div *ngIf="item.medication?.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.medication.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.medication.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.medication.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item.medication?.rxfillStatus && item.medication.rxfillStatus!='') || (item.medication?.rxfillNote && item.medication.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.medication.rxfillStatus}}
+                            </td>
+                            <td>
+                                <b>Refill Note:</b> {{item.medication.rxfillNote}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item.medication.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item.medication.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0">
+                            <td colspan="3" *ngIf="taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number
+                                ? taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                            <td colspan="3" *ngIf="item.pharmacy && !taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{item.pharmacy?.name}},
+                                {{item.pharmacy?.addressLine1? item.pharmacy.addressLine1+',' : ''}}
+                                {{item.pharmacy?.addressLine2? item.pharmacy.addressLine2+',' : ''}}
+                                {{item.pharmacy?.city}}, {{item.pharmacy?.stateProvince}}
+                                , {{item.pharmacy?.postalCode}},
+                                Phone:{{item.pharmacy?.primaryPhone?.number
+                                ? item.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.medication && item.medication.alerts && item.medication.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="onChangeAlerts(i)"
+                                        [checked]="AllertsArray[i].draftOrder" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="AllertsArray[i].draftOrder">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr  *ngIf="item.medication?.rawMed?.rawData?.FederalDEAClassCode!='0' && _service.denyChange==false">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative"
+                                   >
+                                    <input id="isReadySign" name="readyToSign" (change)="isReadyToSign(i)"
+                                        [checked]="viewAlerts.readySign || !readytoSignIndexes.includes(i)" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">Ready To Sign*</label>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- For compound medications  start -->
+        <div class="card card-grey" *ngIf="taskdetail.draftOrder && taskdetail.draftOrder!='' && _service.erxCheck==2">
+            <div class="card-header">
+                <h5 class="card-title">Medications</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail?.draftOrder; let i = index">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.medication?.description}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.medication.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.medication.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.medication.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.medication.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.medication.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item?.medication?.quantityUnitOfMeasureName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Ict10 Codes diagnoses:</b>
+                                <div *ngIf="item.medication?.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.medication.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.medication.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.medication.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item.medication?.rxfillStatus && item.medication.rxfillStatus!='') || (item.medication?.rxfillNote && item.medication.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.medication.rxfillStatus}}
+                            </td>
+                            <td>
+                                <b>Refill Note:</b> {{item.medication.rxfillNote}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Strength Form</b> {{item.medication.strengthFormName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Compound Medicines:</b>
+                            </td>
+                        </tr>
+                        <tr
+                            *ngFor="let med of item && item.medication && item.medication.compoundMedication;let k=index">
+                            <td>
+                                <b>Name:</b> {{med?.rawMed?.drugName}} <span class="text-danger"
+                                    *ngIf="med.rawMed?.rawData?.FederalDEAClassCode!=0">
+                                    (
+
+                                    Schedule
+                                    {{med.rawMed.rawData.FederalDEAClassCodeDesc}}
+                                    )
+
+                                </span>
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{med?.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{med.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item?.medication?.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item?.medication?.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0 || _service.erxCheck==2">
+                            <td colspan="3" *ngIf="taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number
+                                ? taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                            <td colspan="3" *ngIf="item.pharmacy && !taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{item.pharmacy?.name}},
+                                {{item.pharmacy?.addressLine1? item.pharmacy.addressLine1+',' : ''}}
+                                {{item.pharmacy?.addressLine2? item.pharmacy.addressLine2+',' : ''}}
+                                {{item.pharmacy?.city}}, {{item.pharmacy?.stateProvince}}
+                                , {{item.pharmacy?.postalCode}},
+                                Phone:{{item.pharmacy?.primaryPhone?.number
+                                ? item.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.medication && item.medication.alerts && item.medication.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="viewAlerts.draftOrder=!viewAlerts.draftOrder"
+                                        [checked]="viewAlerts.draftOrder" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.draftOrder">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr  *ngIf="readyCompound==true &&_service.denyChange==false">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative"
+                               >
+                                    <input id="isReadySign" name="readyToSign" (change)="isReadyToSign()"
+                                        [checked]="viewAlerts.readySign || (_service.readySigned==true && _service.updated==false)" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">Ready To Sign*</label>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- for compound medications end -->
+        <!-- remove service.erxCheck==2 in future -->
+        <div class="card card-grey"
+            *ngIf="taskdetail.medicationPrescribed && taskdetail.medicationPrescribed!='' && _service.erxCheck!=2">
+            <div class="card-header">
+                <h5 class="card-title">
+                    {{(taskdetail.task.numType==1 || taskdetail.task.numType==2) && this.taskdetail.task.action=='Denied'?'Denied':'Prescribed'}}
+                     Medication</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.medicationPrescribed; let i = index">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.rawMed?.drugName}} <span
+                                    *ngIf="item?.rawMed?.rawData?.FederalDEAClassCode!='0'">({{item?.rawMed?.rawData?.FederalDEAClassCodeDesc}})</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item.rawMed.rawData.ClinicalQuantity.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>ICT10 Codes:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item?.rxfillStatus && item.rxfillStatus!='') || (item?.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0 && taskdetail.pharmacy">
+                            <td colspan="3">
+                                <b>Pharmacy:</b>
+                                {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number ?
+                                taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        
+                        <tr *ngIf="item.alerts && item.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}"
+                                        (change)="this.AllertsArrayPrescribed[i].medicationPrescribed=!this.AllertsArrayPrescribed[i].medicationPrescribed"
+                                        [checked]="this.AllertsArrayPrescribed[i].medicationPrescribed" name="recurrenceAfter"
+                                        type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="this.AllertsArrayPrescribed[i].medicationPrescribed">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- for compound prescribed medicine -->
+        <div class="card card-grey" *ngIf="taskdetail.medicationPrescribed && taskdetail.medicationPrescribed!='' && _service.erxCheck==2">
+            <div class="card-header">
+                <h5 class="card-title">Compound 
+                    {{(taskdetail.task.numType==2 || taskdetail.task.numType==1) && taskdetail.task.action=='Denied'?'Denied':'Prescribed'}}
+                     Medications</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.medicationPrescribed; let i = index">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.description}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item?.quantityUnitOfMeasureName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Ict10 Codes diagnoses:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item.rxfillStatus && item.rxfillStatus!='') || (item.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Strength Form</b> {{item.strengthFormName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Compound Medicines:</b>
+                            </td>
+                        </tr>
+                        <tr
+                            *ngFor="let med of item && item.compoundMedication;let k=index">
+                            <td>
+                                <b>Name:</b> {{med?.rawMed?.drugName}} <span class="text-danger"
+                                    *ngIf="med.rawMed?.rawData?.FederalDEAClassCode!=0">
+                                    (
+
+                                    Schedule
+                                    {{med.rawMed &&  med.rawMed.rawData && med.rawMed.rawData.FederalDEAClassCodeDesc}}
+                                    )
+
+                                </span>
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{med?.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{med.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item?.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item?.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0 || _service.erxCheck==2">
+                            <td colspan="3" *ngIf="taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number
+                                ? taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                            <td colspan="3" *ngIf="item.pharmacy && !taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{item.pharmacy?.name}},
+                                {{item.pharmacy?.addressLine1? item.pharmacy.addressLine1+',' : ''}}
+                                {{item.pharmacy?.addressLine2? item.pharmacy.addressLine2+',' : ''}}
+                                {{item.pharmacy?.city}}, {{item.pharmacy?.stateProvince}}
+                                , {{item.pharmacy?.postalCode}},
+                                Phone:{{item.pharmacy?.primaryPhone?.number
+                                ? item.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.alerts && item.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="viewAlerts.draftOrder=!viewAlerts.draftOrder"
+                                        [checked]="viewAlerts.draftOrder" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.draftOrder">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr *ngIf="readyCompound==true && !(_service.updated==false && _service.readySigned ==true) && _service.denyChange==false">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative"
+                                >
+                                    <input id="isReadySign" name="readyToSign" (change)="isReadyToSign()"
+                                        [checked]="viewAlerts.readySign" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">Ready To Sign*</label>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Denied Flow -->
+
+        <div class="card card-grey"
+            *ngIf="taskdetail.medicationDenied && taskdetail.medicationDenied!='' && _service.erxCheck!=2">
+            <div class="card-header">
+                <h5 class="card-title">
+                    {{(taskdetail.task.numType==1 || taskdetail.task.numType==2) && this.taskdetail.task.action=='Denied'?'Denied':'Prescribed'}}
+                     Medication</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.medicationDenied; let i = index">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.rawMed?.drugName}}<span
+                                    *ngIf="item?.rawMed?.rawData?.FederalDEAClassCode!='0'">({{item?.rawMed?.rawData?.FederalDEAClassCodeDesc}})</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item.rawMed.rawData.ClinicalQuantity.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>ICT10 Codes:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item?.rxfillStatus && item.rxfillStatus!='') || (item?.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="_service.erxCheck==0">
+                            <td colspan="3">
+                                <b>Pharmacy:</b>
+                                {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number ?
+                                taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.alerts && item.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}"
+                                        (change)="viewAlerts.medicationDenied=!viewAlerts.medicationDenied"
+                                        [checked]="viewAlerts.medicationDenied" name="recurrenceAfter"
+                                        type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.medicationDenied">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+
+        <!-- for compound prescribed medicine -->
+        <div class="card card-grey" *ngIf="taskdetail.medicationDenied && taskdetail.medicationDenied!='' && _service.erxCheck==2">
+            <div class="card-header">
+                <h5 class="card-title">Compound 
+                    {{(taskdetail.task.numType==2 || taskdetail.task.numType==1) && taskdetail.task.action=='Denied'?'Denied':'Prescribed'}}
+                     Medications</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.medicationDenied; let i = index">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.description}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item?.quantityUnitOfMeasureName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Ict10 Codes diagnoses:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item.rxfillStatus && item.rxfillStatus!='') || (item.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Strength Form</b> {{item.strengthFormName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Compound Medicines:</b>
+                            </td>
+                        </tr>
+                        <tr
+                            *ngFor="let med of item && item.compoundMedication;let k=index">
+                            <td>
+                                <b>Name:</b> {{med?.rawMed?.drugName}} <span class="text-danger"
+                                    *ngIf="med.rawMed?.rawData?.FederalDEAClassCode!=0">
+                                    (
+
+                                    Schedule
+                                    {{med.rawMed &&  med.rawMed.rawData && med.rawMed.rawData.FederalDEAClassCodeDesc}}
+                                    )
+
+                                </span>
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{med?.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{med.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item?.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item?.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0 || _service.erxCheck==2">
+                            <td colspan="3" *ngIf="taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number
+                                ? taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                            <td colspan="3" *ngIf="item.pharmacy && !taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{item.pharmacy?.name}},
+                                {{item.pharmacy?.addressLine1? item.pharmacy.addressLine1+',' : ''}}
+                                {{item.pharmacy?.addressLine2? item.pharmacy.addressLine2+',' : ''}}
+                                {{item.pharmacy?.city}}, {{item.pharmacy?.stateProvince}}
+                                , {{item.pharmacy?.postalCode}},
+                                Phone:{{item.pharmacy?.primaryPhone?.number
+                                ? item.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.alerts && item.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="viewAlerts.draftOrder=!viewAlerts.draftOrder"
+                                        [checked]="viewAlerts.draftOrder" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.draftOrder">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr *ngIf="readyCompound==true && !(_service.updated==false && _service.readySigned ==true) && _service.denyChange==false">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative"
+                                >
+                                    <input id="isReadySign" name="readyToSign" (change)="isReadyToSign()"
+                                        [checked]="viewAlerts.readySign" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">Ready To Sign*</label>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    <!-- Denied flow ended -->
+
+        <div class="card card-grey"
+            *ngIf="taskdetail.medicationDispensed  && taskdetail.medicationDispensed!='' && _service.erxCheck!=2">
+            <div class="card-header">
+                <h5 class="card-title">Dispensed Medication</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.medicationDispensed; let i = index">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>{{item.rawMed.drugName}}</b><span
+                                    *ngIf="item?.rawMed?.rawData?.FederalDEAClassCode!='0'">
+                                    ({{item?.rawMed?.rawData?.FederalDEAClassCodeDesc}})</span>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item.rawMed.rawData.ClinicalQuantity.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Associate diagnoses:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item?.rxfillStatus && item.rxfillStatus!='') || (item?.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0">
+                            <td colspan="3">
+                                <b>Pharmacy:</b>
+                                {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number ?
+                                taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.medication && item.medication.alerts && item.medication.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="viewAlerts.medicationDispensed=!viewAlerts.medicationDispensed"
+                                        [checked]="viewAlerts.medicationDispensed" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.medicationDispensed">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-grey"
+            *ngIf="taskdetail.medicationRequested  && taskdetail.medicationRequested!='' && _service.erxCheck!=2 ">
+            <div class="card-header">
+                <h5 class="card-title">Requested Medication</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.medicationRequested; let i = index">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.rawMed?.drugName}}<span
+                                    *ngIf="item?.rawMed?.rawData?.FederalDEAClassCode!='0'">({{item?.rawMed?.rawData?.FederalDEAClassCodeDesc}})</span>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item.rawMed.rawData.ClinicalQuantity.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Associate diagnoses:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item?.rxfillStatus && item.rxfillStatus!='') || (item?.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0">
+                            <td colspan="3">
+                                <b>Pharmacy:</b>
+                                {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number ?
+                                taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" *ngIf="this?.taskdetail?.task?.numStatus==3 && item.rawMed?.rawData?.FederalDEAClassCode!='0' && this.taskdetail.task && this.taskdetail.task.numType==3 && this.taskdetail.task.type=='Prescriber Authorization'">
+                                <label class="d-inline-block checkbox position-relative"
+                                    >
+                                    <input id="isReadySign" name="readyToSign" (change)="isReadyToSign(i)"
+                                        [checked]="viewAlerts.readySign || !readytoSignIndexes.includes(i)" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">Ready To Sign*</label>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.medication && item.medication.alerts && item.medication.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="viewAlerts.medicationRequested=!viewAlerts.medicationRequested"
+                                        [checked]="viewAlerts.medicationRequested" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.medicationRequested">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Requested Medication Compound -->
+        <div class="card card-grey" *ngIf="taskdetail.medicationRequested && taskdetail.medicationRequested!='' && _service.erxCheck==2">
+            <div class="card-header">
+                <h5 class="card-title">Conpound Requested Medications</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.medicationRequested; let i = index">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.description}}
+                               
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item?.quantityUnitOfMeasureName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Ict10 Codes diagnoses:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item.rxfillStatus && item.medication.rxfillStatus!='') || (item.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Strength Form</b> {{item.strengthFormName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Compound Medicines:</b>
+                            </td>
+                        </tr>
+                        <tr
+                            *ngFor="let med of item && item.compoundMedication;let k=index">
+                            <td>
+                                <b>Name:</b> {{med?.rawMed?.drugName}} <span class="text-danger"
+                                    *ngIf="med.rawMed?.rawData?.FederalDEAClassCode!=0">
+                                    (
+
+                                    Schedule
+                                    {{med.rawMed &&  med.rawMed.rawData && med.rawMed.rawData.FederalDEAClassCodeDesc}}
+                                    )
+
+                                </span>
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{med?.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{med.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item?.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item?.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0 || _service.erxCheck==2">
+                            <td colspan="3" *ngIf="taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number
+                                ? taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                            <td colspan="3" *ngIf="item.pharmacy && !taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{item.pharmacy?.name}},
+                                {{item.pharmacy?.addressLine1? item.pharmacy.addressLine1+',' : ''}}
+                                {{item.pharmacy?.addressLine2? item.pharmacy.addressLine2+',' : ''}}
+                                {{item.pharmacy?.city}}, {{item.pharmacy?.stateProvince}}
+                                , {{item.pharmacy?.postalCode}},
+                                Phone:{{item.pharmacy?.primaryPhone?.number
+                                ? item.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="this?.taskdetail?.task?.numStatus==3 && readyCompound==true && this.taskdetail.task && this.taskdetail.task.numType==3 && this.taskdetail.task.type=='Prescriber Authorization'">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative"
+                                >
+                                    <input id="isReadySign" name="readyToSign" (change)="isReadyToSign()"
+                                        [checked]="viewAlerts.readySign" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">Ready To Sign*</label>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.medication && item.medication.alerts && item.medication.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="viewAlerts.draftOrder=!viewAlerts.draftOrder"
+                                        [checked]="viewAlerts.draftOrder" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.draftOrder">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+                                </div>
+
+                            </td>
+                        </tr>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-grey"
+            *ngIf="taskdetail.previousMedicationPrescribed  && taskdetail.previousMedicationPrescribed!='' && _service.erxCheck!=2">
+            <div class="card-header">
+                <h5 class="card-title">Previous Prescribed Medication</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.previousMedicationPrescribed; let i = index">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm fs-13 mb-0">
+                        <tr>
+                            <td colspan="3" class="bg-gray">
+                                <b>Medication:</b> {{item?.rawMed?.drugName}}<span
+                                    *ngIf="item?.rawMed?.rawData?.FederalDEAClassCode!='0'">({{item?.rawMed?.rawData?.FederalDEAClassCodeDesc}})</span>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item.rawMed.rawData.ClinicalQuantity.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Associate diagnoses:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item?.rxfillStatus && item.rxfillStatus!='') || (item?.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="!taskdetail.previousPharmacy">
+                            <td colspan="3">
+                                <b>Pharmacy:</b>
+                                {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number ?
+                                taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="taskdetail.previousPharmacy">
+                            <td colspan="3">
+                                <b>Pharmacy:</b>
+                                {{taskdetail.previousPharmacy?.name}},
+                                {{taskdetail.previousPharmacy?.addressLine1 ? taskdetail.previousPharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.previousPharmacy?.addressLine2 ? taskdetail.previousPharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.previousPharmacy?.city}}, {{taskdetail.previousPharmacy?.stateProvince}}
+                                , {{taskdetail.previousPharmacy?.postalCode}},
+                                Phone:{{taskdetail.previousPharmacy?.primaryPhone?.number ?
+                                taskdetail.previousPharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr  *ngIf="item.medication && item.medication.alerts && item.medication.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative">
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="viewAlerts.previousMedicationPrescribed=!viewAlerts.previousMedicationPrescribed"
+                                        [checked]="viewAlerts.previousMedicationPrescribed" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.previousMedicationPrescribed">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+
+                                </div>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card card-grey" *ngIf="taskdetail.previousMedicationPrescribed  && taskdetail.previousMedicationPrescribed!='' && _service.erxCheck==2">
+            <div class="card-header">
+                <h5 class="card-title">Previous Prescribed Compound Medication</h5>
+            </div>
+            <div class="card-body" *ngFor="let item of taskdetail.previousMedicationPrescribed; let i = index">
+
+                <div class="table-responsive">
+                    <table class="table table-sm fs-13 table-bordered">
+                        <tr>
+                            <td colspan="3" class="bg-light">
+                                <b>Medication:</b> {{item?.description}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Sig:</b> {{item.sig}}
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Start date:</b> {{item.effectiveDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                            <td colspan="2">
+                                <b>Script date:</b> {{item.scriptDate| date: 'MM-dd-yyyy'}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Day supply:</b> {{item.daysSupply}}
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{item.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{item?.quantityUnitOfMeasureName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <b>Ict10 Codes diagnoses:</b>
+                                <div *ngIf="item.icd10Codes?.codes">
+                                    <div *ngFor="let ict of item.icd10Codes.codes;let q=index">
+                                        {{ict.name}} : {{ict.description}}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <b>Refill:</b> {{item.refill}}
+                            </td>
+                            <td>
+                                <b>Substitute:</b> {{item.substitute==0?'Allowed':'Not Allowed'}}
+                            </td>
+                        </tr>
+                        <tr
+                            *ngIf="(item.rxfillStatus && item.rxfillStatus!='') || (item.rxfillNote && item.rxfillNote!='')">
+                            <td>
+                                <b>Refill Status:</b> {{item.rxfillStatus}}
+                            </td>
+                            <td colspan="2">
+                                <b>Refill Note:</b> {{item.rxfillNote}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <b>Strength Form</b> {{item.strengthFormName}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Compound Medicines:</b>
+                            </td>
+                        </tr>
+                        <tr
+                            *ngFor="let med of item && item.compoundMedication;let k=index">
+                            <td>
+                                <b>Name:</b> {{med?.rawMed?.drugName}} <span class="text-danger"
+                                    *ngIf="med.rawMed?.rawData?.FederalDEAClassCode!=0">
+                                    (
+
+                                    Schedule
+                                    {{med.rawMed &&  med.rawMed.rawData && med.rawMed.rawData.FederalDEAClassCodeDesc}}
+                                    )
+
+                                </span>
+                            </td>
+                            <td>
+                                <b>Dispense:</b> {{med?.quantity}}
+                            </td>
+                            <td>
+                                <b>Dispense unit:</b>
+                                {{med.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc}}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="3">
+                                <b>Internal notes:</b> {{item?.internalComments}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <b>Pharmacy notes:</b> {{item?.pharmacyNotes}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="_service.erxCheck==0 || _service.erxCheck==2">
+                            <td colspan="3" *ngIf="taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{taskdetail.pharmacy?.name}},
+                                {{taskdetail.pharmacy?.addressLine1 ? taskdetail.pharmacy.addressLine1+',' : ''}}
+                                {{taskdetail.pharmacy?.addressLine2 ? taskdetail.pharmacy.addressLine2+',' : ''}}
+                                {{taskdetail.pharmacy?.city}}, {{taskdetail.pharmacy?.stateProvince}}
+                                , {{taskdetail.pharmacy?.postalCode}},
+                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number
+                                ? taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                            <td colspan="3" *ngIf="item.pharmacy && !taskdetail.pharmacy">
+                                <b>Pharmacy:</b> {{item.pharmacy?.name}},
+                                {{item.pharmacy?.addressLine1? item.pharmacy.addressLine1+',' : ''}}
+                                {{item.pharmacy?.addressLine2? item.pharmacy.addressLine2+',' : ''}}
+                                {{item.pharmacy?.city}}, {{item.pharmacy?.stateProvince}}
+                                , {{item.pharmacy?.postalCode}},
+                                Phone:{{item.pharmacy?.primaryPhone?.number
+                                ? item.pharmacy?.primaryPhone?.number : "N/A"}}
+                            </td>
+                        </tr>
+                        <tr *ngIf="item.alerts && item.alerts.length>0">
+                            <td colspan="3">
+                                <label class="d-inline-block checkbox position-relative" >
+                                    <input id="Alerts{{i}}" name="recurrenceAfter"
+                                        (change)="viewAlerts.draftOrder=!viewAlerts.draftOrder"
+                                        [checked]="viewAlerts.draftOrder" type="checkbox" />
+                                    <span class="fake-input position-absolute"></span>
+                                    <label class="fake-label d-block mb-0" for="Alerts">View Alerts</label>
+                                </label>
+
+
+                                <div class="view-alerts mt-2" *ngIf="viewAlerts.draftOrder">
+                                    <app-view-summary-alerts [item]="item" [i]="i"></app-view-summary-alerts>
+                                </div>
+
+                            </td>
+                        </tr>
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="r">
+            <div class="card card-grey" *ngIf="taskdetail!=''">
+                <div class="card-header">
+                    <h5 class="card-title">Patient details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm fs-13 mb-0">
+                            <tr>
+                                <td colspan="4" class="bg-light">
+                                    <b>Patient:</b> {{taskdetail.patient.firstName}}
+                                        {{taskdetail.patient.middleName}} {{taskdetail.patient.lastName}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Gender:</b> {{taskdetail.patient.gender}}
+                                </td>
+                                <td>
+                                    <b>DOB:</b> {{taskdetail.patient.dob| date: 'MM-dd-yyyy'}}
+                                </td>
+                                <td>
+                                    <b>Weight:</b> {{taskdetail.patient.weight?taskdetail.patient.weight+" lbs":'N/A'}}
+                                </td>
+
+                                <td>
+                                    <b>Height:</b> 
+                                    {{
+                                        taskdetail.patient.height_ft?taskdetail.patient.height_ft + "'" + taskdetail.patient.height_in + '"': 'N/A'}}
+                                </td>
+
+
+                            </tr>
+                            <tr>
+                                <td class="white-space-nowrap">
+                                    <b>Phone:</b>
+                                    {{taskdetail.patient.primaryPhone?.extension}}{{taskdetail.patient.primaryPhone?.number
+                                    ?
+                                    taskdetail.patient.primaryPhone.number : "N/A"}}
+                                </td>
+                                <td colspan="3">
+                                    <b>Address:</b>
+                                    {{taskdetail.patient.addressLine1}},
+                                    {{taskdetail.patient?.addressLine2 ? taskdetail.patient.addressLine2+',' : ''}}
+                                    {{taskdetail.patient.city}},{{taskdetail.patient.stateProvince}},
+                                    {{taskdetail.patient.countryCode}},
+                                    {{taskdetail.patient.postalCode}}
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-grey" *ngIf="taskdetail!=''">
+                <div class="card-header">
+                    <h5 class="card-title">Provider Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="">
+                        <table class="table table-bordered table-sm fs-13 mb-0">
+                            <tr>
+                                <td class="bg-light">
+                                    <b>Provider:</b> {{taskdetail.prescriber.firstName}}
+                                        {{taskdetail.prescriber.middleName}}
+                                        {{taskdetail.prescriber.lastName}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="row align-items-center">
+                                        <div class="col-auto d-flex align-items-center" *ngIf="!_service.data.task_list && (taskdetail?.task?.numType==0 ||!taskdetail?.task)">
+                                            <b class="white-space-nowrap me-3">Facility Locations:</b>
+                                            <ng-select *ngIf="taskdetail.prescriber.spi || (!taskdetail.prescriber.spi && userSpis?.[0]?.facility_location_id)" [items]="userSpis" class="filled" bindLabel="facility_location.facility_full_name"
+                                                bindValue="spi" [closeOnSelect]='true' placeholder="Facility Locations" (change)="OnFacilityLocationChange($event)"
+                                                [(ngModel)]="taskdetail.prescriber.spi"
+                                                >
+                                            </ng-select>  
+                                            <ng-select *ngIf="!taskdetail.prescriber.spi && !userSpis?.[0]?.facility_location_id" [items]="userSpis" class="filled" bindLabel="facility_full_name"
+                                                bindValue="spi" [closeOnSelect]='true' placeholder="Facility Locations" (change)="OnFacilityLocationChange($event)"
+                                                [(ngModel)]="taskdetail.prescriber.spi"
+                                                >
+                                            </ng-select>  
+                                        </div>
+                                        <div *ngIf="taskdetail?.prescriber?.spi" class="col-auto">
+                                            <b> SPI : </b>
+                                            <span>
+                                            {{taskdetail?.prescriber?.spi
+                                            ?
+                                            taskdetail?.prescriber?.spi : "N/A"}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <b>DEA:</b>
+                                    {{taskdetail?.prescriber?.dean
+                                    ?
+                                    taskdetail?.prescriber?.dean : "N/A"}}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <b>NA DEA:</b>
+                                    {{taskdetail?.prescriber?.nadean
+                                    ?
+                                    taskdetail?.prescriber?.nadean : "N/A"}}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <b>NPI:</b>
+                                    {{taskdetail?.prescriber?.npi
+                                    ?
+                                    taskdetail?.prescriber?.npi : "N/A"}}
+                                </td>
+                            </tr>
+
+
+                            <tr>
+                                <td>
+                                    <b>Phone:</b>
+                                    {{taskdetail.prescriber.primaryPhone?.extension}}{{taskdetail.prescriber.primaryPhone?.number
+                                    ?
+                                    taskdetail.prescriber.primaryPhone.number : "N/A"}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Address:</b> 
+                                    <span *ngIf="taskdetail.prescriber && taskdetail.prescriber.spi">
+                                        {{ taskdetail.prescriber && taskdetail.prescriber.addressLine1}},
+                                        {{taskdetail.prescriber?.addressLine2 ? taskdetail.prescriber.addressLine2+',' :
+                                        ''}}
+    
+                                        {{taskdetail.prescriber && taskdetail.prescriber.city}}, {{taskdetail.prescriber && taskdetail.prescriber.stateProvince}},
+                                        {{taskdetail.prescriber && taskdetail.prescriber.countryCode}}, {{taskdetail.prescriber && taskdetail.prescriber.postalCode}}
+                                        </span>
+                                    {{!taskdetail.prescriber || !taskdetail.prescriber.spi ? 'N/A' : ''}}
+                                </td>
+                            </tr>
+                            <tr *ngIf="taskdetail?.validate?.subCodesWithDesc">
+                                <td>
+                                    <b>Codes With Description:</b>
+                                </td>
+                            </tr>
+                            <tr *ngIf="taskdetail?.validate?.subCodesWithDesc">
+                                <table class="table table-bordered table-sm fs-13 mb-0">
+                                    <tr>
+                                        <td style="width: 15%;">
+                                            <b>Code:</b> {{taskdetail.validate?.subCodesWithDesc[0].code}}
+                                        </td>
+                                        <td>
+                                            <b>Description:</b>
+                                            {{taskdetail.validate?.subCodesWithDesc[0].description}}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-grey" *ngIf="tempData.role.can_finalize==1 && tempData.role.has_supervisor==1 && taskdetail!=''">
+                <div class="card-header">
+                    <h5 class="card-title">Supervisor Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm fs-13 mb-0">
+                            <tr *ngIf="!transmiited && supervisors && supervisors.length>1 && !(taskdetail.task && taskdetail.task.numStatus==3)">
+                                <td style="font-weight: 600;">
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-5 col-sm-6">
+                                    <ng-select [items]="supervisors" class="filled"
+                                        bindLabel="full_name" bindValue="id" [closeOnSelect]='true'
+                                        placeholder="Choose Supervisor"
+                                        [(ngModel)]="selectedSupervisor"
+                                        appendTo="body"
+                                         (change)="selectSupervisor($event)"
+                                         [disabled]="faciltyId==null || faciltyId==''"
+                                        [ngModelOptions]="{standalone: true}">
+                                    </ng-select>
+                                    </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngIf="(supervisors && supervisors.length>0 && selectedSupervisor) || taskdetail.supervisor">
+                                <td class="bg-light">
+                                    <b class="m-0">{{taskdetail.supervisor.firstName}}
+                                        {{taskdetail.supervisor.middleName}}
+                                        {{taskdetail.supervisor.lastName}}</b>
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="(supervisors && supervisors.length>0 && selectedSupervisor) || taskdetail.supervisor">
+                                <td>
+                                    <b>DEA:</b>
+                                    {{taskdetail.supervisor && taskdetail.supervisor.dean
+                                    ?
+                                    taskdetail.supervisor.dean : "N/A"}}
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="(supervisors && supervisors.length>0 && selectedSupervisor) || taskdetail.supervisor">
+                                <td>
+                                    <b>NA DEA:</b>
+                                    {{taskdetail.supervisor && taskdetail.supervisor.nadean
+                                    ?
+                                    taskdetail.supervisor.nadean : "N/A"}}
+                                </td>
+                            </tr>
+
+                            <tr *ngIf="(supervisors && supervisors.length>0 && selectedSupervisor) || taskdetail.supervisor">
+                                <td>
+                                    <b>NPI:</b>
+                                    {{taskdetail.supervisor && taskdetail.supervisor.npi
+                                    ?
+                                    taskdetail.supervisor.npi : "N/A"}}
+                                </td>
+                            </tr>
+
+
+                            <tr *ngIf="(supervisors && supervisors.length>0 && selectedSupervisor) || taskdetail.supervisor">
+                                <td>
+                                    <b>Phone:</b>
+                                    {{taskdetail.supervisor && taskdetail.supervisor.primaryPhone?.extension}}{{ taskdetail.supervisor && taskdetail.supervisor.primaryPhone?.number
+                                    ?
+                                    taskdetail.supervisor.primaryPhone.number : "N/A"}}
+                                </td>
+                            </tr>
+                            <tr *ngIf="(supervisors && supervisors.length>0 && selectedSupervisor) || taskdetail.supervisor">
+                                <td>
+                                    <span>
+                                        <b>Address:</b>
+                                        {{ taskdetail.supervisor && taskdetail.supervisor.addressLine1}},
+                                        {{taskdetail.supervisor?.addressLine2 ? taskdetail.supervisor.addressLine2+',' :
+                                        ''}}
+    
+                                        {{taskdetail.supervisor && taskdetail.supervisor.city}}, {{taskdetail.supervisor && taskdetail.supervisor.stateProvince}},
+                                        {{taskdetail.supervisor && taskdetail.supervisor.countryCode}}, {{taskdetail.supervisor && taskdetail.supervisor.postalCode}}
+                                        </span>
+                                    
+                                </td>
+                            </tr> 
+                            <tr *ngIf="(supervisors && supervisors.length==0) && !taskdetail.supervisor">
+                                <td>
+                                    No Supervisor is associated with this facililty location
+                                </td>
+                            </tr>
+                            <tr *ngIf="(supervisors && supervisors.length>0 && !selectedSupervisor) && !taskdetail.supervisor">
+                                <td>
+                                   Please select a supervisor from available supervisors in this facililty location
+                                </td>
+                            </tr>
+                            
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+    
+<div class="modal fade modal-scroll" bsModal #SignatureModal="bs-modal"
+  [config]="{backdrop:'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+    <app-signature-listing (selectedUrlChange)="selectedUrlChange($event)" [(signatures)]="doctor_signature_listing"
+     [selectable]="true" [deletable]="false" (closeModal)="onCancel()" [viewSummary]="true">
+    </app-signature-listing>
+      <div class="d-flex justify-content-center mb-3">
+        <button type="button" class="btn btn-primary" (click)="onSkip()">Skip</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+.custom-btn{
+  width: 100px !important;
+}
+
+ .place::placeholder { 
+	font-size: 9px;
+	font-weight: bold;
+  }
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .btn-empty {
+		flex: 0 0 25% !important;
+		max-width: 25% !important;
+	}
+	.rest_class{
+		flex: 0 0 32%;
+		max-width: 32%;
+	}
+}
+@media only screen and (min-width: 1200px) {
+	.btn-empty {
+		flex: 0 0 39% !important;
+		max-width: 39% !important;
+	}
+}
+
+.main-container{
+  padding: 0 !important;
+}
+select{
+  padding: 0 !important
+}
+
+.doc-spec-name{
+  font-weight: 500;
+  display: inherit !important;
+}
+.main-checkmark{
+  float:right;
+  // padding-left: 4px;
+}

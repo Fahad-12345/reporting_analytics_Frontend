@@ -1,0 +1,26 @@
+.insurance-specific {
+  ::ng-deep .dynamic-form-block,
+  .dynamic-form {
+    .form-group {
+      &:has(small.danger) {
+        input[type=text].form-control.ng-invalid {
+          border: #dc3545 1px solid !important;
+        }
+        .radio-block {
+          border: 1px solid #dc3545;
+        }
+        select {
+          &.form-select {
+            border: 1px solid #dc3545;
+          }
+        }
+        .ng-select {
+          .ng-select-container,
+          .ng-dropdown-panel {
+            border: 1px solid #dc3545 !important;
+          }
+        }
+      }
+    }
+  }
+}

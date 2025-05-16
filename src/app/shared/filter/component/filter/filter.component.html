@@ -1,0 +1,730 @@
+<form class="form"  autocomplete="off" [formGroup]="filterForm" (ngSubmit)="doFilter()">
+    <div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+        <div class="filter-grid-container">
+            <div class="form-group" *ngIf="fieldShow.showBillIDFiled() && showCategoryDropdown ">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'type_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['type_ids']"
+                    [showSelectFieldOnRefresh]="filterForm.get('type_ids').value" 
+                    [lableName]="'Category'" [bindlable]="'label_name'" 
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false"
+                    [bindId]="'id'" [apiPath]="EnumApiPath.Pom_types" [searchLableName]="'type_ids'"
+                    (valueChange)="selectionOnValueChange($event,'type_ids')" 
+                    [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showBillIDFiled()">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'bill_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['bill_ids']"
+                    [showSelectFieldOnRefresh]="filterForm.get('bill_ids').value" 
+                    [lableName]="'Bill ID'" [bindlable]="'label_id'" 
+                    [showSelectAll] ="true" [conditionalExtraApiParams]="{bill_type_ids:[2]}"
+                    [showGroupBy] = "false"
+                    [bindId]="'id'" [apiPath]="EnumApiPath.BillIdPath" [searchLableName]="'bill_no'"
+                    (valueChange)="selectionOnValueChange($event,'bill_ids')" 
+                    [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showCaseIDFiled()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()" [filterFieldName]="'case_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['case_ids']"
+                    [showSelectFieldOnRefresh]="filterForm.get('case_ids').value" 
+                    [lableName]="'Case ID'" [bindlable]="'id'" 
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false" [conditionalExtraApiParams]="getOrderBy"
+                    [mainApiPath]="requestServerpath.kios_api_path"
+                    [bindId]="'id'" [apiPath]="EnumApiPath.NF2PomCaseIdApiPath" [searchLableName]="'id'"
+                    (valueChange)="selectionOnValueChange($event,'case_ids')" 
+                    [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showPacketIDField() && showPacketIDFilter">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'packet_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['packet_ids']"
+                [showSelectFieldOnRefresh]="filterForm.get('packet_ids').value" 
+                [lableName]="'Packet ID'" [bindlable]="'id'" [searchLableName]="'packet_id'"
+                [bindId]="'id'" [apiPath]="EnumApiPath.Bill_Id_Packet_List"  
+                (valueChange)="selectionOnValueChange($event,'packet_ids')" 
+                [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showSpecialtyField()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['speciality_ids']"
+                [showSelectFieldOnRefresh]="filterForm.get('speciality_ids').value" 
+                [lableName]="'Specialty'" [bindlable]="'name'" 
+                [qulifierShown] = "true"
+                [showSelectAll] ="true"
+                [showGroupBy] = "true"
+                [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+                (valueChange)="selectionOnValueChange($event,'speciality_ids')" 
+                [multiple]="true">
+                </app-ng-select-shareable>      
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showPracticeLocationFilter()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['facility_ids']"
+                [showSelectFieldOnRefresh]="filterForm.get('facility_ids').value" 
+                [lableName]="'Practice - Location'" [bindlable]="'facility_full_name'" 
+                [showSelectAll] ="true"
+                [showGroupBy] = "true"
+                [qulifierShown] = "true"
+                [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+                (valueChange)="selectionOnValueChange($event,'facility_ids')" 
+                [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showBillDateField()"
+            [ngClass]="{'focused': filterForm.get('bill_date_from').value != '' && filterForm.get('bill_date_from').value != null || (filterForm.get('bill_date_from').errors?.invalid_date && filterForm.get('bill_date_from').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="bill_date_from">Bill Date From (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('bill_date_from').value"
+                [matDatepicker]="bill_date_from" id="bill_date_from" formControlName="bill_date_from">
+                <span *ngIf="filterForm.get('bill_date_from').value != '' && filterForm.get('bill_date_from').value != null" (click)="filterForm?.get('bill_date_from')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="bill_date_from"></mat-datepicker-toggle>
+                <mat-datepicker #bill_date_from></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('bill_date_from').errors?.invalid_date && filterForm.get('bill_date_from').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showBillDateField()"
+            [ngClass]="{'focused': filterForm.get('bill_date_to').value != '' && filterForm.get('bill_date_to').value != null || (filterForm.get('bill_date_to').errors?.invalid_date && filterForm.get('bill_date_to').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="bill_date_to">Bill Date To (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('bill_date_to').value"
+                [matDatepicker]="bill_date_to" id="bill_date_to" formControlName="bill_date_to">
+                <span *ngIf="filterForm.get('bill_date_to').value != '' && filterForm.get('bill_date_to').value != null" (click)="filterForm?.get('bill_date_to')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="bill_date_to"></mat-datepicker-toggle>
+                <mat-datepicker #bill_date_to></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('bill_date_to').errors?.invalid_date && filterForm.get('bill_date_to').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showScamPomDateField()"
+            [ngClass]="{'focused': filterForm.get('scan_upload_date_from').value != '' && filterForm.get('scan_upload_date_from').value != null || (filterForm.get('scan_upload_date_from').errors?.invalid_date && filterForm.get('scan_upload_date_from').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="scan_upload_date_from">Received Pom Date From (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('scan_upload_date_from').value"
+                [matDatepicker]="scan_upload_date_from" id="scan_upload_date_from" formControlName="scan_upload_date_from">
+                <span *ngIf="filterForm.get('scan_upload_date_from').value != '' && filterForm.get('scan_upload_date_from').value != null" (click)="filterForm?.get('scan_upload_date_from')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="scan_upload_date_from"></mat-datepicker-toggle>
+                <mat-datepicker #scan_upload_date_from></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('scan_upload_date_from').errors?.invalid_date && filterForm.get('scan_upload_date_from').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showScamPomDateField()"
+            [ngClass]="{'focused': filterForm.get('scan_upload_date_to').value != '' && filterForm.get('scan_upload_date_to').value != null || (filterForm.get('scan_upload_date_to').errors?.invalid_date && filterForm.get('scan_upload_date_to').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="scan_upload_date_to">Received Pom Date To (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('scan_upload_date_to').value"
+                [matDatepicker]="scan_upload_date_to" id="scan_upload_date_to" formControlName="scan_upload_date_to">
+                <span *ngIf="filterForm.get('scan_upload_date_to').value != '' && filterForm.get('scan_upload_date_to').value != null" (click)="filterForm?.get('scan_upload_date_to')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="scan_upload_date_to"></mat-datepicker-toggle>
+                <mat-datepicker #scan_upload_date_to></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('scan_upload_date_to').errors?.invalid_date && filterForm.get('scan_upload_date_to').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showBillIds()">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'bill_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['bill_ids']"
+                    [showSelectFieldOnRefresh]="filterForm.get('bill_ids').value" 
+                    [lableName]="'Bill ID'" [bindlable]="'label_id'" 
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false"
+                    [bindId]="'id'" [apiPath]="EnumApiPath.BillIdPath" [searchLableName]="'bill_no'"
+                    (valueChange)="selectionOnValueChange($event,'bill_ids')" 
+                    [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+       
+            <div class="form-group" *ngIf="fieldShow.showPracticeLocationIdFilter()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_location_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['facility_location_ids']"
+                [showSelectFieldOnRefresh]="filterForm.get('facility_location_ids').value" 
+                [lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" 
+                [qulifierShown] = "true"
+                [showSelectAll] ="true"
+                [showGroupBy] = "true"
+                [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+                (valueChange)="selectionOnValueChange($event,'facility_location_ids')" 
+                [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group field" *ngIf="fieldShow.showPatientNameField()"
+                [ngClass]="{'focused': (filterForm.get('name').value != '' && filterForm.get('name').value != null)}">
+                <label class="form-label" for="name">Patient Name</label>
+                <input type="text" class="form-control form-input" id="name"
+                formControlName="name">
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showCaseTypeField()">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'case_type_ids'"
+                  [showSelectFieldList]="selectedMultipleFieldFiter['case_type_ids']"
+                  [showSelectFieldOnRefresh]="filterForm.get('case_type_ids').value" 
+                  [lableName]="'Case Type'" [bindlable]="'NameDescription'"  [ngSelectShow]="true"
+                  [showSelectAll] ="true"
+                  [showGroupBy] = "true"
+                  [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeCaseTypeApiPath"  
+                  (valueChange)="selectionOnValueChange($event,'case_type_ids')" 
+                  [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showJobStatus()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'job_status'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['job_status']"
+                [showSelectFieldOnRefresh]="filterForm.get('job_status').value" 
+                [lableName]="'Job Status'" 
+                [showSelectAll] ="true"
+                [showGroupBy] = "true"
+                [bindId]="'id'" [apiPath]="EnumApiPath.billingJobStatusApiPath"  
+                (valueChange)="selectionOnValueChange($event,'job_status')" 
+                [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showBillStatus()"
+            [ngClass]="{'focused': (filterForm.get('bill_recipient_type_ids').value != '' && filterForm.get('bill_recipient_type_ids').value != null) || filterService.filter_Field.getBillStatus()}">
+                <!-- <label class="form-label" for="bill_recipient_type_ids">Bill Recipient</label>
+                <ng-select  id="bill_recipient_type_ids" multiple="true" bindLabel="name"  [items]="lstBillstate" formControlName="bill_recipient_type_ids" bindValue="id"  [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                (open)="getFieldAction(true, 'bill_status_id')"
+                (change)="actionRecipient($event)"
+                (close)="getFieldAction(false, 'bill_status_id')">
+                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                        <div class="ng-value ng-label" *ngFor="let item of items | slice:0:1">
+                            <span class="ng-value-label">{{item.name}}</span>
+                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                        </div>
+                        <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 1">
+                            <span class="ng-value-label border-0">+{{items.length - 1}}</span>
+                        </div>
+                    </ng-template>
+                </ng-select> -->
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'bill_recipient_type_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['bill_recipient_type_ids']"
+                            [showSelectFieldOnRefresh]="filterForm.get('bill_recipient_type_ids').value"
+                            [lableName]="'Bill Recipient'"
+                            [bindlable]="'name'" [ngSelectShow]="true" 
+                            [showSelectAll]="true" [showGroupBy]="true" [bindId]="'id'"
+                            [mainApiPath]="requestServerpath.fd_api_url"
+                            [apiPath]="BillingRecipientUrlsEnum.BillingRecipient_list_GET" (valueChange)="selectionOnValueChange($event,'bill_recipient_type_ids')"
+                            [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showCreatedAtField()"
+            [ngClass]="{'focused': filterForm.get('created_at').value != '' && filterForm.get('created_at').value != null || (filterForm.get('created_at').errors?.invalid_date && filterForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="created_at">Created At (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('created_at').value"
+                [matDatepicker]="created_at" id="created_at" formControlName="created_at">
+                <span *ngIf="filterForm.get('created_at').value != '' && filterForm.get('created_at').value != null" (click)="filterForm?.get('created_at')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="created_at"></mat-datepicker-toggle>
+                <mat-datepicker #created_at></mat-datepicker>
+
+
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('created_at').errors?.invalid_date && filterForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showCreatedAtField()"
+            [ngClass]="{'focused': filterForm.get('updated_at').value != '' && filterForm.get('updated_at').value != null || (filterForm.get('updated_at').errors?.invalid_date && filterForm.get('updated_at').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="updated_at">Updated At (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('updated_at').value"
+                [matDatepicker]="updated_at" id="updated_at" formControlName="updated_at">
+                <span *ngIf="filterForm.get('updated_at').value != '' && filterForm.get('updated_at').value != null" (click)="filterForm?.get('updated_at')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="updated_at"></mat-datepicker-toggle>
+                <mat-datepicker #updated_at></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('updated_at').errors?.invalid_date && filterForm.get('updated_at').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showPomIDField()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'pom_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['pom_ids']"
+                [showSelectFieldOnRefresh]="filterForm.get('pom_ids').value" 
+                [lableName]="'POM ID'" [bindlable]="'id'" 
+                [showSelectAll] ="true"
+                 [showGroupBy] = "false" [searchLableName]="'pom_id'"
+                [bindId]="'id'" [apiPath]="EnumApiPath.NF2PomPomIDApiPath"  
+                (valueChange)="selectionOnValueChange($event,'pom_ids')" 
+                [multiple]="true">
+                </app-ng-select-shareable> 
+            </div>  
+            <div class="form-group" *ngIf="fieldShow.showScamPomDateField()">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'created_by_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['created_by_ids']" [lableName]="'Created By'"
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false"
+                    [bindlable]="'full_name'" [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"
+                    (valueChange)="selectionOnValueChange($event,'created_by_ids')" [multiple]="true"></app-ng-select-shareable>
+            </div>
+            
+            <div class="form-group" *ngIf="fieldShow.showScamPomDateField()">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'updated_by_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['updated_by_ids']" [lableName]="'Updated By'"
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false"
+                    [bindlable]="'full_name'" [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"
+                    (valueChange)="selectionOnValueChange($event,'updated_by_ids')" [multiple]="true"></app-ng-select-shareable>
+            </div>
+            
+            <div class="form-group" *ngIf="fieldShow.showScamPomDateField()"
+                [ngClass]="{'focused': (filterForm.get('created_at').value != '' && filterForm.get('created_at').value != null) || filterForm.get('created_at').errors?.invalid_date  || filterForm.get('created_at').errors?.invalid_date }">
+                <label class="form-label" for="dateOfAccidentFrom">Created At (mm/dd/yyyy)</label>
+                <input [matDatepicker]="created_at" appInputDateMask [min]="min"
+                
+                [appMaskDate]="filterForm.get('created_at').value"
+                class="form-control form-input" id="dueDate"
+                    formControlName="created_at">
+                <mat-datepicker-toggle matSuffix [for]="created_at"></mat-datepicker-toggle>
+                <mat-datepicker #created_at></mat-datepicker>
+                <small class="form-text text-muted danger"
+                    *ngIf="filterForm.get('created_at').errors?.invalid_date && filterForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT  ">Date
+                    format should be accurate</small>
+            </div>
+            
+            <div class="form-group" *ngIf="fieldShow.showScamPomDateField()"
+                [ngClass]="{'focused': (filterForm.get('updated_at').value != '' && filterForm.get('updated_at').value != null) || filterForm.get('updated_at').errors?.invalid_date  || filterForm.get('updated_at').errors?.invalid_date }">
+                <label class="form-label" for="dateOfAccidentFrom">Updated At (mm/dd/yyyy)</label>
+                <input [matDatepicker]="updated_at" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('updated_at').value"
+                class="form-control form-input" id="dueDate"
+                    formControlName="updated_at">
+                <mat-datepicker-toggle matSuffix [for]="updated_at"></mat-datepicker-toggle>
+                <mat-datepicker #updated_at></mat-datepicker>
+                <small class="form-text text-muted danger"
+                    *ngIf="filterForm.get('updated_at').errors?.invalid_date && filterForm.get('updated_at').errors?.invalid_date?.text != DATEFORMAT  ">Date
+                    format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showProvider()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'doctor_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['doctor_ids']"
+                [showSelectFieldOnRefresh]="filterForm.get('doctor_ids').value" 
+                [lableName]="'Provider'" [bindlable]="'full_name'" [searchLableName]="'doctor_name'"
+                [showSelectAll] ="true"
+                [showGroupBy] = "false"
+                [bindId]="'id'" [apiPath]="EnumApiPath.providerApiPath"  
+                (valueChange)="selectionOnValueChange($event)" 
+                [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showRangeFromDateField()"
+                [ngClass]="{'focused': filterForm.get('bill_date_range1').value != '' && filterForm.get('bill_date_range1').value != null || (filterForm.get('bill_date_range1').errors?.invalid_date && filterForm.get('bill_date_range1').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="bill_date_range1">Bill Date From  (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('bill_date_range1').value"
+                [matDatepicker]="bill_date_range1" id="bill_date_range1" formControlName="bill_date_range1">
+                <span *ngIf="filterForm.get('bill_date_range1').value != '' && filterForm.get('bill_date_range1').value != null" (click)="filterForm?.get('bill_date_range1')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="bill_date_range1"></mat-datepicker-toggle>
+                <mat-datepicker #bill_date_range1></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('bill_date_range1').errors?.invalid_date && filterForm.get('bill_date_range1').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showRangeToDateField()"
+                [ngClass]="{'focused': filterForm.get('bill_date_range2').value != '' && filterForm.get('bill_date_range2').value != null || (filterForm.get('bill_date_range2').errors?.invalid_date && filterForm.get('bill_date_range2').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="bill_date_range2">Bill Date To (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('bill_date_range2').value"
+                [matDatepicker]="bill_date_range2" id="bill_date_range2" formControlName="bill_date_range2">
+                <span *ngIf="filterForm.get('bill_date_range2').value != '' && filterForm.get('bill_date_range2').value != null" (click)="filterForm?.get('bill_date_range2')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="bill_date_range2"></mat-datepicker-toggle>
+                <mat-datepicker #bill_date_range2></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('bill_date_range2').errors?.invalid_date && filterForm.get('bill_date_range2').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            
+<div class="form-group" *ngIf="fieldShow.showRangeFromDateField()"
+                [ngClass]="{'focused': filterForm.get('visit_date_range_1').value != '' && filterForm.get('visit_date_range_1').value != null || (filterForm.get('visit_date_range_1').errors?.invalid_date && filterForm.get('visit_date_range_1').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="visit_date_range_1">Visit Date From  (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('visit_date_range_1').value"
+                [matDatepicker]="visit_date_range_1" id="visit_date_range_1" formControlName="visit_date_range_1">
+                <span *ngIf="filterForm.get('visit_date_range_1').value != '' && filterForm.get('visit_date_range_1').value != null" (click)="filterForm?.get('visit_date_range_1')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="visit_date_range_1"></mat-datepicker-toggle>
+                <mat-datepicker #visit_date_range_1></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('visit_date_range_1').errors?.invalid_date && filterForm.get('visit_date_range_1').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showRangeToDateField()"
+                [ngClass]="{'focused': filterForm.get('visit_date_range_2').value != '' && filterForm.get('visit_date_range_2').value != null || (filterForm.get('visit_date_range_2').errors?.invalid_date && filterForm.get('visit_date_range_2').errors?.invalid_date?.text != DATEFORMAT) }">
+                <label class="form-label" for="visit_date_range_2">visit Date To (mm/dd/yyyy)</label>
+                <input matInput class="form-control form-input date-field" appInputDateMask [min]="min"
+                [appMaskDate]="filterForm.get('visit_date_range_2').value"
+                [matDatepicker]="visit_date_range_2" id="visit_date_range_2" formControlName="visit_date_range_2">
+                <span *ngIf="filterForm.get('visit_date_range_2').value != '' && filterForm.get('visit_date_range_2').value != null" (click)="filterForm?.get('visit_date_range_2')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle [for]="visit_date_range_2"></mat-datepicker-toggle>
+                <mat-datepicker #visit_date_range_2></mat-datepicker>
+                <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('visit_date_range_2').errors?.invalid_date && filterForm.get('visit_date_range_2').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showCreatedBillStatus()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'bill_status_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['bill_status_ids']"
+                [showSelectFieldOnRefresh]="filterForm.get('bill_status_ids').value" 
+                [lableName]="'Bill Status'" [bindlable]="'name'" 
+                [showSelectAll] ="true"
+                [showGroupBy] = "true"
+                [bindId]="'id'" [apiPath]="EnumApiPath.billStatusApiPath" [searchLableName]="'bill_status_ids'"
+                (valueChange)="selectionOnValueChange($event,'bill_status_ids')" 
+                [loadByDefaultApi] = "true"
+                (apiResponseReturned)="onInitialApiComplete($event)"
+                [initialSelectedSlugs]="['billed']"
+                [multiple]="true">
+            </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showCreatedBy()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'created_by_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['created_by_ids']"
+                    [showSelectFieldOnRefresh]="filterForm.get('created_by_ids').value" 
+                    [lableName]="'Created By'" [bindlable]="'full_name'" 
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false"
+                    [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"  
+                    (valueChange)="selectionOnValueChange($event,'created_by_ids')" 
+                    [multiple]="true">
+                 </app-ng-select-shareable> 
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showCreatedBy()">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'updated_by_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['updated_by_ids']"
+                    [showSelectFieldOnRefresh]="filterForm.get('updated_by_ids').value" 
+                    [lableName]="'Updated By'" 
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false" [bindlable]="'full_name'" 
+                    [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"  
+                    (valueChange)="selectionOnValueChange($event,'updated_by_ids')" 
+                    [multiple]="true">
+                 </app-ng-select-shareable> 
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showPatientNameFieldInSpeciality()  && fieldShow.showPatientCheckInBillSpeciality(billReciepientCheck.patient)">
+                <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'patient_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['patient_ids']"
+                    [showSelectFieldOnRefresh]="filterForm.get('patient_ids').value" 
+                    [mainApiPath]="requestServerpath.kios_api_path"
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false"
+                    [lableName]="'Patient Name'" [bindlable]="'full_name'" 
+                    [bindId]="'id'" [apiPath]="EnumApiPath.patientNameApiPath"  
+                    (valueChange)="selectionOnValueChange($event,'patient_ids')" 
+                    [multiple]="false">
+                </app-ng-select-shareable>  
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showInsurance()  && fieldShow.showInsuranceCheckInBillSpeciality(billReciepientCheck.insurance)">
+                <app-ng-select-shareable  
+                    [filterFieldName]="'insurance_ids'"
+                    [showSelectFieldList]="selectedMultipleFieldFiter['insurance_ids']"
+                    [showSelectFieldOnRefresh]="filterForm.get('insurance_ids').value" 
+                    [mainApiPath]="requestServerpath.billing_api_url"
+                    [lableName]="'Insurance Name'" [bindlable]="'insurance_name'" [searchLableName]="'insurance_name'"
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false"
+                    [bindId]="'id'" [apiPath]="EnumApiPath.insuranceApiPath"  
+                    (valueChange)="selectionOnValueChange($event,'insurance_ids')" 
+                    [multiple]="true">
+                </app-ng-select-shareable>
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showAttorney() && fieldShow.showAttorneyCheckInBillSpeciality(billReciepientCheck.attorney)">
+                <app-ng-select-shareable  [filterFieldName]="'firm_ids'"
+                    [lableName]="'Firm Name'" [bindlable]="'full_name'" [showSelectFieldList]=" selectedMultipleFieldFiter['firm_ids']"
+                    [showSelectFieldOnRefresh]="filterForm && filterForm.get('firm_ids').value ? filterForm.get('firm_ids').value : null"
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false"
+                    [bindId]="'id'" [apiPath]="EnumApiPath.firmurlApiPath"
+                    (valueChange)="selectionOnValueChange($event,'firm_ids')"
+                    [multiple]="false">
+                </app-ng-select-shareable> 
+            </div>
+            <div class="form-group" *ngIf="fieldShow.showEmployer()  && fieldShow.showEmployerCheckInBillSpeciality(billReciepientCheck.employer)">
+                <app-ng-select-shareable  [filterFieldName]="'employer_ids'"
+                    [lableName]="'Employer'" [bindlable]="'employer_name'" [showSelectFieldList]=" selectedMultipleFieldFiter['employer_ids']"
+                    [showSelectFieldOnRefresh]="filterForm && filterForm.get('employer_ids').value ? filterForm.get('employer_ids').value[0] : null"
+                    [bindId]="'id'" 
+                    [showSelectAll] ="true"
+                    [showGroupBy] = "false" [apiPath]="EnumApiPath.scheduleFeeEmployerApiPath"
+                    (valueChange)="selectionOnValueChange($event,'employer_ids')"
+                    [multiple]="false">
+             </app-ng-select-shareable> 
+            </div>
+        </div>
+        <div class="collape-btn">
+            <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button">
+                <span [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+            </button>
+        </div>
+        <div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+            <button class="btn btn-success" type="submit"> Filter </button>
+            <button class="btn btn-primary" (click)="resetFilter()" [disabled]="checkInputs()"> Reset</button>
+        </div>
+    </div>
+</form>
+
+                                                 <!--previous code -->
+<!-- <div class="search-filter">
+    <div class="search-filter-body">
+        <form class="form d-flex flex-wrap"  autocomplete="off" [formGroup]="filterForm" (ngSubmit)="doFilter()">
+            <div class="field-block">
+                <div class="row" [class.dynamic-collapse]="!isCollapsed">
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showBillIDFiled()">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'bill_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['bill_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('bill_ids').value" 
+						 [lableName]="'Bill ID'" [bindlable]="'label_id'" 
+						 [bindId]="'id'" [apiPath]="EnumApiPath.BillIdPath" [searchLableName]="'bill_no'"
+						 (valueChange)="selectionOnValueChange($event,'bill_ids')" 
+						 [multiple]="true"></app-ng-select-shareable> 
+					</div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showCaseIDFiled()">
+                    	<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'case_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['case_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('case_ids').value" 
+						 [lableName]="'Case ID'" [bindlable]="'id'" 
+						 [mainApiPath]="requestServerpath.kios_api_path"
+						 [bindId]="'id'" [apiPath]="EnumApiPath.NF2PomCaseIdApiPath" [searchLableName]="'id'"
+						 (valueChange)="selectionOnValueChange($event,'case_ids')" 
+						 [multiple]="true"></app-ng-select-shareable> 
+					</div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showPacketIDField()">
+                        <div class="form-group field"
+                        [ngClass]="{'focused': (filterForm.get('packet_ids').value != '' && filterForm.get('packet_ids').value != null) || filterService.filter_Field.getPacketId()}">
+                            <label class="form-label" for="packet_ids">Packet ID</label>
+                            <ng-select  id="packet_ids" multiple="true" bindLabel="id" formControlName="packet_ids" bindValue="id"  [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                            (open)="getFieldAction(true, 'packet_id')"
+							(close)="getFieldAction(false, 'packet_id')">
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value ng-label" *ngFor="let item of items | slice:0:1">
+                                        <span class="ng-value-label">{{item.id}}</span>
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                    </div>
+                                    <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 1">
+                                        <span class="ng-value-label border-0">+{{items.length - 1}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showSpecialtyField()">
+                    	<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['speciality_ids']"
+		 				[showSelectFieldOnRefresh]="filterForm.get('speciality_ids').value" 
+						[lableName]="'Specialty'" [bindlable]="'name'" 
+						[qulifierShown] = "true"
+		 				[bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+		 				(valueChange)="selectionOnValueChange($event,'speciality_ids')" 
+		 				[multiple]="true"></app-ng-select-shareable>  
+					</div>
+
+                    <div class="col-12 col-sm-6 col-lg-3" *ngIf="fieldShow.showPracticeLocationFilter()">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['facility_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('facility_ids').value" 
+						 [lableName]="'Practice - Location'" [bindlable]="'facility_full_name'" 
+						 [qulifierShown] = "true"
+						 [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+						 (valueChange)="selectionOnValueChange($event,'facility_ids')" 
+						 [multiple]="true"></app-ng-select-shareable> 
+					</div>
+
+                    <div class="col-12 col-sm-6 col-lg-3" *ngIf="fieldShow.showPracticeLocationIdFilter()">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_location_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['facility_location_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('facility_location_ids').value" 
+						 [lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" 
+						 [qulifierShown] = "true"
+						 [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+						 (valueChange)="selectionOnValueChange($event,'facility_location_ids')" 
+						 [multiple]="true"></app-ng-select-shareable> 
+                    </div>
+
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showPatientNameField()">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'patient_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['patient_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('patient_ids').value" 
+						 [mainApiPath]="requestServerpath.kios_api_path"
+						 [lableName]="'Patient Name'" [bindlable]="'full_name'" 
+						 [bindId]="'id'" [apiPath]="EnumApiPath.patientNameApiPath"  
+						 (valueChange)="selectionOnValueChange($event,'patient_ids')" 
+						 [multiple]="true"></app-ng-select-shareable>   
+					</div>
+
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showCaseTypeField()">
+                        <div class="form-group field"
+                        [ngClass]="{'focused': (filterForm.get('case_type_ids').value != '' && filterForm.get('case_type_ids').value != null) || filterService.filter_Field.getCaseTypesIds()}">
+                            <label class="form-label" for="case_type_ids">Case Type</label>
+                            <ng-select  id="case_type_ids" multiple="true" bindLabel="name" formControlName="case_type_ids" bindValue="id" [items]="caseTypeLists" [clearable]="true" [closeOnSelect]="false" [searchable]="true"
+                            (open)="getFieldAction(true, 'case_type_ids')"
+							(close)="getFieldAction(false, 'case_type_ids')">
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                <div class="ng-value ng-label" *ngFor="let item of items | slice:0:1">
+                                    <span class="ng-value-label">{{item.name}}</span>
+                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                </div>
+                                <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 1">
+                                    <span class="ng-value-label border-0">+{{items.length - 1}}</span>
+                                </div>
+                            </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showJobStatus()">
+                    	<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'job_status'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['job_status']"
+						 [showSelectFieldOnRefresh]="filterForm.get('job_status').value" 
+						 [lableName]="'Job Status'" 
+						 [bindId]="'id'" [apiPath]="EnumApiPath.billingJobStatusApiPath"  
+						 (valueChange)="selectionOnValueChange($event,'job_status')" 
+						 [multiple]="true"></app-ng-select-shareable> 
+					</div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showPomIDField()">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'pom_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['pom_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('pom_ids').value" 
+						 [lableName]="'POM ID'" [bindlable]="'id'"  [searchLableName]="'pom_id'"
+						 [bindId]="'id'" [apiPath]="EnumApiPath.NF2PomPomIDApiPath"  
+						 (valueChange)="selectionOnValueChange($event,'pom_ids')" 
+						 [multiple]="true"></app-ng-select-shareable> 
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showBillStatus()">
+                        <div class="form-group field"
+                        [ngClass]="{'focused': (filterForm.get('bill_recipient_type_ids').value != '' && filterForm.get('bill_recipient_type_ids').value != null) || filterService.filter_Field.getBillStatus()}">
+                            <label class="form-label" for="bill_recipient_type_ids">Bill Recipient</label>
+                            <ng-select  id="bill_recipient_type_ids" multiple="true" bindLabel="name"  [items]="lstBillstate" formControlName="bill_recipient_type_ids" bindValue="id"  [clearable]="true" [searchable]="true" [closeOnSelect]="false"
+                            (open)="getFieldAction(true, 'bill_status_id')"
+                            (change)="actionRecipient($event)"
+							(close)="getFieldAction(false, 'bill_status_id')">
+                                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                    <div class="ng-value ng-label" *ngFor="let item of items | slice:0:1">
+                                        <span class="ng-value-label">{{item.name}}</span>
+                                        <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                    </div>
+                                    <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 1">
+                                        <span class="ng-value-label border-0">+{{items.length - 1}}</span>
+                                    </div>
+                                </ng-template>
+                            </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showCreatedAtField()">
+                        <div class="form-group field"
+                        [ngClass]="{'focused': filterForm.get('created_at').value != '' && filterForm.get('created_at').value != null || (filterForm.get('created_at').errors?.invalid_date && filterForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT) }">
+                            <label class="form-label" for="created_at">Created At (mm/dd/yyyy)</label>
+                            <input matInput class="form-control form-input date-field" appInputDateMask [matDatepicker]="created_at" id="created_at" formControlName="created_at">
+                            <span *ngIf="filterForm.get('created_at').value != '' && filterForm.get('created_at').value != null" (click)="filterForm?.get('created_at')?.reset()" class="icon-plus date-cross-icon"></span>
+                            <mat-datepicker-toggle [for]="created_at"></mat-datepicker-toggle>
+                            <mat-datepicker #created_at></mat-datepicker>
+                            <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('created_at').errors?.invalid_date && filterForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+                        </div>
+                    </div>
+                  
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showBillDateField()">
+                        <div class="form-group field"
+                        [ngClass]="{'focused': filterForm.get('bill_date').value != '' && filterForm.get('bill_date').value != null || (filterForm.get('bill_date').errors?.invalid_date && filterForm.get('created_date').errors?.invalid_date?.text != DATEFORMAT) }">
+                            <label class="form-label" for="bill_date">Bill Date (mm/dd/yyyy)</label>
+                            <input matInput class="form-control form-input date-field" appInputDateMask [matDatepicker]="bill_date" id="bill_date" formControlName="bill_date">
+                            <span *ngIf="filterForm.get('bill_date').value != '' && filterForm.get('bill_date').value != null" (click)="filterForm?.get('bill_date')?.reset()" class="icon-plus date-cross-icon"></span>
+                            <mat-datepicker-toggle [for]="bill_date"></mat-datepicker-toggle>
+                            <mat-datepicker #bill_date></mat-datepicker>
+                            <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('bill_date').errors?.invalid_date && filterForm.get('bill_date').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showScamPomDateField()">
+                        <div class="form-group field"
+                        [ngClass]="{'focused': filterForm.get('scan_upload_date').value != '' && filterForm.get('scan_upload_date').value != null || (filterForm.get('scan_upload_date').errors?.invalid_date && filterForm.get('scan_upload_date').errors?.invalid_date?.text != DATEFORMAT) }">
+                            <label class="form-label" for="scan_upload_date">Received Pom Date (mm/dd/yyyy)</label>
+                            <input matInput class="form-control form-input date-field" appInputDateMask [matDatepicker]="scan_upload_date" id="scan_upload_date" formControlName="scan_upload_date">
+                            <span *ngIf="filterForm.get('scan_upload_date').value != '' && filterForm.get('scan_upload_date').value != null" (click)="filterForm?.get('scan_upload_date')?.reset()" class="icon-plus date-cross-icon"></span>
+                            <mat-datepicker-toggle [for]="scan_upload_date"></mat-datepicker-toggle>
+                            <mat-datepicker #scan_upload_date></mat-datepicker>
+                            <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('scan_upload_date').errors?.invalid_date && filterForm.get('scan_upload_date').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+                        </div>
+                    </div>
+					<div class="col-12 col-sm-6 col-lg-3"  *ngIf="fieldShow.showProvider()">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'doctor_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['doctor_ids']"
+						[showSelectFieldOnRefresh]="filterForm.get('doctor_ids').value" 
+						[lableName]="'Provider'" [bindlable]="'full_name'" [searchLableName]="'doctor_name'"
+						[bindId]="'id'" [apiPath]="EnumApiPath.providerApiPath"  
+						(valueChange)="selectionOnValueChange($event)" 
+						[multiple]="true"></app-ng-select-shareable> 
+					</div>
+
+					<div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showCreatedBillStatus()">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'bill_status_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['bill_status_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('bill_status_ids').value" 
+						 [lableName]="'Bill Status'" [bindlable]="'name'" 
+						 [bindId]="'id'" [apiPath]="EnumApiPath.billStatusApiPath" [searchLableName]="'bill_status_ids'"
+						 (valueChange)="selectionOnValueChange($event,'bill_status_ids')" 
+						 [multiple]="true"></app-ng-select-shareable> 
+					</div>
+
+					<div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showRangeFromDateField()">
+                        <div class="form-group field"
+                        [ngClass]="{'focused': filterForm.get('bill_date_range1').value != '' && filterForm.get('bill_date_range1').value != null || (filterForm.get('bill_date_range1').errors?.invalid_date && filterForm.get('bill_date_range1').errors?.invalid_date?.text != DATEFORMAT) }">
+                            <label class="form-label" for="bill_date_range1">Bill Date From  (mm/dd/yyyy)</label>
+                            <input matInput class="form-control form-input date-field" appInputDateMask [matDatepicker]="bill_date_range1" id="bill_date_range1" formControlName="bill_date_range1">
+                            <span *ngIf="filterForm.get('bill_date_range1').value != '' && filterForm.get('bill_date_range1').value != null" (click)="filterForm?.get('bill_date_range1')?.reset()" class="icon-plus date-cross-icon"></span>
+                            <mat-datepicker-toggle [for]="bill_date_range1"></mat-datepicker-toggle>
+                            <mat-datepicker #bill_date_range1></mat-datepicker>
+                            <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('bill_date_range1').errors?.invalid_date && filterForm.get('bill_date_range1').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+                        </div>
+                    </div>
+
+					<div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showRangeToDateField()">
+                        <div class="form-group field"
+                        [ngClass]="{'focused': filterForm.get('bill_date_range2').value != '' && filterForm.get('bill_date_range2').value != null || (filterForm.get('bill_date_range2').errors?.invalid_date && filterForm.get('bill_date_range2').errors?.invalid_date?.text != DATEFORMAT) }">
+                            <label class="form-label" for="bill_date_range2">Bill Date To (mm/dd/yyyy)</label>
+                            <input matInput class="form-control form-input date-field" appInputDateMask [matDatepicker]="bill_date_range2" id="bill_date_range2" formControlName="bill_date_range2">
+                            <span *ngIf="filterForm.get('bill_date_range2').value != '' && filterForm.get('bill_date_range2').value != null" (click)="filterForm?.get('bill_date_range2')?.reset()" class="icon-plus date-cross-icon"></span>
+                            <mat-datepicker-toggle [for]="bill_date_range2"></mat-datepicker-toggle>
+                            <mat-datepicker #bill_date_range2></mat-datepicker>
+                            <small class="form-text text-muted danger text-start" *ngIf="filterForm.get('bill_date_range2').errors?.invalid_date && filterForm.get('bill_date_range2').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+                        </div>
+                    </div>
+
+					<div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showCreatedBy()">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'created_by_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['created_by_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('created_by_ids').value" 
+						 [lableName]="'Created By'" [bindlable]="'full_name'" 
+						 [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"  
+						 (valueChange)="selectionOnValueChange($event,'created_by_ids')" 
+						 [multiple]="true"></app-ng-select-shareable> 
+					</div>
+					
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showPatientNameFieldInSpeciality()  && fieldShow.showPatientCheckInBillSpeciality(billReciepientCheck.patient)">
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'patient_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['patient_ids']"
+						 [showSelectFieldOnRefresh]="filterForm.get('patient_ids').value" 
+						 [mainApiPath]="requestServerpath.kios_api_path"
+						 [lableName]="'Patient Name'" [bindlable]="'full_name'" 
+						 [bindId]="'id'" [apiPath]="EnumApiPath.patientNameApiPath"  
+						 (valueChange)="selectionOnValueChange($event,'patient_ids')" 
+						 [multiple]="false"></app-ng-select-shareable>   
+					</div>
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showInsurance()  && fieldShow.showInsuranceCheckInBillSpeciality(billReciepientCheck.insurance)" >
+						<app-ng-select-shareable [events]="eventsSubject.asObservable()" 
+						[filterFieldName]="'insurance_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['insurance_ids']"
+						[showSelectFieldOnRefresh]="filterForm.get('insurance_ids').value" 
+						[mainApiPath]="requestServerpath.billing_api_url"
+						[lableName]="'Insurance Name'" [bindlable]="'insurance_name'" [searchLableName]="'doctor_name'"
+						[bindId]="'id'" [apiPath]="EnumApiPath.insuranceApiPath"  
+						(valueChange)="selectionOnValueChange($event,'insurance_ids')" 
+						[multiple]="true"></app-ng-select-shareable>  
+					</div>
+
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showAttorney() && fieldShow.showAttorneyCheckInBillSpeciality(billReciepientCheck.attorney) ">
+						<app-ng-select-shareable  [filterFieldName]="'firm_ids'"
+						[lableName]="'Attorney'" [bindlable]="'full_name'" [showSelectFieldList]=" selectedMultipleFieldFiter['firm_ids']"
+						[showSelectFieldOnRefresh]="filterForm && filterForm.get('firm_ids').value ? filterForm.get('firm_ids').value : null"
+						[bindId]="'id'" [apiPath]="EnumApiPath.attorneyApiPath"
+						(valueChange)="selectionOnValueChange($event,'firm_ids')"
+						[multiple]="false"></app-ng-select-shareable> 
+					</div>
+
+                    <div class="col-sm-6 col-md-4 col-xl-3" *ngIf="fieldShow.showEmployer()  && fieldShow.showEmployerCheckInBillSpeciality(billReciepientCheck.employer)">
+						<app-ng-select-shareable  [filterFieldName]="'employer_ids'"
+						[lableName]="'Employer'" [bindlable]="'employer_name'" [showSelectFieldList]=" selectedMultipleFieldFiter['employer_ids']"
+						[showSelectFieldOnRefresh]="filterForm && filterForm.get('employer_ids').value ? filterForm.get('employer_ids').value[0] : null"
+						[bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeEmployerApiPath"
+						(valueChange)="selectionOnValueChange($event,'employer_ids')"
+						[multiple]="false"></app-ng-select-shareable> 
+					</div>
+                    <div class="col-md-12 text-center search-filter-btn float-left mb-3">
+                        <button class="btn btn-success mt-0 me-3" type="submit"> Filter </button>
+                        <button class="btn btn-primary mt-0" (click)="resetFilter()" [disabled]="checkInputs()"> Reset</button>
+                    </div>
+                </div>
+            </div>
+            <div class="colps-btn-block">
+                <button class="btn plus-btn position-relative float-right mt-0" style="right: 0;" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button">
+                    <span [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div> -->

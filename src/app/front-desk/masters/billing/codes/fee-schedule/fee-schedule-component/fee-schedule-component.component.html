@@ -1,0 +1,537 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_view)">
+    <div class="d-block text-end">
+      <a href="javascript:void(0)" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_add)"
+        (click)="addFeeSchedule()" class="btn btn-default round-btn ">
+        <span class="icon-plus-circle"></span> Add New 
+      </a>
+    </div>
+    <form class="form" autocomplete="off" (keyup.enter)="$event.preventDefault();onFilterSubmit()"
+    *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_filter)" [formGroup]="filterForm"
+    (ngSubmit)="onFilterSubmit()">
+    <div class="ng-check">
+      <div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+        <div class="filter-grid-container">
+          <div class="form-group">
+            <label class="form-label" for="code_name">Code Name</label>
+            <input type="text" formControlName="code_name" id="code_name" class="form-control form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="description">Code Description</label>
+            <input type="text" formControlName="description" id="description" class="form-control form-input">
+          </div>
+          <div class="form-group">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'fee_type_id'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['fee_type_id']"
+              [showSelectFieldOnRefresh]="filterForm.get('fee_type_id').value" 
+              [lableName]="'Fee Type'" [bindlable]="'name'" 
+              [showSelectAll] ="true"
+              [showGroupBy] = "true" [ngSelectShow]="true"
+              [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeTypeApiPath"  
+              (valueChange)="selectionOnValueChange($event,'fee_type_id')" 
+              [multiple]="true">
+            </app-ng-select-shareable>
+          </div>
+          <div class="form-group currency">
+            <label class="form-label" for="base_price">Base Price</label>
+            <input type="text" id="base_price" class="form-control form-input" formControlName="base_price" >
+            <i class="fa fa-dollar-sign"></i>
+          </div>
+          <div class="form-group collapse-basic" id="collapseBasic" [class.collapse-overflow]="isCollapsed"
+            [collapse]="!isCollapsed" [isAnimated]="true">
+            <label class="form-label" for="Units">Units</label>
+            <input type="text" id="Units" formControlName="units" class="form-control form-input">
+          </div>
+          <div class="form-group">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'modifier_id'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['modifier_id']"
+              [showSelectFieldOnRefresh]="filterForm.get('modifier_id').value" 
+              [lableName]="'Modifiers'" [bindlable]="'NameDescription'" 
+              [showSelectAll] ="true"
+              [showGroupBy] = "false" [ngSelectShow]="true"
+              [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeModifierApiPath"  
+              (valueChange)="selectionOnValueChange($event,'modifier_id')" 
+              [multiple]="true">
+            </app-ng-select-shareable>   
+          </div>
+          <div class="form-group">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'provider_id'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['provider_id']"
+              [showSelectFieldOnRefresh]="filterForm.get('provider_id').value" 
+              [lableName]="'Provider Name'" [bindlable]="'full_name'" [searchLableName]="'doctor_name'"
+              [bindId]="'id'" [apiPath]="EnumApiPath.providerApiPath" 
+              [showSelectAll] ="true"
+              [showGroupBy] = "false"  [ngSelectShow]="true"
+              (valueChange)="selectionOnValueChange($event,'provider_id')" 
+              [multiple]="true">
+            </app-ng-select-shareable> 
+          </div>
+          <div class="form-group">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_id'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['speciality_id']"
+              [showSelectFieldOnRefresh]="filterForm.get('speciality_id').value" 
+              [lableName]="'Specialty'" [bindlable]="'name'" [ngSelectShow]="true"
+              [qulifierShown] = "true"
+              [showSelectAll] ="true"
+              [showGroupBy] = "true"
+              [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+              (valueChange)="selectionOnValueChange($event,'speciality_id')" 
+              [multiple]="true">
+            </app-ng-select-shareable>
+          </div>
+          <div class="form-group">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_location_id'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['facility_location_id']"
+              [showSelectFieldOnRefresh]="filterForm.get('facility_location_id').value" 
+              [lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" 
+              [qulifierShown] = "true" [ngSelectShow]="true"
+              [showSelectAll] ="true"
+              [showGroupBy] = "true"
+              [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+              (valueChange)="selectionOnValueChange($event,'facility_location_id')" 
+              [multiple]="true">
+            </app-ng-select-shareable> 
+          </div>
+          <div class="form-group">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'employer_name'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['employer_name']"
+              [showSelectFieldOnRefresh]="filterForm.get('employer_name').value" 
+              [lableName]="'Employer'" [bindlable]="'employer_name'"  [ngSelectShow]="true"
+              [showSelectAll] ="true"
+              [showGroupBy] = "false"
+              [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeEmployerApiPath"  
+              (valueChange)="selectionOnValueChange($event,'employer_name')" 
+              [multiple]="true">
+            </app-ng-select-shareable> 
+          </div>
+          <div class="form-group">
+                    <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'insurance_ids'"
+                      [showSelectFieldList]="selectedMultipleFieldFiter['insurance_ids']"
+                      [showSelectFieldOnRefresh]="filterForm.get('insurance_ids').value" 
+                      [lableName]="'Insurance'" [bindlable]="'insurance_name'"  [ngSelectShow]="true"
+                      [showSelectAll] ="true"
+                      [showGroupBy] = "false"
+                      [bindId]="'id'" [apiPath]="EnumApiPath.insuranceBillsApiPath"
+                      (valueChange)="selectionOnValueChange($event,'insurance_ids')" 
+                      [multiple]="true">
+                    </app-ng-select-shareable>   
+                  </div>
+                  <div class="form-group">
+                    <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'case_type_ids'"
+                      [showSelectFieldList]="selectedMultipleFieldFiter['case_type_ids']"
+                      [showSelectFieldOnRefresh]="filterForm.get('case_type_ids').value" 
+                      [lableName]="'Case Type'" [bindlable]="'NameDescription'"  [ngSelectShow]="true"
+                      [showSelectAll] ="true"
+                      [showGroupBy] = "true"
+                      [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeCaseTypeApiPath"  
+                      (valueChange)="selectionOnValueChange($event,'case_type_ids')" 
+                      [multiple]="true">
+                    </app-ng-select-shareable>   
+                  </div>
+                  <div class="form-group">
+                    <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'visit_type_ids'"
+                      [showSelectFieldList]="selectedMultipleFieldFiter['visit_type_ids']"
+                      [showSelectFieldOnRefresh]="filterForm.get('visit_type_ids').value" 
+                      [lableName]="'Visit Type'" [bindlable]="'NameDescription'"  [ngSelectShow]="true"
+                      [showSelectAll] ="true"
+                      [showGroupBy] = "true"
+                      [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeVisitTypeApiPath"  
+                      (valueChange)="selectionOnValueChange($event,'visit_type_ids')" 
+                      [multiple]="true">
+                    </app-ng-select-shareable>   
+                  </div>
+          
+        </div>
+        <div class="collape-btn">
+          <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+          [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+          [class.btn-success]="isCollapsed" type="button">
+              <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+          </button>
+      </div>
+      <div class="search-filter-btn-group" [class.btn-group-mrgin-top]="isCollapsed">
+        <button class="btn btn-success" type="submit"> Filter </button>
+        <button class="btn btn-primary" (click)="resetForm()" type="button" [disabled]="checkInputs()"> Reset</button>
+      </div>
+      </div>
+    </div>
+    </form>
+</div>
+<!--old code-->
+  <!-- <form autocomplete="off" (keyup.enter)="$event.preventDefault();onFilterSubmit()"
+    *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_filter)" [formGroup]="filterForm"
+    (ngSubmit)="onFilterSubmit()">
+    <div class="form">
+      <div class="search-filter-body">
+        <div class="row px-2">
+          <div class="field-block">
+            <div class="row">
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="form-group field">
+                  <label class="form-label" for="code_name">Code Name</label>
+                  <input type="text" formControlName="code_name" id="code_name" class="form-control form-input">
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="form-group field">
+                  <label class="form-label" for="description">Code Description</label>
+                  <input type="text" formControlName="description" id="description" class="form-control form-input">
+                </div>
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-3">
+				<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'fee_type_id'"
+				[showSelectFieldList]="selectedMultipleFieldFiter['fee_type_id']"
+				 [showSelectFieldOnRefresh]="filterForm.get('fee_type_id').value" 
+				 [lableName]="'Fee Type'" [bindlable]="'name'" 
+				 [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeTypeApiPath"  
+				 (valueChange)="selectionOnValueChange($event,'fee_type_id')" 
+				 [multiple]="false"></app-ng-select-shareable>    
+			</div>
+              <div class="col-12 col-sm-6 col-lg-3">
+                <div class="form-group currency field">
+                  <label class="form-label" for="base_price">Base Price</label>
+                  <input type="text" id="base_price" class="form-control form-input" formControlName="base_price" appOnlyNumeric >
+                  <i class="fa fa-dollar-sign"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="collapse-basic" id="collapseBasic" [class.collapse-overflow]="isCollapsed"
+              [collapse]="!isCollapsed" [isAnimated]="true">
+              
+              <div class="row">
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <div class="form-group field">
+                    <label class="form-label" for="Units">Units</label>
+                    <input type="text" id="Units" formControlName="units" class="form-control form-input">
+                  </div>
+                </div>
+
+              
+
+                <div class="col-12 col-sm-6 col-lg-3">
+				  <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'modifier_id'"
+				  [showSelectFieldList]="selectedMultipleFieldFiter['modifier_id']"
+				   [showSelectFieldOnRefresh]="filterForm.get('modifier_id').value" 
+				   [lableName]="'Modifiers'" [bindlable]="'NameDescription'" 
+				   [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeModifierApiPath"  
+				   (valueChange)="selectionOnValueChange($event,'modifier_id')" 
+				   [multiple]="false"></app-ng-select-shareable>   
+				</div>
+              
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'provider_id'"
+				  [showSelectFieldList]="selectedMultipleFieldFiter['provider_id']"
+				   [showSelectFieldOnRefresh]="filterForm.get('provider_id').value" 
+				   [lableName]="'Provider Name'" [bindlable]="'full_name'" [searchLableName]="'doctor_name'"
+				   [bindId]="'id'" [apiPath]="EnumApiPath.providerApiPath"  
+				   (valueChange)="selectionOnValueChange($event,'provider_id')" 
+				   [multiple]="false"></app-ng-select-shareable> 
+				</div>
+                <div class="col-12 col-sm-6 col-lg-3">
+				  <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_id'"
+				  [showSelectFieldList]="selectedMultipleFieldFiter['speciality_id']"
+				   [showSelectFieldOnRefresh]="filterForm.get('speciality_id').value" 
+				   [lableName]="'Specialty'" [bindlable]="'name'"
+				   [qulifierShown] = "true"
+				   [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+				   (valueChange)="selectionOnValueChange($event,'speciality_id')" 
+				   [multiple]="false"></app-ng-select-shareable> 
+				</div>
+                <div class="col-12 col-sm-6 col-lg-3 float-left">
+				  <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_location_id'"
+				  [showSelectFieldList]="selectedMultipleFieldFiter['facility_location_id']"
+				   [showSelectFieldOnRefresh]="filterForm.get('facility_location_id').value" 
+				   [lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" 
+				   [qulifierShown] = "true"
+				   [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+				   (valueChange)="selectionOnValueChange($event,'facility_location_id')" 
+				   [multiple]="false"></app-ng-select-shareable> 
+				</div>
+               
+                <div class="col-12 col-sm-6 col-lg-3 float-left">
+				  <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'employer_name'"
+				  [showSelectFieldList]="selectedMultipleFieldFiter['employer_name']"
+				   [showSelectFieldOnRefresh]="filterForm.get('employer_name').value" 
+				   [lableName]="'Employer'" [bindlable]="'employer_name'" 
+				   [bindId]="'employer_name'" [apiPath]="EnumApiPath.scheduleFeeEmployerApiPath"  
+				   (valueChange)="selectionOnValueChange($event,'employer_name')" 
+				   [multiple]="false"></app-ng-select-shareable> 
+                </div>
+               
+
+                <div class="col-12 float-left" *ngIf="!isCollapsed">
+                  <button class="btn btn-success mt-0 me-3" type="submit" hidden> Filter </button>
+                </div>
+
+                <div class="col-md-12 text-center search-filter-btn float-left mb-3">
+                  <button class="btn btn-success mt-0 me-3" type="submit"> Filter </button>
+                  <button class="btn btn-primary mt-0" (click)="resetForm()" type="button" [disabled]="checkInputs()"> Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="colps-btn-block">
+            <button class="btn plus-btn float-right mt-0" (click)="isCollapsed = !isCollapsed"
+              [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+              [class.btn-success]="isCollapsed" type="button"><span class="" [class.icon-plus]="!isCollapsed"
+                [class.icon-minus]="isCollapsed"></span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form> -->
+
+
+<div class="card data-table p-0 mt-2 border-0"
+  *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_view)">
+  <div class="row">
+    <div class="col-sm-5 edit-block text-start">
+      <div class="form-group field option-field mb-2 d-inline-block">
+        <ul>
+          <li>Show</li>
+          <li>
+            <select (change)="setPage($event)" class="custom-select" [(ngModel)]="page.size">
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </li>
+          <li>Entries</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-sm-7 text-end mt-0 mt-sm-2 mb-2">
+      <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+        Customize Columns
+      </button>
+
+      <!-- <a *ngIf=" selection.selected.length > 0" class="btn btn-success round-btn" href="javascript:void(0)">
+        <span class="icon-create-task me-1"></span> Create Task <span
+          *ngIf="selection.selected.length>0">[{{selection.selected.length}}]</span>
+      </a> -->
+      <!-- <a *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_delete) && selection.selected.length > 0"
+        class="btn btn-default round-btn ms-2" href="javascript:void(0)" (click)="deleteMultipleFiles()">
+        <span class="icon-remove me-1"></span> Delete <span
+          *ngIf="selection.selected.length>0">[{{selection.selected.length}}]</span>
+      </a> -->
+    </div>
+  </div>
+  <!--data table starts from here -->
+  <ngx-datatable class="bootstrap" #feeScheduleList [rows]="lstFeeSchedule" [columnMode]='"force"'
+    [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [externalPaging]="true" [count]="page.totalElements"
+    [offset]="page.pageNumber - 1" [limit]="page.size" (page)="onPageChange($event)" [scrollbarH]="true">
+
+    <ngx-datatable-column name="Code Name" prop="code_id" [sortable]="false" [width]="120" [minWidth]="120"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" [ngbTooltip]="row.code?.name" container="body">
+          {{row.code?.name}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column [sortable]='false' prop="description" name="Code Description" prop="" [width]="120" [minWidth]="120"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" [ngbTooltip]="row.code?.description" container="body">
+          {{row.code?.description}}
+        </div>
+
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Fee type" [sortable]="false" prop="fee_type"  [minWidth]="60"  [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.fee_type?row.fee_type?.name:'All'}}" container="body">
+          {{row.fee_type?row.fee_type?.name:'All'}}
+      </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Base price" [sortable]="false" prop="base_price" [width]="80" [minWidth]="80"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <!-- <div *ngIf="row.modifier && row.modifier.length" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          [ngbTooltip]="modifierToolTip(row.modifier)">
+          <span *ngFor="let i of row.modifier;let x = index">
+
+
+            <span *ngIf="x > 0 && i.name">,</span> {{i.name}}
+          </span>
+        </div>
+        <div *ngIf="!row.modifier || !row.modifier.length">All</div> -->
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{(row?.base_price || 0 )| currency}}" container="body">
+		      {{(row?.base_price || 0 )| currency}}
+        </div>
+        <!-- {{row?.base_price}} -->
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Units" [sortable]="false" prop="units" [minWidth]="60" [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.units}}" container="body">{{row.units}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column [sortable]='false' name="Modifiers" [width]="80" [minWidth]="80"  prop="modifier" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div *ngIf="row.modifier && row.modifier.length" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          [ngbTooltip]="modifierToolTip(row.modifier)" container="body">
+          <span *ngFor="let i of row.modifier;let x = index">
+            <span *ngIf="x > 0 && i.name">,</span> {{ i && i.name ? i.name : ''}}
+          </span>
+        </div>
+        <div *ngIf="!row.modifier || !row.modifier.length">All</div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Provider Name" [sortable]="false" prop="provider" [width]="100" [minWidth]="100"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="tooltip-outer" *ngIf="row.provider && row.provider.length" tooltipClass="table-custom-tooltip"
+          [ngbTooltip]="reduceFunc(row.provider)" container="body">
+          <span *ngFor="let i of row.provider;let x=index">
+            <span *ngIf="x > 0 && i.first_name">,</span>
+            {{i.first_name + ' ' +  (i.middle_name?i.middle_name:'') + ' ' + i.last_name + '' + (i.email? '('+i.email +')':'')}}
+          </span>
+        </div>
+        <div *ngIf="!row.provider || !row.provider.length">
+          All
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column [sortable]='false' name="Specialty" prop="speciality" [width]="70" [minWidth]="70"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+
+        <div *ngIf="row.speciality && row.speciality.length" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          [ngbTooltip]="specialityTooltip(row.speciality)" container="body">
+
+          <span *ngFor="let i of row.speciality;let x=index">
+            <span *ngIf="x > 0 && i.name">,</span> {{i.qualifier}}
+          </span>
+        </div>
+        <div *ngIf="!row.speciality || row.speciality.length == 0">
+          All
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Practice-location" [sortable]="false" prop="speciality" [width]="120" [minWidth]="120"   [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div *ngIf="row.facilities_locations && row.facilities_locations.length" class="tooltip-outer"
+          tooltipClass="table-custom-tooltip" [ngbTooltip]="practiceTooltip(row.facilities_locations )" container="body">
+
+          <span *ngFor="let i of row.facilities_locations ;let x=index">
+            <span *ngIf="x > 0 && i.facility_full_name">,</span> {{i?.qualifier}}
+          </span>
+        </div>
+        <div *ngIf="!row.facilities_locations || row.facilities_locations.length == 0"> All</div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column [sortable]='false' name="Employer" prop="employer" [width]="80" [minWidth]="80"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ row.employer?row.employer?.employer_name:'All'}}" container="body">
+          {{ row.employer?row.employer?.employer_name:'All'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [sortable]='false' name="Insurance" prop="insurance" [width]="80" [minWidth]="80"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.insurance ? row?.insurance?.insurance_name : 'All'}}" container="body">
+          {{row?.insurance ? row?.insurance?.insurance_name : 'All'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+      
+          <ngx-datatable-column [sortable]='false' name="Case Type" prop="Case Type" [width]="80" [minWidth]="80"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div *ngIf="row?.case_type && row?.case_type?.length" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                [ngbTooltip]="caseTypeTooltip(row?.case_type)" container="body">
+                <span *ngFor="let i of row?.case_type;let x = index">
+                  <span *ngIf="x > 0 && i?.name">,</span> {{i?.name}}
+                </span>
+              </div>
+              <div *ngIf="!row?.case_type || row?.case_type?.length == 0">
+                All
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+      
+          <ngx-datatable-column [sortable]='false' name="Visit Type" prop="Visit Type" [width]="80" [minWidth]="80"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <div *ngIf="row?.visit_type && row?.visit_type?.length" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                [ngbTooltip]="visitTypeTooltip(row?.visit_type)" container="body">
+                <span *ngFor="let i of row?.visit_type;let x = index">
+                  <span *ngIf="x > 0 && i?.name">,</span> {{i?.name}}
+                </span>
+              </div>
+              <div *ngIf="!row?.visit_type || row?.visit_type?.length == 0">
+                All
+              </div>
+            </ng-template>
+          </ngx-datatable-column>	 
+	
+    <ngx-datatable-column name="Actions" [width]="100" [minWidth]="100"  [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-header-template name="Actions">
+        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_edit)" disabled
+          (change)="$event ? masterToggle($event) : null"
+          [checked]="selection.selected.length == lstFeeSchedule.length && selection.selected.length>0">
+        </mat-checkbox>
+        Actions
+
+      </ng-template>
+
+      <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_edit)"
+          (click)="$event.stopPropagation()" disabled (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+        <button *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_edit)" class="edit-hov mx-1"
+          data-original-title="Edit" title="Edit" (click)="updateFeeSchedule(row)" ngbTooltip="Edit" container="body" role="button"
+          data-bs-toggle="modal" data-target="#edit-ICD-Code">
+          <i class="icon-pencil"></i>
+        </button>
+        <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="feeScheduleHistoryStats(row)">
+          <i class="fa fa-history"></i>
+        </a>
+
+        <!-- <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button">
+          <span class="icon-create-task"></span>
+        </a> -->
+
+        <!-- <a *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_delete)" class="remove-hov mx-1"
+        ngbTooltip="Delete" (click)="deleteFeeSchedule(row)" href="javascript:void(0)" role="button"><i
+            class="icon-remove"></i>
+        </a> -->
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

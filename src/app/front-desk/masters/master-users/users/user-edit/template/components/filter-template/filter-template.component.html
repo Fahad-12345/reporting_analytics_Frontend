@@ -1,0 +1,126 @@
+<form class="form" autocomplete="off" [formGroup]="templateFilterForm">
+	<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+		<div class="filter-grid-container">
+			<div class="form-group">
+				<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_location_id'"
+				[showSelectFieldOnRefresh]="templateFilterForm.get('facility_location_id').value" 
+				[lableName]="'Practice - Location'" [bindlable]="'facility_full_name'" 
+				[qulifierShown] = "true" [ngSelectShow]="true"
+				[bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath" [conditionalExtraApiParams]="conditionalExtraApiParams"  
+				(valueChange)="selectionOnValueChange($event,'facility_location_id')" 
+				[multiple]="true"></app-ng-select-shareable> 
+			</div>
+			<div class="form-group">
+				<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'specialty_id'"
+				[showSelectFieldOnRefresh]="templateFilterForm.get('specialty_id').value" 
+				[lableName]="'Specialty'" [bindlable]="'name'" 
+				[qulifierShown] = "true" [ngSelectShow]="true"
+				[bindId]="'id'" [apiPath]="EnumApiPath.specialityApi" [conditionalExtraApiParams]="conditionalExtraApiParams" 
+				(valueChange)="selectionOnValueChange($event,'specialty_id')" 
+				[multiple]="true"></app-ng-select-shareable>
+			</div>
+			<div class="form-group">
+				<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'visit_type_id'"
+				[showSelectFieldOnRefresh]="templateFilterForm.get('visit_type_id').value" 
+				[lableName]="'Visit Type'" [bindlable]="'name'" 
+				[qulifierShown] = "true" [ngSelectShow]="true"
+				[bindId]="'id'" [apiPath]="visitTypeUrls.VisitType_list_GET"  
+				(valueChange)="selectionOnValueChange($event,'visit_type_id')" 
+				[multiple]="true"></app-ng-select-shareable>
+			</div>
+			<div class="form-group">
+				<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'case_type_id'"
+				[showSelectFieldOnRefresh]="templateFilterForm.get('case_type_id').value" 
+				[lableName]="'Case Type'" [bindlable]="'name'"  [ngSelectShow]="true"
+				[bindId]="'id'" [apiPath]="CaseTypeUrls.CaseType_list_GET"  
+				(valueChange)="selectionOnValueChange($event,'case_type_id')" 
+				[multiple]="true"></app-ng-select-shareable>
+			</div>
+			<div class="form-group">
+				<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'template_name'"
+				[showSelectFieldOnRefresh]="templateFilterForm.get('template_name').value" 
+				[lableName]="'Template'" [bindlable]="'name'" [ngSelectShow]="true"
+				[bindId]="'name'" [apiPath]="templateUrls"  [conditionalExtraApiParams]="conditionalExtraApiParams"
+				(valueChange)="selectionOnValueChange($event,'template_name')" 
+				[multiple]="false"></app-ng-select-shareable>
+			</div>
+		</div>
+		<div class="collape-btn">
+			<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+			[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+			[class.btn-success]="isCollapsed" type="button">
+				<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+			</button>
+		</div>
+		<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+			<button class="btn btn-success" (click)="applyFilter();">Filter</button>
+			<button class="btn btn-primary" (click)="resetFilter()">Reset</button>
+		</div>
+	</div>
+</form>
+<!-- <form autocomplete="off" [formGroup]="templateFilterForm">
+<div class="form">
+  <div class="search-filter-body">
+	<div class="row px-2">
+	  <div class="field-block">
+		<div class="row pb-1" [class.dynamic-collapse]="!isCollapsed">
+		  <div class="col-12 col-sm-6 col-lg-3">
+			<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_location_id'"
+		 [showSelectFieldOnRefresh]="templateFilterForm.get('facility_location_id').value" 
+		 [lableName]="'Practice - Location'" [bindlable]="'facility_full_name'" 
+		 [qulifierShown] = "true"
+		 [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath" [conditionalExtraApiParams]="conditionalExtraApiParams"  
+		 (valueChange)="selectionOnValueChange($event,'facility_location_id')" 
+		 [multiple]="true"></app-ng-select-shareable> 
+		  </div>
+		  <div class="col-12 col-sm-6 col-lg-3">
+			<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'specialty_id'"
+			[showSelectFieldOnRefresh]="templateFilterForm.get('specialty_id').value" 
+			[lableName]="'Specialty'" [bindlable]="'name'" 
+			[qulifierShown] = "true"
+			[bindId]="'id'" [apiPath]="EnumApiPath.specialityApi" [conditionalExtraApiParams]="conditionalExtraApiParams" 
+			(valueChange)="selectionOnValueChange($event,'specialty_id')" 
+			[multiple]="true"></app-ng-select-shareable>
+		  </div>
+		  <div class="col-12 col-sm-6 col-lg-3">
+			<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'visit_type_id'"
+			[showSelectFieldOnRefresh]="templateFilterForm.get('visit_type_id').value" 
+			[lableName]="'Visit Type'" [bindlable]="'name'" 
+			[qulifierShown] = "true"
+			[bindId]="'id'" [apiPath]="visitTypeUrls.VisitType_list_GET"  
+			(valueChange)="selectionOnValueChange($event,'visit_type_id')" 
+			[multiple]="true"></app-ng-select-shareable>
+		  </div>
+		  <div class="col-12 col-sm-6 col-lg-3">
+			<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'case_type_id'"
+			[showSelectFieldOnRefresh]="templateFilterForm.get('case_type_id').value" 
+			[lableName]="'Case Type'" [bindlable]="'name'" 
+			[bindId]="'id'" [apiPath]="CaseTypeUrls.CaseType_list_GET"  
+			(valueChange)="selectionOnValueChange($event,'case_type_id')" 
+			[multiple]="true"></app-ng-select-shareable>
+		  </div>
+		  <div class="col-12 col-sm-6 col-lg-3">
+			<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'template_name'"
+			[showSelectFieldOnRefresh]="templateFilterForm.get('template_name').value" 
+			[lableName]="'Template'" [bindlable]="'name'"
+			[bindId]="'name'" [apiPath]="templateUrls"  [conditionalExtraApiParams]="conditionalExtraApiParams"
+			(valueChange)="selectionOnValueChange($event,'template_name')" 
+			[multiple]="false"></app-ng-select-shareable>
+		  </div>
+		  <div class="col-md-12 text-center search-filter-btn float-left">
+			<button class="btn btn-success mt-0 me-3" (click)="applyFilter();">
+			  Filter </button>
+			<button class="btn btn-primary mt-0" (click)="resetFilter()"> Reset</button>
+		  </div>
+		</div>
+	  </div>
+	  <div class="colps-btn-block">
+		<button class="btn plus-btn float-right mt-0" (click)="isCollapsed = !isCollapsed"
+		  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+		  [class.btn-success]="isCollapsed" type="button"><span class="" [class.icon-plus]="!isCollapsed"
+			[class.icon-minus]="isCollapsed"></span></button>
+	  </div>
+	</div>
+  </div>
+</div>
+</form> -->

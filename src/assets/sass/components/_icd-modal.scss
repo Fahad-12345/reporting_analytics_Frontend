@@ -1,0 +1,27 @@
+.modal-body{
+    .icd-edit-bills{
+        display: flex;
+        align-items: center;
+        @include px-to-rem(margin-left, 0px, true);
+        .badge{
+            @include px-to-rem(min-width, 45px, false);
+            line-height: 1.2;
+        }
+        span{
+            display: inline-block;
+            @include px-to-rem(margin, 0px 10px 0px 0px, false);
+           
+            strong{
+                @include px-to-rem(font-size, 18px, false);
+                font-weight: 700;
+                @include px-to-rem(margin, 0p 5px, false);
+            }
+            small{
+                display: inline-block;
+                @include px-to-rem(margin, 0px 10px, false);
+                @include px-to-rem(font-size, 16px, false);
+            } 
+        }
+    }
+    
+}

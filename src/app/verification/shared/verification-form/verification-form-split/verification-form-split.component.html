@@ -1,0 +1,95 @@
+<form class="form" [formGroup]="verificationForm">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group horizontal-label mb-2">
+        <label for="denial_date" class="text-capitalize">Verification Date*</label>
+        <div class="d-block position-relative">
+          <input  matInput  class="form-control form-input mb-0 date-field" [max]="today" [min]="min" formControlName="date" [matDatepicker]="denial_date" appInputDateMask 
+          [appMaskDate]="verificationForm.get('date').value"
+          id="start_date">
+          <mat-datepicker-toggle matSuffix [for]="denial_date"></mat-datepicker-toggle>
+          <mat-datepicker #denial_date></mat-datepicker>
+          <small class="form-text text-muted danger"
+          *ngIf="verificationForm.get('date').errors?.required && (verificationForm.get('date').dirty || verificationForm.get('date').touched)">
+		  This field is required
+        </small>
+        <small class="form-text text-muted danger" *ngIf="verificationForm.errors?.futureDate">
+          Max date should be {{ today | date: dateformateService.slashDateFormat_MM_dd_yyyy() }}
+        </small>
+        <!-- <small class="form-text text-muted danger"
+          *ngIf="verificationForm.get('date').errors?.invalid_date && (verificationForm.get('date').dirty || verificationForm.get('date').touched)">
+		  This field is required
+        </small> --> 
+
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group mb-2">
+        <label for="verification_type_ids" class="text-capitalize">Verification Type*</label>
+        <div class="form-group mb-2"  #denialTypeSelection>
+          <ng-multiselect-dropdown id="verification_type_ids" name="verification_type_ids" [settings]="bpDropdownSettingsEor" (click)="typeClick()"
+            [placeholder]="'Select Verification Type'" [data]="verificationTypeData"
+            formControlName="verification_type_ids" 
+             class="ng-select-ellipsis top-n2 d-block handle-arrow">
+          </ng-multiselect-dropdown>
+          <small class="form-text text-muted danger"
+          *ngIf="verificationForm.get('verification_type_ids').errors?.required && typeClicked">
+		  This field is required
+        </small>
+        </div>
+      </div>
+  </div>
+  <div class="col-12">
+		<label for="status_id" class="text-capitalize">Verification  Status</label>
+		<div class="form-group mb-2" >
+		  <ng-multiselect-dropdown id="verification_status_id" name="verification_status_id" [settings]="bpDropdownSettingsDenialStatus" (click)="verificationStatus()"
+		  [placeholder]="'Select Verification Status'" [data]="verificationStatusCommingData"
+		  formControlName="verification_status_id" 
+			  [class.disabled_custom]="disableDenial" class="ng-select-ellipsis top-n2 d-block handle-arrow">
+    </ng-multiselect-dropdown>
+    <small class="form-text text-muted danger"
+    *ngIf="verificationForm.get('verification_status_id').errors?.required && verificationStatusCheck">
+	This field is required
+  </small>
+		</div>
+	  </div>
+    <div class="col-12">
+      <div class="form-group mb-2">
+        <label for="denial_reason" class="text-capitalize">Verification Received Description</label>
+        <textarea type="text" formControlName="description" class="form-control form-input mb-0" rows="3" ></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row align-items-center">
+    <div class="col-12">
+      <div class="form-group view-icon mb-2">
+      <label for="action_type">File Name</label>
+      <input class="form-control mb-0" type="text" formControlName="file_name" disabled>
+      <div *ngIf="Verification_Edit_Model.getMediaExist()">
+        <a class="pdf-view view-hov">
+          <i class="icon-eye" (click)="viewDocFile(Verification_Edit_Model.getMediaLink())"></i></a>
+      </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-2 mb-1">
+    <label style="vertical-align: middle; margin-top: 0;" for="file" class="pe-1 d-none">Choose File</label>
+    <input type="file" id="file" #file class="file file_style d-none" #pFile (click)="pFile.value = null"
+      (change)="handleFileInput($event.target.files)" accept="application/pdf" />
+    <label (click)="file.click()" for="file-upload" class="custom-file-upload btn btn-success text-white">
+      <i class="fa fa-upload" aria-hidden="true"></i> Upload a File
+    </label>
+      <span class="ms-2" *ngIf="!verificationForm?.value?.id"
+      style="word-break: break-all;">{{fileToUpload? fileToUpload.name :null}}</span>
+
+      <span style="word-break: break-all;" *ngIf="verificationForm?.value?.id">{{fileToUpload ? fileToUpload.name : Verification_Edit_Model.getMediaExist() ? verificationForm?.value?.file_name : '' }} </span>
+    </div>
+  </div>
+  
+  <div class="col-12 search-filter-block mt-3">
+    <div class="row justify-content-center search-filter-btn mb-0">
+      <button *ngIf="!verificationForm?.value?.id" class="btn btn-primary mx-2" type="button" (click)= "reset()" [disabled]="checkInputs() && fileToUpload === null">Clear</button>
+      <button class="btn btn-success mx-2" (click)="postVerification()" [disabled]="!verificationForm.valid || !verificationForm.value.date || disabledFormBtn">{{(verificationForm?.value?.id)?'Update':'Save'}} </button>
+    </div>
+  </div>
+</form>

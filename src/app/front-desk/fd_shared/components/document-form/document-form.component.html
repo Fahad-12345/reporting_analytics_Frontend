@@ -1,0 +1,94 @@
+
+
+
+<div class="col-12 h-100">
+    <perfect-scrollbar>
+        <!-- <div class="row">
+            <div class="col-12">
+                <app-tree-view [directories]="directories"></app-tree-view>
+            </div>
+        </div> -->
+        <div class="row">
+            <!-- Attorney Information -->
+            <div class="col-12">
+                <div class="card">
+                <div class="card-header text-center">
+                    <h1 class="card-title text-white m-0">Document Lists</h1>
+                </div>
+
+                <div class="card-body">
+                    <div class="center">
+                        <!-- <file-drop headertext="Drop files here" (onFileDrop)="dropped($event, content)" 
+                        (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                            <span>Upload New File? </span>
+                        </file-drop> -->
+                        <div class="upload-table">
+
+                            <ngx-datatable class="bootstrap" [rows]="documents" [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+                                <!-- <ngx-datatable-column name="ID" prop="id" [width]="100"></ngx-datatable-column> -->
+                                <ngx-datatable-column name="Name" prop="name" [width]="230"></ngx-datatable-column>
+                                <ngx-datatable-column name="Thumbnail Preview" prop="path">
+                                    <ng-template let-column="column" ngx-datatable-header-tempalte>
+                                        Thumbnail Preview
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <img [src]="value" style="width:100px">
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Type" prop="type"></ngx-datatable-column>
+                                <ngx-datatable-column name="Actions" sortable="false" prop="id">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Actions
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        
+                                        <a class="danger p-0" data-original-title="Delete" title="Delete">
+                                            <i class="icon-remove me-2"></i>
+                                        </a>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                    
+                </div>
+                </div>
+            </div>								
+        </div>
+    </perfect-scrollbar>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Document Details</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+    <div class="modal-body">
+        <div class="row fields-holder">
+            <div class="col-12">
+                <div class="form-group fields-holder" [ngClass]="{'focused': form.get('description').value != ''}">
+                    <label for="description" class="form-label">Description *</label>
+                    <input type="text" id="description" class="form-control form-input" formControlName="description" placeholder="Enter Description">
+                    <small class="form-text text-muted danger" *ngIf="form.get('description').errors?.required && (form.get('description').dirty || form.get('description').touched)">Document Name field is required</small>
+                    <small class="form-text text-muted danger" *ngIf="form.get('description').errors?.maxLength?.requiredLength==100">Maximum characters should be 100!</small>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group fields-holder" [ngClass]="{'focused': form.get('type').value != ''}">
+                    <label for="type" class="form-label">Type *</label>
+                    <select class="custom-select" formControlName="type" id="type">
+                        <option *ngFor="let type of documentTypes" [value]="type"> {{ type }}</option>
+                    </select>
+                    <small class="form-text text-muted danger" *ngIf="form.get('type').errors?.required && (form.get('type').dirty || form.get('type').touched)">Please enter Type!</small>
+                </div>
+            </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary ">Upload Document</button>
+    </div>
+  </form>
+</ng-template>

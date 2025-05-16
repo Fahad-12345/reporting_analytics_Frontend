@@ -1,0 +1,35 @@
+// border-width mixin px to rem
+@mixin border-width($border-width) {
+    border-width: calc($border-width / $base-px-value) + rem;
+}
+
+// All border-width
+@mixin all-border-width($top: null, $right: null, $bottom: null, $left: null){
+	border-top-width: calc($top / $base-px-value) + rem;
+	border-right-width: calc($right / $base-px-value) + rem;
+	border-bottom-width: calc($bottom / $base-px-value) + rem;
+	border-left-width: calc($left / $base-px-value) + rem;
+}
+
+// border-width, border-style, border-color
+@mixin border($bwidth, $bstyle, $bcolor){
+	border-width: $bwidth;
+	border-style: $bstyle;
+	border-color: $bcolor;
+}
+
+// border-radius mixin
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+       -moz-border-radius: $radius;
+        -ms-border-radius: $radius;
+            border-radius: $radius;
+}
+  
+// all side border-radius
+@mixin all-border-radius($top-left, $top-right, $bottom-right, $bottom-left) {
+    border-top-left-radius: calc($top-left / $base-px-value) + rem;
+    border-top-right-radius: calc($top-right / $base-px-value) + rem;
+    border-bottom-right-radius: calc($bottom-right / $base-px-value) + rem;
+    border-bottom-left-radius: calc($bottom-left / $base-px-value) + rem;
+}

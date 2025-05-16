@@ -1,0 +1,734 @@
+<div class="master-header-footer-preview mt-3">
+    <div id="template-manager">
+        <div class="left-section" [style.display]="leftSection ? 'table-cell' : 'none'">
+            <div class="card bg-light-grey">
+                <div class="card-header">
+                    <h3 class="card-title">Header/Footer Search</h3>
+                </div>
+                <div class="card-body">
+                    <div class="search-category mb-3">
+                        <div class="input-group">
+                            <div style="width: 100% !important">
+                                <input type="text" placeholder="Search" class="form-control" [(ngModel)]="searchParam" (keyup.enter)="getHeaderFooter(false)" />
+                                <span class="icon2-search form-control-feedback" (click)="getHeaderFooter(false)"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <h4 *ngIf="searchSections?.length > 0" class="text-success">Headers/Footers</h4>
+                    <div class="left-scroll" *ngIf="searchSections?.length > 0">
+                        <div id="main-list">
+                            <div class="main-list">
+                                <ul class="list-strip" *ngFor="let search of searchSections let i=index" draggable="true" (dragend)="dropSearchSection()" (mouseover)="dragSectionSearchStart(search)">
+                                    <li>
+                                        <div class="list-text">
+                                            <a>{{search.section_title}}</a>
+                                        </div>
+                                        <div class="align-items-baseline d-flex float-right right_icons">
+                                            <a data-bs-toggle="tooltip" title="Apply Section" [ngClass]="{'applied':applyTempId==search.section_id}" (click)="applySection(search.section_id,i,search)"><i
+												class="icon2-apply-template"></i></a>
+                                            <div class="list-action" (click)="pView.toggle()">
+
+                                                <a placement="right auto" [ngbPopover]="hoverSection" (click)="viewSection(search.section_id,i,search)" title="Show Section" [autoClose]="false" triggers="manual" #pView="ngbPopover"><i
+														class="icon2-display"></i></a>
+
+                                                <ng-template #hoverSection>
+                                                    <div id="popover-add" class="popover-large popover-view l-scroll">
+                                                        <gridster *ngIf="layoutService?.sectionsSearch?.options" [options]="layoutService?.sectionsSearch?.options">
+                                                            <gridster-item *ngFor="let item of  layoutService?.sectionsSearch?.dashboard;let k=index" [item]="item" style="background: white">
+                                                                <ng-container appLayoutItem [object]="item.obj" [data]="item" [componentRef]="getComponentRef(item.id)"> </ng-container>
+                                                                <div class="column-action dropup" *ngIf="item.isClick"></div>
+
+                                                                <ng-template #itempopover>
+                                                                    <div id="popover-add">
+                                                                        <ul class="list-menu" style="list-style-type: none">
+                                                                            <li><a (click)="removeItem(item,'row', true, $event)" (mouseover)="itemDeleteHoverRow(item)" (mouseout)="hoverOutRow(item)">Delete Row</a></li>
+                                                                            <li (click)="removeItem(item,'col', true, $event)" (mouseover)="itemDeleteHover(item)" (mouseout)="hoverOut(item)">
+                                                                                <a>Delete Item</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </ng-template>
+                                                            </gridster-item>
+                                                        </gridster>
+                                                    </div>
+                                                </ng-template>
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <a *ngIf="sectionShowMore" class="btn btn-link text-primary" (click)="getHeaderFooter(true)">
+                                <small>Show More</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-section" [ngClass]="{'full-Section': rightSection==false && leftSection==false}">
+            <div class="slide-arrow">
+                <a class="arrow-left" title="Collapse Left Panel" (click)="arrowLeftRight('left')"><i class="icon2-arrow-left" [ngClass]="{'icon2-arrow-right': leftSection==false}"></i></a>
+                <a class="arrow-right" title="Collapse Right Panel" (click)="arrowLeftRight('right')"><i [ngClass]="{'icon2-arrow-left': rightSection==false}" class="icon2-arrow-right"></i></a>
+            </div>
+            <div class="card">
+                <div class="card-header" (click)="sectionsProperties()">
+                    <div class="float-left template-title-head top-btn">
+                        <h3 class="card-title" *ngIf="layoutService.section?.is_header">Header</h3>
+                        <h3 class="card-title" *ngIf="!layoutService.section?.is_header">Footer</h3>
+                    </div>
+                    <div class="float-right">
+                        <button class="btn btn-default" (click)="backToMenu()">Back</button>
+                        <button class="btn btn-default" (click)="createNewTemplate()">Create New</button>
+                        <button class="btn btn-default template-save" (click)="pSave.toggle()">
+							<a placement="bottom" [ngbPopover]="popoversave" [autoClose]="false" triggers="manual" #pSave="ngbPopover"> Save </a>
+						</button>
+
+                        <button class="btn btn-default" (click)="undoTask()" title="Undo"><i class="fas fa-undo"></i></button>
+                        <button class="btn btn-default ms-0" (click)="redoTask()" title="Redo"><i class="fas fa-redo"></i></button>
+
+                    </div>
+                    <ng-template #popoversave>
+                        <div id="popover-add">
+                            <ul class="list-menu" style="list-style-type: none">
+                                <li (click)="addTemplate()"><a>Save</a></li>
+                                <li (click)="saveNewTemplate()"><a>Save As New </a></li>
+                            </ul>
+                        </div>
+                    </ng-template>
+                </div>
+                <div class="card-body">
+                    <div class="middle-scroll">
+                        <div id="section-sortable" *ngIf="sectionCreated">
+                            <ng-container>
+                                <div class="card primary-section mb-3">
+                                    <div class="card-header section-header" (click)="sectionsProperties()" (dblclick)="optionRefresh($event, false)">
+                                        <h5 class="card-section-title float-left">
+                                            <div class="card-title">
+                                                <span style="margin-right: 5px">{{section?.secNo}}</span>
+                                                <span id="sectionName" [hidden]="!layoutService.section.isSelected" (click)="textSectionClick()">{{layoutService.section.section_title}} </span>
+                                                <input type="text" class="section-head-edit" [(ngModel)]="layoutService.section.section_title" *ngIf="!layoutService.section.isSelected" 
+                                                 (clickOutside)="textAreaClickSection()" />
+                                            </div>
+                                        </h5>
+                                        <div class="card-action">
+                                            <a placement="left" [ngbPopover]="popoverAdd" [autoClose]="false" triggers="manual" #pAdd="ngbPopover" (click)="pAdd.toggle()">
+                                                <i title="Add" class="icon2-add"></i>
+                                            </a>
+                                            <ng-template #popoverAdd>
+                                                <div id="popover-add">
+                                                    <ul class="adition-deletion-menu" style="list-style-type: none">
+                                                        <li>
+                                                            <div class="d-flex row-number-div">
+                                                                <div class="btn-group input-group">
+                                                                    <input type="text" [disabled]="true" class="form-control input-number text-lg-center" [(ngModel)]="rowAddItems" min="1" max="10" />
+                                                                    <div class="btn-plus-minue" style="margin-top: -5px">
+                                                                        <button type="button" class="btn btn-outline-secondary btn-top" (click)="changeRowAddItems(true)">
+																			<i class="fa fa-chevron-up"></i>
+																		</button>
+                                                                        <button type="button" class="btn btn-outline-secondary btn-bottom" (click)="changeRowAddItems(false)">
+																			<i class="fa fa-chevron-down"></i>
+																		</button>
+                                                                    </div>
+                                                                </div>
+                                                                <a (click)="addRowItem(i, rowAddItems);pAdd.close()" style="min-width: auto" class="btn btn-success white-space-nowrap btn-add-row me-0" title="Add Row"><i class="icon2-plus1"></i></a>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </ng-template>
+
+                                            <span data-bs-toggle="tooltip" (click)="optionRefresh($event, false)">
+												<a class="toggle action-warning" href="#section" [ngClass]="{'collapsed': !layoutService.collapseSectionIndex}" data-target="#section" data-bs-toggle="collapse"></a>
+											</span>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div id="section" [ngClass]="{'show': layoutService.collapseSectionIndex}" *ngIf="layoutService.collapseSectionIndex" class="collapse">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-11" style="flex: 0 0 calc(100% - 20px); max-width: calc(100% - 20px); padding-right: 0 !important" oncontextmenu="return false;">
+                                                    <gridster *ngIf="layoutService.section?.options" [options]="layoutService.section?.options" (dragover)="setSection('section')">
+                                                        <gridster-item *ngFor="let item of  layoutService?.section?.dashboard;let k=index" [item]="item" (dragover)="setDropId(item.id)" [style.background]="item.obj.emptyCell ? 'lightgray' : white" placement="top" data-container="body" [ngbPopover]="copypopover"
+                                                            triggers="manual" #pCopy="ngbPopover" (contextmenu)="pCopy.toggle()" [ngStyle]="item?.isClick && item.hover ? {'background': '#f7fcfd'} :
+																												 item?.isClick ? {'background': '#f7fcfd'} : item.hover?  {'background': '#fff2f2'} : {'background': 'white'}">
+                                                            <div class="button-holder" [ngClass]="{'alignment-top': item.obj.alignment == 'top','alignment-center': item.obj.alignment == 'center','alignment-bottom': item.obj.alignment == 'bottom'}">
+                                                                <ng-container appLayoutItem [object]="item.obj" [data]="item" [componentRef]="getComponentRef(item.id)"> </ng-container>
+                                                                <div class="column-action dropup" (click)="pDelete.toggle()">
+                                                                    <a class="listover" placement="top" data-container="body" [ngbPopover]="itempopover" [autoClose]="false" triggers="manual" #pDelete="ngbPopover">
+                                                                        <i *ngIf="item?.isClick" title="" class="icon2-delete" data-original-title="Delete"></i>
+                                                                    </a>
+                                                                </div>
+                                                                <ng-template #copypopover>
+                                                                    <div id="popover-add">
+                                                                        <ul *ngIf="!item?.obj?.emptyCell" class="list-menu" style="list-style-type: none">
+                                                                            <li>
+                                                                                <a (click)="itemCopy(k,item)">Copy Item</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                        <ul *ngIf="item?.obj?.emptyCell" class="list-menu" style="list-style-type: none">
+                                                                            <li>
+                                                                                <a (click)="itemPaste()">Paste Item</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </ng-template>
+                                                                <ng-template #itempopover>
+                                                                    <div id="popover-add">
+                                                                        <ul class="list-menu" style="list-style-type: none">
+                                                                            <li>
+                                                                                <a (click)="removeItem(item,'row', true, $event)" (mouseover)="itemDeleteHoverRow(item)" (mouseout)="hoverOutRow(item)">Delete Row</a>
+                                                                            </li>
+                                                                            <li (click)="removeItem(item,'col', true, $event)" (mouseover)="itemDeleteHover(item)" (mouseout)="hoverOut(item)">
+                                                                                <a>Delete Item</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </ng-template>
+                                                            </div>
+                                                        </gridster-item>
+                                                    </gridster>
+                                                </div>
+
+                                                <div class="col-md-1" style="display: flex; flex: 0 0 20px; flex-flow: wrap; max-width: 20px; padding-left: 0 !important">
+                                                    <div class="row" (click)="pAction.toggle()" [ngStyle]="rowMapper?{'height':rowMapper*100+'px'}:{'height':rowMapper*100+'px'}" style="width: 20px; height: 100px; margin-left: 0; margin-right: 0" *ngFor="let rowMapper of layoutService.section.mapper;let m=index">
+                                                        <a title=" Click to change row height" placement="left" data-container="body" triggers="manual" [ngbPopover]="actionPopover" #pAction="ngbPopover" [autoClose]="false" class="row-settings-arrow"><span></span></a>
+                                                        <ng-template #actionPopover>
+                                                            <div id="popover-add">
+                                                                <ul class="adition-deletion-menu" style="list-style-type: none">
+                                                                
+                                                                    <li>
+                                                                        <div class="d-flex row-number-div">
+                                                                            <div class="btn-group input-group me-2">
+                                                                                <input type="text" class="form-control input-number text-lg-center" [(ngModel)]="rowAddItems" min="1" max="10" disabled />
+                                                                                <div class="btn-plus-minue">
+                                                                                    <button type="button" class="btn btn-outline-secondary btn-top" (click)="changeRowAddItems(true)">
+																						<i class="fa fa-chevron-up"></i>
+																					</button>
+                                                                                    <button type="button" class="btn btn-outline-secondary btn-bottom" (click)="changeRowAddItems(false)">
+																						<i class="fa fa-chevron-down"></i>
+																					</button>
+                                                                                </div>
+                                                                            </div>
+                                                                            <a (click)="addRowItem(i, rowAddItems, rowMapper,m);pAction.close()" class="btn btn-success white-space-nowrap" title="Add Row"><i class="icon2-plus1"></i></a>
+                                                                            <a (click)="reduceRow(i, rowAddItems, rowMapper,m);pAction.close()" class="btn btn-danger white-space-nowrap ms-2" title="Delete Row"><i class="icon2-minus1"></i
+                                  ></a>
+
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-section" [ngClass]="{'no-left-section': hideLeftSection==true}" [style.display]="rightSection ? 'table-cell' : 'none'">
+            <div class="accordion" id="accordionExample1">
+                <div class="card bg-light-grey" *ngIf="showUIComponents" [ngClass]="{'height-one': HeightValueHeader==1,'height-two': HeightValueHeader==2,'height-three': HeightValueHeader==3,'height-four': HeightValueHeader==4}">
+                    <div class="card-header" (click)="collapseFunction('showUIComponents')" [ngClass]="{'collapsed':  !collapsePropertiesTab['showUIComponents'] }">
+                        <h3 class="card-title float-left">UI Components</h3>
+                        <div class="card-action">
+                            <a data-bs-toggle="tooltip" class="toggle action-warning"></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="collapse1" class="collapse" [ngClass]="{'show':  collapsePropertiesTab['showUIComponents']}" data-parent="#accordionExample1">
+                        <div class="card-body">
+                            <div class="right-scroll">
+                                <div class="row">
+                                    <div class="col-6 col-lg-6 col-md-3 col-sm-4 col-xs-6">
+                                        <div title="Template Manager Text UI Component" class="ui-component" draggable="true" (mouseover)="dropItem('text')">
+                                            <div class="component-header">
+                                                <h5>Text</h5>
+                                            </div>
+                                            <div class="component-body">
+                                                <i class="icon2-text"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-lg-6 col-md-3 col-sm-4 col-xs-6">
+                                        <div title="Template Manager Image UI Component" class="ui-component" draggable="true" (mouseover)="dropItem('simpleImage')">
+                                            <div class="component-header">
+                                                <h5>Image</h5>
+                                            </div>
+                                            <div class="component-body">
+                                                <i class="icon2-image"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-lg-6 col-md-3 col-sm-4 col-xs-6">
+                                        <div title="Template Manager Input UI Component" class="ui-component" draggable="true" (mouseover)="dropItem('input')">
+                                            <div class="component-header">
+                                                <h5>Input</h5>
+                                            </div>
+                                            <div class="component-body">
+                                                <i class="icon2-input"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 col-lg-6 col-md-3 col-sm-4 col-xs-6">
+                                        <div title="Template Manager Line UI Component" class="ui-component" draggable="true" (mouseover)="dropItem('line')">
+                                            <div class="component-header">
+                                                <h5>Line</h5>
+                                            </div>
+                                            <div class="component-body">
+                                                <i class="icon2-line_weight"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-light-grey" [hidden]="!showSectionProperties" [ngClass]="{'height-one': HeightValueHeader==1,'height-two': HeightValueHeader==2,'height-three': HeightValueHeader==3,'height-four': HeightValueHeader==4}">
+                    <div class="card-header collapsed" (click)="collapseFunction('showSectionProperties')" [ngClass]="{'collapsed':  !collapsePropertiesTab['showSectionProperties'] }">
+                        <h3 class="card-title float-left">Section Properties</h3>
+                        <div class="card-action">
+                            <a data-bs-toggle="tooltip" class="toggle action-warning"></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="collapse3" class="collapse" [ngClass]="{'show':  collapsePropertiesTab['showSectionProperties']}" data-parent="#accordionExample1">
+                        <div class="card-body">
+                            <div class="right-scroll">
+                                <div class="property-box">
+                                 
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <label class="control-label">Name </label>
+                                            <input placeholder="Section name" type="text" *ngIf="layoutService.section !== undefined" [(ngModel)]="layoutService.section.section_title" class="form-control" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="checkbox">
+												<input type="checkbox" [checked]="layoutService.section?.is_header" (click)="header()" />
+												<span class="l-0 fake-input position-absolute"></span>
+												<span class="ps-4">Header</span>
+											</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Default Columns Settings</label>
+                                            <select id="selectCol" class="form-control" (change)="setSectionColumn($event,-1)">
+												<option [selected]="!layoutService.section?.defaultColumn" [value]=" " disabled>Select Columns {{!layoutService.section?.defaultColumn}}</option>
+												<option [selected]="layoutService.section?.options.maxCols==1" [value]="1">1 Column</option>
+												<option [selected]="layoutService.section?.options.maxCols==2" [value]="2">2 Columns</option>
+												<option [selected]="layoutService.section?.options.maxCols==3" [value]="3">3 Columns</option>
+												<option [selected]="layoutService.section?.options.maxCols==4" [value]="4">4 Columns</option>
+												<option [selected]="layoutService.section?.options.maxCols==6" [value]="6">6 Columns</option>
+											</select>
+                                        </div>
+                                        <div class="collapse-options">
+                                            <a href="#template-options-collapse" class="collapsed" data-bs-toggle="collapse">PDF Generation</a>
+                                        </div>
+
+                                        <div class="collapse" id="template-options-collapse">
+                                            <div class="row">
+                                                <div class="col-md-6 form-group">
+                                                    <div class="form-group" ng-reflect-klass="form-group mb-1">
+                                                        <label class="control-label m-0" for="name">Left Margin</label>
+                                                        <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name" id="name" type="number" min="0" max="30" ng-reflect-name="name" [(ngModel)]="layoutService.section.headerMarginLeft" [ngModelOptions]="{standalone: true}"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group" ng-reflect-klass="form-group mb-1">
+                                                        <label class="control-label m-0" for="name">Right Margin</label>
+                                                        <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name" id="name" type="number" min="0" max="30" ng-reflect-name="name" [(ngModel)]="layoutService.section.headerMarginRight" [ngModelOptions]="{standalone: true}"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn-default" (click)="openModel()">Permissions</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-light-grey text_pro_box" *ngIf="showTextProperties" [ngClass]="{'height-one': HeightValue==1,'height-two': HeightValue==2,'height-three': HeightValue==3,'height-four': HeightValue==4}">
+                    <div class="card-header" [ngClass]="{'collapsed':  !collapsePropertiesTab['showTextProperties']  }" (click)="collapseFunction('showTextProperties')">
+                        <h3 class="card-title float-left">Text Properties</h3>
+                        <div class="card-action">
+                            <a data-bs-toggle="tooltip" class="toggle action-warning"></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="collapseText" [ngClass]="{'show': collapsePropertiesTab['showTextProperties']}" class="collapse">
+                        <div class="card-body">
+                            <div class="right-scroll">
+                                <div class="row">
+                                    <div class="col-sm-6 offset-sm-3 col-md-4 offset-md-4 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
+                                        <div class="ui-component active-element">
+                                            <div class="component-header">
+                                                <h5>Text</h5>
+                                            </div>
+                                            <div class="component-body">
+                                                <i class="icon2-text"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="property-box">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-4 pe-0">
+                                                <div class="form-group">
+                                                    <label class="control-label d-block m-0">ID</label>
+                                                    <ng-select appendTo="body" [(ngModel)]="layoutService.section.dashboard[layoutService.lastK].obj.uicomponent_name" [clearable]="false" (click)="getValidIds()">
+                                                        <ng-option *ngFor="let item of validIds" [value]="item">{{item}}</ng-option>
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="form-group">
+                                                    <label class="control-label d-block m-0">UI Name</label>
+                                                    <textarea type="text" [(ngModel)]="layoutService.section.dashboard[layoutService.lastK].obj.second_name " class="form-control" placeholder="Label" (keyup)="UpdateNames()"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Alignment</label>
+                                            <div class="btn-group d-block mb-2 multi-switch">
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="1" [checked]="layoutService.section.dashboard[layoutService.lastK]?.obj.alignment == 'top'" (click)="setUIProperty(0, layoutService.lastK, 'alignment', 'top', true)" />
+													<span class="value"><i class="icon2-vertical_align_top"></i> Top</span>
+												</label>
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="2" [checked]="layoutService.section.dashboard[layoutService.lastK]?.obj.alignment == 'center'" (click)="setUIProperty(0, layoutService.lastK, 'alignment', 'center', true)" />
+													<span class="value"><i class="icon2-vertical_align_center"></i> Center</span>
+												</label>
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="3" [checked]="layoutService.section.dashboard[layoutService.lastK]?.obj.alignment == 'bottom'" (click)="setUIProperty(0, layoutService.lastK, 'alignment', 'bottom', true)" />
+													<span class="value"><i class="icon2-vertical_align_bottom"></i> Bottom</span>
+												</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <angular-editor id="checkBoxPropEditor{{layoutService.lastI}}{{layoutService.lastK}}" [(obj)]="layoutService.section.dashboard[layoutService.lastK].obj" [(ngModel)]="layoutService.section.dashboard[layoutService.lastK]?.obj.statement" (ngModelChange)="statementUpdate()">
+                                            </angular-editor>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-light-grey" *ngIf="showCombinedProperties" [ngClass]="{'height-one': HeightValueHeader==1,'height-two': HeightValueHeader==2,'height-three': HeightValueHeader==3,'height-four': HeightValueHeader==4}">
+                    <div class="card-header" [ngClass]="{'collapsed':  !collapsePropertiesTab['showCombinedProperties']  }" (click)="collapseFunction('showCombinedProperties')">
+                        <h3 class="card-title float-left">Combined Properties</h3>
+                        <div class="card-action">
+                            <a data-bs-toggle="tooltip" class="toggle action-warning"></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="collapseText" [ngClass]="{'show': collapsePropertiesTab['showCombinedProperties']}" class="collapse">
+                        <div class="card-body">
+                            <div class="right-scroll">
+                                <div class="property-box">
+                                    <div class="box-body">
+                                        <div class="form-group" *ngIf="combinedHasNonLine && !combinedHasLine">
+                                            <label class="control-label">Alignment</label>
+                                            <div class="btn-group d-block mb-3 multi-switch">
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="1" [checked]="combinedAlignmentValue == 'top'" (click)="setCombinedAlignment('top')" />
+													<span class="value"><i class="icon2-vertical_align_top"></i> Top</span>
+												</label>
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="2" [checked]="combinedAlignmentValue == 'center'" (click)="setCombinedAlignment('center')" />
+													<span class="value"><i class="icon2-vertical_align_center"></i> Center</span>
+												</label>
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="3" [checked]="combinedAlignmentValue == 'bottom'" (click)="setCombinedAlignment('bottom')" />
+													<span class="value"><i class="icon2-vertical_align_bottom"></i> Bottom</span>
+												</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" *ngIf="!combinedHasNonLine">
+                                            <label class="control-label">Alignment</label>
+                                            <div class="btn-group d-block mb-3 multi-switch">
+                                                <label (click)="setCombinedLineHorizontal(true)">
+													<input [checked]="combinedLineHorizontal" name="choices[1]" class="form-control" type="radio" />
+													<span class="value"><i class="icon2-vertical_align_center"></i> Horizontal line</span>
+												</label>
+                                                <label (click)="setCombinedLineHorizontal(false)">
+													<input [checked]="!combinedLineHorizontal" name="choices[1]" class="form-control" type="radio" />
+													<span class="value"><i class="icon2-vertical_align_bottom"></i> Vertical line</span>
+												</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-light-grey input_pro_box" *ngIf="showInputProperties" [ngClass]="{'height-one': HeightValue==1,'height-two': HeightValue==2,'height-three': HeightValue==3,'height-four': HeightValue==4}">
+                    <div class="card-header" [ngClass]="{'collapsed':  !collapsePropertiesTab['showInputProperties'] }" (click)="collapseFunction('showInputProperties')">
+                        <h3 class="card-title float-left">Input Properties</h3>
+                        <div class="card-action">
+                            <a data-bs-toggle="tooltip" class="toggle action-warning"></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="collapseInput" [ngClass]="{'show': collapsePropertiesTab['showInputProperties']}" class="collapse">
+                        <div class="card-body">
+                            <div class="right-scroll">
+                                <div class="row">
+                                    <div class="col-sm-6 offset-sm-3 col-md-4 offset-md-4 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
+                                        <div class="ui-component active-element">
+                                            <div class="component-header">
+                                                <h5>Input</h5>
+                                            </div>
+                                            <div class="component-body">
+                                                <i class="icon2-input"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="property-box">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-4 pe-0">
+                                                <div class="form-group">
+                                                    <label class="control-label d-block m-0">ID</label>
+                                                    <ng-select appendTo="body" [(ngModel)]="layoutService.section.dashboard[layoutService.lastK].obj.uicomponent_name" [clearable]="false" (click)="getValidIds()">
+                                                        <ng-option *ngFor="let item of validIds" [value]="item">{{item}}</ng-option>
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="form-group">
+                                                    <label class="control-label d-block m-0">UI Name</label>
+                                                    <textarea type="text" [(ngModel)]="layoutService.section.dashboard[layoutService.lastK].obj.second_name " class="form-control" placeholder="Label" (keyup)="UpdateNames()"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Alignment</label>
+                                            <div class="btn-group d-block mb-2 multi-switch">
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="1" [checked]="layoutService.section.dashboard[layoutService.lastK]?.obj.alignment == 'top'" (click)="setUIProperty(0, layoutService.lastK, 'alignment', 'top', true)" />
+													<span class="value"><i class="icon2-vertical_align_top"></i> Top</span>
+												</label>
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="2" [checked]="layoutService.section.dashboard[layoutService.lastK]?.obj.alignment == 'center'" (click)="setUIProperty(0, layoutService.lastK, 'alignment', 'center', true)" />
+													<span class="value"><i class="icon2-vertical_align_center"></i> Center</span>
+												</label>
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="3" [checked]="layoutService.section.dashboard[layoutService.lastK]?.obj.alignment == 'bottom'" (click)="setUIProperty(0, layoutService.lastK, 'alignment', 'bottom', true)" />
+													<span class="value"><i class="icon2-vertical_align_bottom"></i> Bottom</span>
+												</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="checkbox">
+												<input type="checkbox" [disabled]="true" [checked]="layoutService.section?.dashboard[layoutService.lastK]?.obj.preDefind" />
+												<span class="l-0 fake-input position-absolute"></span>
+												<span class="ps-4">Pre-defined Fields</span>
+											</label>
+                                        </div>
+                                        <div class="form-group" *ngIf="layoutService.section?.dashboard[layoutService.lastK]?.obj.preDefind">
+                                            <div class="intellisense-box search-content">
+                                                <div class="intellisene-field">
+                                                    <input class="form-control" placeholder="Search..." type="text" (input)="searchCodes($event)" [(ngModel)]="preDefinedInputModel" />
+                                                    <div class="intellisense-results" *ngIf="searchData.length>0">
+                                                        <ul>
+                                                            <li *ngFor="let item of searchData;"><a (mousedown)="preDefindSelect({target: {value: item.id}})">{{item.title}} - {{item.description}}</a></li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="input-group-prepend">
+                                                        <button class="input-group-text search-btn" type="submit"><span class="icon-search"></span></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="intellisense-selected-item">{{layoutService.section.dashboard[this.layoutService.lastK].obj['preDefinedObj'].title}} - {{layoutService.section.dashboard[this.layoutService.lastK].obj['preDefinedObj'].description}}</div>
+                                        </div>
+                                        <div class="form-group" *ngIf="!layoutService.section?.dashboard[layoutService.lastK]?.obj.preDefind">
+                                            <label class="checkbox">
+												<input type="checkbox" [checked]="layoutService.section?.dashboard[layoutService.lastK]?.obj.isStatement" (click)="invertUIProperty(layoutService.lastI, layoutService.lastK, 'isStatement',true)" />
+												<span class="l-0 fake-input position-absolute"></span>
+												<span class="ps-4">Statement</span>
+											</label>
+                                            <angular-editor [(obj)]="layoutService.section.dashboard[layoutService.lastK].obj" *ngIf="layoutService.section?.dashboard[layoutService.lastK]?.obj.isStatement" id="statementEditor{{layoutService.lastI}}{{layoutService.lastK}}" [(ngModel)]="layoutService.section.dashboard[layoutService.lastK]?.obj.statement"
+                                                (ngModelChange)="statementUpdate()"> </angular-editor>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-light-grey" *ngIf="showLineProperties" [ngClass]="{'height-one': HeightValue==1,'height-two': HeightValue==2,'height-three': HeightValue==3,'height-four': HeightValue==4}">
+                    <div class="card-header" [ngClass]="{'collapsed':  !collapsePropertiesTab['showLineProperties'] }" (click)="collapseFunction('showLineProperties')">
+                        <h3 class="card-title float-left">Line Properties</h3>
+                        <div class="card-action">
+                            <a data-bs-toggle="tooltip" class="toggle action-warning"></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="collapseLine" [ngClass]="{'show': collapsePropertiesTab['showLineProperties']}" class="collapse">
+                        <div class="card-body">
+                            <div class="right-scroll">
+                                <div class="row">
+                                    <div class="col-sm-6 offset-sm-3 col-md-4 offset-md-4 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
+                                        <div class="ui-component active-element">
+                                            <div class="component-header">
+                                                <h5>Line</h5>
+                                            </div>
+                                            <div class="component-body">
+                                                <i class="icon2-line_weight"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="property-box">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-4 pe-0">
+                                                <div class="form-group">
+                                                    <label class="control-label d-block m-0">ID</label>
+                                                    <ng-select appendTo="body" [(ngModel)]="layoutService.section.dashboard[layoutService.lastK].obj.uicomponent_name" [clearable]="false" (click)="getValidIds()">
+                                                        <ng-option *ngFor="let item of validIds" [value]="item">{{item}}</ng-option>
+                                                    </ng-select>
+                                                </div>
+                                            </div>
+                                            <div class="col-8">
+                                                <div class="form-group">
+                                                    <label class="control-label d-block m-0">UI Name</label>
+                                                    <textarea type="text" [(ngModel)]="layoutService.section.dashboard[layoutService.lastK].obj.second_name " class="form-control" placeholder="Label" (keyup)="UpdateNames()"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Alignment</label>
+                                            <div class="btn-group d-block mb-2 multi-switch">
+                                                <label (click)="lineHorizontal(true)">
+													<input [checked]="layoutService.section.dashboard[layoutService.lastK].obj.horizontal" name="choices[1]" class="form-control" type="radio" />
+													<span class="value"><i class="icon2-vertical_align_center"></i> Horizontal line</span>
+												</label>
+                                                <label (click)="lineHorizontal(false)">
+													<input [checked]="!layoutService.section.dashboard[layoutService.lastK].obj.horizontal" name="choices[1]" class="form-control" type="radio" />
+													<span class="value"><i class="icon2-vertical_align_bottom"></i> Vertical line</span>
+												</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Line Style</label>
+                                            <div class="btn-group d-block mb-2 multi-switch">
+                                                <label (click)="selectLineProperty('Size')">
+													<input [checked]="lineSelectedProp=='Size'" name="choices[2]" class="form-control" type="radio" value="1" />
+													<span class="value">Size</span>
+												</label>
+                                                <label (click)="selectLineProperty('Type')">
+													<input [checked]="lineSelectedProp=='Type'" name="choices[2]" class="form-control" type="radio" value="2" />
+													<span class="value">Type </span>
+												</label>
+                                                <label (click)="selectLineProperty('Color')">
+													<input [checked]="lineSelectedProp=='Color'" name="choices[2]" class="form-control" type="radio" value="3" />
+													<span class="value">Color</span>
+												</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" *ngIf="lineSelectedProp == 'Size'">
+                                            <select (change)="lineSize($event)" class="form-control">
+												<option value="1px" [selected]="layoutService.section.dashboard[layoutService.lastK].obj.size=='1px'">1px</option>
+												<option value="2px" [selected]="layoutService.section.dashboard[layoutService.lastK].obj.size=='2px'">2px</option>
+												<option value="3px" [selected]="layoutService.section.dashboard[layoutService.lastK].obj.size=='3px'">3px</option>
+												<option value="4px" [selected]="layoutService.section.dashboard[layoutService.lastK].obj.size=='4px'">4px</option>
+												<option value="5px" [selected]="layoutService.section.dashboard[layoutService.lastK].obj.size=='5px'">5px</option>
+											</select>
+                                        </div>
+                                        <div class="form-group" *ngIf="lineSelectedProp =='Type'">
+                                            <select (change)="lineType($event)" class="form-control">
+												<option value="Solid" [selected]="layoutService.section.dashboard[layoutService.lastK].obj.typeLine=='Solid'">Solid</option>
+												<option value="Dotted" [selected]="layoutService.section.dashboard[layoutService.lastK].obj.typeLine=='Dotted'">Dotted</option>
+												<option value="Dashed" [selected]="layoutService.section.dashboard[layoutService.lastK].obj.typeLine=='Dashed'">Dashed</option>
+											</select>
+                                        </div>
+                                        <div class="form-group" *ngIf="lineSelectedProp == 'Color'">
+                                            <input (ngModelChange)="lineColor($event)" [ngModel]="layoutService.section.dashboard[layoutService.lastK].obj.color" type="color" id="favcolor" name="favcolor" value="#000000" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card bg-light-grey" *ngIf="showImageProperties" [ngClass]="{'height-one': HeightValueHeader==1,'height-two': HeightValueHeader==2,'height-three': HeightValueHeader==3,'height-four': HeightValueHeader==4}">
+                    <div class="card-header collapsed" (click)="collapseFunction('showImageProperties')" [ngClass]="{'collapsed':  !collapsePropertiesTab['showImageProperties'] }">
+                        <h3 class="card-title float-left">Image Properties</h3>
+                        <div class="card-action">
+                            <a data-bs-toggle="tooltip" class="toggle action-warning"></a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div id="collapseImage" class="collapse" [ngClass]="{'show':  collapsePropertiesTab['showImageProperties']}" data-parent="#accordionExample1">
+                        <div class="card-body">
+                            <div class="right-scroll">
+                                <div class="row">
+                                    <div class="col-sm-6 offset-sm-3 col-md-4 offset-md-4 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
+                                        <div class="ui-component active-element">
+                                            <div class="component-header">
+                                                <h5>Image</h5>
+                                            </div>
+                                            <div class="component-body">
+                                                <i class="icon2-checkbox"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="property-box">
+                                    <div class="box-body">
+                                        <div class="form-group">
+                                            <label class="control-label d-block m-0"><small>Name</small></label>
+                                            <input type="text" disabled (keyup)="onChangeUiName($event)" [(ngModel)]="layoutService.section?.dashboard[layoutService.lastK]?.obj.uicomponent_name " class="form-control" placeholder="Label" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Alignment</label>
+                                            <div class="btn-group d-block mb-3 multi-switch">
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="1" [checked]="layoutService.section?.dashboard[layoutService.lastK]?.obj.alignment== 'top'" (click)="layoutService.section?.dashboard[layoutService.lastK]?.obj.alignment = 'top'" />
+													<span class="value"><i class="icon2-vertical_align_top"></i> Top</span>
+												</label>
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="2" [checked]="layoutService.section?.dashboard[layoutService.lastK]?.obj.alignment== 'center'" (click)="layoutService.section?.dashboard[layoutService.lastK]?.obj.alignment = 'center'" />
+													<span class="value"><i class="icon2-vertical_align_center"></i> Center</span>
+												</label>
+                                                <label>
+													<input name="choices[1]" class="form-control" type="radio" value="3" [checked]="layoutService.section?.dashboard[layoutService.lastK]?.obj.alignment== 'bottom'" (click)="layoutService.section?.dashboard[layoutService.lastK]?.obj.alignment = 'bottom'" />
+													<span class="value"><i class="icon2-vertical_align_bottom"></i> Bottom</span>
+												</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label">Width</label>
+
+                                            <ngx-slider [(value)]="layoutService.section?.dashboard[layoutService.lastK]?.obj.width" [(options)]="widthOptions" (valueChange)="widthChange($event, layoutService.lastK)"> </ngx-slider>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">Upload and Label</h4>
+        <button aria-label="Close" class="close" type="button" data-dismiss="modal" (click)="imageModal.close('cancel')"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="px-0">
+                    <div class="file-upload" style="border: 2px dashed #b3aeae; border-radius: 5px;">
+                        <div class="custom-file-upload mb-3 mt-3">
+                            <button class="btn btn-primary" type="reset" [disabled]="!previewUrl" (click)="resetImage()">Reset</button>
+                            <label *ngIf="!layoutService.editorView" for="file-upload" class="btn-success btn ms-3">
+                                <i class="icon-upload"></i> Upload
+                            </label>
+                            <input  *ngIf="!layoutService.editorView"  id="file-upload" type="file" name="image" accept="image/*" (change)="fileProgress($event)">
+                        </div>
+                        <div id="canvas-image-container" [hidden]="!previewUrl">
+							<canvas class="image-canvas" id="image-canvas">
+							</canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="maping-pairs">
+                    <div *ngFor="let point of data;let i=index;">
+                        <div class="form-group input-pair" [ngClass]="{'border border-success image-label-selected': point.isSelected}">
+							<div *ngIf="!layoutService.editorView" class="pair-actions">
+								<a (click)="deleteOption(i)"><i class="icon2-delete" data-bs-toggle="tooltip"
+										title="Delete"></i></a>
+							</div>
+							<div class="align-items-center d-flex">
+								<p class="label-image-tag">{{i+1}}.</p>
+                        		<input placeholder="Label {{i+1}}" (focusout)="drawImage()" [disabled]="layoutService.editorView == true" type="text" class="form-control label-image-label" [(ngModel)]="point.label">
+							</div>
+							<input *ngIf="openObject.enableTextInput" [disabled]="layoutService.editorView !== true || (layoutService.editorView === true && point.isSelected === false)" placeholder="Text {{i+1}}" type="text" class="form-control label-image-text" [(ngModel)]="point.text">
+							<label *ngIf="layoutService.editorView !== true" class="checkbox">
+								<input [disabled]="layoutService.editorView" type="checkbox" (click)="toggleLinkedStatement(i)"
+									[checked]="point.linkedStatementCheck">
+								<span class="l-0 fake-input position-absolute"></span>
+								<span class="ps-2">Statement for Text Linking</span>
+							</label>
+							<div *ngIf="point.linkedStatementCheck == true && layoutService.editorView !== true">
+								<angular-editor [disabled]="layoutService.editorView" id="Linking{{i}}" [(ngModel)]="data[i].linkedStatement">
+								</angular-editor>
+							</div>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row w-100">
+            <div class="col-sm-8 offset-sm-2">
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-success w-100" [disabled]="!previewUrl" type="submit" (click)="onSubmit()">Save</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100" data-dismiss="modal" type="button" (click)="imageModal.close('cancel')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

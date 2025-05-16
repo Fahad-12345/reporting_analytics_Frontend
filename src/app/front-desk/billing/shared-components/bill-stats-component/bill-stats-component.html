@@ -1,0 +1,27 @@
+
+<div class="tabs-grid">
+  <div class="tabs-grid-item">
+    <p>billed amount:</p>
+    <span>{{billTotalDetails?.total_bill_amount || 0 | currency}}</span>
+  </div>
+  <div class="tabs-grid-item">
+    <p>paid amount:</p>
+    <span>{{billTotalDetails?.total_paid_amount || 0 | currency}}</span>
+  </div>
+  <div class="tabs-grid-item">
+    <p>outstanding amount:</p>
+    <span>{{billTotalDetails?.total_outstanding_amount || 0 | currency}}</span>
+  </div>
+  <div class="tabs-grid-item">
+    <p>write off amount:</p>
+    <span>{{billTotalDetails?.total_write_off_amount || 0 | currency}}</span>
+  </div>
+  <div class="tabs-grid-item">
+    <p>overpayment:</p>
+    <span>{{billTotalDetails?.total_over_amount || 0 | currency}}</span>
+  </div>
+  <div class="tabs-grid-item">
+    <p>Interest amount:</p>
+    <span>{{billTotalDetails?.total_interest_amount || 0 | currency}}</span>
+  </div>
+</div>

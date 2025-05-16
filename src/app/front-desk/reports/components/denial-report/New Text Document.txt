@@ -1,0 +1,116 @@
+calculateLeftMargin(prop: string): number {
+    console.log("Paramssssssss",this.filterParam)
+    if(!this.filterParam.subgroup_by_id){
+    switch (prop) {
+      case 'total':
+        return 3;
+      case 'balance_0_to_29_days':
+        return 15.3;
+      case 'balance_30_to_59_days':
+        return 25;
+      case 'balance_60_to_89_days':
+        return 35.5;
+      case 'balance_90_to_119_days':
+        return 46;
+      case 'balance_120_to_149_days':
+        return 57.2;
+      case 'balance_150_to_179_days':
+        return 67.7;
+      case 'balance_180plusdays':
+        return 79;
+      case 'total_denied_amount':
+        return 89.5;
+      default:
+        return 0; 
+    }}
+    else{
+      switch (prop) {
+        case 'total':
+          return 3;
+        case 'balance_0_to_29_days':
+          return 23.5;
+        case 'balance_30_to_59_days':
+          return 32.4;
+        case 'balance_60_to_89_days':
+          return 41.6;
+        case 'balance_90_to_119_days':
+          return 51;
+        case 'balance_120_to_149_days':
+          return 61.3;
+        case 'balance_150_to_179_days':
+          return 70.5;
+        case 'balance_180plusdays':
+          return 80.6;
+        case 'total_denied_amount':
+          return 90.3;
+        default:
+          return 0; 
+      }
+    }
+  }
+
+
+
+
+ <div *ngIf="showfirstTable && showSummaryTable == true" class="summary-footer">
+              <div *ngFor="let column of Summarycolumns" class="summary-column"[ngClass]="column?.prop" [style.margin-left.%]="calculateLeftMargin(column?.prop)">
+                {{ lastRowData[lastRowData?.length - 1][column?.prop]  }}
+              </div>
+            </div>
+
+
+
+
+  .summary-footer {
+    display: flex;
+    // justify-content: space-between;
+    padding: 6px;
+    background-color: white
+  }
+  .summary-column {
+    font-weight: bold;
+
+    // margin-inline: 40px;
+    // margin-left: 10px;
+  }
+
+  .summary-column.empty_column_2 {
+    margin-inline-start: 80px;
+  }
+  .summary-column.total {
+    position: absolute;
+
+  }
+  .summary-column.balance_0_to_29_days {
+    position: absolute;
+
+  }
+  .summary-column.balance_30_to_59_days {
+    position: absolute;
+
+  }
+  .summary-column.balance_60_to_89_days {
+    position: absolute;
+
+  }
+  .summary-column.balance_90_to_119_days {
+    position: absolute;
+
+  }
+  .summary-column.balance_120_to_149_days {
+    position: absolute;
+
+  }
+  .summary-column.balance_150_to_179_days {
+    position: absolute;
+
+  }
+  .summary-column.balance_180plusdays {
+    position: absolute;
+
+  }
+  .summary-column.total_denied_amount {
+    position: absolute;
+
+  }
+  

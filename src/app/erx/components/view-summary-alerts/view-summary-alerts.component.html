@@ -1,0 +1,192 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation" *ngIf="show.dt">
+        <a class="nav-link"
+        [ngClass]="{'active': activeAlert=='dt'}"
+        id="dt-tab" data-toggle="tab" href="javascript:void(0)" role="tab" (click)="showActiveCheck('dt')">Duplicate 
+        Therapy</a>
+        <!-- id="dt-tab" data-toggle="tab" href="#duplicate-therapy{{item.medDetailId}}{{i}}" role="tab" (click)="onChangeAlertsTab('dt')">Duplicate Therapy</a> -->
+    </li>
+    <li class="nav-item" role="presentation" *ngIf="show.dd">
+        <a class="nav-link" [ngClass]="{'active': activeAlert=='dd'}" 
+        id="dd-tab" data-toggle="tab" href="javascript:void(0)" role="tab" (click)="showActiveCheck('dd')">Drug to Drug 
+        Interaction</a>
+        <!-- id="dd-tab" data-toggle="tab" href="#drug-interaction{{item.medDetailId}}{{i}}" role="tab" (click)="onChangeAlertsTab('dd')">Drug to Drug Interaction</a> -->
+    </li>
+    <li class="nav-item" role="presentation" *ngIf="show.df">
+        <a class="nav-link" [ngClass]="{'active': activeAlert=='df'}"
+         id="df-tab" data-toggle="tab" href="javascript:void(0)" role="tab" (click)="showActiveCheck('df')">Drug to Food 
+         Interaction</a>
+         <!-- id="df-tab" data-toggle="tab" href="#drug-food-interaction{{item.medDetailId}}{{i}}" role="tab" (click)="onChangeAlertsTab('df')">Drug to Food Interaction</a> -->
+    </li>
+    <li class="nav-item" role="presentation" *ngIf="show.da">
+        <a class="nav-link" [ngClass]="{'active': activeAlert=='da'}"
+        id="da-tab" data-toggle="tab" href="javascript:void(0)" role="tab" (click)="showActiveCheck('da')">Drug to 
+        Allergy interaction</a>
+        <!-- id="da-tab" data-toggle="tab" href="#durg-allergy-interaction{{item.medDetailId}}{{i}}" role="tab" (click)="onChangeAlertsTab('da')">Drug to Allergy interaction</a> -->
+    </li>
+    <li class="nav-item" role="presentation" *ngIf="show.ot">
+        <a class="nav-link" [ngClass]="{'active': activeAlert=='ot'}"
+        id="ot-tab" data-toggle="tab" href="javascript:void(0)" role="tab" (click)="showActiveCheck('ot')">Other</a>
+        <!-- id="ot-tab" data-toggle="tab" href="#other-alerts{{item.medDetailId}}{{i}}" role="tab" (click)="onChangeAlertsTab('ot')">Other</a> -->
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div *ngIf="show.dt && _service.erxCheck!=2" class="tab-pane fade" [ngClass]="{'show active': activeAlert=='dt'}" id="duplicate-therapy{{item.medDetailId}}{{i}}" role="tabpanel">
+        <div class="row" *ngFor="let alert of item?.alerts">
+            <div class="col-sm-6 pe-sm-0" style="margin-right: -1px;" *ngIf="alert.alertType=='duplicatetherapy'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto"  style="height: 123px;">
+                        <div>
+                            <div>
+                                <h6>{{item.rawMed.drugName}}</h6>
+                            </div>
+                            <p class="text-success">{{alert.screenMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 ps-sm-0" *ngIf="alert.alertType=='duplicatetherapy'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <h6 class="mb-0">Override Reason: </h6>
+                        <p class="mb-2">{{alert.reason}}</p>
+                        <h6 class="mb-0">Comment: </h6>
+                        <p class="mb-0">{{alert.comment}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="show.dt && _service.erxCheck==2" class="tab-pane fade" [ngClass]="{'show active': activeAlert=='dt'}" id="duplicate-therapy{{item.medDetailId}}{{i}}" role="tabpanel">
+        <div class="row" *ngFor="let alert of item?.alerts">
+            <div class="col-sm-6 pe-sm-0" style="margin-right: -1px;" *ngIf="alert.alertType=='duplicatetherapy'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto"  style="height: 123px;">
+                        <div>
+                            <div>
+                                <!-- <h6>{{item.description}}</h6> -->
+                            </div>
+                            <p class="text-success">{{alert.screenMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 ps-sm-0" *ngIf="alert.alertType=='duplicatetherapy'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <h6 class="mb-0">Override Reason: </h6>
+                        <p class="mb-2">{{alert.reason}}</p>
+                        <h6 class="mb-0">Comment: </h6>
+                        <p class="mb-0">{{alert.comment}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="show.dd" class="tab-pane fade" [ngClass]="{'show active': activeAlert=='dd'}" id="drug-interaction{{item.medDetailId}}{{i}}" role="tabpanel">
+        <div class="row" *ngFor="let alert of item?.alerts">
+            <div class="col-sm-6 pe-sm-0" style="margin-right: -1px;" *ngIf="alert.alertType=='drugdruginteraction'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <div>
+                            <div>
+                                <h6 *ngIf="_service.erxCheck!=2">{{item.rawMed.drugName}}</h6>
+                            </div>
+                            <p class="text-success">{{alert.screenMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 ps-sm-0" *ngIf="alert.alertType=='drugdruginteraction'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <h6 class="mb-0">Override Reason: </h6>
+                        <p class="mb-2">{{alert.reason}}</p>
+                        <h6 class="mb-0">Comment: </h6>
+                        <p class="mb-0">{{alert.comment}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="show.df" class="tab-pane fade" [ngClass]="{'show active': activeAlert=='df'}" id="drug-food-interaction{{item.medDetailId}}{{i}}" role="tabpanel">
+        <div class="row" *ngFor="let alert of item?.alerts">
+            <div class="col-sm-6 pe-sm-0" style="margin-right: -1px;" *ngIf="alert.alertType=='drugfoodinteraction'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <div>
+                            <div>
+                                <h6 *ngIf="_service.erxCheck!=2">{{item.rawMed.drugName}}</h6>
+                            </div>
+                            <p class="text-success">{{alert.screenMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 ps-sm-0" *ngIf="alert.alertType=='drugfoodinteraction'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <h6 class="mb-0">Override Reason: </h6>
+                        <p class="mb-2">{{alert.reason}}</p>
+                        <h6 class="mb-0">Comment: </h6>
+                        <p class="mb-0">{{alert.comment}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="show.da" class="tab-pane fade" [ngClass]="{'show active': activeAlert=='da'}" id="durg-allergy-interaction{{item.medDetailId}}{{i}}" role="tabpanel">
+        <div class="row" *ngFor="let alert of item?.alerts">
+            <div class="col-sm-6 pe-sm-0" style="margin-right: -1px;" *ngIf="alert.alertType=='drugallergyinteraction'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <div>
+                            <div>
+                                <h6 *ngIf="_service.erxCheck!=2">{{item.rawMed.drugName}}</h6>
+                            </div>
+                            <p class="text-success">{{alert.screenMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 ps-sm-0" *ngIf="alert.alertType=='drugallergyinteraction'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <h6 class="mb-0">Override Reason: </h6>
+                        <p class="mb-2">{{alert.reason}}</p>
+                        <h6 class="mb-0">Comment: </h6>
+                        <p class="mb-0">{{alert.comment}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="show.ot" class="tab-pane fade" [ngClass]="{'show active': activeAlert=='ot'}" id="other-alerts{{item.medDetailId}}{{i}}" role="tabpanel">
+        <div class="row" *ngFor="let alert of item?.alerts">
+            <div class="col-sm-6 pe-sm-0" style="margin-right: -1px;" *ngIf="alert.alertType=='other'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <div>
+                            <div>
+                                <h6 *ngIf="_service.erxCheck!=2">{{item.rawMed.drugName}}</h6>
+                            </div>
+                            <p class="text-success">{{alert.screenMessage}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 ps-sm-0" *ngIf="alert.alertType=='other'">
+                <div class="card card-grey">
+                    <div class="card-body overflow-auto" style="height: 123px;">
+                        <h6 class="mb-0">Override Reason: </h6>
+                        <p class="mb-2">{{alert.reason}}</p>
+                        <h6 class="mb-0">Comment: </h6>
+                        <p class="mb-0">{{alert.comment}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

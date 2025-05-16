@@ -1,0 +1,160 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Template Alignment</h4>
+  <button aria-label="Close" data-dissmiss="modal" class="close" type="button" (click)="cancelModel()"> <span
+      aria-hidden="true">×</span></button>
+</div>
+<div class="modal-body">
+  <form novalidate="" ng-reflect-form="[object Object]" class="ng-untouched ng-pristine ng-invalid">
+
+    <div class="row form mb-3">
+      <div class="col-12 mb-1">
+        <div class=" pe-0 form mb-0 ">
+
+          <span class="check-header" style=" font-size: 16px; font-weight: 600;">Page Size Properties</span>
+
+
+        </div>
+      </div>
+      <div class="col-12 form-group">
+        <label for="name">Page Size</label>
+        <select class="sel custom-select ng-pristine ng-valid ng-touched m-0 w-100" id="page" (change)="setDimensions($event)">
+          <option value="0" [selected]="layoutService.selectedOption==0">Manual</option>
+          <option value="1" [selected]="layoutService.selectedOption==1">Letter</option>
+          <option value="2" [selected]="layoutService.selectedOption==2">A4</option>
+          <option value="3" [selected]="layoutService.selectedOption==3">Legal</option>
+        </select>
+    </div>
+      <div class="col-6">
+        <label for="name">Width</label>
+        <div class="form-group mb-2" ng-reflect-klass="form-group mb-1">
+
+          <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+            id="name" type="number" step="0.01" min="180"  ng-reflect-name="name" [(ngModel)]="layoutService.template.pageSize.width" (ngModelChange) = "setDimensions('0')"
+            [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+
+      <div class="col-6">
+        <label for="name">Height</label>
+        <div class="form-group mb-2" ng-reflect-klass="form-group mb-1">
+
+          <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+            id="name" type="number" step="0.01" min="180" ng-reflect-name="name" [(ngModel)]="layoutService.template.pageSize.height" (ngModelChange) = "setDimensions('0')"
+            [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+
+      <div class="col-6">
+        <label for="name">Top Margin</label>
+        <div class="form-group mb-2" ng-reflect-klass="form-group mb-1">
+
+          <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+            id="name" type="number" min="0"  ng-reflect-name="name" [(ngModel)]="layoutService.template.pdfMarginTop" (change)="setMarginTop($event)"
+            [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+
+      <div class="col-6">
+        <label for="name">Bottom Margin</label>
+        <div class="form-group mb-2" ng-reflect-klass="form-group mb-1">
+
+          <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+            id="name" type="number" min="0" max="30"  ng-reflect-name="name" [(ngModel)]="layoutService.template.pdfMarginBottom" (change)="setMarginBottom($event)"
+            [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+
+
+      <div class="col-6">
+        <label for="name">Left Margin</label>
+        <div class="form-group mb-2" ng-reflect-klass="form-group mb-1">
+
+          <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+            id="name" type="number" min="0" max="30"  ng-reflect-name="name" [(ngModel)]="layoutService.template.pdfMarginLeft" (change)="setMarginLeft($event)"
+            [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+
+
+      <div class="col-6">
+        <label for="name">Right Margin</label>
+        <div class="form-group mb-2" ng-reflect-klass="form-group mb-1">
+
+          <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+            id="name" type="number" min="0" max="30"  ng-reflect-name="name" [(ngModel)]="layoutService.template.pdfMarginRight" (change)="setMarginRight($event)"
+            [ngModelOptions]="{standalone: true}">
+        </div>
+      </div>
+      <div class="col-12 mb-1 mt-1">
+        <div class=" pe-0 form mb-0 ">
+
+          <span class="check-header" style=" font-size: 16px; font-weight: 600;">Headers and Footer Properties</span>
+
+
+        </div>
+      </div>
+      <div class="col-md-12 p-0">
+        <div class="col-md-6 float withckeck">
+          <label for="name">Default Header</label>
+          <select class="custom-select ng-pristine ng-valid ng-touched" id="head" (change)="selectHeader($event)">
+            <option *ngFor = "let header of layoutService.defaultHeadersObject; let i = index;" value="{{i}}" [selected]="i==layoutService.headerIndex">{{header.section_title}}</option>
+          </select>
+          <div class="row">
+            <div class="col-6">
+              <label for="name">Left Margin</label>
+              <div class="mb-0" ng-reflect-klass="mb-0">
+                <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+                  id="name" type="number" min="0" max="30" ng-reflect-name="name" [(ngModel)]="layoutService.defaultHeaderMarginLeft" (change)="setHFMargin($event, 'defaultHeaderMarginLeft')"
+                  [ngModelOptions]="{standalone: true}">
+              </div>
+            </div>
+            <div class="col-6">
+              <label for="name">Right Margin</label>
+              <div class="mb-0" ng-reflect-klass="mb-0">
+                <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+                  id="name" type="number" min="0" max="30"  ng-reflect-name="name" [(ngModel)]="layoutService.defaultHeaderMarginRight" (change)="setHFMargin($event, 'defaultHeaderMarginRight')"
+                  [ngModelOptions]="{standalone: true}">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-6 float withckeck">
+          <label for="name">Default Footer</label>
+          <select class="custom-select ng-pristine ng-valid ng-touched" id="footer" (change)="selectFooter($event)">
+            <option *ngFor = "let footer of layoutService.defaultFootersObject; let i = index;" value="{{i}}" [selected]="i==layoutService.footerIndex">{{footer.section_title}}</option>
+          </select>
+          <div class="row">
+            <div class="col-6">
+              <label for="name">Left Margin</label>
+              <div class="mb-0" ng-reflect-klass="mb-0">
+                <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+                  id="name" type="number" min="0" max="30" ng-reflect-name="name" [(ngModel)]="layoutService.defaultFooterMarginLeft" (change)="setHFMargin($event, 'defaultFooterMarginLeft')"
+                  [ngModelOptions]="{standalone: true}">
+              </div>
+            </div>
+            <div class="col-6">
+              <label for="name">Right Margin</label>
+              <div class="mb-0" ng-reflect-klass="mb-0">
+                <input class="form-control form-input mb-0 ng-untouched ng-pristine ng-invalid" formcontrolname="name"
+                  id="name" type="number" min="0" max="30"  ng-reflect-name="name" [(ngModel)]="layoutService.defaultFooterMarginRight" (change)="setHFMargin($event, 'defaultFooterMarginRight')"
+                  [ngModelOptions]="{standalone: true}">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <div *ngIf="layoutService.hfHeight" class="form-group modal-btn-width text-center mb-0">
+      <p style="color:red;">Header/Footer height exceeds selected page height</p>
+
+    </div>
+    <div class="form-group modal-btn-width text-center mb-0">
+      <button class="btn btn-success" type="button" (click)="resetModel()">Save</button>
+      <button class="btn btn-primary ms-3" type="button" data-dissmiss="modal" (click)="cancelModel()">Cancel</button>
+    </div>
+
+  </form>
+</div>

@@ -1,0 +1,38 @@
+<div class="modal-header">
+	<h4 class="modal-title">Automated Assignment</h4>
+	<button type="button" class="close" data-dismiss="modal"
+		(click)="activeModal.dismiss('Cross click')">&times;</button>
+</div>
+
+<div class="modal-body">
+	<form [formGroup]="myForm">
+		<div class="row">
+			<div class='col-md-6'>
+				<!-- <label class="title" for="startdate">Start Date* </label> -->
+				<!-- <ejs-datepicker  formControlName="startdate" (change)="changeDate($event)" placeholder='Enter date'>
+				</ejs-datepicker> -->
+				<app-mat-date-picker-sharedable [classesName]="['form-group', 'vertical-label-cross']" [lableName]="'Start Date*'" (valueChange)="onChangeStartDate($event)" [defaultDate]="myForm.get('startdate').value"  [placeholder]="'Enter date'" ></app-mat-date-picker-sharedable>
+
+				<small class="form-text text-muted danger" *ngIf="myForm.get('startdate').errors?.required">This field is required</small>
+			</div>
+			<div class="col-md-6">
+				<label class="title" for="noOfDoctors">Number of weeks*</label>
+				<input type="number" min="2" max="4" oninput="validity.valid||(value='')" (change)="changeNoWeeks()"
+					class="form-control height-clr" formControlName="noOfWeeks" />
+					<small class="form-text text-muted danger" *ngIf="myForm.get('noOfWeeks').errors?.required">This field is required</small>
+			</div>
+		</div>
+		<div class="row d-flex justify-content-center mt-3">
+			<div class="col-md-4">
+				<button class="btn btn-outline-secondary w-100" (click)="activeModal.close()">
+					Cancel
+				</button>
+			</div>
+			<div class="col-md-4">
+				<button class="btn btn-success w-100" [disabled]="myForm.invalid" (click)="submitFormAndOpen()">
+					Automate
+				</button>
+			</div>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,279 @@
+<div class="row">
+	<div class="col-12 pt-2">
+		<div class="user-info">
+			<div class="row">
+				<div class='col-md-12'>
+					<h4 class="my-0 color-green" style="font-size: 18px !important;">Rooms</h4>
+				</div>
+			</div>
+		</div>
+		<hr class="line-bottom mt-2">
+
+		<div class="divmaincontainer"
+			style="font-weight:500;font-size: 14px;margin-top: 20px;padding: 0px 1px 0 !important;">
+			<div class="row" style="background-color: white; margin-left: 0; margin-right: 0;">
+				<div class="col-md-3 col-sm-12"
+					style=" width: 100%; float:left; height:auto; border-radius: 4px; margin-left: 0; padding: 0;">
+					<div class="row">
+						<div class="col-md-12 col-sm-6">
+							<form [formGroup]="myForm" novalidate>
+								
+									<!-- <mat-calendar (selectedChange)="setDate($event)" [(selected)]="model"></mat-calendar> -->
+							</form>
+						</div>
+
+						<div class="col-md-12 col-sm-6">
+							<app-doctor-room-list (checkAvailabilityDoc)="checkAvailabilityDoc($event)"
+								(clearCalendar)="clearCalendar()" (callAssign)="callAssign($event)"
+								(sendClinicId)="changeClinicId($event)" (selectRoom)="selectRoom($event)"
+								(selectDoctor)="selectDoctor($event)"></app-doctor-room-list>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-9 col-sm-12" style="padding-left:5px !important">
+					<front-desk-calendar-header [(view)]="view" [(viewDate)]="viewDate"
+						(changeDatePickerMonthNext)="getMainCalendarCurrentDate($event)" (swap)="changeSwap($event)"
+						[swaps]="swap" (changeDatePickerMonthPrev)="getMainCalendarCurrentDate($event)"
+						(viewChange)="viewChange($event)"></front-desk-calendar-header>
+					<div *ngIf="view=='month'">
+
+						<div class="overflow-drag-front-desk-assign-room" [ngSwitch]="view"
+							[style.height]="view == 'month' ? '100%' : '100vh'"
+							style="overflow-x: scroll !important;overflow-y: hidden !important;">
+							<table style="width: 100%;">
+								<tr *ngIf="swap==='true'">
+									<td>
+										<a (click)="chnageDoctorHeader('left')">
+											<i class="fa fa-arrow-circle-left"
+												style="width: 30px;height: 30px;"></i></a>
+									</td>
+									<td>
+										<a style="float: right" (click)="chnageDoctorHeader('right')"> <i
+												class="fa fa-arrow-circle-right"
+												style="width: 30px;height: 30px;"></i></a>
+
+									</td>
+								</tr>
+								<tr *ngIf="swap==='true'">
+
+
+									<td *ngFor="let doc of currentDoctors; let i=index"
+										style="    min-width: 435px;padding-left: 10px;">
+										<div (click)="removeTopEntry(doc.id)" [hidden]="doc.id == 0" class="text-center"
+											style="border: 1px solid #e1e1e1; width: 70%; margin-left: 15%;margin-bottom: 10px;">
+
+											<div class="col-md-3" [style.background-color]="doc.color"
+												style="width: 20px; float: left; height: 37px;">
+
+											</div>
+											<h4 *ngIf="doc.doctor">{{doc.doctor.first_name}} {{doc.name}}</h4>
+
+										</div>
+										<mwl-calendar-month-view *ngSwitchCase="'month'" [(viewDate)]="viewDate"
+											[clinicDays]="clinicDays" [data]="doc.doctor" [docName]="doc.name"
+											[selectDate]="datePick" [refresh]="refresh" [swaps]="swap" [index]="i"
+											[monthEvents]="eventsDoc">
+										</mwl-calendar-month-view>
+
+									</td>
+
+								</tr>
+								<tr *ngIf="swap==='false'">
+									<td>
+										<a (click)="chnageRoomHeader('left')">
+											<i class="fa fa-arrow-circle-left"
+												style="width: 30px;height: 30px;"></i></a>
+
+									</td>
+									<td>
+										<a style="float: right" (click)="chnageRoomHeader('right')"> <i
+												class="fa fa-arrow-circle-right"
+												style="width: 30px;height: 30px;"></i></a>
+
+									</td>
+								</tr>
+								<tr *ngIf="swap==='false'">
+
+									<td *ngFor="let room of currentRooms; let i=index" style="    min-width: 620px;">
+										<div (click)="removeTopEntry(room.id)" [hidden]="room.id == 0"
+											class="text-center"
+											style="border: 1px solid #e1e1e1; width: 70%; margin-left: 15%;margin-bottom: 10px">
+											<div class="col-md-3" [style.background-color]="room.color"
+												style="width: 20px; float: left; height: 37px;">
+											</div>
+											<h4>{{room.name}}</h4>
+										</div>
+										<mwl-calendar-month-view *ngSwitchCase="'month'" [(viewDate)]="viewDate"
+											[clinicDays]="clinicDays" [data]="room" [selectDate]="datePick"
+											[refresh]="refresh" [swaps]="swap" [index]="i" [monthEvents]="eventsRoom">
+										</mwl-calendar-month-view>
+
+
+									</td>
+
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div *ngIf="view!='month'">
+
+						<div class="row" [ngSwitch]="view">
+							<div class=" col-md-12" style="width: 100%;">
+								<div class="row" *ngIf="swap==='true'">
+									<div class="col-md-11">
+										<a (click)="chnageDoctorHeader('left')">
+											<i class="fa fa-arrow-circle-left"
+												style="width: 30px;height: 30px;"></i></a>
+									</div>
+									<div class="col-md-1">
+										<a (click)="chnageDoctorHeader('right')" style="float: right"> <i
+												class="fa fa-arrow-circle-right"
+												style="width: 30px;height: 30px;"></i></a>
+									</div>
+								</div>
+								<div class="row" *ngIf="swap==='true' && currentDoctors.length===2">
+									<div class="col-md-6" *ngFor="let doc of currentDoctors; let i=index"
+										[ngStyle]="i===1?{'padding-left':'12px','padding-right':'12px'}:{'padding-right':'0'}">
+										<div (click)="removeTopEntry(doc.id)" [hidden]="doc.id == 0" class="text-center"
+											style="border: 1px solid #e1e1e1; width: 70%; margin-left: 15%;margin-bottom: 10px;">
+											<div class="col-md-3" [style.background-color]="doc.color"
+												style="width: 20px; float: left; height: 37px;">
+											</div>
+											<h4 *ngIf="doc.doctor">{{doc.doctor.first_name}} {{doc.name}}</h4>
+										</div>
+										<mwl-calendar-week-view *ngSwitchCase="'week'" [headerOn]="'true'"
+											[clinicDays]="clinicDays" [checkDay]="'week'" [index]="i"
+											[viewDate]="viewDate" [swaps]="swap" [data]="doc.doctor"
+											[docName]="doc.name">
+										</mwl-calendar-week-view>
+									</div>
+								</div>
+								<div class="row" *ngIf="swap==='true' && currentDoctors.length===1">
+									<div class="col-md-12" *ngFor="let doc of currentDoctors; let i=index"
+										[ngStyle]="i===1?{'padding-left':'0'}:{'padding-right':'0'}">
+										<div (click)="removeTopEntry(doc.id)" [hidden]="doc.id == 0" class="text-center"
+											style="border: 1px solid #e1e1e1; width: 70%; margin-left: 15%;margin-bottom: 10px;">
+											<div class="col-md-3" [style.background-color]="doc.color"
+												style="width: 20px; float: left; height: 37px;">
+											</div>
+											<h4 *ngIf="doc.doctor">{{doc.doctor.first_name}} {{doc.name}}</h4>
+										</div>
+										<mwl-calendar-week-view *ngSwitchCase="'week'" [headerOn]="'true'"
+											[clinicDays]="clinicDays" [checkDay]="'week'" [index]="i"
+											[viewDate]="viewDate" [swaps]="swap" [data]="doc" [docName]="doc.name">
+										</mwl-calendar-week-view>
+									</div>
+								</div>
+								<div class="row" *ngIf="swap==='false'">
+									<div class="col-md-11">
+										<a (click)="chnageRoomHeader('left')">
+											<i class="fa fa-arrow-circle-left"
+												style="width: 30px;height: 30px;"></i></a>
+									</div>
+									<div class="col-md-1">
+										<a (click)="chnageRoomHeader('right')" style="float: right"> <i
+												class="fa fa-arrow-circle-right"
+												style="width: 30px;height: 30px;"></i></a>
+									</div>
+								</div>
+								<div class="row" *ngIf="swap==='false'  && currentRooms.length===2">
+									<div class="col-md-6" *ngFor="let room of currentRooms; let i=index"
+										[ngStyle]="i===1?{'padding-left':'12px','padding-right':'12px'}:{'padding-right':'0'}">
+										<div (click)="removeTopEntry(room.id)" [hidden]="room.id == 0"
+											class="text-center"
+											style="border: 1px solid #e1e1e1; width: 70%; margin-left: 15%;margin-bottom: 10px">
+											<div class="col-md-3" [style.background-color]="room.color"
+												style="width: 20px; float: left; height: 37px;">
+											</div>
+											<h4>{{room.name}}</h4>
+										</div>
+										<mwl-calendar-week-view *ngSwitchCase="'week'" [headerOn]="'true'" [index]="i"
+											[clinicDays]="clinicDays" [viewDate]="viewDate" [data]="room" [swaps]="swap"
+											[checkDay]="'week'" (eventClicked)="eventClicked($event.event)">
+										</mwl-calendar-week-view>
+									</div>
+								</div>
+								<div class="row" *ngIf="swap==='false'  && currentRooms.length===1">
+									<div class="col-md-12" *ngFor="let room of currentRooms; let i=index"
+										[ngStyle]="i===1?{'padding-left':'0'}:{'padding-right':'0'}">
+										<div (click)="removeTopEntry(room.id)" [hidden]="room.id == 0"
+											class="text-center"
+											style="border: 1px solid #e1e1e1; width: 70%; margin-left: 15%;margin-bottom: 10px">
+											<div class="col-md-3" [style.background-color]="room.color"
+												style="width: 20px; float: left; height: 37px;">
+											</div>
+											<h4>{{room.name}}</h4>
+										</div>
+										<mwl-calendar-week-view *ngSwitchCase="'week'" [headerOn]="'true'" [index]="i"
+											[clinicDays]="clinicDays" [viewDate]="viewDate" [data]="room" [swaps]="swap"
+											[checkDay]="'week'" (eventClicked)="eventClicked($event.event)">
+										</mwl-calendar-week-view>
+									</div>
+								</div>
+
+							</div>
+							<div class="col-md-12" id="test-scroll"
+								style="overflow-y: scroll;overflow-x:hidden;height: 93vh;padding-right:4px">
+								<div class="row" *ngIf="swap==='true'  && currentDoctors.length===2">
+									<div class="col-md-6" *ngFor="let doc of currentDoctors; let i=index"
+										[ngStyle]="i===1?{'padding-left':'9px','padding-right':'18.5px'}:{'padding-right':'3px'}">
+										<mwl-calendar-week-view *ngSwitchCase="'week'" [headerOn]="'false'"
+											[clinicDays]="clinicDays" [checkDay]="'week'" [index]="i"
+											[viewDate]="viewDate" [swaps]="swap" [data]="doc.doctor"
+											[docName]="doc.name">
+										</mwl-calendar-week-view>
+										<mwl-calendar-week-view *ngSwitchCase="'day'" [checkDay]="'day'" [index]="i"
+											[clinicDays]="clinicDays" [viewDate]="viewDate" [swaps]="swap"
+											[data]="doc.doctor" [docName]="doc.name">
+										</mwl-calendar-week-view>
+									</div>
+								</div>
+								<div class="row" *ngIf="swap==='true'  && currentDoctors.length===1">
+									<div class="col-md-12" *ngFor="let doc of currentDoctors; let i=index"
+										[ngStyle]="i===1?{'padding-left':'0'}:{'padding-right':'0'}">
+										<mwl-calendar-week-view *ngSwitchCase="'week'" [headerOn]="'false'"
+											[clinicDays]="clinicDays" [checkDay]="'week'" [index]="i"
+											[viewDate]="viewDate" [swaps]="swap" [data]="doc.doctor"
+											[docName]="doc.name">
+										</mwl-calendar-week-view>
+										<mwl-calendar-week-view *ngSwitchCase="'day'" [checkDay]="'day'" [index]="i"
+											[clinicDays]="clinicDays" [viewDate]="viewDate" [swaps]="swap"
+											[data]="doc.doctor" [docName]="doc.name">
+										</mwl-calendar-week-view>
+									</div>
+								</div>
+								<div class="row" *ngIf="swap==='false' && currentRooms.length===2">
+									<div class="col-md-6" *ngFor="let room of currentRooms; let i=index"
+										[ngStyle]="i===1?{'padding-left':'9px','padding-right':'18.5px'}:{'padding-right':'0px'}">
+										<mwl-calendar-week-view *ngSwitchCase="'week'" [headerOn]="'false'" [index]="i"
+											[clinicDays]="clinicDays" [viewDate]="viewDate" [data]="room" [swaps]="swap"
+											[checkDay]="'week'" (eventClicked)="eventClicked($event.event)">
+										</mwl-calendar-week-view>
+										<mwl-calendar-week-view *ngSwitchCase="'day'" [checkDay]="'day'" [index]="i"
+											[clinicDays]="clinicDays" [viewDate]="viewDate" [swaps]="swap"
+											[data]="room">
+										</mwl-calendar-week-view>
+									</div>
+								</div>
+								<div class="row" *ngIf="swap==='false' && currentRooms.length===1">
+									<div class="col-md-12" *ngFor="let room of currentRooms; let i=index"
+										[ngStyle]="i===1?{'padding-left':'0'}:{'padding-right':'0'}">
+										<mwl-calendar-week-view *ngSwitchCase="'week'" [headerOn]="'false'" [index]="i"
+											[clinicDays]="clinicDays" [viewDate]="viewDate" [data]="room" [swaps]="swap"
+											[checkDay]="'week'" (eventClicked)="eventClicked($event.event)">
+										</mwl-calendar-week-view>
+										<mwl-calendar-week-view *ngSwitchCase="'day'" [checkDay]="'day'" [index]="i"
+											[clinicDays]="clinicDays" [viewDate]="viewDate" [swaps]="swap"
+											[data]="room">
+										</mwl-calendar-week-view>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

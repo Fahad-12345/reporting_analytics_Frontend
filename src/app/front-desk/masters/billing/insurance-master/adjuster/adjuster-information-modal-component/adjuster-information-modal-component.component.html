@@ -1,0 +1,277 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div class="modal-content">
+	<div class="modal-header">
+		<h5 *ngIf="!editMode" class="modal-title" id="exampleModalLabel">Add Adjuster Information</h5>
+		<h5 *ngIf="editMode" class="modal-title" id="exampleModalLabel">Edit Adjuster Information</h5>
+		<button type="button" class="close" (click)="close()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+		<form [formGroup]="adjusterForm">
+			<div class="row">
+				<div class="col-md-12 mb-2">
+					<label class="form-label" for="insurance_and_location">Insurance Name*</label>
+
+					<!-- <ng-multiselect-dropdown *ngIf="dropDownData.length>0" formControlName="insurance_and_location"
+						placeholder="Select Insurance Name" [data]="dropDownData" [settings]="dropdownSettings">
+					</ng-multiselect-dropdown> -->
+
+					<!-- <ng-select (keyup)="searchInsurance($event)" [items]="lstInsurances"
+						formControlName="insurance_and_location" [multiple]="true" bindLabel="insurance_name"
+						bindValue="id">
+					</ng-select> -->
+
+					<ng-select (keyup)="searchInsurance($event.target.value)" (add)="add()" (clear)="add()" [multiple]="true" [items]="lstInsurances"
+						formControlName="insurance_and_location" (scrollToEnd)="fetchMoreInsurances()" bindLabel="insurance_name" bindValue="id" [closeOnSelect]="false">
+					</ng-select>
+					<!-- <ng-select [multiple]="true" formControlName="insurance_and_location"
+						(keyup)="searchInsurance($event)">
+						<ng-option *ngFor="let option of lstInsurances" [value]="option.id"
+							[disabled]="option.disabled">
+							{{option.insurance_name}}</ng-option>
+					</ng-select> -->
+					<small class="form-text text-muted danger"
+							*ngIf="adjusterForm.get('insurance_and_location').errors?.required && adjusterForm.get('insurance_and_location').touched">
+							This field is required
+						</small>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="first_name">First Name*</label>
+						<input class="form-control mb-0" formControlName="first_name" type="text" notFirstCharactorSpace>
+						<small class="form-text text-muted danger"
+							*ngIf="adjusterForm.get('first_name').errors?.required && adjusterForm.get('first_name').touched">
+							This field is required
+						</small>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="middle_name">Middle Name</label>
+						<input class="form-control mb-0" formControlName="middle_name" type="text">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="last_name">Last Name*</label>
+						<input class="form-control mb-0" formControlName="last_name" type="text" notFirstCharactorSpace>  
+						<small class="form-text text-muted danger"
+							*ngIf="adjusterForm.get('last_name').errors?.required && adjusterForm.get('last_name').touched">
+							This field is required
+						</small>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="address">Street Address</label>
+						<input class="form-control mb-0" ngx-google-places-autocomplete [options]="{
+              types: [],
+              componentRestrictions: { country: 'US' }
+              }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'location')"
+							formControlName="street_address" type="text">
+
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="suite">Suite / Floor</label>
+						<input class="form-control mb-0" formControlName="apartment_suite" type="text">
+
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="city">City</label>
+						<input class="form-control mb-0" formControlName="city" type="text">
+
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="state">State</label>
+						<!-- <input class="form-control mb-0" formControlName="state" type="text"> -->
+						<ng-select formControlName="state" class="ng-value-label border-0 tooltip-outer"  ngbTooltip="{{selectedState}}" (change)="stateChange($event)" tooltipClass="table-custom-tooltip" [items]="allStates" container="body" bindLabel="name" bindValue="name">
+							<ng-template ng-option-tmp let-item="item">
+							  <span class="ng-value-label border-0 tooltip-outer"  tooltipClass="table-custom-tooltip" ngbTooltip="{{item.fullName}}" container="body">{{item.name}}</span>
+							</ng-template>
+						  </ng-select>					</div>
+				</div>
+				<div class="col-md-4">
+					<!-- <div class="form-group field mb-1">
+						<label class="form-label" for="zip">Zip</label>
+						<input class="form-control mb-0" mask="00000" formControlName="zip" type="text">
+						<small class="form-text text-muted danger"
+							*ngIf="adjusterForm.get('zip').value?.length > 0 && adjusterForm.get('zip').value?.length < 5 ">
+							Invalid Format: 00000
+						</small>
+					</div> -->
+					<div class="form-group field mb-1">
+						<label class="form-label" for="zip">Zip</label>
+						<input class="form-control mb-0"  formControlName="zip" type="text">
+						<small class="form-text text-muted danger"
+							*ngIf="adjusterForm.get('zip').value?.length > 0 && adjusterForm.get('zip').errors?.pattern ">
+							{{zipFormatMessage.format_usa}}
+						</small>
+						
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="phone">Phone No</label>
+						<input class="form-control mb-0" mask="000-000-0000" formControlName="phone_no" type="text">
+						<small class="form-text text-muted danger"
+							*ngIf="adjusterForm.get('phone_no').value?.length > 0 && adjusterForm.get('phone_no').value?.length < 10 && adjusterForm.get('phone_no').touched ">
+							Invalid Format: 000-000-0000
+						</small>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="ext">Extension</label>
+						<input class="form-control mb-0" appOnlyNumeric maxLength="10" formControlName="ext"
+							type="text">
+						<!-- <label class="form-text text-muted danger"
+              *ngIf="adjusterForm.get('ext').value.length > 0 && adjusterForm.get('ext').value.length < 2">
+              Extention No
+            </label> -->
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="cell_no">Cell No</label>
+						<input class="form-control mb-0" mask="000-000-0000" formControlName="cell_no" type="text">
+						<small class="form-text text-muted danger"
+							*ngIf="adjusterForm.get('cell_no').value.length > 0 && adjusterForm.get('cell_no').value.length < 10 && adjusterForm.get('cell_no').touched">
+							Invalid Format: 000-000-0000</small>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="fax">Fax</label>
+						<input class="form-control mb-0" mask="000-000-0000" formControlName="fax" type="text">
+						<small class="form-text text-muted danger"
+							*ngIf="adjusterForm.get('fax').value.length > 0 && adjusterForm.get('fax').value.length < 10  && adjusterForm.get('fax').touched">
+							Invalid Format: 000-000-0000</small>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="email">Email</label>
+						<input class="form-control mb-0" formControlName="email" type="text">
+						<small class="form-text text-muted danger"
+						*ngIf="adjusterForm.get('email').errors && (adjusterForm.get('email').dirty || adjusterForm.get('email').touched)">
+						Invalid email address.</small>
+					</div>
+				</div>
+
+
+			</div>
+			<!-- <div class="row">
+        <div class="col-12">
+          <h6 class="color-green mb-0 mt-1">Contact Person Information</h6>
+        </div>
+      </div> -->
+
+			<!-- <div class="row">
+        <div class="col-md-4">
+          <div class="form-group mb-1"><label class="form-label"> First Name</label>
+            <input formControlName="contactPersonFirstName" class="form-control mb-0" type="text">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-1"><label class="form-label">Middle Name</label>
+            <input formControlName="contactPersonMiddleName" class="form-control mb-0" type="text">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group mb-1"><label class="form-label">Last Name</label>
+            <input formControlName="contactPersonLastName" class="form-control mb-0" type="text">
+          </div>
+        </div>
+
+      </div> -->
+
+			<div class="row">
+				<!-- <div class="col-md-4">
+          <div class="form-group mb-1"><label class="form-label">Phone No</label>
+            <input class="form-control mb-0" mask="000-000-0000" formControlName="contactPersonPhoneNo" type="text">
+            <label class="form-text text-muted danger"
+              *ngIf="adjusterForm.get('contactPersonPhoneNo').value?.length > 0 && adjusterForm.get('contactPersonPhoneNo').value?.length < 10">
+              Phone No</label>
+          </div>
+        </div> -->
+
+				<!-- <div class="col-md-4">
+          <div class="form-group mb-1"><label class="form-label">Extension</label>
+            <input class="form-control mb-0" appOnlyNumeric maxlength="10" minlength="2"
+              formControlName="contactPersonExt" type="text"> -->
+				<!-- <label class="form-text text-muted danger"
+              *ngIf="adjusterForm.get('contactPersonExt').value.length > 0 && adjusterForm.get('contactPersonExt').value.length < 2">
+              Extension</label> -->
+				<!-- </div>
+
+        </div> -->
+
+				<div class="col-md-4">
+					<!-- <div class="form-group mb-1">
+            <label class="form-label">Cell No.</label>
+            <input class="form-control mb-0" mask="000-000-0000" formControlName="contactPersonCellNumber" type="text"> -->
+					<!-- <label class="form-text text-muted danger"
+              *ngIf="adjusterForm.get('contactPersonCellNumber').value.length > 0 && adjusterForm.get('contactPersonCellNumber').value.length < 10">
+              Cell No</label> -->
+					<!-- </div> -->
+				</div>
+
+			</div>
+
+			<div class="row">
+				<!-- <div class="col-md-6">
+          <div class="form-group mb-1"><label class="form-label">Fax</label>
+            <input class="form-control mb-0" mask="000-000-0000" formControlName="contactPersonFax" type="text"> -->
+				<!-- <label class="form-text text-muted danger"
+              *ngIf="adjusterForm.get('contactPersonFax').value.length > 0 && adjusterForm.get('contactPersonFax').value.length < 10">
+              Fax</label> -->
+				<!-- </div>
+        </div> -->
+				<!-- <div class="col-md-6">
+          <div class="form-group mb-1">
+            <label class="form-label">Email</label>
+            <input formControlName="contactPersonEmail" class="form-control mb-0" type="text">
+            <label class="form-text text-muted danger" *ngIf="adjusterForm.get('contactPersonEmail').invalid"> Email
+              Format</label>
+          </div>
+        </div> -->
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group field mb-1">
+						<label class="form-label" for="comments">Comments</label>
+						<textarea class="form-control mb-0" formControlName="comments" rows="3"></textarea>
+
+					</div>
+				</div>
+			</div>
+
+		</form>
+		<div class="row mt-3">
+			<div class="col-md-12 text-center modal-btn-width">
+				<button class="btn btn-primary me-3" data-dismiss="modal" (click)="close()"
+					type="button">Cancel</button>
+				<button [disabled]="disableBtn || adjusterForm.invalid" *ngIf="!editMode" class="btn btn-success"
+					(click)="submit(adjusterForm.value)">Save & Continue</button>
+				<button  *ngIf="editMode" class="btn btn-success"
+					[disabled]="disableBtn || adjusterForm.invalid" (click)="submit(adjusterForm.value)">Update</button>
+
+			</div>
+		</div>
+	</div>
+</div>

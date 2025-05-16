@@ -1,0 +1,11 @@
+.modal{
+	::ng-deep &.modal-width-xl{
+		.modal-dialog{
+			max-width: 1420px !important;
+			padding: 0 15px;
+			@media (max-width: 1199.98px) {
+				max-width: 100% !important;
+			}
+		}
+	}
+}

@@ -1,0 +1,25 @@
+.highlighted{
+    color: #34c3ee;
+}
+
+label {
+    font-weight: 500 !important;
+}
+
+
+.tooltip-outer {
+    font-size: 12px;
+    white-space: nowrap;
+    width: 90%;
+    overflow: hidden;
+    margin-left: 5px;
+    text-overflow: ellipsis;
+    color: #4b4b4b;
+    font-weight: 500;
+
+    ul {
+        top: 3px;
+        cursor: pointer;
+        position: relative;
+    }
+}

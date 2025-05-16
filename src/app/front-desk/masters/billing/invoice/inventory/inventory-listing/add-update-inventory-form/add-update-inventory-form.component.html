@@ -1,0 +1,75 @@
+<form [formGroup]="inventoryForm" (ngSubmit)="onSubmit(inventoryForm)">
+  <div class="row ">
+    <div class="col-12">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': inventoryForm.get('name').value != '' && inventoryForm.get('name').value != null }">
+        <label class="form-label">Item Name*</label>
+        <input type="text" formControlName="name" class="form-control form-input mb-0" notFirstCharactorSpace />
+        <small class="form-text text-muted danger" *ngIf="inventoryForm.get('name').errors?.required && 
+           (inventoryForm.get('name').dirty ||
+           inventoryForm.get('name').touched)">
+          This field is required</small>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group currency mb-1"
+        [ngClass]="{'focused': inventoryForm.get('unit_price').value != '' && inventoryForm.get('unit_price').value != null }">
+        <label class="form-label">Unit Price*</label>
+        <input type="text" currencyMask formControlName="unit_price" class="form-control form-input mb-0"
+        [options]="customCurrencyMaskConfig" (keydown.space)="$event.preventDefault()"
+        />
+        <i class="fa fa-dollar-sign"></i>
+        <small class="form-text text-muted danger" *ngIf="inventoryForm.get('unit_price').errors?.required  && 
+          (inventoryForm.get('unit_price').dirty ||
+          inventoryForm.get('unit_price').touched)">
+          This field is required</small>
+          <small class="form-text text-muted danger"
+          *ngIf="inventoryForm.get('unit_price').errors?.max">
+          Unit price cannot be greater than 999999.99
+        </small>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': inventoryForm.get('quantity').value != '' && inventoryForm.get('quantity').value != null }">
+        <label class="form-label">Quantity*</label>
+        <input type="text" appAppOnlyNumbersWithoutDecimal formControlName="quantity"  class="form-control form-input mb-0" notFirstCharactorSpace />
+        <small class="form-text text-muted danger" *ngIf="inventoryForm.get('quantity').errors?.required && 
+        (inventoryForm.get('quantity').dirty ||
+        inventoryForm.get('quantity').touched)">
+          This field is required</small>
+          <small class="form-text text-muted danger"
+          *ngIf="inventoryForm.get('quantity').errors?.max">
+          Quantity cannot be greater than 999999
+        </small>
+          <small class="form-text text-muted danger"
+          *ngIf="inventoryForm.get('quantity').errors?.min">
+          Quantity cannot be less than 1
+        </small>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': inventoryForm.get('description').value != '' && inventoryForm.get('description').value != null }">
+        <label class="form-label">Description</label>
+        <textarea rows="6" formControlName="description" class="form-control form-input mb-0" notFirstCharactorSpace></textarea>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': inventoryForm.get('comment').value != '' && inventoryForm.get('comment').value != null }">
+        <label class="form-label">Comment</label>
+        <textarea rows="2" formControlName="comment" class="form-control form-input mb-0" notFirstCharactorSpace></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 modal-btn-width text-center mt-3">
+      <button class="btn btn-primary me-2" (click)="closeModal()" type="button"
+          >Cancel</button>
+      <button class="btn btn-success" type="submit"
+         [disabled]="isDisabled()">{{hasId?'Update':'Save'}} </button>
+    </div>
+  </div>
+</form>
+

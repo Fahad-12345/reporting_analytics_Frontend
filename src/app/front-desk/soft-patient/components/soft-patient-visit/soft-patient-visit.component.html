@@ -1,0 +1,43 @@
+<!-- <div class="modal-header">
+    <h4 class="modal-title">Create Appointment </h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div> -->
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+
+<div class="front-desk-block soft-patient">
+	<div class="row user-info pt-2">
+		<div class="col-12">
+		  <h4 class="my-0 color-green">Soft Registration List</h4>
+		</div>
+	</div>
+	  <hr class="line-bottom" />
+		<div class="row pt-2">
+			<div class="col-12">
+				<!-- {{patientId}}-{{caseId}} --{{createCaseComponent&&  createCaseComponent.form&&patientSoftRegistrationComponent._form.valid}} -->
+				<!-- [stepControl]="patientSoftRegistrationComponent._form" -->
+				<mat-horizontal-stepper (selectionChange)="selectedIndex($event)" class="mat-stepper-board" [linear]="isLinear" #stepper class="mat-stepper-hold {{caseId?'last-edited-step-' + stepper.selectedIndex:'last-add-step-' + stepper.selectedIndex }}">
+					<mat-step [completed]="(patientSoftRegistrationComponent && patientSoftRegistrationComponent._form&& patientSoftRegistrationComponent._form.valid && patientId>0) || softCaseService.patientFormValidation"  label="Add Patient Information">
+					
+							<app-patient-form-soft  #patientSoftRegistrationComponent (patientAddedSucuss) = "patientAddedSucuss($event)" (patientEditForm) = "patientEditForm($event)"(patientAddForm) = "patientAddForm($event)" (moveToCaseInfoTab)="moveToCaseInfoTab($event)" (moveToNextTab)="moveToNextTab($event)"></app-patient-form-soft>
+		
+					</mat-step>
+					<!-- [stepControl]="createCaseComponent.form" -->
+					<mat-step  [completed]="(createCaseComponent&&  createCaseComponent.form&&createCaseComponent.form.valid && patientId>0 && caseId>0) "  label="Case Information">
+						
+							<app-create-case-form [addSoftPatientProviderCalandar]="addSoftPatientProviderCalandar" #createCaseComponent [case] = "case" (updateCase) = "updateCase($event)" (submit) = "submitCase($event)" (back)="back($event)"></app-create-case-form>
+						
+					</mat-step>
+	
+					<mat-step   [stepControl]="createAppointment?.myForm" *ngIf="!addSoftPatientProviderCalandar" label="Appointment Information">
+					
+	
+							
+							<app-soft-patient-create-appointment class="soft-patient-create-appointment" #createAppointment [patientId]="patientId" [caseId]="caseId" [caseTypeId]="caseTypeId" (back)="back($event)"></app-soft-patient-create-appointment>
+							
+	
+					</mat-step>
+				</mat-horizontal-stepper>
+			</div>
+		</div>
+</div>
+  

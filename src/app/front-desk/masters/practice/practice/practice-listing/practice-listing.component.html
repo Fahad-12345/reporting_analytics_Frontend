@@ -1,0 +1,399 @@
+
+<app-practice-menu></app-practice-menu>
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="document-manager add-user px-0 practice-list"
+	*ngIf="aclService.hasPermission(userPermissions.master_practice_view)">
+	<!-- <div class="user-info">
+		<div class="row">
+			<div class="col-md-12">
+				<h4 class="mb-0 color-green">Practice List</h4>
+			</div>
+		</div>
+	</div>
+	<hr class="line-bottom"> -->
+	<div class="d-block text-end" *ngIf="aclService.hasPermission(userPermissions.master_practice_add_new)">
+		<a [routerLink]='["/front-desk/masters/practice/practice/add"]' class="btn btn-default round-btn">
+			<span class="icon-plus-circle"></span> Add New
+		</a>
+	 </div>
+	 <form class="form" autocomplete="off" [formGroup]="searchForm" *ngIf="aclService.hasPermission(userPermissions.master_practice_filter)">
+		  <div class="search-filter search-filter-bg-light filter-grid grid-2" [class.hide-remaining-search-filter]="!isCollapsed">
+			  <div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+					<label class="form-label" for="FirstName">Practice Name</label>
+					<input type="text" id="FirstName" class="form-control form-input" formControlName="name">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('phone').value != '' && searchForm.get('phone').value != null }">
+					<label class="form-label" for="phoneNo">Phone No</label>
+					<input formControlName="phone" type="text" id="phoneNo" mask='000-000-0000' [dropSpecialCharacters]="true" class="form-control form-input">
+				</div>
+			  </div>
+			  <div class="collape-btn">
+				  <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				  [class.btn-success]="isCollapsed" type="button">
+					  <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				  </button>
+			  </div>
+			  <div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				  <button class="btn btn-success" (click)="setPage({ offset: 0 })">Filter</button>
+				  <button class="btn btn-primary" (click)="resetFilters()" [disabled]="checkInputs()">Reset</button>
+			  </div>
+		  </div>
+	 </form>
+	<!-- <div class="search-filter">
+		<div class="text-end px-0" *ngIf="aclService.hasPermission(userPermissions.master_practice_add_new)">
+			<a [routerLink]='["/front-desk/masters/practice/practice/add"]' class="btn btn-default round-btn float-right">
+				<span class="icon-plus-circle"></span> Add New</a>
+		</div>
+		<form autocomplete="off" [formGroup]="searchForm"
+			*ngIf="aclService.hasPermission(userPermissions.master_practice_filter)">
+			<div class="form">
+				<div class="search-filter-body">
+					<div class="row fields-holder">
+						<div class="col-md-8 col-lg-9 col-xl-10">
+							<div class="row">
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="form-group field"
+										[ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+										<label class="form-label" for="FirstName">Practice Name</label>
+										<input type="text" id="FirstName" class="form-control form-input"
+											formControlName="name">
+									</div>
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6">
+									<div class="form-group field"
+										[ngClass]="{'focused': searchForm.get('phone').value != '' && searchForm.get('phone').value != null }">
+										<label class="form-label" for="phoneNo">Phone No</label>
+										<input formControlName="phone" type="text" id="phoneNo" mask='000-000-0000'
+											[dropSpecialCharacters]="true" class="form-control form-input">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4 col-lg-3 col-xl-2 text-center">
+							<div class="row justify-content-center mb-xl-0 mb-3">
+								<div class="col-4 col-sm-4 col-md-6 col-lg-6 align-self-center">
+									<button class="btn btn-success w-100 mt-0 me-3" (click)="setPage({ offset: 0 })">
+										Filter
+									</button>
+								</div>
+								<div class="col-4 col-sm-4 col-md-6 col-lg-6 align-self-center">
+									<button class="btn btn-primary w-100 mt-0" (click)="resetFilters()" [disabled]="checkInputs()"> Reset</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div> -->
+	<div class="document-content-area mt-2 practice-scroll">
+		<div class="row select-all-document align-items-start align-items-sm-center">
+			<div class="col-7 col-sm-5 col-md-6 col-lg-8 edit-block text-start">
+				<div class="form-group field option-field d-inline-block mb-2">
+					<ul>
+						<li>Show</li>
+						<li>
+							<select [(ngModel)]="this.facilityPage.size" (change)="pageLimit($event.target.value)" class="custom-select" name="limit">
+								<option  [value]="10">10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+
+				</div>
+			</div>
+			<div class="col-5 col-sm-7 col-md-6 col-lg-4 text-end">
+				<div class="row">
+					<div class="col-12 order-2 order-sm-1 mb-1 pe-1">
+					
+					</div>
+					<!-- <div class="col-12 col-sm-5 col-md-4 col-lg-5 col-xl-4 order-1 order-sm-2">
+							<p class="mb-2 d-inline-block ms-2">
+								<mat-checkbox (change)="$event ? masterToggle() : null"
+									[checked]="selection.hasValue() && isAllSelected()"
+									[indeterminate]="selection.hasValue() && !isAllSelected()">
+								</mat-checkbox>
+								<span class="position-relative" style="top: 1px;">Check all</span>
+							</p>
+						</div> -->
+				</div>
+			</div>
+		</div>
+
+		<div class="card mb-0 ma-body-list">
+			<div class="card-header card-header-custom">
+				<div class="row align-items-center">
+					<div class="col-2 pe-0 form">
+						<p class="mb-0 ps-2">
+							<mat-checkbox (change)="$event ? masterToggle() : null"
+								[checked]="selection.hasValue() && isAllSelected()"
+								[indeterminate]="selection.hasValue() && !isAllSelected()" disabled>
+							</mat-checkbox>
+							<span class="text-white justify-content-center position-relative d-inline-block mt-1">Practice Name</span>
+						</p>
+					</div>
+					<div class="col-8 ms-1 pt-1">
+						<ul class="list-unstyled social-icon-block font-bold">
+							<li class="text-white"> Short Name</li>
+							<li class="text-white"> Phone No</li>
+							<li class="text-white"> Address</li>
+							<li class="text-white"> City</li>
+							<li class="text-white"> State</li>
+							<li class="text-white pe-0 ps-0">Zip</li>
+							<li style="margin-left: -12px;" class="text-white ps-0">Email</li>
+							<li class="text-white ps-0"> Fax</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body card-body-custom px-3 pb-0 pt-3" style="border-radius: 0">
+				<div class="card mb-3" *ngFor="let facility of facilities; index as i;">
+					<div class="card-header">
+						<div class="row align-items-center">
+							<div class="col-2 pe-0 ma-pa-list form">
+								<ul class="list-unstyled social-icon-block">
+									<li style="width: 100% !important;">
+									<mat-checkbox (click)="$event.stopPropagation()"
+										*ngIf="aclService.hasPermission(userPermissions.master_practice_edit)"
+										(change)="$event ? selection.toggle(facility) : null"
+										[checked]="selection.isSelected(facility)" disabled>
+									
+									</mat-checkbox>
+										<span class="tooltip-outer d-inline-block font-bold" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{facility.name}}">{{facility.name}}</span>
+									</li>
+								</ul>
+							</div>
+							<div class="col-8 ma-pa-list">
+								<ul class="list-unstyled social-icon-block d-flex align-items-center">
+								
+									<li>
+										<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{ facility?.qualifier||'N/A'}}">{{ facility?.qualifier||'N/A'}}</span>
+									</li>
+
+									<li>
+										<i class="icon-phone me-1"></i>
+										<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{ facility?.locations[0]?.phone||'N/A'|phoneFormatPipe }}">{{ facility?.locations[0]?.phone||'N/A'|phoneFormatPipe }}</span>
+									</li>
+									<li>
+										<i class="icon-map m-1 float-left"></i>
+										<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{fullAddress(facility?.locations[0])}}">
+											{{fullAddress(facility?.locations[0])}}</span>
+
+										<!-- <ul class="custom-btn-tooltip list-unstyled d-inline-block ms-0">
+		<span>{{facility && facility?.locations[0] && facility?.locations[0]?.address && facility?.locations[0]?.address.length > 12 ? facility?.locations[0]?.address.substring(0, 12)+'...' : facility?.locations[0]?.address}}</span>
+		<li
+		*ngIf="facility && facility?.locations[0] && facility?.locations[0]?.address && facility?.locations[0]?.address.length > 12"
+		class="btn-tooltip-top">
+		<span>{{facility?.locations[0]?.address}}</span>
+		<i></i>
+		</li>
+		</ul> -->
+									</li>
+									<li>
+										<img class="me-1" src="assets/images/city.png">
+										<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{ facility?.locations[0]?.city||'N/A' }}">{{ facility?.locations[0]?.city||'N/A' }}</span>
+									</li>
+									<li>
+										<img class="me-1" src="assets/images/state.png">
+										<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{ facility?.locations[0]?.state||'N/A' }}">{{ facility?.locations[0]?.state||'N/A' }}</span>
+									</li>
+									<li>
+										<img class="me-1" src="assets/images/zip-code.png">
+										<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{ facility?.locations[0]?.zip||'N/A' }}">{{ facility?.locations[0]?.zip||'N/A' }}</span>
+									</li>
+									<li>
+										<i class="icon-envelope me-1"></i>
+										<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{facility?.locations[0]?.email||'N/A'}}">{{facility?.locations[0]?.email||'N/A'}}</span>
+									</li>
+									<li><i class="icon-fax m-1"></i>
+										<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{ facility?.locations[0]?.fax||'N/A'|phoneFormatPipe  }}">{{ facility?.locations[0]?.fax||'N/A' |phoneFormatPipe }}</span>
+									</li>
+									<!-- <li><span class="icon-envelope me-1"></span>
+		<ul class="d-inline-block custom-btn-tooltip list-unstyled">
+		<ng-container *ngIf="facility?.locations[0]?.email?.length > 0">
+		{{facility?.locations[0]?.email?.length > 25 ? facility?.locations[0]?.email?.substring(0, 25)+'...' : facility?.locations[0]?.email}}
+		</ng-container>
+		<li class="btn-tooltip-top text-center" *ngIf="facility?.locations[0]?.email?.length > 25">
+		<span>facility?.locations[0]?.email}}</span>
+		<i></i>
+		</li>
+		</ul>
+		</li> -->
+								</ul>
+							</div>
+							<div class="col-2 text-sm-end">
+								<mat-slide-toggle class="me-3" [(ngModel)]="facility.is_active" (change)="changeStatus(changeStatus1,facility,$event)" tooltip="Location Status" [labelPosition]="'before'"></mat-slide-toggle>
+								<button *ngIf="aclService.hasPermission(userPermissions.master_practice_edit)"
+									type="button" class="btn btn-outline-secondary" (click)="onEdit($event,facility)">
+									<span class="icon-pencil"></span> Edit
+								</button>
+								<button type="button" class="btn slide-btn" (click)="toggle(i,facility.id,facility)"
+									[disabled]="facility.locations.length == 0"
+									[ngClass]="{'btn-success': opened[i], 'btn-primary':!opened[i] }">
+									<i class="icon-{{ icon(i) }}"></i>
+								</button>
+							</div>
+						</div>
+					</div>
+					<app-practice-location-table-component [mainFacility]="mainFacility" *ngIf="!hidden(i)" [practiceId]='facility.id'
+						[dropDownRegion]="dropDownRegion" [practiceLocations]="facility" (updateFacilityStatus)="updateFacilityStatus($event)" [page]="facilityLocationPage"
+						(onPageChange)="onLocationPageChange($event,facility.id)"
+						(onAddLocation)="addLocation($event, facility)"
+						(onEditLocation)="onEditLocation($event?.formData, facility, $event?.page)">
+					</app-practice-location-table-component>
+				</div>
+				<div class="mb-2 text-center" *ngIf="!facilities.length">
+					No data to display
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="custom-pagination text-capitalize" *ngIf="facilities.length > 0">
+		<span>{{facilityPage.totalElements}} total</span>
+		<ng-container *ngIf="facilities?.length &&( facilityPage.totalElements>facilityPage.size)">
+			<pagination [boundaryLinks]=" true" [totalItems]="facilityPage.totalElements" 
+             	[itemsPerPage]="facilityPage.size"  [(ngModel)]="currentPage"  (pageChanged)="pageChanged($event)"
+				 previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+			     [maxSize]="facilityPage.maxPaginationContentSize"
+				 >
+			</pagination>
+		</ng-container>
+	</div>
+</div>
+<ng-template #changeStatus1 let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left">Delete Appointments/Assignments</h4>
+		<button type="button" class="close" aria-label="Close" (click)="closeModelAppointment()">
+		  <span aria-hidden="true">&times;</span>
+		</button>
+	  </div>
+	<div class="modal-body practice-status">
+		<p><strong>Note:</strong> Clicking the "Delete Appointments/Assignments" button will result in the cancellation of all current
+		and future date appointments, as well as the deletion of assignments associated with those
+		appointments. After cancellation data cannot be restored.</p>
+
+		<div class="row select-all-document align-items-start align-items-sm-center">
+			<div class="col-12 edit-block text-start">
+				<div class="form-group field option-field d-inline-block mb-2">
+					<ul>
+						<li>Show</li>
+						<li>
+							
+							<select [(ngModel)]="this.facilityAppointmentPage.size" (change)="pageLimitAppointment($event.target.value)" class="custom-select" name="limit" class="custom-select" name="limit">
+								<option [value]="10">10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+
+				</div>
+			</div>
+		</div>
+
+		<ngx-datatable class="bootstrap" [columnMode]="'force'" [rows]="facilityAppointmentsData"  [headerHeight]="50" [footerHeight]="50"
+			[rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true"
+			[count]="this.facilityAppointmentPage?.totalElements" [offset]="this.facilityAppointmentPage?.offset" [limit]="this.facilityAppointmentPage?.size"
+			(page)="onPageChange($event)"
+			[externalPaging]="true"
+			>
+			<ngx-datatable-column name="Provider Name" prop="doctor_first_name" [sortable]="false" prop="bill_id" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Provider Name" [width]="100" [minWidth]="100">
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<span *ngIf="row?.doctor_first_name || row?.doctor_middle_name || row?.doctor_last_name; else noNames" class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" 
+						ngbTooltip="{{row?.doctor_first_name}} {{row?.doctor_middle_name}} {{row?.doctor_last_name}}">
+							{{row?.doctor_first_name}} {{row?.doctor_middle_name}}
+							{{row?.doctor_last_name}}
+						</span>
+						<ng-template #noNames>
+							<span  class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="N/A">
+								N/A
+							</span>
+						</ng-template>
+					</ng-template>
+				</ngx-datatable-column>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Date" [width]="80" [minWidth]="80">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+						{{row.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Time" [width]="110" [minWidth]="110">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{timeConversion(row.scheduled_date_time) | date: 'hh:mm a'}}" container="body">
+						{{timeConversion(row.scheduled_date_time) | date: 'hh:mm a'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Specialty" [width]="80" [minWidth]="80">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="	{{row?.speciality_name}}" container="body">
+						{{row?.speciality_qualifier}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Visit Type" [width]="80" [minWidth]="80">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.appointment_type_name}}" container="body">
+					{{row?.visit_type}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+		<form [formGroup]="myForm">
+			<div class="form-group mt-3">
+				<div class="row justify-content-between">
+					<label class="col-12 title mb-2">Comments</label>
+					<div class="col-6" [ngClass]="{'col-md-3':isOtherChecked}">
+						<select class="form-select select"  formControlName="defaultComments" (change)="onSelectValue()">
+							<option *ngFor="let com of defaultComments 
+							let i=index" value={{com.name}}
+							[selected]="(com?.slug === 'practice_off')"
+							>{{com.name}}
+							</option>
+						</select>
+					</div>
+					<div class="col-4" [hidden]="!isOtherChecked">
+						<textarea placeholder="Enter Comments" formControlName="otherComments" class="form-control form-group coments-text mb-0"></textarea>
+					</div>
+					<div class="col-5 btn-train justify-content-end ">
+						<button (click)="onCancelAppointmentAndAssigments()" class="btn btn-success btn-width">Delete Appointments/Assignments</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+
+
+<ng-template #practiceLocationAdd let-modal>
+	<practice-location (closeModal)="closeModal($event)" [dropDownRegion]="dropDownRegion"
+	  disableLocation="practiceForm.controls.name.disabled" 
+	  [shortNameFlag]="true"
+	  [addLocationFlag]="true"
+	  >
+	</practice-location>
+  </ng-template>

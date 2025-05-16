@@ -1,0 +1,775 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<div class="cal-supervisor-notifications-week-view">
+    <!-- <div class="cal-day-headers" *ngIf="headerOn=='true' && checkDay=='week'" style="width:100% !important;margin-left: 3px;" [ngStyle]="index===0?{'padding-left': '70px'}:{'padding-left': '0'}" [ngClass]="{'header-pad-box': docIndex === 0}">
+        <div class="cal-header" *ngFor="let day of days;let x=index; trackBy:trackByWeekDayHeaderDate" [class.cal-past]="day.isPast" [class.cal-today]="day.isToday" [class.cal-future]="day.isFuture" [class.cal-weekend]="day.isWeekend" style="flex: 0 0 14.28% !important;max-width: 14.28% !important;"
+            (mwlClick)="dayHeaderClicked.emit({day: day})" mwlDroppable dragOverClass="cal-drag-over" [ngStyle]="x==highlightdayH ? {'background': '#c1c1c1'} : {'background': transparent}">
+            <div>{{ day.date.toString().substring(0,3) }}</div>
+            <span title="{{ day.date | calendarDate:'weekViewColumnSubHeader':locale }}">{{ day.date | calendarDate:'weekViewColumnSubHeader':locale }}</span> {{day.cssClass}}
+
+            <div *ngIf="noteButton && patient!='true' && checkDayNote(day.date)" style="border: 1px solid;cursor: pointer" (click)="addNote(day.date)">
+                Note
+            </div>
+            <div style="height: 21px" *ngIf="patient=='true' || !checkDayNote(day.date)">
+
+            </div>
+        </div>
+    </div> -->
+    <div class="cal-day-headers" *ngIf="headerOn=='true' && checkDay=='day'">
+        <div *ngIf="noteButton && patient!='true' && checkDayNote(viewDate)" style="cursor: pointer" (click)="addNote(viewDate)">
+            Note
+        </div>
+        <div *ngIf="patient=='true' || !checkDayNote(viewDate)" style="height: 19px">
+
+        </div>
+    </div>
+
+
+
+    <!-- <ng-template #defaultTemplate let-days="days" let-locale="locale" let-dayHeaderClicked="dayHeaderClicked" let-eventDropped="eventDropped" let-trackByWeekDayHeaderDate="trackByWeekDayHeaderDate" let-dragEnter="dragEnter">
+        <div class="cal-day-headers" *ngIf="headerOn=='true' && checkDay=='week'" role="row" [ngStyle]="index===0?{'padding-left': '70px'}:{'padding-left': '0'}">
+            <div class="cal-header" *ngFor="let day of days;let x=index; trackBy: trackByWeekDayHeaderDate" [class.cal-past]="day.isPast" [class.cal-today]="day.isToday" [class.cal-future]="day.isFuture" [class.cal-weekend]="day.isWeekend" [ngClass]="day.cssClass"
+                (mwlClick)="dayHeaderClicked.emit({ day: day, sourceEvent: $event })" mwlDroppable dragOverClass="cal-drag-over" [ngStyle]="x==highlightdayH.day && index==highlightdayH.index ? {'background': '#c1c1c1','flex':'150px'} : {'background': transparent}"
+                (drop)="
+          eventDropped.emit({
+            event: $event.dropData.event,
+            newStart: day.date
+          })
+        " (dragEnter)="dragEnter.emit({ date: day.date })" tabindex="0" role="columnheader">
+                <b>{{ day.date | calendarDate: 'weekViewColumnHeader':locale }}</b
+        ><br />
+        <span>{{
+          day.date | calendarDate: 'weekViewColumnSubHeader':locale
+        }}</span>
+      </div>
+    </div>
+  </ng-template> -->
+  <ng-template #defaultTemplate let-days="days" let-locale="locale" let-dayHeaderClicked="dayHeaderClicked" let-eventDropped="eventDropped" let-trackByWeekDayHeaderDate="trackByWeekDayHeaderDate" let-dragEnter="dragEnter">
+	<div class="cal-day-headers" *ngIf="headerOn=='true' && checkDay=='week'" role="row" [ngStyle]="index===0?{'padding-left': '70px'}:{'padding-left': '0'}">
+		<div class="cal-header" *ngFor="let day of days;let x=index; trackBy: trackByWeekDayHeaderDate" [class.cal-past]="day.isPast" [class.cal-today]="day.isToday" [class.cal-future]="day.isFuture"  [ngClass]="day.cssClass"
+			(mwlClick)="dayHeaderClicked.emit({ day: day, sourceEvent: $event })" mwlDroppable dragOverClass="cal-drag-over" [ngStyle]="x==highlightdayH.day && index==highlightdayH.index ? {'background': '#c1c1c1','flex':'150px'} : {'background': transparent}"
+			(drop)="
+	  eventDropped.emit({
+		event: $event.dropData.event,
+		newStart: day.date
+	  })
+	" (dragEnter)="dragEnter.emit({ date: day.date })" tabindex="0" role="columnheader">
+			<b>{{ day.date | calendarDate: 'weekViewColumnHeader' }}</b
+	><br />
+	<span>{{
+	  day.date | calendarDate: 'weekViewColumnSubHeader':locale:0
+	}}</span>
+  </div>
+</div>
+</ng-template>
+  <ng-template
+    [ngTemplateOutlet]="defaultTemplate"
+    [ngTemplateOutletContext]="{
+      days: days,
+      locale: locale,
+      dayHeaderClicked: dayHeaderClicked,
+      eventDropped: eventDropped,
+      dragEnter: dragEnter,
+      trackByWeekDayHeaderDate: trackByWeekDayHeaderDate
+    }"
+  >
+  </ng-template>
+    <div *ngIf="headerOn!='true'" class="cal-time-events" mwlDroppable (dragEnter)="eventDragEnter = eventDragEnter + 1" (dragLeave)="eventDragEnter = eventDragEnter - 1">
+        <div class="cal-time-label-column" *ngIf="view.hourColumns.length > 0 && index===0 ">
+            <div *ngFor="let hour of view.hourColumns[0].hours; trackBy:trackByHour; let odd = odd" class="cal-hour" [class.cal-hour-odd]="odd">
+                <div *ngFor="let segment of hour.segments; trackBy:trackByHourSegment" [style.height.px]="hourSegmentHeight" [class.cal-hour-start]="segment.is_start" [ngStyle]="{'display': timeDisplay(segment.date) ? 'block': 'none'}" [class.cal-after-hour-start]="!segment.is_start " [ngClass]="segment.cssClass " (dblclick)="openThroughText(segment.date)">
+                    <div class="cal-time ">
+                        {{ segment.date | date :datePipeService.hourMinAmPmTimeFormat() }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div *ngIf="checkDay==='week' " class="cal-day-columns week-calander-columns " (mouseleave)="highlightDayHead(-1)" [class.cal-resize-active]="timeEventResizes.size> 0" #dayColumns>
+            <div class="cal-day-column cal-day-column-hover" *ngFor="let column of view.hourColumns; trackBy:trackByHourColumn;let o=index" [ngStyle]="o===viewDate.getDay() && checkDay==='day'?
+				{'width':'100%'}:{'position':'relative'}" (mouseover)="highlightDayHead(o)">
+                <div *ngIf="checkDay==='week' || o===viewDate.getDay()">
+                    <div *ngFor="let timeEvent of column.events; trackBy:trackByDayOrWeekEvent" #event class="cal-event-container cal-event-container-hover" [class.cal-draggable]="timeEvent.event.draggable && timeEventResizes.size === 0" [class.cal-starts-within-day]="!timeEvent.startsBeforeDay"
+                        [class.cal-ends-within-day]="!timeEvent.endsAfterDay" [ngClass]="timeEvent.event.cssClass" [hidden]="timeEvent.height === 0 && timeEvent.width === 0" [ngStyle]="{'top.px': setAutoTopValue(timeEvent.top)}" [style.height.px]="timeEvent.height" [style.left.%]="timeEvent.left"
+                        [style.width.%]="timeEvent.width" mwlResizable [resizeSnapGrid]="{left: dayColumnWidth, right: dayColumnWidth, top: eventSnapSize || hourSegmentHeight, bottom: eventSnapSize || hourSegmentHeight}" [validateResize]="validateResize"
+                        [allowNegativeResizes]="true" (resizeStart)="timeEventResizeStarted(dayColumns, timeEvent, $event)" (resizing)="timeEventResizing(timeEvent, $event)" (resizeEnd)="timeEventResizeEnded(timeEvent)" mwlDraggable dragActiveClass="cal-drag-active"
+                        [dropData]="{event: timeEvent.event, calendarId: calendarId}" [dragAxis]="{
+              x: timeEvent.event.draggable && timeEventResizes.size === 0,
+              y: timeEvent.event.draggable && timeEventResizes.size === 0
+            }" [dragSnapGrid]="snapDraggedEvents ? {x: dayColumnWidth, y: eventSnapSize || hourSegmentHeight} : {}" [ghostDragEnabled]="!snapDraggedEvents" [validateDrag]="validateDrag" (dragPointerDown)="dragStarted(dayColumns, event, timeEvent)" (dragging)="dragMove(timeEvent, $event)"
+                        (dragEnd)="dragEnded(timeEvent, $event, dayColumnWidth, true)">
+                        <div class="cal-resize-handle cal-resize-handle-before-start" *ngIf="timeEvent.event?.resizable?.beforeStart && !timeEvent.startsBeforeDay" mwlResizeHandle [resizeEdges]="{
+                left: true,
+                top: true
+              }">
+                        </div>
+						<!-- {{currentDoc |json}} -->
+                        <div class="cal-event" style="background-color: white" *ngIf="timeEvent.event.patient!='true' &&
+                             ((currentDocId == timeEvent.event.doctor_id && currentDoc.doctor && currentDoc.speciality_id==timeEvent.event.speciality_id) ||
+                             (currentDocId == timeEvent.event.speciality_id && !currentDoc.doctor && !timeEvent.event.doctor_id) ||
+                             (currentDoc.doctor && timeEvent.event.available_speciality_id && currentDoc.speciality_id==timeEvent.event.speciality_id))
+                             && !timeEvent.event.is_unavailablility &&
+							  !timeEvent.event.is_start && timeEvent.event.is_appointment" [style.backgroundColor]="timeEvent.event.appointment_status=='done' ? '#00a650' : timeEvent.event.color" [style.borderColor]="timeEvent.event.color" [mwlCalendarTooltip]="timeEvent.event.patientName + ' (' + timeEvent.event.start_time + ' - ' + timeEvent.event.end_time + ')' + ',   (Status: ' + timeEvent.event.appointment_status +')'" 
+                            [tooltipPlacement]="tooltipPlacement" 
+                            [tooltipEvent]="timeEvent.event" 
+                            [tooltipTemplate]="tooltipTemplate" 
+                            [tooltipAppendToBody]="tooltipAppendToBody" 
+                            #p="ngbPopover"  
+                            (click)="showPatientRecordDocCalendar(p,timeEvent.event,evualtionTemplateEvent)"
+                            [ngbPopover]="openPatientUnavailable" 
+                            [autoClose]="false" 
+                            triggers="manual" 
+                            placement="auto" 
+                            container="body"
+                            popoverClass="nacustom-popover">
+                            <div> 
+                                
+                            <div class="text-truncate" style="line-height: 1.6;"><span class="dot" *ngIf="timeEvent.event.doctor_info == null || timeEvent.event.doctor_info == undefined" style="padding:0;"></span> {{timeEvent.event.patientName}}</div>
+                                
+                                <span *ngIf="timeEvent.event.appointment_status=='scheduled' || timeEvent.event.appointment_status=='no show' || timeEvent.event.appointment_status=='rescheduled'"><i class="icon-alert ms-2"></i></span>
+                            </div>
+                            <div class="text-truncate" style="line-height: 1.6;"> {{timeEvent.event.start_time}} - {{timeEvent.event.end_time}} 
+                            </div>
+                            <mwl-calendar-event-actions [event]="timeEvent.event" [customTemplate]="eventActionsTemplate">
+                            </mwl-calendar-event-actions>
+                        </div>
+                        <div class="cal-event" style="background-Color: #ffffff;padding: 0 0 !important;" *ngIf="timeEvent.event.patient!='true' && 
+                        ((currentDocId == timeEvent.event.doctor_id && currentDoc.doctor ) ||
+                             (currentDocId == timeEvent.event.speciality_id && !currentDoc.doctor && !timeEvent.event.doctor_id)) && timeEvent.event.is_unavailablility && !timeEvent.event.is_start && !timeEvent.event.is_appointment" [style.backgroundColor]="timeEvent.event.appointment_status=='done' ? 'white' : timeEvent.event.color"
+                            [style.borderColor]="timeEvent.event.color" [mwlCalendarTooltip]="'Unavailability ' + timeEvent.event.start_time + ' - ' + timeEvent.event.end_time" [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate"
+                            [ngbPopover]="check" placement="top" data-container="body" [tooltipAppendToBody]="tooltipAppendToBody">
+                            <div class="text-truncate" style="line-height: 1.6;">Unavailability</div>
+                            <div class="text-truncate" style="line-height: 1.6;"> {{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}
+                            </div>
+                            <ng-template #check>
+                                <div class="popover-top custom-popover-style">
+                                    <div class="popover-header" [ngStyle]="timeEvent.event.approval_status==0 ?
+                  {'background-color': 'lightblue'} : {'background-color':timeEvent.event.color}">
+                                        <span>Unavailability</span>
+                                        <span class="popover-icon d-inline-flex float-right">
+											<a class="popover-icon-remove" href="javascript:void(0)"
+												*ngIf="deleteUnavailabilityButton"
+												(click)="deleteUnavialability(timeEvent.event)"><i
+													class="icon-remove"></i></a>
+										</span>
+                                        <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                    </div>
+                                    <div class="popover-desc">
+                                        <ul class="list-unstyled mb-0">
+                                            <!-- <li><span class="font-bold">Subject:</span> {{timeEvent.event.subject}}</li> -->
+                                            <li *ngIf = "timeEvent.event.subject.length < 30" [title]= "timeEvent.event.subject"><span class="font-bold" >Subject:</span>{{timeEvent.event.subject}}</li>
+                                            <li *ngIf = "timeEvent.event.subject.length > 30" data-bs-toggle="tooltip" data-placement="right" [title]= "timeEvent.event.subject" ><span class="font-bold">Subject:</span>{{timeEvent.event.subject.substr(0,23)}}....</li>
+                                            <li>{{timeEvent.event.end_Date|date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</li>
+                                            <li>
+                                                {{timeEvent.event.start_time}} {{datePipeService.signBetweenDates()}} {{timeEvent.event.end_time}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                            <mwl-calendar-event-actions [event]="timeEvent.event" [customTemplate]="eventActionsTemplate">
+                            </mwl-calendar-event-actions>
+
+                        </div>
+
+                        <div class="cal-event" *ngIf="timeEvent.event.patient!='true' && ((currentDocId == timeEvent.event.doctor_id && currentDoc.doctor && currentDoc.speciality_id==timeEvent.event.speciality_id) ||
+                        (currentDocId == timeEvent.event.speciality_id && !currentDoc.doctor && !timeEvent.event.doctor_id)) && !timeEvent.event.is_unavailablility && timeEvent.event.is_start && !timeEvent.event.is_appointment" [style.backgroundColor]="timeEvent.event.color"
+                            [style.borderColor]=" timeEvent.event.color" style="margin-top: 3px;padding: 0 0 !important;" [mwlCalendarTooltip]="'Assignment starts at ' + timeEvent.event.start_time" [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event"
+                            [tooltipTemplate]="tooltipTemplate" [tooltipAppendToBody]="tooltipAppendToBody">							
+                        </div>
+
+                        <div class="cal-event" *ngIf="timeEvent.event.patient!='true' && ((currentDocId == timeEvent.event.doctor_id && currentDoc.doctor && currentDoc.speciality_id==timeEvent.event.speciality_id) ||
+                        (currentDocId == timeEvent.event.speciality_id && !currentDoc.doctor && !timeEvent.event.doctor_id)) && !timeEvent.event.is_unavailablility && !timeEvent.event.is_start && !timeEvent.event.is_appointment" [style.backgroundColor]="timeEvent.event.color"
+                            style="margin-bottom: 1px;padding: 0 0 !important;" [style.borderColor]="timeEvent.event.color" [mwlCalendarTooltip]="'Assignment ends at ' + timeEvent.event.start_time" [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event"
+                            [tooltipTemplate]="tooltipTemplate" [tooltipAppendToBody]="tooltipAppendToBody">							
+						</div>
+                        <div class="cal-event" *ngIf="timeEvent.event.patient=='true'" [style.backgroundColor]="timeEvent.event.appointment_status=='done' ? '#00a650' : timeEvent.event.color" [style.borderColor]="timeEvent.event.color" [mwlCalendarTooltip]="timeEvent.event.patientName + ' (' + timeEvent.event.start_time + ' - ' + timeEvent.event.end_time + ')' + ',   (Appointment Status: ' + timeEvent.event.appointment_status +')'"
+                            [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate" [tooltipAppendToBody]="tooltipAppendToBody" [ngbPopover]="openPatient" data-container="body" placement="top" (click)="showPatientRecordDocCalendar(timeEvent.event)">
+                            <div> 
+                               
+                                 <div class="text-truncate" style="line-height: 1.6;">  <span class="dot" *ngIf="timeEvent.event.doctor_info == null || timeEvent.event.doctor_info == undefined" style="padding:0;"></span> {{timeEvent.event.patientName}}</div>
+                                
+                                <span *ngIf="timeEvent.event.appointment_status=='scheduled' || timeEvent.event.appointment_status=='no show' || timeEvent.event.appointment_status=='rescheduled'"><i class="icon-alert ms-2"></i></span>
+                                
+                            </div>
+                            
+                            <div class="text-truncate" style="line-height: 1.6;"> {{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}
+                            </div>
+                        </div>
+                        <ng-template #openPatient>
+                            <div class="popover-top custom-popover-style">
+                                <div class="popover-header" [style.background-color]="timeEvent.event.color">
+                                    <span>{{timeEvent.event.patientName }}</span>
+                                    <span class="popover-icon d-inline-flex float-right">
+										<!-- <a class="popover-icon-edit" href="javascript:void(0)"
+											*ngIf="timeEvent.event.updateApp && !timeEvent.event.visit_session && timeEvent.event.update_back && timeEvent.event.appointment_status_slug!='no_show'" (click)="edit(timeEvent.event)"> <i
+												class="icon-pencil"></i>
+										</a>
+										<a class="popover-icon-remove" href="javascript:void(0)"
+											*ngIf="timeEvent.event.deleteApp && !timeEvent.event.visit_session && timeEvent.event.appointment_status_slug!='no_show'"
+											(click)="deleteAppointment(timeEvent.event)"><i class="icon-remove"></i></a> -->
+											<a class="popover-icon-edit" href="javascript:void(0)"
+											*ngIf="timeEvent.event.updateApp && !timeEvent.event.visit_session && timeEvent.event.appointment_status_slug!='completed' && timeEvent.event.appointment_status_slug!='no_show'" (click)="edit(timeEvent.event)"> <i
+												class="icon-pencil"></i>
+										</a>
+										<a class="popover-icon-remove" href="javascript:void(0)"
+											*ngIf="timeEvent.event.deleteApp && !timeEvent.event.visit_session && timeEvent.event.appointment_status_slug!='completed' && timeEvent.event.appointment_status_slug!='no_show'"
+											(click)="deleteAppointment(timeEvent.event)"><i class="icon-remove"></i></a>
+									</span>
+									<!-- upd:{{timeEvent.event.updateApp}}
+									se:{{timeEvent.event.visit_session}}
+									upd-ba:{{timeEvent.event.visit_session}}
+									aapt-st:{{timeEvent.event.appointment_status_slug}} -->
+                                    <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                </div>
+                                <div class="popover-desc">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>{{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}</li>
+                                        <li *ngIf="timeEvent.event.available_doctor">
+											<span class="font-bold">Provider:</span> 
+											{{timeEvent.event.available_doctor.doctor.userBasicInfo.first_name}} {{timeEvent.event.available_doctor.doctor.userBasicInfo.middle_name}} {{timeEvent.event.available_doctor.doctor.userBasicInfo.last_name}}
+
+                                        </li>
+                                        <li *ngIf="timeEvent.event.available_speciality && !timeEvent.event.available_doctor">
+                                            <span class="font-bold">Provider:</span> N/A
+                                        </li>
+                                        <li *ngIf="timeEvent.event.available_doctor">
+                                            <!-- <span class="font-bold">Practice Location:</span> {{aclCustom.convertFacilityToPracticeLocation(timeEvent.event.facility_id)}} -->
+										    <span class="font-bold">Practice-Location:</span> {{timeEvent.event.available_doctor.facilityLocations.facility.name}}-{{timeEvent.event.available_doctor.facilityLocations.name}}
+
+										</li>
+                                        <li *ngIf="timeEvent.event.available_speciality && !timeEvent.event.available_doctor">
+                                            <!-- <span class="font-bold">Practice Location:</span> {{aclCustom.convertFacilityToPracticeLocation(timeEvent.event.facility_id)}} -->
+										    <span class="font-bold">Practice-Location:</span> {{timeEvent.event.available_speciality.facilityLocation.facility.name}}-{{timeEvent.event.available_speciality.facilityLocation.name}}
+
+										</li>
+                                        <!-- <li *ngIf="timeEvent.event.roomName">
+											<span class="font-bold">Room:</span> {{timeEvent.event.roomName}}
+										</li>
+										<li *ngIf="!timeEvent.event.roomName">
+											<span class="font-bold">Room:</span> {{timeEvent.event.room.name}}
+										</li> -->
+                                        <li *ngIf="timeEvent.event.startEval && (!timeEvent.event.has_app || timeEvent.event.speciality_key === 'medical_doctor' || timeEvent.event.speciality_key==='hbot')" class="text-end">
+                                            <!-- <button [disabled]="timeEvent.event.appointment_status_slug==='no_show' " class="btn btn-success" (click)="startEvaluation.emit(timeEvent.event);startEvualtionFlagShow.emit(timeEvent.event)">
+												{{timeEvent.event.visit_session ? "Edit Evalutaion" : "Start"}}</button> -->
+                                                <button *ngIf = "timeEvent.event.visit_session" class="btn btn-success" style = "margin-left: 4px;" (click) = "openShowModal(timeEvent.event)">
+                                                    Report
+                                                </button>
+                                                <button *ngIf = "timeEvent.event.visit_session" (click)="showEvaluation.emit(timeEvent.event)" class="btn btn-success" style = "margin-left: 4px;" >
+                                                    Show
+                                                </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                        <ng-template #openPatientUnavailable>
+                            <div class="popover-top custom-popover-style">
+                                <div class="popover-header" [style.background-color]="timeEvent.event.color">
+                                    <span>{{timeEvent.event.patientName }}</span>
+                                    <span class="popover-icon d-inline-flex float-right">
+										<a class="popover-icon-edit" href="javascript:void(0)"
+											*ngIf="timeEvent.event.updateApp && !timeEvent.event.visit_session && timeEvent.event.update_back && timeEvent.event.appointment_status_slug!='no_show'" (click)="edit(timeEvent.event)">
+											<i class="icon-pencil"></i>
+										</a>
+										<a class="popover-icon-remove" href="javascript:void(0)"
+											*ngIf="timeEvent.event.deleteApp && !timeEvent.event.visit_session && timeEvent.event.appointment_status_slug!='no_show'"
+											(click)="deleteAppointment(timeEvent.event)"><i class="icon-remove"></i></a>
+									</span>
+                                    
+                                    <a class="float-right" href="javascript:void(0)" (click)="closengb(p)"><i class="fa fa-times"></i></a>
+                                </div>
+
+                                <div [class]="timeEvent?.event?.appointment_status_slug ==='completed'?'popover-desc popover-status-green':'popover-desc'">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>{{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}
+                                        </li>
+                                        <!-- <li>
+                                            <Span class="font-bold">Provider:</Span> {{timeEvent.event.doctor_info ? timeEvent.event.doctor_info.first_name+(timeEvent.event.doctor_info.middle_name? ' '+timeEvent.event.doctor_info.middle_name:'')+ ' '+ timeEvent.event.doctor_info.last_name : "N/A"}}</li> -->
+                                            <li>
+                                                <Span class="font-bold">Apt.Type:</Span>
+                                                <Span tooltipClass="table-custom-tooltip" ngbTooltip="{{timeEvent.event.appointment_type_description}}"> {{timeEvent.event.appointment_type_description}}</Span>
+                                            </li>
+                                        <li>
+                                            <!-- <Span class="font-bold">Practice-Location:</Span> {{aclCustom.convertFacilityToPracticeLocationName(timeEvent.event.facility_name)}}</li> -->
+											<Span class="font-bold">Practice-Location:</Span> {{timeEvent.event.facility_name}}</li>                                       
+                                            <li>
+                                                <Span class="font-bold">Transportation: </Span>
+                                                  <i  *ngIf="timeEvent.event.has_transportation else noTransport" class="fa fa-car" aria-hidden="true"></i> 
+                                                  <ng-template #noTransport>
+                                                    N/A
+                                                </ng-template>  
+                                                </li>
+                                                <li>
+                                                    <div class="row">
+                                                        <div class="col-10">
+                                                            <div class="tooltip-outer" popoverClass="visit-bill-popover"
+                                                                [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
+                                                                <span class="font-bold">CPT Codes:</span>
+                                                                {{timeEvent?.event?.appointment_cpt_codes?.[0]?.billingCode?.name ? timeEvent?.event?.appointment_cpt_codes?.[0]?.billingCode?.name : ''}}
+                                                                -
+                                                                {{timeEvent?.event?.appointment_cpt_codes?.[0]?.billingCode?.description ? timeEvent?.event?.appointment_cpt_codes?.[0]?.billingCode?.description + (timeEvent?.event?.appointment_cpt_codes?.length > 1 ? ' ...' : '') : ''}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-2 p-0">
+                                                            <button [ngClass]="[((timeEvent?.event?.visit_status_slug == 'checked_out' || timeEvent?.event?.visit_status_slug == 'in_session' || timeEvent?.event?.visit_status_slug == 'no_show') || !(timeEvent?.event?.allow_multiple_cpt_codes)) ? 'btn add-tag-btn-disabled':'btn btn-success add-tag-btn custom-btn-tooltip list-unstyled']" tooltipClass="table-custom-tooltip" role="button"  
+                                                            ngbTooltip="{{timeEvent?.event | tooltipContent}}" triggers="mouseenter:mouseleave" container="body" (click)="addModal(add,timeEvent?.event,$event,(timeEvent?.event?.visit_status_slug == 'checked_out' || timeEvent?.event?.visit_status_slug == 'in_session' || timeEvent?.event?.visit_status_slug == 'no_show') || !(timeEvent?.event?.allow_multiple_cpt_codes))">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <ng-template #popContent>
+                                                        <table class="w-100 text-start">
+                                                            <tbody>
+                                                                <tr *ngFor="let cpt of timeEvent?.event?.appointment_cpt_codes">
+                                                                    <td>
+                                                                        <span class="font-bold">
+                                                                            {{cpt?.billingCode?.name ? cpt?.billingCode?.name : ''}}</span>
+                                                                            -
+                                                                            {{cpt?.billingCode?.description ? cpt?.billingCode?.description : ''}}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </ng-template>
+                                                </li>
+                                            <li>
+                                                <form [formGroup]="appointmentForm">
+                                                    <app-ng-select-shareable class="formgroup-mb0" [class.ngSelectDisabled] = "isProviderLogedIn && timeEvent.event.doctor_info || !isProviderLogedIn && timeEvent.event.doctor_info || isProviderLogedIn && !timeEvent.event.doctor_info || !isProviderLogedIn && !timeEvent.event.doctor_info && timeEvent.event.visit_session"
+                                                     [events]="eventsSubject.asObservable()"  [filterFieldName]="'provider_id'"
+                                                     [showSelectFieldOnRefresh]="appointmentForm.get('provider_id').value" 
+                                                    [lists]="timeEvent.event && timeEvent.event.selectedMultipleFieldFiterProviders ? timeEvent.event.selectedMultipleFieldFiterProviders : []"
+                                                    [ngSelectShow]="true"
+                                                     [lableName]="'Provider'" [bindlable]="'full_name'" 
+                                                     [bindId]="'id'" [apiPath]="EnumApiPath.get_providers_for_technicion_loggedIn"  
+                                                     (valueChange)="selectionOnValueChange($event,'provider_id',timeEvent.event)"
+                                                     [conditionalExtraApiParams]="conditionalExtraApiParamsForProvidersGet ? conditionalExtraApiParamsForTemplateGet : {}"
+                                                     [multiple]="false"></app-ng-select-shareable>
+                                                     <span class="text-muted danger" *ngIf="(appointmentForm.get('provider_id').errors?.required || appointmentForm.get('provider_id').value == null) && ((!isProviderLogedIn && !timeEvent.event.doctor_info) || (isProviderLogedIn && !timeEvent.event.doctor_info)) && !timeEvent.event.doctor_info && (appointmentForm.get('provider_id').dirty || appointmentForm.get('provider_id').touched)">This field is
+                                                        required</span> 
+                                                        <app-ng-select-shareable class="formgroup-mb0"  [class.ngSelectDisabled] = "!isProviderLogedIn || timeEvent.event.visit_session" [events]="eventsSubject.asObservable()"  [filterFieldName]="'technician_id'"
+                                                        [lists]="timeEvent.event && timeEvent.event.selectedMultipleFieldFiterTechnician ? timeEvent.event.selectedMultipleFieldFiterTechnician : []"
+                                                         [showSelectFieldOnRefresh]="appointmentForm.get('technician_id').value" 
+                                                         [lableName]="'Technician'" [bindlable]="'full_name'" [ngSelectShow]="true"
+                                                         [bindId]="'id'" [apiPath]="EnumApiPath.get_supervisor_technicians"  
+                                                         (valueChange)="selectionOnValueChange($event,'technician_id',rowIndex)"
+                                                         [conditionalExtraApiParams]="conditionalExtraApiParamsForTechnicianGet ? conditionalExtraApiParamsForTechnicianGet : {}"
+                                                         [multiple]="false"></app-ng-select-shareable> 
+
+                                                         <app-ng-select-shareable  #evualtionTemplateEvent class="formgroup-mb0"  [class.ngSelectDisabled] = "timeEvent.event.visit_session" [events]="eventsSubject.asObservable()"  [filterFieldName]="'template_id'"
+                                                         [lists]="timeEvent.event && timeEvent.event.template ? timeEvent.event.template : []"
+                                                          [showSelectFieldOnRefresh]="appointmentForm.get('template_id').value"
+                                                          [lableName]="'Template'" [bindlable]="'template_name'"
+                                                          [bindId]="'id'" [ngSelectShow]="true" [updateChanges]="true"
+                                                         [apiPath]="templateUrls" [moduleName]="'template'"
+														 [forceApiHitonOpen] = "true"
+						                                 [removeDuplicatesfromElements] = "true"
+                                                          (valueChange)="selectionOnValueChange($event,'template_id',timeEvent.event)"
+                                                          [conditionalExtraApiParams]="conditionalExtraApiParamsForTemplateGet ? conditionalExtraApiParamsForTemplateGet : {}"
+                                                          [multiple]="false"></app-ng-select-shareable>
+                                                          <span class="text-muted danger" *ngIf="(appointmentForm.get('template_id').errors?.required || appointmentForm.get('template_id').value == null) && (appointmentForm.get('template_id').dirty || appointmentForm.get('template_id').touched)">This field is
+                                                             required</span> 
+                                                    </form>
+                                            </li>
+                                        <li>
+                                            <span *ngIf="timeEvent.event.startEval && (!timeEvent.event.has_app || timeEvent.event.speciality_key === EnumSpecialtyType.MEDICAL_DOCTOR || timeEvent.event.speciality_key === EnumSpecialtyType.HBOT || timeEvent.event.speciality_key == EnumSpecialtyType.CHIROPRACTOR || timeEvent.event.speciality_key == EnumSpecialtyType.PHYSICAL_THERAPY || timeEvent.event.speciality_key == EnumSpecialtyType.ACUPUNCTURE)" class="d-flex align-items-center justify-content-center py-2">
+												<button [disabled]="timeEvent.event.appointment_status==='no show' "
+													class="btn btn-success"
+													(click)="startEvaluationAndFlagShowEmit(timeEvent.event)">
+                                                    {{timeEvent.event.visit_session ? "Edit Evalutaion" : "Start"}}
+                                                </button>
+                                                    <button *ngIf = "timeEvent.event.visit_session" class="btn btn-success" style = "margin-left: 4px;" (click) = "openShowModal(timeEvent.event)">
+                                                        Report
+                                                    </button>
+                                                    <button *ngIf = "timeEvent.event.visit_session" (click)="showEvaluation.emit(timeEvent.event)" class="btn btn-success" style = "margin-left: 4px;" >
+                                                        View
+                                                    </button>
+											</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ng-template>
+
+
+                        <div class="cal-resize-handle cal-resize-handle-after-end" *ngIf="timeEvent.event?.resizable?.afterEnd && !timeEvent.endsAfterDay" mwlResizeHandle [resizeEdges]="{
+                right: true,
+                bottom: true
+              }">
+                        </div>
+                    </div>
+                </div>
+                <!-- <div *ngFor="let hour of column.hours; trackBy:trackByHour; let odd = odd" class="cal-hour" [class.cal-hour-odd]="odd" [style.height.px]="hourSegmentHeight*hour.segments.length" [style.background-color]="odd? 'white' : '#f1f1f1'" (dblclick)="open(hour.segments[0].date)"> -->
+                <div *ngFor="let hour of column.hours; trackBy:trackByHour; let odd = odd" class="cal-hour" [class.cal-hour-odd]="odd" [style.background-color]="odd? 'white' : '#f1f1f1'" >
+                    <div *ngFor="let mins of hour.segments; " [style.height.px]="hourSegmentHeight"  [ngClass]="{'disable-timing':disable(mins.date)}"  [class.cal-height-0]="!timeDisplay(mins.date)" (dblclick)="open(mins.date)">
+                    </div>
+                </div>
+            </div>
+		</div>
+		
+        <div *ngIf="checkDay==='day'" class="cal-day-columns" [class.cal-resize-active]="timeEventResizes.size > 0" #dayColumns>
+            <div class="cal-day-column" *ngFor="let column of view.hourColumns; trackBy:trackByHourColumn;let o=index" [ngStyle]="o===viewDate.getDay() && checkDay==='day'?
+				{'width':'100%'}:{'position':'relative'}">
+
+                <div *ngIf="o===viewDate.getDay()">			
+                    <div *ngFor="let timeEvent of column.events; trackBy:trackByDayOrWeekEvent" #event class="cal-event-container" [class.cal-draggable]="timeEvent.event.draggable && timeEventResizes.size === 0" [class.cal-starts-within-day]="!timeEvent.startsBeforeDay"
+                        [class.cal-ends-within-day]="!timeEvent.endsAfterDay" [ngClass]="timeEvent.event.cssClass" [hidden]="timeEvent.height === 0 && timeEvent.width === 0" [ngStyle]="{'top.px': setAutoTopValue(timeEvent.top)}" [style.height.px]="timeEvent.height" [style.left.%]="timeEvent.left"
+                        [style.width.%]="timeEvent.width" mwlResizable [resizeSnapGrid]="{left: dayColumnWidth, right: dayColumnWidth, top: eventSnapSize || hourSegmentHeight, bottom: eventSnapSize || hourSegmentHeight}" [validateResize]="validateResize"
+                        [allowNegativeResizes]="true" (resizeStart)="timeEventResizeStarted(dayColumns, timeEvent, $event)" (resizing)="timeEventResizing(timeEvent, $event)" (resizeEnd)="timeEventResizeEnded(timeEvent)" mwlDraggable dragActiveClass="cal-drag-active"
+                        [dropData]="{event: timeEvent.event, calendarId: calendarId}" [dragAxis]="{
+              x: timeEvent.event.draggable && timeEventResizes.size === 0,
+              y: timeEvent.event.draggable && timeEventResizes.size === 0
+            }" [dragSnapGrid]="snapDraggedEvents ? {x: dayColumnWidth, y: eventSnapSize || hourSegmentHeight} : {}" [ghostDragEnabled]="!snapDraggedEvents" [validateDrag]="validateDrag" (dragPointerDown)="dragStarted(dayColumns, event, timeEvent)" (dragging)="dragMove(timeEvent, $event)"
+                        (dragEnd)="dragEnded(timeEvent, $event, dayColumnWidth, true)">
+                        <div class="cal-resize-handle cal-resize-handle-before-start" *ngIf="timeEvent.event?.resizable?.beforeStart && !timeEvent.startsBeforeDay" mwlResizeHandle [resizeEdges]="{
+                left: true,
+                top: true
+              }">
+                        </div>
+                        <!-- <div class="cal-event" style="background-Color: white" *ngIf="timeEvent.event.patient!='true' &&  ((currentDocId == timeEvent.event.docId && currentDoc.doctor) ||
+                        (currentDocId == timeEvent.event.specId && !currentDoc.doctor && !timeEvent.event.docId)) &&
+							!timeEvent.event.isUnavailablility && !timeEvent.event.isStart && timeEvent.event.isAppointment" [style.backgroundColor]="timeEvent.event.appointment_status=='done' ? 'white' : '#'+timeEvent.event.color" [style.borderColor]=" '#'+timeEvent.event.color"
+                            [mwlCalendarTooltip]="timeEvent.event.patientName + ' (' + timeEvent.event.start_time + ' - ' + timeEvent.event.endTime + ')'" [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate"
+                            [tooltipAppendToBody]="tooltipAppendToBody" [ngbPopover]="openPatientUnavailable" placement="top" (click)="showPatientRecordDocCalendar(timeEvent.event)" data-container="body">
+                            <div class="text-truncate" style="line-height: 20px;">{{timeEvent.event.patientName}}</div>
+                            <div class="text-truncate" style="line-height: 20px;"> {{timeEvent.event.startTime}} - {{timeEvent.event.endTime}}
+                            </div>
+                            <mwl-calendar-event-actions [event]="timeEvent.event" [customTemplate]="eventActionsTemplate">
+                            </mwl-calendar-event-actions>
+						</div> -->
+                        <div class="cal-event" style="background-Color: white" *ngIf="timeEvent.event.patient!='true' &&
+                        ((currentDocId == timeEvent.event.doctor_id && currentDoc.doctor && currentDoc.speciality_id==timeEvent.event.speciality_id) ||
+                        (currentDocId == timeEvent.event.speciality_id && !currentDoc.doctor && !timeEvent.event.doctor_id) ||
+                        (currentDoc.doctor && timeEvent.event.available_speciality_id && currentDoc.speciality_id==timeEvent.event.speciality_id))
+                        && !timeEvent.event.is_unavailablility && !timeEvent.event.is_start && timeEvent.event.is_appointment" [style.backgroundColor]="timeEvent.event.appointment_status=='done' ? '#00a650' : timeEvent.event.color" [style.borderColor]="timeEvent.event.color"
+                        [mwlCalendarTooltip]="timeEvent.event.patientName + ' (' + timeEvent.event.start_time + ' - ' + timeEvent.event.end_time + ')' + ',   (Status: ' + timeEvent.event.appointment_status +')' " 
+                        (click)="p.open()" 
+                        #p="ngbPopover" 
+                        (click)="showPatientRecordDocCalendar(p,timeEvent.event,o)" 
+                        [tooltipPlacement]="tooltipPlacement" 
+                        [tooltipEvent]="timeEvent.event" 
+                        [tooltipTemplate]="tooltipTemplate" 
+                        [tooltipAppendToBody]="tooltipAppendToBody" 
+                        [ngbPopover]="openPatientUnavailable" 
+                        [autoClose]="false" 
+                        triggers="manual" 
+                        placement="auto"
+                        container="body" 
+                        popoverClass="nacustom-popover">
+                            <div>
+                                <div class="text-truncate" style="line-height: 1.6;">
+                                    <span class="dot" *ngIf="timeEvent.event.doctor_info == null || timeEvent.event.doctor_info == undefined" style="padding:0;"></span> {{timeEvent.event.patientName}}
+                                </div>
+                                <span *ngIf="timeEvent.event.appointment_status=='scheduled' || timeEvent.event.appointment_status=='no show' || timeEvent.event.appointment_status=='rescheduled'"><i class="icon-alert ms-2"></i></span>
+                            </div>
+                            <div class="text-truncate" style="line-height: 1.6;"> {{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}
+							</div>
+							
+
+                            <mwl-calendar-event-actions [event]="timeEvent.event" [customTemplate]="eventActionsTemplate">
+                            </mwl-calendar-event-actions>
+                        </div>
+                        <div class="cal-event" style="background-Color: white;padding: 0 0 !important;" *ngIf="timeEvent.event.patient!='true' &&  ((currentDocId == timeEvent.event.doctor_id && currentDoc.doctor) ||
+                        (currentDocId == timeEvent.event.speciality_id && !currentDoc.doctor && !timeEvent.event.doctor_id)) && timeEvent.event.is_unavailablility && !timeEvent.event.is_start && !timeEvent.event.is_appointment" [style.backgroundColor]="timeEvent.event.appointment_status=='done' ? 'white' : timeEvent.event.color"
+						[style.borderColor]="timeEvent.event.color" [mwlCalendarTooltip]="'Unavailability ' + timeEvent.event.start_time + ' - ' + timeEvent.event.end_time" [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate"	
+						[ngbPopover]="check" placement="top" data-container="body" [tooltipAppendToBody]="tooltipAppendToBody">
+                            <div class="text-truncate" style="line-height: 1.6;">Unavailability</div>
+                            <div class="text-truncate" style="line-height: 1.6;"> {{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}
+                            </div>
+                            <ng-template #check>
+
+                                <div class="popover-top custom-popover-style">
+                                    <div class="popover-header" [ngStyle]="timeEvent.event.approval_status==0 ?
+                  {'background-color': 'lightblue'} : {'background-color': timeEvent.event.color}">
+                                        <span>Unavailability</span>
+                                        <span class="popover-icon d-inline-flex float-right">
+											<a class="popover-icon-remove" href="javascript:void(0)"
+												*ngIf="deleteUnavailabilityButton"
+												(click)="deleteUnavialability(timeEvent.event)"><i
+													class="icon-remove"></i></a>
+										</span>
+                                        <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                    </div>
+                                    <div class="popover-desc">
+                                        <ul class="list-unstyled mb-0">
+                                            <!-- <li><span class="font-bold">Subject: </span> {{timeEvent.event.subject}}
+                                            </li> -->
+                                            <li *ngIf = "timeEvent.event.subject.length < 30" [title]= "timeEvent.event.subject"><span class="font-bold" >Subject:</span>{{timeEvent.event.subject}}</li>
+                                            <li *ngIf = "timeEvent.event.subject.length > 30" data-bs-toggle="tooltip" data-placement="right" [title]= "timeEvent.event.subject" ><span class="font-bold">Subject:</span>{{timeEvent.event.subject.substr(0,23)}}....</li>
+                                            <li>{{timeEvent.event.start_date|date: datePipeService.slashDateFormat_MM_dd_yyyy()}} {{datePipeService.signBetweenDates()}} {{timeEvent.event.end_date|date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</li>
+                                            <li>
+                                                {{timeEvent.event.start_date|date: 'HH:mm'}} - {{timeEvent.event.end_date|date: 'HH:mm'}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </ng-template>
+                            <mwl-calendar-event-actions [event]="timeEvent.event" [customTemplate]="eventActionsTemplate">
+                            </mwl-calendar-event-actions>
+
+                        </div>
+
+                        <div class="cal-event" *ngIf="timeEvent.event.patient!='true' &&  ((currentDocId == timeEvent.event.doctor_id && currentDoc.doctor) ||
+                        (currentDocId == timeEvent.event.speciality_id && !currentDoc.doctor && !timeEvent.event.doctor_id)) && !timeEvent.event.is_unavailablility && timeEvent.event.is_start && !timeEvent.event.is_appointment" [style.backgroundColor]="timeEvent.event.color"
+                            [style.borderColor]="timeEvent.event.color" style="margin-top: 3px;padding: 0 0 !important;" [mwlCalendarTooltip]="'Assignment starts at ' + timeEvent.event.start_time" [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event"
+                            [tooltipTemplate]="tooltipTemplate" [tooltipAppendToBody]="tooltipAppendToBody">
+                        </div>
+
+                        <div class="cal-event" *ngIf="timeEvent.event.patient!='true'  &&  ((currentDocId == timeEvent.event.doctor_id && currentDoc.doctor) ||
+                        (currentDocId == timeEvent.event.speciality_id && !currentDoc.doctor && !timeEvent.event.doctor_id)) && !timeEvent.event.is_unavailablility && !timeEvent.event.is_start && !timeEvent.event.is_appointment" [style.backgroundColor]="timeEvent.event.color"
+                            style="margin-bottom: 1px;padding: 0 0 !important;" [style.borderColor]=" timeEvent.event.color" [mwlCalendarTooltip]="'Assignment ends at ' + timeEvent.event.start_time" [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event"
+                            [tooltipTemplate]="tooltipTemplate" [tooltipAppendToBody]="tooltipAppendToBody">
+                        </div>
+                        <div class="cal-event" *ngIf="timeEvent.event.patient=='true' && patient=='true'" [style.backgroundColor]="timeEvent.event.appointment_status=='done' ? 'white' : timeEvent.event.color" [style.borderColor]=" timeEvent.event.color" [mwlCalendarTooltip]="timeEvent.event.patientName +' (' + timeEvent.event.start_time + ' - ' + timeEvent.event.end_time + ')'"
+                            [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate" [tooltipAppendToBody]="tooltipAppendToBody" [ngbPopover]="openPatient" data-container="body" (click)="showPatientRecordDocCalendar(timeEvent.event)"
+                            placement="top">
+                            <div class="text-truncate" style="line-height: 1.6;">{{timeEvent.event.patientName}}</div>
+                            <div class="text-truncate" style="line-height: 1.6;"> {{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}
+                            </div>
+                        </div>
+                        <ng-template #openPatient>
+                            <div class="popover-top custom-popover-style">
+                                <div class="popover-header" [style.background-color]="timeEvent.event.color">
+                                    <span>{{timeEvent.event.patientName }}</span>
+                                    <span class="popover-icon d-inline-flex float-right">
+										<a class="popover-icon-edit" href="javascript:void(0)"
+											*ngIf="timeEvent.event.updateApp && !timeEvent.event.visit_session  && timeEvent.event.appointment_status_slug!='completed' && timeEvent.event.appointment_status_slug!='no_show'" (click)="edit(timeEvent.event)" >
+											<i class="icon-pencil"></i>
+										</a>
+										<a class="popover-icon-remove" href="javascript:void(0)"
+											*ngIf="timeEvent.event.deleteApp && !timeEvent.event.visit_session && timeEvent.event.appointment_status_slug!='completed'  && timeEvent.event.appointment_status_slug!='no_show'"
+											(click)="deleteAppointment(timeEvent.event)"><i class="icon-remove"></i></a>
+									</span>	
+                                    <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                </div>
+                                <div  [class]="timeEvent?.event?.appointment_status_slug ==='completed'?'popover-desc popover-status-green':'popover-desc'">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>{{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}</li>
+                                        <li *ngIf="timeEvent.event.available_doctor">
+											Provider: {{timeEvent.event.available_doctor.doctor.userBasicInfo.first_name}} {{timeEvent.event.available_doctor.doctor.userBasicInfo.middle_name}} {{timeEvent.event.available_doctor.doctor.userBasicInfo.last_name}}
+                                        </li>
+                                        <li *ngIf="timeEvent.event.available_speciality && !timeEvent.event.available_doctor">
+                                            Provider: N/A
+                                        </li>
+                                        <li *ngIf="timeEvent.event.available_doctor">
+
+											Practice-Location: {{timeEvent.event.available_doctor.facilityLocations.facility.name}}-{{timeEvent.event.available_doctor.facilityLocations.name}}
+											<!-- {{aclCustom.convertFacilityToPracticeLocation(timeEvent.event.docAssign.docBelongtoFacility.id)}} -->
+                                        </li>
+                                        <li *ngIf="timeEvent.event.available_speciality && !timeEvent.event.available_doctor">
+											Practice-Location: {{timeEvent.event.available_speciality.facilityLocation.facility.name}}-{{timeEvent.event.available_speciality.facilityLocation.name}}
+											<!-- {{aclCustom.convertFacilityToPracticeLocation(timeEvent.event.specAssign.facilityId)}} -->
+                                        </li>
+                                        <!-- <li *ngIf="timeEvent.event.roomName">
+											Room: {{timeEvent.event.roomName}}
+										</li>
+										<li *ngIf="!timeEvent.event.roomName">
+											Room: {{timeEvent.event.room.name}}
+										</li> -->
+                                        <li>
+                                            <div *ngIf="timeEvent.event.startEval && (!timeEvent.event.has_app || timeEvent.event.speciality_key === 'medical_doctor' || timeEvent.event.speciality_key==='hbot')" class="text-end">
+                                                <!-- abdullah asked me to hide the start evaluation button on patient calender -->
+												<!-- <button [disabled]= "timeEvent.event.appointment_status_slug=='no_show' " class="btn btn-success" (click)="startEvaluation.emit(timeEvent.event);startEvualtionFlagShow.emit(timeEvent.event)">
+													{{timeEvent.event.visit_session ? "Edit Evalutaion" : "Start"}}
+                                                </button> -->
+                                                <button *ngIf = "timeEvent.event.visit_session" class="btn btn-success"  style = "margin-left: 4px;" (click) = "openShowModal(timeEvent.event)">
+                                                    Report
+                                                </button>
+                                                <button *ngIf = "timeEvent.event.visit_session" (click)="showEvaluation.emit(timeEvent.event)" class="btn btn-success" style = "margin-left: 4px;" >
+                                                View
+                                                </button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                        <ng-template #openPatientUnavailable>
+                            <div class="popover-top custom-popover-style">
+                                <div class="popover-header" [style.background-color]="timeEvent.event.color">
+                                    <span>{{timeEvent.event.patientName }}</span>
+                                    <span class="popover-icon d-inline-flex float-right">
+										<a class="popover-icon-edit" href="javascript:void(0)"
+											*ngIf="timeEvent.event.updateApp && !timeEvent.event.visit_session && timeEvent.event.update_back && timeEvent.event.appointment_status_slug!='no_show'" (click)="edit(timeEvent.event)">
+											<i class="icon-pencil"></i>
+										</a>
+										<a class="popover-icon-remove" href="javascript:void(0)"
+											*ngIf="timeEvent.event.deleteApp && !timeEvent.event.visit_session && timeEvent.event.appointment_status_slug!='no_show'"
+											(click)="deleteAppointment(timeEvent.event)"><i class="icon-remove"></i></a>
+									</span>
+                                    <a class="float-right" href="javascript:void(0)" (click)="closengb(p)"><i class="fa fa-times"></i></a>
+                                </div>
+                                <div [class]="timeEvent?.event?.appointment_status_slug ==='completed'?'popover-desc popover-status-green':'popover-desc'">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>{{timeEvent.event.start_time}} - {{timeEvent.event.end_time}}</li>
+                                        <!-- <li>
+                                            <span class="font-bold">Provider:</span> {{timeEvent.event.doctor_info ? timeEvent.event.doctor_info.first_name +(timeEvent.event.doctor_info.middle_name? ' '+timeEvent.event.doctor_info.middle_name:'')+ ' '+timeEvent.event.doctor_info.last_name  : "N/A"}}
+                                        </li> -->
+                                        <li>
+                                            <Span class="font-bold">Apt.Type:</Span>
+												<Span tooltipClass="table-custom-tooltip" ngbTooltip="{{timeEvent.event.appointment_type_description}}"> {{timeEvent.event.appointment_type_description}}</Span>
+
+                                        </li>
+                                        <li>
+                                            <!-- <span class="font-bold">Practice-Location:</span> {{aclCustom.convertFacilityToPracticeLocationName(timeEvent.event.facility_name)}} -->
+											<span class="font-bold">Practice-Location:</span> {{timeEvent.event.facility_name}}
+                                            
+										</li>
+                                        <li>
+                                            <span class="font-bold ">Transportation: </span> 
+                                            <i  *ngIf="timeEvent.event.has_transportation else noTransport" class="fa fa-car" aria-hidden="true"></i> 
+                                            <ng-template #noTransport>
+                                              N/A
+                                          </ng-template>  
+                                        </li>
+                                        <li>
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <div class="tooltip-outer" popoverClass="visit-bill-popover"
+                                                        [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
+                                                        <span class="font-bold">CPT Codes:</span>
+                                                        {{ timeEvent?.event?.appointment_cpt_codes?.[0]?.billingCode?.name ? timeEvent?.event?.appointment_cpt_codes?.[0]?.billingCode?.name : '' }}
+                                                        -
+                                                        {{ timeEvent?.event?.appointment_cpt_codes?.[0]?.billingCode?.description ? timeEvent?.event?.appointment_cpt_codes?.[0]?.billingCode?.description + (timeEvent?.event?.appointment_cpt_codes?.length > 1 ? ' ...' : '') : '' }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-2 p-0">
+                                                    <button [ngClass]="[((timeEvent?.event?.visit_status_slug == 'checked_out' || timeEvent?.event?.visit_status_slug == 'in_session' || timeEvent?.event?.visit_status_slug == 'no_show') || !(timeEvent?.event?.allow_multiple_cpt_codes)) ? 'btn add-tag-btn-disabled':'btn btn-success add-tag-btn custom-btn-tooltip list-unstyled']" tooltipClass="table-custom-tooltip" role="button"  
+                                                    ngbTooltip="{{timeEvent?.event | tooltipContent}}" triggers="mouseenter:mouseleave" container="body" (click)="addModal(add,timeEvent?.event,$event,(timeEvent?.event?.visit_status_slug == 'checked_out' || timeEvent?.event?.visit_status_slug == 'in_session' || timeEvent?.event?.visit_status_slug == 'no_show') || !(timeEvent?.event?.allow_multiple_cpt_codes))">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <ng-template #popContent>
+                                                <table class="w-100 text-start">
+                                                    <tbody>
+                                                        <tr *ngFor="let cpt of timeEvent?.event?.appointment_cpt_codes">
+                                                            <td>
+                                                                <span class="font-bold">
+                                                                    {{ cpt?.billingCode?.name ? cpt?.billingCode?.name : '' }}</span>
+                                                                    -
+                                                                    {{ cpt?.billingCode?.description ? cpt?.billingCode?.description : '' }}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </ng-template>
+                                        </li>
+                                        <li>
+                                            <form [formGroup]="appointmentForm">
+                                                <app-ng-select-shareable class="formgroup-mb0" [appendTo]="'body'"[class.ngSelectDisabled] = "isProviderLogedIn && timeEvent.event.doctor_info || !isProviderLogedIn && timeEvent.event.doctor_info || isProviderLogedIn && !timeEvent.event.doctor_info || !isProviderLogedIn && !timeEvent.event.doctor_info && timeEvent.event.visit_session"
+                                                 [events]="eventsSubject.asObservable()"  [filterFieldName]="'provider_id'"
+                                                 [showSelectFieldOnRefresh]="appointmentForm.get('provider_id').value" 
+                                                [lists]="timeEvent.event && timeEvent.event.selectedMultipleFieldFiterProviders ? timeEvent.event.selectedMultipleFieldFiterProviders : []"
+                                                [ngSelectShow]="true"
+                                                 [lableName]="'Provider'" [bindlable]="'full_name'" 
+                                                 [bindId]="'id'" [apiPath]="EnumApiPath.get_providers_for_technicion_loggedIn"  
+                                                 (valueChange)="selectionOnValueChange($event,'provider_id',timeEvent.event)"
+                                                 [conditionalExtraApiParams]="conditionalExtraApiParamsForProvidersGet ? conditionalExtraApiParamsForTemplateGet : {}"
+                                                 [multiple]="false"></app-ng-select-shareable>
+                                                 <span class="text-muted danger" *ngIf="(appointmentForm.get('provider_id').errors?.required || appointmentForm.get('provider_id').value == null) && ((!isProviderLogedIn && !timeEvent.event.doctor_info) || (isProviderLogedIn && !timeEvent.event.doctor_info)) && !timeEvent.event.doctor_info && (appointmentForm.get('provider_id').dirty || appointmentForm.get('provider_id').touched)">This field is
+                                                    required</span> 
+                                                    <app-ng-select-shareable [appendTo]="'body'" [class.ngSelectDisabled] = "!isProviderLogedIn || timeEvent.event.visit_session" [events]="eventsSubject.asObservable()"  [filterFieldName]="'technician_id'"
+                                                    [lists]="timeEvent.event && timeEvent.event.selectedMultipleFieldFiterTechnician ? timeEvent.event.selectedMultipleFieldFiterTechnician : []"
+                                                     [showSelectFieldOnRefresh]="appointmentForm.get('technician_id').value" 
+                                                     [lableName]="'Technician'" [bindlable]="'full_name'" [ngSelectShow]="true"
+                                                     [bindId]="'id'" [apiPath]="EnumApiPath.get_supervisor_technicians"  
+                                                     (valueChange)="selectionOnValueChange($event,'technician_id',rowIndex)"
+                                                     [conditionalExtraApiParams]="conditionalExtraApiParamsForTechnicianGet ? conditionalExtraApiParamsForTechnicianGet : {}"
+                                                     [multiple]="false"></app-ng-select-shareable> 
+                                                     <app-ng-select-shareable class="formgroup-mb0" [appendTo]="'body'" [class.ngSelectDisabled] = "timeEvent.event.visit_session" [events]="eventsSubject.asObservable()"  [filterFieldName]="'template_id'"
+                                                     [lists]="timeEvent.event && timeEvent.event.template ? timeEvent.event.template : []"
+                                                      [showSelectFieldOnRefresh]="appointmentForm.get('template_id').value" 
+                                                      [lableName]="'Template'" [bindlable]="'template_name'"
+                                                      [bindId]="'id'" [ngSelectShow]="true" [updateChanges]="true"
+                                                     [apiPath]="templateUrls" [moduleName]="'template'" 
+                                                     [forceApiHitonOpen] = "true"
+                                                      (valueChange)="selectionOnValueChange($event,'template_id',timeEvent.event)"
+                                                      [conditionalExtraApiParams]="conditionalExtraApiParamsForTemplateGet ? conditionalExtraApiParamsForTemplateGet : {}"
+                                                      [multiple]="false"></app-ng-select-shareable>
+                                                      <span class="text-muted danger" *ngIf="(appointmentForm.get('template_id').errors?.required || appointmentForm.get('template_id').value == null) && (appointmentForm.get('template_id').dirty || appointmentForm.get('template_id').touched)">This field is
+                                                         required</span> 
+                                                </form>
+                                        </li>
+                                        <!-- <li>
+											<span class="font-bold">Room: </span> {{timeEvent.event.roomId}}
+										</li> -->
+                                        <li *ngIf="timeEvent.event.startEval && (!timeEvent.event.has_app || timeEvent.event.speciality_key === EnumSpecialtyType.MEDICAL_DOCTOR || timeEvent.event.speciality_key === EnumSpecialtyType.HBOT || timeEvent.event.speciality_key == EnumSpecialtyType.CHIROPRACTOR || timeEvent.event.speciality_key == EnumSpecialtyType.PHYSICAL_THERAPY || timeEvent.event.speciality_key == EnumSpecialtyType.ACUPUNCTURE)"  class="d-flex align-items-center justify-content-center py-2">
+                                            <button [disabled]="timeEvent.event.appointment_status==='no show' " class="btn btn-success" (click)="startEvaluationAndFlagShowEmit(timeEvent.event)">
+                                                {{timeEvent.event.visit_session ? "Edit Evalutaion" : "Start"}}</button>
+                                                <button  *ngIf = "timeEvent.event.visit_session" class="btn btn-success" style = "margin-left: 4px;" (click) = "openShowModal(timeEvent.event)">
+                                                    Report
+                                                </button>
+                                                <button *ngIf = "timeEvent.event.visit_session" (click)="showEvaluation.emit(timeEvent.event)" class="btn btn-success" style = "margin-left: 4px;" >
+                                                    View
+                                                </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ng-template>
+
+
+                        <div class="cal-resize-handle cal-resize-handle-after-end" *ngIf="timeEvent.event?.resizable?.afterEnd && !timeEvent.endsAfterDay" mwlResizeHandle [resizeEdges]="{
+                right: true,
+                bottom: true
+              }">
+                        </div>
+                    </div>
+                </div>
+                <!-- <div *ngFor="let hour of column.hours; trackBy:trackByHour; let odd = odd" class="cal-hour" [class.cal-hour-odd]="odd" [style.height.px]="hourSegmentHeight*hour.segments.length" [style.background-color]="odd? 'white' : '#f1f1f1'" (dblclick)="open(hour.segments[0].date)"> -->
+                <div *ngFor="let hour of column.hours; trackBy:trackByHour; let odd = odd" class="cal-hour" [class.cal-hour-odd]="odd" [style.background-color]="odd? 'white' : '#f1f1f1'" >
+                    <div *ngFor="let mins of hour.segments; " [style.height.px]="hourSegmentHeight" [class.cal-height-0]="!timeDisplay(mins.date)" [ngClass]="{'disable-timing':disable(mins.date)}" (dblclick)="open(mins.date)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #add let-modal style="max-width: 500px;">
+
+	<div class="modal-header">
+		<h5 class="modal-title">Add CPT Codes</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+
+		<form [formGroup]="addCptForm">
+			<div class="row">
+				<div class="col-sm-12">
+                    <div class="form-group field mb-1 cpt-plc-hold search-label">
+                        <app-ng-select-shareable   [filterFieldName]="'cpt_codes_ids'" 
+                                            [showSelectFieldList]="selectedCPTs"
+                                             [showSelectFieldOnRefresh]="addCptForm.get('cpt_codes_ids').value" 
+                                             [lableName]="'CPT Codes'" [bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'"
+                                             [bindId]="'id'" [apiPath]="EnumApiPath.getCptListByVisitType"  [conditionalExtraApiParams]="{'visit_type_id':typeForAppointment}"
+											 [maxLengthName] = "80" [ngSelectShow]="true"
+											 (valueChange)="SelectionValueChangeCPT($event)" 
+                                             [multiple]="true" [closeOnSelect]='false'  ></app-ng-select-shareable>
+                        </div>
+				</div>
+			</div>
+			<div class="form-group row mb-0">
+                <div class="col-sm-6 offset-sm-3">
+					<div class="row">
+						<div class="col-6">
+							<button type="button" (click)="modal.dismiss('Cross click')"
+								class="btn btn-primary w-100">Close</button>
+						</div>
+						<div class="col-6">
+							<button class="btn btn-success w-100"
+								(click)="createAppointmentsWithCpts(addCptForm)" type="submit">
+								Add
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>

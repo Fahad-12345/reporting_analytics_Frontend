@@ -1,0 +1,164 @@
+# This is an example Starter pipeline configuration
+# This is an example Starter pipeline configuration
+# Use a skeleton to build, test and deploy using manual and parallel steps
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: node:14
+pipelines:
+  pull-requests:
+    '**': #this runs as default for any branch not elsewhere defined
+      - step:
+          name: 'Pull Request Verification Step'
+          size: 2x # Double resources available for this step.
+          caches:
+            - node
+          script:
+            - npm install
+            - npm install -g @angular/cli
+            - npm run build:dev
+  branches:
+    prod-env:
+      - step:
+          name: 'Build'
+          size: 2x # Double resources available for this step.
+          caches:
+            - node
+          script:
+            - npm cache clean --force
+            - npm install
+            - npm install -g @angular/cli
+            - npm run build:citimed-com
+            # - cp .htaccess dist/
+          artifacts:
+            - dist/builds/citimed-com_build/**
+      - step:
+          name: Deploy to Production
+          deployment: Production
+          trigger: "manual"
+          image: atlassian/default-image:2
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.8
+              variables:  
+                AWS_DEFAULT_REGION: 'us-east-1'
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                S3_BUCKET: 'citimed.ovadamd.com'
+                ACL: 'public-read'
+                LOCAL_PATH: ./dist/builds/citimed-com_build 
+                DELETE_FLAG: 'true'
+            - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                DISTRIBUTION_ID: "E2UPJ8N3OOZAJ0"
+    master-angular:
+       - step:
+          name: 'Build'
+          size: 2x # Double resources available for this step.
+          caches:
+            - node
+          script:
+            - npm cache clean --force
+            - npm install
+            - npm install -g @angular/cli
+            - npm run build:dev
+            # - cp .htaccess dist/
+          artifacts:
+            - dist/builds/develop_build/**
+       - step:
+          name: 'Deploy'
+          image: atlassian/default-image:2
+          deployment: development
+          script:
+            - apt-get update && apt-get install zip
+            - /bin/bash appspecdev.sh
+            - zip -r frontend.zip ./dist/builds/develop_build scripts/* appspec.yml  after_install.sh
+            - pipe: atlassian/aws-s3-deploy:0.3.8
+              variables:  
+                AWS_DEFAULT_REGION: 'us-east-1'
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                S3_BUCKET: 'dev-ovadamd.org'
+                ACL: 'public-read'
+                LOCAL_PATH: ./dist/builds/develop_build 
+                DELETE_FLAG: 'true'
+            - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                DISTRIBUTION_ID: "E11XWVSF8PKGQF"
+
+    stage-env:
+      - step:
+          name: 'Build'
+          size: 2x # Double resources available for this step.
+          caches:
+            - node
+          script:
+            - npm cache clean --force
+            - npm install
+            - npm install -g @angular/cli
+            - npm run build:staging
+            # - cp .htaccess dist/
+          artifacts:
+            - dist/builds/staging_build/**
+      - step:
+          name: 'Deploy'
+          image: atlassian/default-image:2
+          deployment: staging
+          script:
+            - apt-get update && apt-get install zip
+            - /bin/bash appspecstaging.sh
+            - zip -r frontend.zip ./dist/builds/staging_build scripts/* appspec.yml  after_install.sh
+            - pipe: atlassian/aws-s3-deploy:0.3.8
+              variables:  
+                AWS_DEFAULT_REGION: 'us-east-1'
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                S3_BUCKET: 'staging-ovadamd.tk'
+                ACL: 'public-read'
+                LOCAL_PATH: ./dist/builds/staging_build 
+                DELETE_FLAG: 'true'
+            - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                DISTRIBUTION_ID: "EBXSNEP96XKUR"
+    
+    cm-feature-analytics-reporting:
+      - step:
+          name: 'Build'
+          size: 2x # Double resources available for this step.
+          caches:
+            - node
+          script:
+            - npm cache clean --force
+            - npm install
+            - npm install -g @angular/cli
+            - npm run build:dev
+          artifacts:
+            - dist/builds/develop_build/**
+      - step:
+          name: Deploying to Development(Analytics)
+          deployment: development
+          image: atlassian/default-image:2
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.3.8
+              variables:  
+                AWS_DEFAULT_REGION: 'us-east-1'
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                S3_BUCKET: 'analytics.cm.ovadamd.org'
+                ACL: 'public-read'
+                LOCAL_PATH: ./dist/builds/develop_build 
+                DELETE_FLAG: 'true'
+            - pipe: atlassian/aws-cloudfront-invalidate:0.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: 'us-east-1'
+                DISTRIBUTION_ID: "E2R2SDUP6DF176"
+    

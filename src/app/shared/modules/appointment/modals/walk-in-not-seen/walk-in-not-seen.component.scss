@@ -1,0 +1,35 @@
+.center {
+    flex: 0 0 31.333333% !important;
+    max-width: 31.333333% !important;
+}
+
+.btn-outline-secondary {
+    background-color: white !important;
+    color: #6d6969;
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #34c3ee !important;
+    color: white
+}
+
+.btn-outline-secondary:active {
+    background-color: #34c3ee !important;
+}
+
+.form-control {
+    margin-bottom: 5px !important;
+}
+
+.title {
+    color: #212529;
+    font-weight: 500;
+    margin-bottom: 0rem !important;
+}
+
+.not-seen-modal{
+    .btn{
+        min-width: 120px;
+    }
+}

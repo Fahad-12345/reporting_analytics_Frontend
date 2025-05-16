@@ -1,0 +1,11 @@
+
+
+<div [formGroup]="checkboxGroup" class="form" style="display: inline-block">
+<li *ngFor="let checkbox of checkBoxesData; let i = index" class="list-inline-item text-start" style="min-width: inherit;">
+  <label for="{{fieldName}}-{{checkBoxesData[i].id}}" class="d-block position-relative m-0">
+    <input id="{{fieldName}}-{{checkBoxesData[i].id}}" [name]="fieldName" type="radio" value="{{checkbox.name}}" [formControlName]="fieldName" [disabled]="isDisabled">
+    <span class="fake-input position-absolute"></span>
+    <span class="fake-label d-block">{{checkbox.name}}</span>
+  </label>
+</li>
+</div>

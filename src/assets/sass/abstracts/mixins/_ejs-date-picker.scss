@@ -1,0 +1,11 @@
+// Mixin For ejs-label Styling
+@mixin ejs-date-picker-label {
+	font-size: 12px !important;
+	font-weight: 500 !important;
+	color: #191818 !important;
+	margin: 0;
+	top: -10px !important;
+	padding: 0 !important;
+	line-height: 0.9375rem;
+	font-family: 'Poppins', Arial, Helvetica, sans-serif !important;
+}

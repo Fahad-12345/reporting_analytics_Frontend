@@ -1,0 +1,101 @@
+<div class="col-12">
+  <div class="row">
+      <!-- Attorney Information -->
+      <div class="col-12">
+          <div class="card">
+            <div class="card-header text-center">
+              <h1 class="card-title text-white m-0">Household Information
+                  <a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit" routerLink="/front-desk/household/edit">
+                    <i class="icon-pencil me-2"></i>
+                  </a>
+              </h1>
+            </div>
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-sm-12">
+                    <ngx-datatable class="bootstrap" [rows]="peopleLivingWithPatients" [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+                        <!-- <ngx-datatable-column name="ID" prop="id" [width]="100">
+                            <ng-template ngx-datatable-header-template>
+                                ID
+                            </ng-template>
+                            <ng-template let-row="row" let-value ngx-datatable-cell-template>
+                                <a [routerLink]="['edit', row.id]">
+                                    {{ row.id }}
+                                </a>
+                            </ng-template>
+                        </ngx-datatable-column> -->
+                        <ngx-datatable-column name="Name" prop="name">
+                          <ng-template let-column="column" ngx-datatable-header-template>
+                              Name
+                          </ng-template>
+                          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                              {{ row.firstName + ' ' + row.middleName + ' ' + row.lastName }}
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="SSN" prop="socialSecurity"></ngx-datatable-column>
+                        <ngx-datatable-column name="Date of Birth" prop="dateOfBirth">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Date Of Birth 
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.dateOfBirth | date:datePipeService.slashDateFormat_MM_dd_yyyy()}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <!-- <ngx-datatable-column name="Relation" prop="relationship[0].type"></ngx-datatable-column> -->
+                        <ngx-datatable-column name="Own Motor Vehicle" prop="ownVehicle">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                    Own Motor Vehicle
+                                </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{ row.ownVehicle == true ? 'Yes' : 'No' }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Name" prop="name">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                    Related Vehicle Info Name
+                                </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{ row.relatedVehicleInfos.firstName + ' ' + row.relatedVehicleInfos.middleName + ' ' + row.relatedVehicleInfos.lastName }}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <!-- <ngx-datatable-column name="Cell Phone No." prop="cellPhone"></ngx-datatable-column> -->
+                        <ngx-datatable-column name="Insurance Company Name" prop="relatedVehicleInfos.insuranceCompany.companyName"></ngx-datatable-column>
+                        <ngx-datatable-column name="Policy No." prop="relatedVehicleInfos.policyNo"></ngx-datatable-column>
+                        <ngx-datatable-column name="Effective Date" prop="relatedVehicleInfos.effective">
+                          <ng-template let-column="column" ngx-datatable-header-template>
+                              Effective Date
+                          </ng-template>
+                          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                              {{row.relatedVehicleInfos.effective | date:datePipeService.slashDateFormat_MM_dd_yyyy()}}
+                          </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Expiry Date" prop="personVehicleExpires">
+                          <ng-template let-column="column" ngx-datatable-header-template>
+                              Expiry Date
+                          </ng-template>
+                          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                              {{row.relatedVehicleInfos.expires | date:datePipeService.slashDateFormat_MM_dd_yyyy()}}
+                          </ng-template>
+                        </ngx-datatable-column>
+                        
+                        <ngx-datatable-column name="Actions" sortable="false" prop="id">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Actions
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <a class="success p-0" data-original-title="Edit" title="Edit" [routerLink]="['edit', row.id]">
+                                    <i class="icon-pencil me-2"></i>
+                                </a>
+                                <!-- <a class="danger p-0" data-original-title="Delete" title="Delete" (click)="onDeleteUser(row.id)">
+                                    <i class="icon-remove me-2"></i>
+                                </a> -->
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+            </div>
+          </div>
+      </div>								
+    </div>
+</div>

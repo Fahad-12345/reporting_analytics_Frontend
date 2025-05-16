@@ -1,0 +1,180 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="data-table">
+	<div class="row mt-2">
+		<div class="col-md-12">
+			<h4 class="mt-1 mb-0 color-green">License</h4>
+		</div>
+	</div>
+	<div class="row mt-2">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit"
+							(change)="set_license_page_size($event.target.value)">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2">
+		</div>
+	</div>
+	<ngx-datatable class="bootstrap" [rows]="licenseLists?.result?.data" [columnMode]='"force"' [footerHeight]="50"
+		[rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+		[count]="licenseLists?.result?.total" (page)="set_license_page_number($event)" [offset]="license_offSet"
+		[limit]="licensePage.size">
+		<ngx-datatable-column name="Order ID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="order_id" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Key" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="license_key" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="User Status" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="user_license_status" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value.name ? value.name : 'N/A'}}" container="body">
+					{{value.name ? value.name : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="License Status" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="license_status" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value == 1 ? 'Active' : (value == 0 ? 'Deactive' : 'N/A')}}" container="body">
+					{{value == 1 ? 'Active' : (value == 0 ? 'Deactive' : 'N/A')}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Expiry Date" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="expiry_date" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value ? (value | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}" container="body">
+					{{value ? (value | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Actions" sortable="false" prop="id" cellClass="action-icon" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<button class="revoke_icon mx-1" ngbTooltip="Revoke" container="body">
+					<i class="fa fa-user-times"></i>
+				</button>
+				<button class="renewal_icon mx-1" ngbTooltip="Renewal" container="body">
+					<i class="fa fa-user-circle"></i>
+				</button>
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>
+<div class="data-table">
+	<div class="row mt-2">
+		<div class="col-md-12">
+			<h4 class="mt-1 mb-0 color-green">Proofing</h4>
+		</div>
+	</div>
+	<div class="row mt-2">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit"
+							(change)="set_history_page_size($event.target.value)">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2">
+		</div>
+	</div>
+	<!-- {{historyLists?.result?.data | json}} -->
+	<ngx-datatable class="bootstrap" [rows]="historyLists?.data" [columnMode]='"force"' [footerHeight]="50"
+		[rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+		[count]="historyLists?.total" (page)="set_history_page_number($event)" [offset]="history_offSet"
+		[limit]="historyPage.size">
+		<ngx-datatable-column name="Start Date & time" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="startTime" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value ? (value | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}"
+					container="body">
+					<!-- {{value ? (value | utcTime | date:'MM-dd-yyyy hh:mm:ss aa') : 'N/A'}} -->
+					{{value ? (value | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) :
+					'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="End Date & time" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="endTime" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value ? (value  | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}"
+					container="body">
+					{{value ? (value | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) :
+					'N/A'}}
+					<!-- {{value ? (value | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM() | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) :
+						'N/A'}} -->
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Proofing Status" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="status" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Result" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="result" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Fail Reason" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="failReason" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>

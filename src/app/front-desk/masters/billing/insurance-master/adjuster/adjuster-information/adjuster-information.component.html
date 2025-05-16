@@ -1,0 +1,356 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="front-desk-block billing-info"
+	*ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_view)">
+	<div class="d-block text-end">
+		<button *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_add)"
+				class="btn btn-default round-btn" href="javascript:void(0)" type="button"
+				(click)="createAdjuster()" (keydown.enter)="$event.preventDefault()">
+				<span class="icon-plus-circle"></span> Add New 
+		</button>
+	</div>
+	<form class="form mb-2" [formGroup]="searchForm" (reset)="resetSearchForm()" (ngSubmit)="setPage({ offset: 0 });" autocomplete="off" *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('insurance_name').value != '' && searchForm.get('insurance_name').value
+					!= null }">
+					<label class="form-label" for="insurance_name">Insurance Name</label>
+					<input type="text" formControlName="insurance_name" id="insurance_name" class="form-control form-input">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+					<label class="form-label" for="name">Adjuster Name</label>
+					<input type="text" formControlName="name" id="name" class="form-control form-input">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('phone_no').value != '' && searchForm.get('phone_no').value != null }">
+					<label class="form-label" for="phone_no">Phone No</label>
+					<input type="text" formControlName="phone_no" id="phone_no" mask="000-000-0000" class="form-control form-input">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('fax').value != '' && searchForm.get('fax').value != null }">
+					<label class="form-label" for="fax">Fax</label>
+					<input type="text" formControlName="fax" mask="000-000-0000" id="fax"
+						class="form-control form-input">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('email').value != '' && searchForm.get('email').value != null }">
+					<label class="form-label" for="email">Email</label>
+					<input type="text" formControlName="email" id="email" class="form-control form-input">
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success">Filter</button>
+				<button class="btn btn-primary" [disabled]="checkInputs()">Reset</button>
+			</div>
+		</div>
+   </form>
+	<!-- <div class="search-filter mb-2">
+		<div class="d-block">
+			<button *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_add)"
+				class="btn btn-default round-btn float-right" href="javascript:void(0)" type="button"
+				(click)="createAdjuster()" (keydown.enter)="$event.preventDefault()">
+				<span class="icon-plus-circle"></span> Add New 
+			</button>
+		</div>
+		<form [formGroup]="searchForm" (reset)="resetSearchForm()" (ngSubmit)="setPage({ offset: 0 });"
+			autocomplete="off" *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_filter)">
+			<div class="form">
+				<div class="search-filter-body">
+					<div class="row">
+						<div class="col-xl-10">
+							<div class="row ma-billing-input col-width-20">
+								<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+									<div class="form-group field" [ngClass]="{'focused': searchForm.get('insurance_name').value != '' && searchForm.get('insurance_name').value
+										!= null }">
+										<label class="form-label" for="insurance_name">Insurance Name</label>
+										<input type="text" formControlName="insurance_name" id="insurance_name"
+											class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+									<div class="form-group field"
+										[ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+										<label class="form-label" for="name">Adjuster
+											Name</label>
+										<input type="text" formControlName="name" id="name"
+											class="form-control form-input">
+									</div>
+								</div>
+
+
+								<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+									<div class="form-group field"
+										[ngClass]="{'focused': searchForm.get('phone_no').value != '' && searchForm.get('phone_no').value != null }">
+										<label class="form-label" for="phone_no">Phone No</label>
+										<input type="text" formControlName="phone_no" id="phone_no" mask="000-000-0000"
+											class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+									<div class="form-group field"
+										[ngClass]="{'focused': searchForm.get('fax').value != '' && searchForm.get('fax').value != null }">
+										<label class="form-label" for="fax">Fax</label>
+										<input type="text" formControlName="fax" mask="000-000-0000" id="fax"
+											class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+									<div class="form-group field"
+										[ngClass]="{'focused': searchForm.get('email').value != '' && searchForm.get('email').value != null }">
+										<label class="form-label" for="email">Email</label>
+										<input type="text" formControlName="email" id="email"
+											class="form-control form-input">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-2 text-center">
+							<div class="row justify-content-center mb-3 mb-xl-0">
+								<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+									<button type="submit" class="btn btn-success w-100 mt-0 me-3"> Filter </button>
+								</div>
+								<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+									<button type="reset" class="btn btn-primary w-100 mt-0" [disabled]="checkInputs()"> Reset</button>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+		</form>
+	</div> -->
+
+	<div class="card data-table p-0 border-0">
+		<div class="overflow-hidden">
+			<div class="edit-block float-left">
+				<div class="form-group field option-field mb-2 d-inline-block">
+					<ul>
+						<li>Show</li>
+						<li>
+							<select (change)="setPageLimit($event.target.value)" class="custom-select" [(ngModel)]="page.size">
+								<option selected [value]="10">10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+
+				</div>
+
+
+			</div>
+			<div class="sm-btn-m0 float-right mt-2 mb-2">
+				<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+					Customize Columns
+				</button>
+			</div>
+			<!-- <div *ngIf="getCheckedAdjusters().length > 0" class="sm-btn-m0 float-right mt-2">
+
+				<a class="btn btn-success round-btn me-0" href="javascript:void(0)">
+					<span class="icon-create-task me-1"></span> Create Task [{{getCheckedAdjusters().length}}]
+				</a>
+
+				<a *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_delete)" class="btn btn-default round-btn"
+			(click)="deleteMultiple()">
+			<span class="icon-remove me-1"></span> Delete [{{getCheckedAdjusters().length}}]
+		  </a>
+
+			</div> -->
+		</div>
+		<!--data table starts from here-->
+		<ngx-datatable class="bootstrap" #adjusterList [rows]="lstAdjuster" [columns]="columns"
+			[columnMode]='"force"' [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"  [scrollbarH]="true"
+			[count]='page.totalElements' (page)="setPage($event)" [offset]="page.pageNumber" [limit]="page.size"
+			[externalPaging]="true" [virtualization]="false">
+			<ngx-datatable-column name="Insurance Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-left" container="body"
+						[ngbTooltip]="getInsuranceNames(row?.insurance)">
+						{{ getInsuranceNames(row?.insurance) }}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+
+			<ngx-datatable-column name="Street address" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.street_address ||'N/A'}}" container="body">
+						{{row.street_address ||'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="City" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.city ||'N/A'}}" container="body">
+						{{row.city ||'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="State" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.state ||'N/A'}}" container="body">
+						{{row.state ||'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Zip" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.zip ||'N/A'}}" container="body">
+						{{row.zip ||'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Adjuster Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.first_name ||'N/A'}} {{row.middle_name}} {{row.last_name }}" container="body">
+						<span *ngIf="row.firstLast || row.middle_name || row.last_name">
+							{{row.first_name }} {{row.middle_name}} {{row.last_name}}
+						</span>
+						<span *ngIf="!row.first_name && !row.middle_name && !row.last_name">
+							N/A
+						</span>
+					 </div>
+					
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Extension" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.ext ||'N/A'}}" container="body">
+						{{row.ext ||'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Suite No" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.apartment_suite ||'N/A'}}" container="body">
+						{{row.apartment_suite ||'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<!-- <ngx-datatable-column name="Contact Person Last Name" [sortable]="false">
+        <ng-template ngx-datatable-cell-template let-row="row">
+          {{row.lastName}}
+        </ng-template>
+      </ngx-datatable-column> -->
+
+			<ngx-datatable-column name="Phone No" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					{{row.phone_no ||'N/A' | phoneFormatPipe}}
+				</ng-template>
+			</ngx-datatable-column>
+			<!-- <ngx-datatable-column name="Address" [sortable]="false">
+        <ng-template ngx-datatable-cell-template let-row="row">
+          <div *ngIf="row.streetAddress || row.apartmentSuite">
+            {{ row.streetAddress?row.streetAddress + ' ,':''  }}{{ row.apartmentSuite?row.apartmentSuite:'' }}
+            <br>
+          </div>
+          {{ row.city?row.city + ', ':'' }}{{ row.state?row.state+ ', ':'' }}{{ row.zip?row.zip:'' }}
+        </ng-template>
+      </ngx-datatable-column> -->
+
+			<ngx-datatable-column name="Fax" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.fax ||'N/A' | phoneFormatPipe}}" container="body">
+						{{row.fax ||'N/A' | phoneFormatPipe}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Email" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.email ||'N/A'}}" container="body">
+						{{row.email ||'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Actions" [width]="150" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"> 
+				<ng-template ngx-datatable-header-template name="Actions">
+					<!-- <label>
+                          <input id="intake4" name="" value="" type="checkbox">
+                          <span class="fake-input position-absolute"></span>
+                        </label> -->
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_edit)"
+						(change)="selectAll($event)"
+						[checked]="getCheckedAdjusters().length ===lstAdjuster.length && lstAdjuster.length>0" disabled>
+					</mat-checkbox>
+					Actions
+
+				</ng-template>
+
+				<ng-template ngx-datatable-cell-template let-row="row">
+
+					<!-- <label for="intake4" class="chkbox position-relative mt-1">
+                          <input id="intake4" name="" value="" type="checkbox">
+                          <span class="fake-input position-absolute"></span>
+                        </label>
+                        <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i class="fa fa-tasks"></i></a>
+                        <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button">
+                          <span class="icon-remove"></span></a>
+                        <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+                   -->
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_edit)"
+						(change)="onAdjusterChecked($event,row)" [checked]="row.checked" disabled>
+					</mat-checkbox>
+
+					<button *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_edit)"
+						class="edit-hov mx-1" data-original-title="Edit" ngbTooltip="Edit" container="body" (click)="updateAdjuster(row)"
+					 role="button">
+						<i class="icon-pencil"></i>
+					</button>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="adjusterHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+
+					<!-- <a class="task-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button">
+						<span class="icon-create-task"></span>
+					</a> -->
+
+					<!-- <a *ngIf="aclService.hasPermission(userPermissions.master_billing_adjuster_delete)" class="remove-hov mx-1"
+            tooltip="DeleteAdjuster" (click)="DeleteAdjuster(row)" role="button"><i class="icon-remove"></i>
+          </a> -->
+
+				</ng-template>
+			</ngx-datatable-column>
+
+
+		</ngx-datatable>
+
+		<!-- data table ends here -->
+
+	</div>
+</div>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="position-relative mri-intake-holder">
+	<div class="card card-bg mt-3 pt-3">
+		<app-mri-intake1-form #mriIntake1Form [caseId]="caseId" [MRIData]='MriData'></app-mri-intake1-form>
+		<app-mri-intake2-form #mriIntake2Form [MRIData]='MriData'></app-mri-intake2-form>
+		<app-mri-intake3-form #mriIntake3Form [MRIData]='MriData'></app-mri-intake3-form>
+		<app-mri-intake4-component #mriIntake4Form [caseData]="caseData"></app-mri-intake4-component>
+		<app-mri-intake5-form *ngIf="caseFlowService?.case?.patient?.gender != 'male'"></app-mri-intake5-form>
+        <app-mri-intake6-form [caseData]="caseData"  *ngIf="caseFlowService.case && caseFlowService.case.patient && caseFlowService.case.patient.gender != 'male'" #mriIntake6Form></app-mri-intake6-form>
+        <app-patients-radiology-montage [caseData]="caseData"  #patientsRadiologyMontage></app-patients-radiology-montage>
+		<div *ngIf="!isFormDisabled" class="row form-btn justify-content-center">
+			<button
+				*ngIf="this.aclService.hasPermission(this.userPermissions.patient_case_list_insurance_insurance_info_edit)"
+				class="btn btn-primary w-100 mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="goBack()"><i
+					class="icon-left-arrow me-2"></i> Back</button>
+			<button
+				*ngIf="this.aclService.hasPermission(this.userPermissions.patient_case_list_insurance_insurance_info_edit)"
+				class="btn btn-success w-100 mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="save($event)"><i
+					class="icon-save-continue me-2"></i> Save & Continue</button>
+		</div>
+	</div>
+</div>

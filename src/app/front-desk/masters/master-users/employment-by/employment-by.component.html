@@ -1,0 +1,389 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_view)">
+	<div class="d-block text-end" >
+		<a *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_add)" href="javascript:void(0)"
+			class="btn btn-default round-btn" (click)="createOpenModal(employmentByFrom)">
+			<span class="icon-plus-circle"></span> Add New
+		</a>
+	</div>
+	<form class="form" [formGroup]="searchEmployment" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-2" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': searchEmployment.get('name').value != '' && searchEmployment.get('name').value != null }">
+					<label class="form-label" for="EmploymentBy">Employment By</label>
+					<input type="text" id="EmploymentBy" class="form-control form-input" formControlName="name">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': searchEmployment.get('comments').value != '' && searchEmployment.get('comments').value != null }">
+					<label class="form-label" for="comments">Comments</label>
+					<input type="text" id="comments" class="form-control form-input" formControlName="comments">
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success" (click)="setPage({ offset: 0 })">Filter</button>
+				<button class="btn btn-primary" (click)="resetSearchFilter()" [disabled]="checkInputs()">Reset</button>
+			</div>
+		</div>
+	</form>
+	<!-- <div class="d-block">
+		<a *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_add)" href="javascript:void(0)"
+			class="btn btn-default round-btn float-right" (click)="createOpenModal(employmentByFrom)">
+			<span class="icon-plus-circle"></span> Add New
+		</a>
+	</div>
+	<form [formGroup]="searchEmployment" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_filter)">
+		<div class="form">
+			<div class="search-filter-body">
+				<div class="row">
+					<div class="col-xl-10">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group field"
+									[ngClass]="{'focused': searchEmployment.get('name').value != '' && searchEmployment.get('name').value != null }">
+									<label class="form-label" for="EmploymentBy">Employment By</label>
+									<input type="text" id="EmploymentBy" class="form-control form-input"
+										formControlName="name">
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group field"
+								[ngClass]="{'focused': searchEmployment.get('comments').value != '' && searchEmployment.get('comments').value != null }">
+								<label class="form-label" for="comments">Comments</label>
+								<input type="text" id="comments" class="form-control form-input"
+									formControlName="comments">
+							</div>
+							</div>
+						
+						</div>
+					</div>
+					<div class="col-xl-2">
+						<div class="row justify-content-center mb-3 mb-xl-0">
+							<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+								<button class="btn btn-success w-100 me-3" (click)="setPage({ offset: 0 })"> Filter
+								</button>
+							</div>
+							<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+								<button class="btn btn-primary w-100" (click)="resetSearchFilter()" [disabled]="checkInputs()">Reset</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</form> -->
+</div>
+
+
+<div class="card data-table p-0 mt-2" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_view)">
+	<div class="row">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+
+						<select [(ngModel)]="this.page.size" class="custom-select" name="limit" id="limit" (change)="pageLimit($event.target.value)">
+							<option [value]="10" >10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+			<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+				Customize Columns
+			</button>
+
+			<!-- <lib-task-manager
+				*ngIf="selection.selected.length && aclService.hasPermission(userPermissions.master_user_emp_by_create_task)"
+				selectedProps="{{stringfy(selection.selected)}}" listCount="{{selection.selected.length}}" type="text"
+				page="Patient">
+			</lib-task-manager> -->
+			<!-- <a (click)="deleteMultiple()" class="btn btn-default round-btn" *ngIf="selection.selected.length"><span
+					class="icon-remove me-1"></span>[{{selection.selected.length}}] Delete </a> -->
+		</div>
+	</div>
+	<ngx-datatable #empByList [rows]="getEmploymentBy" [columnMode]='"force"' class="bootstrap"
+		[footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [limit]="page.size" (page)="setPage($event)"
+		[count]='page.totalElements' [offset]="page.pageNumber" [virtualization]="false" [externalPaging]="true">
+
+		<ngx-datatable-column name="Employment By" [width]="150" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+ 		prop="name">
+			<!-- <ng-template *ngFor="let employ of getEmploymentBy">
+				{{employ.name}}
+			</ng-template> -->
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name ||'N/A'}}" container="body">
+					{{row.name ||'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Comments" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+ 		prop="comments">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.comments ||'N/A'}}" container="body">
+					{{row.comments ||'N/A'}}</div>
+			</ng-template>
+
+			<!-- <ng-template ngx-datatable-cell-template *ngFor="let employ of getEmploymentBy">
+				{{data.comments}}
+			</ng-template> -->
+
+		</ngx-datatable-column>
+  
+		<ngx-datatable-column [canAutoResize]="true" name="Actions" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+		[sortable]="false" prop="id"
+			cellClass="action-icon">
+			<ng-template ngx-datatable-header-template let-column="column">
+				<mat-checkbox (change)="$event ? masterToggle() : null"
+					*ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_edit)"
+					[checked]="selection.hasValue() && isAllSelected()"
+					[indeterminate]="selection.hasValue() && !isAllSelected()" disabled>
+				</mat-checkbox>
+				Actions
+
+			</ng-template>
+			<ng-template let-row="row" let-value="value" class="form" ngx-datatable-cell-template
+				let-rowIndex="rowIndex">
+				<mat-checkbox (click)="$event.stopPropagation()"
+					*ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_edit)"
+					(change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" disabled>
+				</mat-checkbox>
+				<!-- <button class="pencil-hov mx-2" 
+							  data-original-title="Edit" 
+							  title="Edit" 
+							  (click)="editInsuranceOneRow(editInsurance,row,rowIndex)"
+							  tooltip="Edit" 
+							  role="button">
+							  
+								  <i class="icon-pencil"></i>
+							</button> -->
+				<a class="edit-hov mx-1" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_edit)"
+					(click)="editEmploymentBy(employmentByFrom , row)" ngbTooltip="Edit" container="body" href="javascript:void(0)"
+					role="button">
+					<i class="icon-pencil"></i></a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="employmentByHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+				<!-- <lib-task-manager *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_create_task)"
+					selectedProps="{{stringfy([row])}}" type="icon" id="{{row.id}}" page="Patient">
+				</lib-task-manager> -->
+
+
+
+				<!--  [routerLink]="['/front-desk/patients/profile', row.id]"  -->
+				<!-- <a *ngIf="aclService.hasPermission('userPermissions.master_user_emp_by_create_task')" class="tasks-hov mx-2"
+					tooltip="Task" href="javascript:void(0)" role="button">
+					<i class="icon-create-task"></i>
+				  </a> -->
+
+				<!-- <a class="remove-hov mx-1" (click)="deleteOneRecord(row.id)" tooltip="Delete" href="javascript:void(0)"
+					role="button"><i class="icon-remove"></i>
+				</a> -->
+			</ng-template>
+
+
+		</ngx-datatable-column>
+	</ngx-datatable>
+	<!-- <div class="card-body border-0 p-0">
+		<table class="table table-bordered table-striped text-center mb-0">
+			<thead>
+				<tr>
+					<th class="border-right" scope="col">Employment By</th>
+					<th class="form" scope="col">
+						<label class="chkbox position-relative mt-1" for="">
+							<input id="" name="" type="checkbox" value=""><span
+								class="fake-input position-absolute"></span>
+						</label>
+						Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>John</td>
+					<td class="form">
+						<label class="chkbox position-relative mt-1" for="">
+							<input id="" name="" type="checkbox" value=""><span
+								class="fake-input position-absolute"></span></label>
+						<a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><i
+								class="icon-pencil"></i></a>
+						<a class="tasks-hov mx-2" href="javascript:void(0)" role="button" tooltip="Task"><i
+								class="icon-create-task"></i></a>
+						<a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+								class="icon-remove"></span></a></td>
+				</tr>
+				<tr>
+					<td>Smith</td>
+					<td class="form">
+						<label class="chkbox position-relative mt-1" for="">
+							<input id="" name="" type="checkbox" value=""><span
+								class="fake-input position-absolute"></span></label>
+						<a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><i
+								class="icon-pencil"></i></a>
+						<a class="tasks-hov mx-2" href="javascript:void(0)" role="button" tooltip="Task"><i
+								class="icon-create-task"></i></a>
+						<a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+								class="icon-remove"></span></a></td>
+				</tr>
+				<tr>
+					<td>William</td>
+					<td class="form">
+						<label class="chkbox position-relative mt-1" for="">
+							<input id="" name="" type="checkbox" value=""><span
+								class="fake-input position-absolute"></span></label>
+						<a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><i
+								class="icon-pencil"></i></a>
+						<a class="tasks-hov mx-2" href="javascript:void(0)" role="button" tooltip="Task"><i
+								class="icon-create-task"></i></a>
+						<a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+								class="icon-remove"></span></a></td>
+				</tr>
+				<tr>
+					<td>John</td>
+					<td class="form">
+						<label class="chkbox position-relative mt-1" for="">
+							<input id="" name="" type="checkbox" value=""><span
+								class="fake-input position-absolute"></span></label>
+						<a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><i
+								class="icon-pencil"></i></a>
+						<a class="tasks-hov mx-2" href="javascript:void(0)" role="button" tooltip="Task"><i
+								class="icon-create-task"></i></a>
+						<a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+								class="icon-remove"></span></a></td>
+				</tr>
+				<tr>
+					<td>Smith</td>
+					<td class="form">
+						<label class="chkbox position-relative mt-1" for="">
+							<input id="" name="" type="checkbox" value=""><span
+								class="fake-input position-absolute"></span></label>
+						<a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><i
+								class="icon-pencil"></i></a>
+						<a class="tasks-hov mx-2" href="javascript:void(0)" role="button" tooltip="Task"><i
+								class="icon-create-task"></i></a>
+						<a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+								class="icon-remove"></span></a></td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div> -->
+	<!-- <div class="card-footer text-muted">
+		<div class="row">
+			<div class="col-md-6 text-start">
+				<p>Showing 1 to 5 of 337 entries</p>
+			</div>
+			<div class="col-md-6 justify-content-end d-flex">
+				<nav aria-label="Page navigation example">
+					<ul class="pagination mb-0">
+						<li class="page-item">
+							<a aria-label="Previous" class="page-link" href="#"><img
+									src="assets/images/previous.png"></a>
+						</li>
+						<li class="page-item">
+							<a aria-label="Previous" class="page-link" href="#"><img src="assets/images/left.png"></a>
+						</li>
+						<li class="page-item active"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item"><a class="page-link" href="#">4</a></li>
+						<li class="page-item"><a class="page-link" href="#">5</a></li>
+						<li class="page-item">
+							<a aria-label="Previous" class="page-link" href="#"><img src="assets/images/right.png"></a>
+						</li>
+						<li class="page-item">
+							<a aria-label="Next" class="page-link" href="#"><img src="assets/images/next.png"></a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+	</div> -->
+</div>
+
+<!-- Add Loction -->
+<!-- <div class="modal fade" id="add-employment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content"> -->
+<ng-template #employmentByFrom let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">{{modalTitle}}Employment By</h5>
+		<button type="button" class="close" aria-label="Close" (click)="closeModal()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+		<form [formGroup]="employmentByForm" (ngSubmit)="onSubmit(employmentByForm.value)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group mb-2">
+						<label class="form-label">Employment By Name*</label>
+						<input type="text" class="form-control mb-0" formControlName="name" notFirstCharactorSpace>
+						<small class="form-text text-muted danger"
+							*ngIf="employmentByForm.get('name').errors?.required && (employmentByForm.get('name').dirty || employmentByForm.get('name').touched)">This field is required</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-12">
+				<div class="form-group row mb-2">
+					<label class="form-label">Comments</label>
+					<textarea class="form-control" rows="3" formControlName="comments"></textarea>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12 modal-btn-width text-center">
+					<button type="button" class="btn btn-primary me-3"
+					(click)="closeModal()">Cancel</button>
+
+					<button class="btn btn-success" type="submit"
+						[disabled]="isDisabledSaveContinue()">{{ submitText  }}</button>
+
+
+				</div>
+			</div>
+
+		</form>
+	</div>
+</ng-template>
+<!-- </div>
+  </div>
+</div> -->
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

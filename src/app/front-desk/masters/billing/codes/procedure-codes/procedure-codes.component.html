@@ -1,0 +1,254 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div class="tab-pane fade show active" id="HCPCS" role="tabpanel" aria-labelledby="HCPCS-tab"
+  *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_view)">
+  <div class="card search-filter-block">
+    <div class="d-block">
+      <a *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_add)"
+        class="btn btn-default round-btn float-right" href="javascript:void(0)" data-bs-toggle="modal"
+        (click)="openModal(codes)"> Add New <span class="icon-plus-circle ms-2"></span>
+      </a>
+    </div>
+    <form action="" autocomplete="off" [formGroup]="searchForm"
+      *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_filter)">
+      <div class="form">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-8 col-lg-9 col-xl-10">
+              <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+                    <label class="form-label" for="name">Code</label>
+                    <input type="text" id="name" class="form-control form-input" formControlName="name">
+                  </div>
+                </div>
+
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('short_description').value != '' && searchForm.get('short_description').value != null }">
+                    <label class="form-label" for="short_description">Description</label>
+                    <input type="text" id="short_description" class="form-control form-input"
+                      formControlName="short_description">
+                  </div>
+                </div>
+
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('comments').value != '' && searchForm.get('comments').value != null }">
+                    <label class="form-label" for="comments">Comments</label>
+                    <input type="text" id="comments" class="form-control form-input" formControlName="comments">
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-sm-4 col-lg-3 col-xl-2">
+              <div class="row justify-content-center mb-0">
+                <div class="col-4 col-sm-6 col-md-6 col-lg-6 align-self-center">
+                  <button class="btn btn-success w-100 me-3" (click)="setPage({offset: 0})">
+                    Filter
+                  </button>
+                </div>
+                <div class="col-4 col-sm-6 col-md-6 col-lg-6 align-self-center">
+                  <button class="btn btn-primary w-100" type="button" (click)="reset()">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div>
+  <div class="card data-table p-0 mt-2 border-0">
+    <div class="row">
+      <div class="col-12 col-sm-6 edit-block text-start">
+        <div class="form-group field option-field mb-2 d-inline-block">
+          <ul>
+            <li>Show</li>
+            <li>
+
+              <select class="custom-select" name="limit" id="limit" (change)="pageLimit($event.target.value)">
+                <option [value]="10" selected>10</option>
+                <option [value]="20">20</option>
+                <option [value]="30">30</option>
+                <option [value]="40">40</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+              </select>
+            </li>
+            <li>entries</li>
+          </ul>
+
+        </div>
+
+
+      </div>
+      <div class="col-12 col-sm-6 text-end mt-0 mt-sm-2">
+
+        <!-- <lib-task-manager *ngIf="HcpcsSelection.selected.length "
+					selectedProps="{{HCPCSstringfy(selection.selected)}}" type="text"
+					[listCount]="HcpcsSelection.selected.length" page="Patient">
+				</lib-task-manager> -->
+        <!-- <a href="javascript:void(0)" (click)="deleteMultipleHcpcsCode()" class="btn btn-default round-btn"
+                  *ngIf="HcpcsSelection.selected.length && aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_delete)">
+                  <span class="icon-remove me-1"></span> Delete [{{HcpcsSelection.selected.length}}]
+                </a> -->
+
+
+      </div>
+    </div>
+
+    <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="rows" [columnMode]='"force"'
+      [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [count]="page.totalElements"
+      [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)" [scrollbarH]="true"
+      [virtualization]="false" [externalPaging]="true">
+
+      <ngx-datatable-column name="Code" [sortable]="false" prop="name">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name}}">
+            {{row.name}}</div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Code Type" [sortable]="false" prop="type.name">
+      </ngx-datatable-column>
+
+
+      <ngx-datatable-column name="Description" [sortable]="false" prop="short_description">
+
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Comments" [sortable]="false" prop="comments">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.comments}}">
+            {{row.comments}}</div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Actions" [width]="150" [sortable]="false" cellClass="action-icon">
+        <ng-template ngx-datatable-header-template name="Actions">
+
+          <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_delete)"
+            (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+          Actions
+
+        </ng-template>
+
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+          <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_delete)"
+            (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+          <a href="javascript:void(0)" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_edit)"
+            class="edit-hov mx-1" (click)="openModal(codes , row , rowIndex)" tooltip="Edit" role="button"
+            data-bs-toggle="modal">
+            <i class="icon-pencil"></i>
+          </a>
+
+          <!-- <lib-task-manager selectedProps="{{HCPCSstringfy([row])}}" type="icon" id="{{row.id}}"
+						page="Patient">
+					</lib-task-manager> -->
+
+          <!-- <a *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_delete)" class="remove-hov mx-1"
+                    tooltip="Delete" href="javascript:void(0)" role="button" (click)="deleteOneHcpcsCode(row)"><i
+                      class="icon-remove"></i>
+                  </a> -->
+
+
+        </ng-template>
+      </ngx-datatable-column>
+
+    </ngx-datatable>
+
+  </div>
+</div>
+
+
+<ng-template #codes let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{modelTitle}} Code</h5>
+    <button type="button" class="close" (click)="close()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form autocomplete="" [formGroup]="form" (ngSubmit)="onSubmit(form.getRawValue())">
+      <div class="row">
+        <div class="col-md-12 mb-1">
+          <label for="name" class="form-label"> Name*</label>
+          <input type="text" class="form-control mb-0" formControlName="name">
+          <small class="form-text text-muted danger" *ngIf="form.get('name').errors?.required && 
+                          (form.get('name').dirty || form.get('name').touched)">Please enter
+            name!</small>
+
+        </div>
+      </div>
+
+      <!-- <div class="row">
+        <div class="col-md-12 mb-1">
+          <label for="name" class="form-label"> Description</label>
+          <textarea class="form-control mb-0" rows="3" formControlName="description"></textarea>
+          <small class="form-text text-muted danger" *ngIf="form.get('description').errors?.required && 
+                          (form.get('description').dirty || form.get('description').touched)">Please
+            enter Description!</small>
+
+        </div>
+      </div> -->
+      <div class="row">
+        <div class="col-md-12 mb-1">
+          <label for="name" class="form-label"> Short Description</label>
+          <textarea class="form-control mb-0" rows="3" formControlName="short_description"></textarea>
+          <small class="form-text text-muted danger" *ngIf="form.get('short_description').errors?.required && 
+                        (form.get('short_description').dirty || form.get('short_description').touched)">Please
+            enter short description!</small>
+
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div class="col-md-12 mb-1">
+          <label for="name" class="form-label"> Medium Description</label>
+          <textarea class="form-control mb-0" rows="3" formControlName="mediumDescription"></textarea>
+          <small class="form-text text-muted danger"
+            *ngIf="form.get('mediumDescription').errors?.required && 
+                      (form.get('mediumDescription').dirty || form.get('mediumDescription').touched)">Please enter Medium Description!</small>
+
+        </div>
+      </div> -->
+      <div class="row">
+        <div class="col-md-12 mb-1">
+          <label for="name" class="form-label"> Long Description</label>
+          <textarea class="form-control mb-0" rows="3" formControlName="long_description"></textarea>
+          <small class="form-text text-muted danger" *ngIf="form.get('long_description').errors?.required && 
+                    (form.get('long_description').dirty || form.get('long_description').touched)">Please
+            enter
+            Long Description!</small>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 mb-1">
+          <label for="name" class="form-label"> Comments</label>
+          <textarea class="form-control mb-3" rows="3" formControlName="comments"></textarea>
+          <small class="form-text text-muted danger" *ngIf="form.get('comments').errors?.required && 
+                          (form.get('comments').dirty || form.get('comments').touched)">Please enter
+            comments!</small>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 modal-btn-width text-center">
+          <button type="button" class="btn btn-outline-secondary me-3" data-dismiss="modal"
+            (click)="close()">Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="form.invalid ">{{modelSubmit}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

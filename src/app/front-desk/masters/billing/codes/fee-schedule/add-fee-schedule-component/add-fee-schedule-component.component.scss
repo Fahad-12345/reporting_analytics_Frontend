@@ -1,0 +1,48 @@
+small {
+    color: red
+}
+
+
+.mat-icon-button {
+    position: absolute;
+    top: 25px !important;
+}
+
+
+.dollar-sign {
+    input {
+        padding-left: 18px !important;
+    }
+    span {
+       position: absolute;
+        top: 25px;
+        left: 15px;
+    }
+}
+
+.select-cross-icon{
+	top:33px !important;
+	right:40px !important;
+}
+
+
+.form-group {
+    small {
+        font-size: 12.5px !important;
+    }
+}
+
+.mat-mdc-select  {
+    background: #faf8f9;
+}
+
+::ng-deep .mat-mdc-select-panel {
+    margin-left: 30px !important;
+}
+ .verti-align {
+	margin-top: -9px;
+ }
+ .pointer-none {
+	 pointer-events: none;
+ }
+ 

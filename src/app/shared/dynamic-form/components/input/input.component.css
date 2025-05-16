@@ -1,0 +1,8 @@
+
+.focushide:focus::placeholder {
+    color: gray;
+  }
+
+  .focushide::placeholder {
+    color: transparent;
+  }

@@ -1,0 +1,176 @@
+.jaspero__confirmation{
+	z-index: 99999999 !important;
+	.jaspero__confirmation_dialog{
+		display: block !important;
+		height: fit-content !important;
+		.jaspero__confirmation_dialog-actions{
+			-webkit-box-pack: center !important;
+			justify-content: center !important;
+			button {
+				@include height(31.875px);
+			}
+		}
+	}
+	.jaspero__confirmation_overlay{
+		 background-color: #00000030 !important;
+	}
+}
+
+// For Jespero_Confirmation New Styling Start
+.jaspero__confirmation{
+	.jaspero__confirmation_overlay{
+		background: rgba(0, 0, 0, 0.4);
+	}
+	.jaspero__confirmation_dialog{
+		max-height: 50%;
+		border-radius: 10px;
+		max-width: 23.75rem;
+		width: 23.75rem!important;
+		.jaspero__confirmation_dialog-title{
+			line-height: 1.2 !important;
+			font-size: 1.25rem !important;
+			font-weight: 600;
+			letter-spacing: .005em;
+			@include px-to-rem(margin-bottom, 20px, true);
+			@include px-to-rem(padding, 24px 24px 0px, true);
+			text-transform: capitalize;
+			text-align: center;
+		}
+		.jaspero__confirmation_dialog-content{
+			line-height: 1.5rem;
+			font-size: 1.125rem;
+			margin-bottom: .313rem;
+			@include px-to-rem(padding, 0px 24px 24px, true);
+			font-weight: 400;
+      text-align: center;
+		}
+		.jaspero__confirmation_dialog-actions{
+            padding: 0 !important;
+			min-height: 3rem;
+			button{
+				width: 50%;
+				border-radius: 0;
+				margin: 0;
+				padding: .313rem !important;
+				font-size: 1rem !important;
+				border: 0;
+				min-height: 3rem !important;
+			}
+		}
+	}
+}
+
+// For Jespero_Confirmation New Styling End
+// Ng_Modal Jaspero_Confirmation styling Start
+.confirmation-modal{
+	.modal-dialog{
+		border-radius: 10px;
+		max-width: 23.75rem;
+		width: 23.75rem !important;
+		.modal-content{
+			border-radius: 10px;
+			overflow: hidden;
+			.confirm-modal-header{
+				letter-spacing: .005em;
+				line-height: 1.2;
+				// @include px-to-rem(margin-bottom, 20px, false);
+				padding: 0.5rem 0.9375rem;
+				text-transform: capitalize;
+				font-size: 1.25rem;
+				text-align: center;
+				button{
+					&.close{
+						opacity: 1;
+						&:hover{
+							opacity: 0.8;
+						}
+						span{
+							vertical-align: top;
+						}
+					}
+				}
+			}
+			.confirm-modal-body{
+				line-height: 1.2;
+				font-size: 1.125rem;
+				padding: 1rem;
+				// @include px-to-rem(padding, 0px 24px 24px, false);
+			}
+			.confirm-modal-footer{
+				border-top: 1px solid transparent;
+				margin: -2px 0 0;
+				.btn{
+					width: 50%;
+					border-radius: 0;
+					margin: 0;
+					padding: .313rem !important;
+					font-size: 1rem !important;
+					border: 0;
+					min-height: 3rem;
+					&.btn-default{
+						border-right: 1px solid transparent;
+					}
+				}
+			}
+		}
+	}
+}
+
+// Ng_Modal Jaspero_Confirmation styling End
+.ngx-cool-dialog{
+	.ngx-cool-dialog__backdrop{
+		opacity: 0.4;
+	}
+	.ngx-cool-dialog__content{
+		max-width: 23.75rem;
+		border-radius: 10px;
+		padding: 0;
+		.ngx-cool-dialog__header{
+			letter-spacing: .005em;
+			line-height: 1.2;
+			@include px-to-rem(margin-bottom, 20px, false);
+			padding: 0.5rem 0.9375rem;
+			text-transform: capitalize;
+			font-size: 1.25rem;
+			text-align: center;
+			.ngx-cool-dialog__title{
+				margin: 0 auto;
+			}
+			.ngx-cool-dialog__close-symbol{
+				@include px-to-rem(width, 16px, false);
+				@include px-to-rem(height, 16px, false);
+				&:after, 
+				&:before{
+					@include px-to-rem(height, 3px, false);
+				}
+			}
+		}
+		.ngx-cool-dialog__divider{
+			margin: 0;
+    		border: 0;
+		}
+		.ngx-cool-dialog__text{
+			line-height: 1.2;
+			font-size: 1.125rem;
+			@include px-to-rem(padding, 0px 24px 24px, false);
+			text-align: left;
+			margin: 0;
+		}
+		.ngx-cool-dialog__footer{
+			border-top: 1px solid transparent;
+			.ngx-cool-dialog__cancel-btn, 
+			.ngx-cool-dialog__ok-btn{
+				width: 50%;
+				border-radius: 0;
+				margin: 0;
+				padding: .313rem !important;
+				min-height: 3.1rem;
+				font: 400 1rem/1.0625rem 'Poppins', Arial, Helvetica, sans-serif !important;
+				display: inline-block;
+			}
+			.ngx-cool-dialog__cancel-btn{
+				border-right: 1px solid $transparent;
+			}
+		}
+	}
+}

@@ -1,0 +1,447 @@
+%flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+%line-height-1-2 {
+  line-height: 1.2;
+}
+
+.ngx-datatable {
+  &.bootstrap {
+    @include px-to-rem(font-size, 13px, false);
+  }
+  &.fixed-row {
+    .datatable-scroll {
+      .datatable-body-row {
+        .datatable-body-cell {
+          @include px-to-rem(padding, 0px, true);
+        }
+      }
+    }
+  }
+  &.white-space-wrap {
+    .datatable-header {
+      .datatable-header-inner {
+        .datatable-row-center {
+          .datatable-header-cell {
+            white-space: pre-wrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .datatable-header-cell-template-wrap,
+            .datatable-header-cell-wrapper,
+            .datatable-header-cell-label {
+              line-height: 1.2 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .bg-info {
+    @include px-to-rem(padding, 4px 10px 5px, false);
+    @include px-to-rem(margin, 2px, false);
+    @include px-to-rem(font-size, 11px, false);
+    font-weight: 400;
+    cursor: pointer;
+    white-space: break-spaces;
+    line-height: 1.2;
+  }
+
+  &.fixed-header {
+    .datatable-header-cell-label,
+    .datatable-header
+      .datatable-header-cell
+      .datatable-header-cell-template-wrap {
+      @include font-weight(medium);
+      // line-height: 1.3125rem !important;
+    }
+
+    a {
+      &.underline-hov {
+        &:hover {
+          text-decoration: underline !important;
+        }
+      }
+    }
+
+    .datatable-header {
+      .datatable-header-inner {
+        .datatable-header-cell {
+          text-align: center;
+          @include px-to-rem(font-size, 13px, false);
+          @include padding-same(3.2px);
+          @include font-weight(medium);
+          // line-height: 1.3125rem;
+          border-style: solid;
+          border-width: 0 1px 0 0;
+          text-transform: capitalize !important;
+          @include media(">xxl-widescreen") {
+            @include px-to-rem(font-size, 14px, false);
+          }
+          .datatable-header-cell-template-wrap {
+            .ng-select-single {
+              .ng-select-container {
+                @include px-to-rem(padding, 3px 0px, false);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .datatable-body {
+      overflow-y: hidden;
+      a,
+      button {
+        border: none;
+        @include px-to-rem(padding, 0px, false);
+        text-decoration: none;
+        i,
+        span,
+        svg {
+          position: relative;
+          top: 1px !important;
+          @include px-to-rem(font-size, 12px, false);
+          @include media(">xxl-widescreen") {
+            @include px-to-rem(font-size, 15px, false);
+          }
+          @include media("<xl-widescreen") {
+            @include px-to-rem(font-size, 15px, false);
+          }
+        }
+        &.view-hov,
+        &.calendar-hov {
+          span,
+          i,
+          svg {
+            &:hover {
+              color: $green-haze;
+            }
+          }
+        }
+        &.task-hov {
+          span,
+          i,
+          svg {
+            &:hover {
+              color: $datatable-task-icons-hover-color;
+            }
+          }
+        }
+        &.print-hov {
+          span,
+          i,
+          svg {
+            &:hover {
+              color: $print-color;
+            }
+          }
+        }
+        &.printer-hov {
+          span,
+          i,
+          svg {
+            &:hover {
+              color: $printer-color;
+            }
+          }
+        }
+        &.comments-hov {
+          span,
+          i,
+          svg {
+            &:hover {
+              color: $comments-color;
+            }
+          }
+        }
+        &.open-box-hov {
+          span,
+          i {
+            &:hover {
+              color: $open-box-color;
+            }
+          }
+        }
+        &.message-hov {
+          span,
+          i,
+          svg {
+            &:hover {
+              color: $message-color;
+            }
+          }
+        }
+        &.download-hov {
+          span,
+          i,
+          svg {
+            &:hover {
+              color: $download-color;
+            }
+          }
+        }
+      }
+
+      .datatable-scroll {
+        display: block;
+        width: auto !important;
+      }
+
+      .datatable-body-row {
+        border-top: 0;
+        .datatable-body-cell {
+          text-align: center;
+          @include px-to-rem(font-size, 12px, false);
+          border-style: solid;
+          line-height: 1.5;
+          word-break: break-word;
+          padding: 0.14rem !important;
+          border-width: 0 1px 0 0;
+          padding: 0.2rem !important;
+          overflow: unset;
+          @include flex(flex, $align-items: center, $justify-content: center);
+          &:first-child {
+            border-width: 0 1px 1px 1px;
+          }
+
+          @include media(">xxl-widescreen") {
+            @include px-to-rem(font-size, 14px, false);
+          }
+
+          @include media("<xl-widescreen") {
+            @include px-to-rem(font-size, 12px, false);
+          }
+          &.count-hold {
+            a {
+              position: relative;
+              margin: 0 7px !important;
+              .comments-count {
+                position: absolute !important;
+                top: -4px !important;
+                right: -9px;
+                border-radius: 50px;
+                font-size: 0.5625rem !important;
+                max-width: 1.25rem;
+                min-width: 0.875rem;
+                height: 0.875rem;
+                padding: 0.1rem 0.15rem !important;
+                overflow: hidden;
+                z-index: 99;
+              }
+            }
+          }
+          &.bill-action {
+            a {
+              &:last-child {
+                margin-left: 0 !important;
+              }
+            }
+          }
+          &.white-space-wrap {
+            .datatable-body-cell-label {
+              white-space: normal;
+            }
+          }
+          &.datatable-form-field {
+            .datatable-body-cell-label {
+              .ng-select {
+                .ng-select-container {
+                  height: unset;
+                  overflow: unset;
+                  .ng-value-container {
+                    padding-top: 0 !important;
+                  }
+                }
+              }
+              .form-group {
+                margin-bottom: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .datatable-footer {
+      overflow: hidden;
+      .datatable-footer-inner {
+        height: 1.875rem !important;
+
+        @media screen and (max-width: 425px) {
+          display: block;
+        }
+      }
+
+      .page-count {
+        text-align: left;
+        @include px-to-rem(margin-left, 15px, false);
+        line-height: 2rem;
+        @include px-to-rem(height, 30px, false);
+        @media screen and (max-width: 425px) {
+          text-align: center;
+          position: relative;
+          top: -1px;
+        }
+      }
+
+      .datatable-pager {
+        @media screen and (max-width: 425px) {
+          width: 100%;
+          display: inline-flex;
+          margin: auto !important;
+        }
+        .datatable-icon-prev,
+        .datatable-icon-left,
+        .datatable-icon-right,
+        .datatable-icon-skip {
+          line-height: 1.6;
+          @include px-to-rem(font-size, 16px, false);
+          @include px-to-rem(padding, 0px, true);
+        }
+
+        .datatable-icon-left,
+        .datatable-icon-skip {
+          @include px-to-rem(padding, 0px, true);
+        }
+
+        a {
+          @include px-to-rem(height, 21px, false);
+          min-width: 1.3125rem;
+          @include px-to-rem(margin-top, 1px, false);
+          line-height: 1.6;
+          @include px-to-rem(padding, 0px 4px 0px 3px, false);
+        }
+
+        ul {
+          @media screen and (max-width: 425px) {
+            margin: auto;
+          }
+          li {
+            @include margin-tb-lr(10px, 0px);
+          }
+        }
+      }
+    }
+  }
+  .sort-btn {
+    display: none !important;
+  }
+}
+
+// Custom Scrollbar-X
+.scroll-hide {
+  overflow: unset !important;
+
+  @include media("<widescreen-min") {
+    overflow: hidden !important;
+  }
+
+  .datatable-body {
+    @include media(">widescreen-min") {
+      overflow: unset !important;
+    }
+
+    @include media("<widescreen-min") {
+      overflow-x: auto !important;
+    }
+  }
+}
+
+.custom-scroll-x {
+  .datatable-body {
+    @include media("<widescreen-min") {
+      overflow-x: scroll !important;
+      width: 100% !important;
+      overflow-y: hidden !important;
+    }
+  }
+
+  ::-webkit-scrollbar:hover {
+    background: #00a650 !important;
+  }
+
+  .datatable-body::-webkit-scrollbar-track {
+    @include box-shadow(inset 0 0 6px rgba(0, 0, 0, 0.3));
+    background-color: #f5f5f5;
+    @include px-to-rem(height, 6px, true);
+  }
+
+  .datatable-body::-webkit-scrollbar {
+    @include px-to-rem(height, 6px, true);
+    background-color: $wild-sand;
+  }
+
+  .datatable-body::-webkit-scrollbar-thumb {
+    @include px-to-rem(height, 6px, true);
+    background-color: $picton-blue;
+    @include border(0px, solid, $emperor);
+    &:hover {
+      background-color: $green-haze;
+      cursor: pointer;
+    }
+  }
+}
+
+.datatable-icon-prev,
+.datatable-icon-right {
+  @include px-to-rem(padding, 0px, true);
+}
+
+ngb-modal-window .ngx-datatable.scroll-horz .datatable-body {
+  overflow-x: auto !important;
+  overflow-y: hidden;
+}
+
+.table-responsive {
+  .table {
+    @media only screen and (max-width: 575px) {
+      @include px-to-rem(width, 550px, false);
+    }
+  }
+}
+
+.ngx-datatable {
+  &.icons-center {
+    .datatable-body {
+      .datatable-body-row {
+        .datatable-body-cell {
+          .datatable-body-cell-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+.header-text-wrap {
+  &.ngx-datatable {
+    .datatable-header {
+      min-height: 24px;
+      .datatable-header-inner {
+        .datatable-row-center {
+          .datatable-header-cell {
+            @extend %flex-center;
+            white-space: pre-wrap;
+            .datatable-header-cell-template-wrap {
+              @extend %flex-center;
+              @extend %line-height-1-2;
+              .datatable-header-cell-wrapper {
+                @extend %line-height-1-2;
+                .datatable-header-cell-label {
+                  @extend %line-height-1-2;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

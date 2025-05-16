@@ -1,0 +1,176 @@
+
+.custom-btn{
+	width: 100px !important;
+  }
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+	.btn-reset {
+		padding: 0px;
+		max-width: 22% !important;
+		flex: 0 0 22% !important;
+	}
+	.btn-check{
+		padding: 8px 0px;
+		max-width: 26% !important;
+		flex: 0 0 26% !important;
+	}
+	.btn-empty {
+		flex: 0 0 46% !important;
+		max-width: 46% !important;
+	}
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+	.btn-reset {
+		padding: 0px;
+		max-width: 22% !important;
+		flex: 0 0 22% !important;
+	}
+	.btn-check{
+		padding: 8px 0px;
+		max-width: 26% !important;
+		flex: 0 0 26% !important;
+	}
+	.btn-empty {
+		flex: 0 0 25% !important;
+		max-width: 25% !important;
+	}
+	.rest_class{
+		flex: 0 0 32%;
+		max-width: 32%;
+	}
+}
+
+@media only screen and (min-width: 1200px) {
+	.btn-reset {
+		padding: 7px;
+		max-width: 22% !important;
+		flex: 0 0 22% !important;
+	}
+	.btn-check{
+		padding: 8px 3px;
+		max-width: 26% !important;
+		flex: 0 0 26% !important;
+	}
+	// .btn-empty {
+	// 	flex: 0 0 62.333333% !important;
+	// 	max-width: 62.333333% !important;
+	// }
+	.btn-empty {
+		flex: 0 0 39% !important;
+		max-width: 39% !important;
+	}
+}
+
+.btn-info {
+	color: #fff !important;
+}
+
+.active1 {
+	border-bottom-color: green !important;
+}
+
+.btn-filter {
+	height: 38px;
+	padding: 10px;
+	font-weight: 500;
+}
+
+.btn-filter:hover {
+	border-bottom: 1px solid #006228;
+	color: #34c3ee !important;
+}
+
+.btn-filter-selected {
+	border-bottom: 1px solid #006228;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+	-webkit-appearance: searchfield-cancel-button;
+
+}
+
+/* The customcheck */
+.customcheck {
+	display: block;
+	position: relative;
+	padding-left: 35px;
+	margin-bottom: 12px;
+	cursor: pointer;
+	font-size: 22px;
+
+}
+
+/* Hide the browser's default checkbox */
+.customcheck input {
+
+	opacity: 0;
+	cursor: pointer;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+	position: absolute;
+	top: 10px;
+	left: 0;
+	height: 25px;
+	width: 25px;
+	background-color: #eee;
+	border-radius: 45px;
+}
+
+.list-group-item:hover,
+.list-group-item:focus {
+	z-index: 0 !important;
+	text-decoration: none !important;
+}
+
+.list-group-item:focus,
+.list-group-item:hover {
+	z-index: 0 !important;
+	text-decoration: none !important;
+}
+
+/* On mouse-over, add a grey background color */
+.customcheck:hover input~.checkmark {
+	background-color: #02cf32;
+}
+
+/* When the checkbox is checked, add a blue background */
+.customcheck input:checked~.checkmark {
+	background-color: #02cf32;
+	border-radius: 45px;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+	content: "";
+	position: absolute;
+	display: none;
+}
+
+/* Show the checkmark when checked */
+.customcheck input:checked~.checkmark:after {
+	display: block;
+}
+
+/* Style the checkmark/indicator */
+.customcheck .checkmark:after {
+	left: 9px;
+	top: 5px;
+	width: 7px;
+	height: 13px;
+	border: solid white;
+	border-width: 0 3px 3px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+.col{
+	padding-right: 10px ;
+	padding-left: 10px ;
+  }
+  .row{
+	margin-left: -10px ;
+	margin-right: -10px ;
+  }

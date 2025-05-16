@@ -1,0 +1,25 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<div class="col-12 role-permissions" *ngIf="aclService.hasPermission(userPermissions.setting_roles_and_permissions_view)">
+  <h4 class="text-center pt-4 pb-3">Roles Permissions</h4>
+  <div class="row">
+    <div class="col-md-12 col-lg-6 offset-lg-3">
+      <div class="form-group">
+        <!-- <select name="" id="" (change)="getRolePermissions($event.target.value)" class="form-select" selected
+          [value]="defaultval"> -->
+        <select name="" id="" (change)="getRolePermissions($event.target.value)" class="form-select">
+          <option disabled selected value="">Please select a role</option>
+          <option *ngFor="let role of roles" [value]="role?.id">{{role?.name}}</option>
+        </select>
+      </div>
+
+      <app-role-privileges [dataObj]='dataObj' (submitData)="submitData($event)" [disablebtn]='disablebtn'
+        [userPermissonData]="userPermissonData">
+      </app-role-privileges>
+
+
+
+    </div>
+  </div>
+</div>
+
+<!-- {{dataObj.result | json}} -->

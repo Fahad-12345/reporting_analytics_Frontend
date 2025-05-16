@@ -1,0 +1,287 @@
+<div class="section-frame reduce-height border-0 pb-2">
+	<div class="inner-frame ps-2 pe-2 pt-3 h-100 pb-md-5 me-1">
+		<form [formGroup]="testResultsForm" autocomplete="off" novalidate class="form h-100">
+			<div class="custom-scrollbar">
+				<div *ngFor="let mri of testResultsForm.controls.MRI.controls; let i=index;" formArrayName="MRI"
+					class="form position-relative px-3">
+					<div [formGroupName]='i' class="row bg-white py-2 mb-2"
+						style="border-radius: 4px;border: 1px solid #d8dde0;">
+						<div class="col-md-4 align-self-center">
+							<ul class="types-list list-inline text-start">
+								<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+									<label for="x-ray-of-cervical-spine" class="d-block chkbox position-relative m-0">
+
+										<span class="fake-label d-block px-3">MRI of the {{mri.value.name}}
+											demonstrates</span>
+									</label>
+								</li>
+							</ul>
+						</div>
+						<div class="col-md-8 align-self-center">
+							<div class="form-group m-0">
+								<textarea class="form-control invalid" cols="30" rows="10"
+									formControlName="test_result_comment"
+									placeholder="Comments"
+									style="min-height: 45px; max-height: 45px;">
+                                </textarea>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<div *ngFor="let ct of testResultsForm.controls.ctScans.controls; let i=index;" formArrayName="ctScans"
+					class="form position-relative px-3">
+					<div [formGroupName]='i' class="row bg-white py-2 mb-2"
+						style="border-radius: 4px;border: 1px solid #d8dde0;">
+						<div class="col-md-4 align-self-center">
+							<ul class="types-list list-inline text-start">
+								<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+									<label for="x-ray-of-cervical-spine" class="d-block chkbox position-relative m-0">
+
+										<span class="fake-label d-block px-3">CAT SCAN of the {{ct.value.name}}
+											demonstrates</span>
+									</label>
+								</li>
+							</ul>
+						</div>
+						<div class="col-md-8 align-self-center">
+							<div class="form-group m-0">
+								<textarea class="form-control invalid" cols="30" rows="10"
+									formControlName="test_result_comment"
+									placeholder="Comments"
+									style="min-height: 45px; max-height: 45px;">
+                                </textarea>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+				<div *ngFor="let ct of testResultsForm.controls.radiologies.controls; let i=index;"
+					formArrayName="radiologies" class="form position-relative px-3">
+					<div [formGroupName]='i' class="row bg-white py-2 mb-2"
+						style="border-radius: 4px;border: 1px solid #d8dde0;">
+						<div class="col-md-4 align-self-center">
+							<ul class="types-list list-inline text-start">
+								<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+									<label for="x-ray-of-cervical-spine" class="d-block chkbox position-relative m-0">
+
+										<span class="fake-label d-block px-3">X RAY of the {{ct.value.name}}
+											demonstrates</span>
+									</label>
+								</li>
+							</ul>
+						</div>
+						<div class="col-md-8 align-self-center">
+							<div class="form-group m-0">
+								<textarea class="form-control invalid" cols="30" rows="10"
+									formControlName="test_result_comment"
+									placeholder="Comments"
+									style="min-height: 45px; max-height: 45px;">
+                                </textarea>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+
+				<div formGroupName='others'>
+					<div *ngFor="let ct of testResultsForm.controls.others.controls.ctaAngiographies.controls; let i=index;"
+						formArrayName="ctaAngiographies" class="form position-relative px-3">
+						<div [formGroupName]='i' class="row bg-white py-2 mb-2"
+							style="border-radius: 4px;border: 1px solid #d8dde0;">
+							<div class="col-md-4 align-self-center">
+								<ul class="types-list list-inline text-start">
+									<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+										<label for="x-ray-of-cervical-spine"
+											class="d-block chkbox position-relative m-0">
+
+											<span class="fake-label d-block px-3">CTA Angiographies of the {{ct.value.name}}
+												demonstrates</span>
+										</label>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-8 align-self-center">
+								<div class="form-group m-0">
+									<textarea class="form-control invalid" cols="30" rows="10"
+										formControlName="test_result_comment"
+										placeholder="Comments"
+										style="min-height: 45px; max-height: 45px;">
+									</textarea>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div *ngFor="let ct of testResultsForm.controls.others.controls.dexa.controls; let i=index;"
+						formArrayName="dexa" class="form position-relative px-3">
+						<div [formGroupName]='i' class="row bg-white py-2 mb-2"
+							style="border-radius: 4px;border: 1px solid #d8dde0;">
+							<div class="col-md-4 align-self-center">
+								<ul class="types-list list-inline text-start">
+									<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+										<label for="x-ray-of-cervical-spine"
+											class="d-block chkbox position-relative m-0">
+
+											<span class="fake-label d-block px-3">Dexa of the {{ct.value.name}}
+												demonstrates</span>
+										</label>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-8 align-self-center">
+								<div class="form-group m-0">
+									<textarea class="form-control invalid" cols="30" rows="10"
+										formControlName="test_result_comment"
+										placeholder="Comments"
+										style="min-height: 45px; max-height: 45px;">
+                                </textarea>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<div *ngFor="let ct of testResultsForm.controls.others.controls.mammographies.controls; let i=index;"
+						formArrayName="mammographies" class="form position-relative px-3">
+						<div [formGroupName]='i' class="row bg-white py-2 mb-2"
+							style="border-radius: 4px;border: 1px solid #d8dde0;">
+							<div class="col-md-4 align-self-center">
+								<ul class="types-list list-inline text-start">
+									<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+										<label for="x-ray-of-cervical-spine"
+											class="d-block chkbox position-relative m-0">
+
+											<span class="fake-label d-block px-3">Mammographies of the {{ct.value.name}}
+												demonstrates</span>
+										</label>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-8 align-self-center">
+								<div class="form-group m-0">
+									<textarea class="form-control invalid" cols="30" rows="10"
+										formControlName="test_result_comment"
+										placeholder="Comments"
+										style="min-height: 45px; max-height: 45px;">
+                                </textarea>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+
+					<div *ngFor="let ct of testResultsForm.controls.others.controls.mrAngiographies.controls; let i=index;"
+						formArrayName="mrAngiographies" class="form position-relative px-3">
+						<div [formGroupName]='i' class="row bg-white py-2 mb-2"
+							style="border-radius: 4px;border: 1px solid #d8dde0;">
+							<div class="col-md-4 align-self-center">
+								<ul class="types-list list-inline text-start">
+									<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+										<label for="x-ray-of-cervical-spine"
+											class="d-block chkbox position-relative m-0">
+
+											<span class="fake-label d-block px-3">MR Angiography of the {{ct.value.name}}
+												demonstrates</span>
+										</label>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-8 align-self-center">
+								<div class="form-group m-0">
+									<textarea class="form-control invalid" cols="30" rows="10"
+										formControlName="test_result_comment"
+										placeholder="Comments"
+										style="min-height: 45px; max-height: 45px;">
+							</textarea>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+
+					<div *ngFor="let ct of testResultsForm.controls.others.controls.ultrasounds.controls; let i=index;"
+						formArrayName="ultrasounds" class="form position-relative px-3">
+						<div [formGroupName]='i' class="row bg-white py-2 mb-2"
+							style="border-radius: 4px;border: 1px solid #d8dde0;">
+							<div class="col-md-4 align-self-center">
+								<ul class="types-list list-inline text-start">
+									<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+										<label for="x-ray-of-cervical-spine"
+											class="d-block chkbox position-relative m-0">
+
+											<span class="fake-label d-block px-3">Ultra Sound of the {{ct.value.name}}
+												demonstrates</span>
+										</label>
+									</li>
+								</ul>
+							</div>
+							<div class="col-md-8 align-self-center">
+								<div class="form-group m-0">
+									<textarea class="form-control invalid" cols="30" rows="10"
+										formControlName="test_result_comment"
+										placeholder="Comments"
+										style="min-height: 45px; max-height: 45px;">
+						</textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngIf="testResultsForm.controls.extremities.value.extremities" formGroupName='extremities' class="row bg-white py-2 mb-2"
+				style="border-radius: 4px;border: 1px solid #d8dde0;">
+				<div  class="col-md-4 align-self-center">
+					<ul class="types-list list-inline text-start">
+						<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+							<label for="x-ray-of-cervical-spine" class="d-block chkbox position-relative m-0">
+
+								<span class="fake-label d-block px-3">EMG/NCV testing of {{testResultsForm.controls.extremities.value.extremities}}
+									demonstrates</span>
+							</label>
+						</li>
+					</ul>
+				</div>
+				<div class="col-md-8 align-self-center">
+					<div class="form-group m-0">
+						<textarea class="form-control invalid" cols="30" rows="10"
+							formControlName="test_result_comment"
+							placeholder="Comments"
+							style="min-height: 45px; max-height: 45px;">
+			</textarea>
+					</div>
+				</div>
+			</div>
+			<div formGroupName='other_comments' class="row">
+				  <div class="col-12 align-self-center px-3 pb-3 mt-2">
+					  <div class="form-group m-0">
+						  <textarea class="form-control invalid" cols="10" rows="3"
+							  formControlName="test_result_comment"
+							  placeholder="Comments"
+							  style="min-height: 60px; max-height: 60px;">
+					  </textarea>
+					  </div>
+				  </div>
+			</div>
+			</div>
+			
+			<div class="paging-bar form-btn text-center my-1 mt-2">
+					<a href="javascript:void(0)" routerLink="/medical-doctor/physical-examination-cont"
+						class="btn btn-primary"><span class="icon-left-arrow me-2"></span>Back
+					</a>
+					<a *ngIf="mainService.isenableSaveRecordMedicalDoctor()"  class="btn btn-info text-white mx-2"
+					  routerLink='/scheduler-front-desk/doctor-calendar'><span class="icon-save-continue"></span> Save For Later</a>
+				  
+					<a *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" routerLink='/medical-doctor/diagnostic-impression'
+						class="btn btn-success"><span class="icon-save-continue me-2"></span>Save & Continue
+					</a>
+			</div>
+		</form>
+
+	</div>
+</div>

@@ -1,0 +1,734 @@
+.grid-area{
+    display: grid !important;
+    grid-template-columns: 58px auto;
+    @media only screen and (max-width: 991.98px){
+        display: block !important;
+        overflow: hidden;
+    }
+}
+.custom-btn {
+    width: 100px !important;
+}
+
+.profile-image {
+    width: 100%;
+    height: 183px !important;
+    border: 1px solid #00d2fd;
+    img {
+        width: 100%;
+        // height: -webkit-fill-available;
+    }
+}
+
+.text-wrap {
+    word-break: break-all;
+}
+
+.list-profile-picture {
+    max-width: 100%;
+    height: 62px;
+    width: 100%;
+    border-radius: 5px;
+    // padding: 5px 1px 0px 5px;
+    margin-top: 0px;
+}
+
+.user-info {
+    ul {
+        span {
+            font-size: 14px;
+        }
+    }
+    h4 {
+        font-size: 22px;
+    }
+    h6 {
+        font-size: 16px;
+    }
+}
+
+.doctor-notify-outer {
+    border: 1px solid #b0b1b1;
+    border-radius: 3px;
+}
+
+.doctor-details {
+    border: 1px solid #b0b1b1;
+    padding: 15px 5px;
+    border-radius: 3px;
+    margin: 0px;
+    height: 100%;
+    @media only screen and (max-width: 991.98px){
+        height: auto;
+    }
+
+}
+
+.form {
+    &.label-handler{
+        .fake-label{
+            @media only screen and (max-width: 1199.98px){
+                text-align: right;
+                padding: 0.3125rem 3px 0.3125rem 2rem;
+            }
+            @media only screen and (max-width: 991.98px){
+                padding: 0.3125rem 3px 0.3125rem 0px;
+            }
+        }
+        .fake-input{
+            @media only screen and (max-width: 1199.98px){
+                left: unset;
+                right: 30px;
+            }
+        }
+    }
+    .fake-label {
+        background: transparent;
+    }
+    [type="checkbox"]:checked~.fake-label {
+        background: transparent;
+        color: initial;
+    }
+    .chkbox [type="checkbox"]:checked+.fake-input {
+        background: #fff;
+        border-color: #00a650;
+        border: 1.5px solid #34c3ee;
+    }
+    [type="checkbox"]+.fake-input:before {
+        border-color: #646060;
+    }
+    .chkbox .fake-input {
+        border: 1.5px solid #bbbfbb;
+        width: 15px;
+        height: 15px;
+    }
+    .icon-Scheduler {
+        font-size: 18px;
+        color: #504c4c;
+    }
+}
+.doctor-notify-box{
+    @media only screen and (max-width: 991.98px){
+        .list-img{
+            .notification-no{
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1300px) {
+    .list-profile-picture {
+        max-width: 45px;
+        height: 50px;
+        border-radius: 3px;
+        margin-top: 6px;
+    }
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .list-img {
+        padding: 0px !important;
+        padding-left: 2px !important;
+    }
+    .list-profile-picture {
+        width: 57px !important;
+        height: 57px !important;
+        border: 1px solid #e1e1e1;
+        margin-top: 9px;
+    }
+    .decline-btn {
+        padding: 8px 0px 0px 12px;
+    }
+    .approve-decline-btn {
+        padding-left: 22px !important;
+    }
+    .header-bar {
+        border: 1px solid #e1e1e1;
+        height: 46px;
+        background-color: #e1e1e1;
+        margin-left: 0px !important;
+        flex: 0 0 33.33333333%;
+        max-width: 33.33333333%;
+        padding: 0;
+    }
+    .date-bar {
+        top: 4px;
+    }
+    .date-header-bar {
+        border: 1px solid #e1e1e1;
+        height: 46px;
+        left: 13px;
+        background-color: #e1e1e1;
+        margin-left: 0px !important;
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding-left: 0px;
+    }
+}
+
+@media only screen and (min-width: 750px) and (max-width: 899px) {
+    .date-tablet {
+        margin-left: 0px !important;
+    }
+    .btn-bx {
+        padding: 0px;
+        margin-left: 29px;
+    }
+    .col-margin-remove {
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+        padding: 0 !important;
+    }
+    .btn-resp {
+        padding: 0px;
+        max-width: 100%;
+    }
+    .resp-font {
+        font-size: 11px;
+        margin-top: 10px;
+    }
+    .mini-calendar {
+        max-width: 100% !important;
+    }
+    .large-calendar {
+        max-width: 100% !important;
+        min-width: 100% !important;
+    }
+    .cal_date {
+        padding-left: 55px !important;
+    }
+    .min_off {
+        max-width: 12% !important;
+        flex: 0 0 12%;
+    }
+    .cal_head_bar {
+        max-width: 44% !important;
+        flex: 0 0 44% !important;
+    }
+    .btn-week {
+        padding: 8px 25px;
+        margin-left: 15px;
+    }
+    .btn-day {
+        padding: 8px 28px;
+        margin-left: 0px;
+    }
+    .doctor-notify-list {
+        height: 70vh;
+        overflow-y: scroll;
+    }
+    .doctor-notify-box {
+        height: 80px;
+        border: 1px solid #e1e1e1;
+    }
+    .date-pad {
+        flex: 0 0 43.333333%;
+        max-width: 43.333333%;
+    }
+}
+
+.btn_date {
+    margin-left: 22px;
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1365px) {
+    .bar-center {
+        margin-left: 44px;
+    }
+    .dot {
+        margin-left: 10px !important;
+    }
+    .btn-bx {
+        padding: 5px;
+        margin-left: 14%;
+    }
+    .main-profile-picture {
+        width: 100px !important;
+        height: 100px !important;
+        margin-top: 6px !important;
+    }
+    .btn-resp {
+        max-width: 100%;
+        padding: 0px;
+    }
+    .resp-font {
+        margin-top: 5px;
+        flex: 0 0 59.333333% !important;
+        max-width: 59.333333% !important;
+    }
+    .mini-calendar {
+        max-width: 30% !important;
+    }
+    .large-calendar {
+        max-width: 70% !important;
+    }
+    .doctor-notify-list {
+        height: 70vh;
+        overflow-y: scroll;
+    }
+    .doctor-notify-box {
+        height: 80px;
+        margin: 5px;
+        border: 1px solid #e1e1e1;
+    }
+    .btn-small-notify {
+        padding-right: 25px;
+        padding-left: 25px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        margin: 0;
+    }
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1036px) {
+    .list-img {
+        flex: 0 0 25% !important;
+        max-width: 25% !important;
+        padding-left: 5px !important;
+    }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+    .col-date {
+        flex: 0 0 60.33333333% !important;
+        max-width: 60.33333333% !important;
+    }
+    .dot {
+        margin-left: 1px !important;
+    }
+    .header-bar {
+        border: 1px solid #e1e1e1;
+        height: 46px;
+        left: 13px;
+        background-color: #e1e1e1;
+        margin-left: 0px !important;
+        flex: 0 0 30.33333333%;
+        max-width: 30.33333333%;
+        padding-left: 4%;
+    }
+    .date-bar {
+        top: 4px;
+    }
+    .date-header-bar {
+        border: 1px solid #e1e1e1;
+        height: 46px;
+        left: 13px;
+        background-color: #e1e1e1;
+        margin-left: 0px !important;
+        flex: 0 0 41.33333333%;
+        max-width: 41.33333333%;
+    }
+}
+
+@media only screen and (min-width: 1844px) {
+    .noti-name {
+        flex: 0 0 71.666667% !important;
+        max-width: 71.666667% !important;
+    }
+    .btn-spc {
+        flex: 0 0 26.333333% !important;
+        max-width: 26.333333% !important;
+    }
+}
+
+@media only screen and (min-width: 1366px) {
+    .bar-center {
+        margin-left: 44px;
+    }
+    .btn-bx {
+        padding: 5px;
+        margin-left: 54%;
+    }
+    .btn-decline {
+        padding: 0px;
+    }
+    .main-profile-picture {
+        width: 80% !important;
+        height: 109% !important;
+        margin-top: 2px !important;
+    }
+    .btn-resp {
+        max-width: 100%;
+    }
+    .resp-font {
+        margin-top: 10px;
+    }
+    .mini-calendar {
+        max-width: 100% !important;
+    }
+    .large-calendar {
+        max-width: 100% !important;
+    }
+    .doctor-notify-list {
+        height: 70vh;
+        overflow-y: scroll;
+    }
+    .doctor-notify-box {
+        height: 80px;
+        margin: 10px;
+        border-radius: 4px;
+        box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;
+        border: 1px solid #e1e1e1;
+        &:hover {
+            box-shadow: rgba(83, 74, 74, 0.2) 0px 1px 5px !important;
+        }
+    }
+    .btn-small-notify {
+        padding-right: 25px;
+        padding-left: 25px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        margin: 0;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .header-bar {
+        border: 1px solid #e1e1e1;
+        height: 46px;
+        left: 13px;
+        background-color: #e1e1e1;
+        margin-left: 0px !important;
+        flex: 0 0 60.33333333%;
+        max-width: 60.33333333%;
+        padding: 0px;
+        padding-left: 29%;
+    }
+    .date-bar {
+        top: 4px;
+    }
+    .date-header-bar {
+        border: 1px solid #e1e1e1;
+        height: 46px;
+        left: 13px;
+        background-color: #e1e1e1;
+        margin-left: 0px !important;
+        flex: 0 0 33.33333333%;
+        max-width: 33.33333333%;
+    }
+    .large_screen_btn {
+        flex: 0 0 41.333333% !important;
+        max-width: 41.333333% !important;
+    }
+}
+
+.ngx-notification {
+    background-color: #2d2d30;
+    border-color: #272729;
+    color: #c9c9c9;
+    height: 50px;
+}
+
+.popover {
+    position: absolute;
+    z-index: 100;
+}
+
+// after new design  ...... //
+.doctor-color {
+    background-color: blue;
+    border-radius: 4px 0px 0px 4px;
+}
+
+.main-picture {
+    border-right: 2px solid #c1c1ca;
+    padding-left: 0px;
+}
+
+.date-time-box {
+    border: 1px solid #c1c1ca;
+    border-radius: 4px !important;
+    font-size: 12px;
+    box-shadow: 0px 2px 3px #00000026;
+    font-weight: 500;
+    background: #fff;
+    color: #565252;
+    padding: 6px 15px !important;
+}
+
+.effected-clinic-color {
+    background-color: blue;
+    height: 15px;
+}
+
+.view-calendar-row {
+    height: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.calendar-header {
+    height: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+a:hover {
+    color: white !important;
+}
+
+.see-more-btn {
+    width: 85px !important;
+    height: 26px;
+    padding: 3px 4px !important;
+}
+
+@media only screen and (max-width: 1270px) {
+    .profile-image {
+        padding: 4px;
+        height: 152px !important;
+    }
+    .date-time-row {
+        .col-md-5 {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+        .col-md-2 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            border-top: 1px solid #b0b1b1;
+            border-left: none !important;
+            padding: 6px 10px !important;
+            background: #f7f7f7;
+            #viewCalendar {
+                max-width: 4.5% !important;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .profile-image {
+        padding: 2px;
+        height: 120px !important;
+    }
+}
+@media only screen and (max-width: 991.98px){
+    .profile-image{
+        max-width: 25%;
+        height: auto !important;
+    }
+}
+
+.assignment-notifi {
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+}
+
+.current-notification {
+    font-size: 14px !important;
+    font-weight: 500;
+    padding: 0px !important;
+    color: #4b4b4b;
+}
+
+.list-img {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+.notification-approve {
+    height: 10px;
+    width: 10px;
+    // margin-left: 15px;
+    background-color: #00a650;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.notification-decline {
+    height: 10px;
+    width: 10px;
+    // margin-left: 15px;
+    background-color: #9a9a9a;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.notification-no {
+    height: 10px;
+    width: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.down-arrow {
+    margin-top: 7px;
+    margin-left: 27%;
+    color: #3f51b5;
+    text-align: center;
+}
+
+.currnt-noti {
+    margin-left: 20px;
+    margin-top: 20px
+}
+
+.scrol-doc-list {
+    overflow-x: hidden;
+}
+
+.doc-color-width {
+    width: 6px;
+}
+
+.icon-envelope {
+    font-size: 15px;
+    top: 2px;
+    position: relative;
+}
+
+.icon-phone {
+    margin-left: -4px;
+}
+
+.noti-column {
+    border: 1px solid #b0b1b1;
+    background: #f7f7f7
+}
+
+.noti-subject {
+    border: 1px solid #b0b1b1;
+    background: #f7f7f7;
+    border-radius: 4px 4px 0px 0px;
+    ul{
+        li{
+            .date-time-box{
+                @media only screen and (max-width: 991.98px){
+                    padding: 6px 8px !important;
+                }
+            }
+        }
+    }
+}
+
+.decline {
+    white-space: nowrap;
+    font-size: small;
+    color: red;
+    padding-left: 19px
+}
+
+.approved {
+    display: block;
+    // margin-right: 92px;
+    white-space: nowrap;
+    font-size: small;
+    color: red
+}
+
+.just {
+    @media screen and (min-width: 1200px) {
+        justify-content: space-evenly !important;
+    }
+}
+
+.repeat-after {
+    margin-left: 20px;
+}
+
+.days-noti {
+    margin-top: 5px;
+    margin-left: 35px;
+}
+
+.weekend-days-noti {
+    width: 70px;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    padding: 6px;
+    margin-left: 11px;
+}
+
+.effected-clinic {
+    border: 1px solid #b0b1b1;
+    border-radius: 0px 0px 4px 4px !important;
+}
+
+.cli-name {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+
+}
+
+.display-inh {
+    display: inherit;
+}
+
+.calendar-date {
+    margin-right: 7px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.clinic-appoitnment {
+    height: 14px;
+    width: 14px;
+}
+
+.calendar-head {
+    padding: 10px;
+}
+
+.show-calendar {
+    height: 50px;
+    border: 1px solid #e1e1e1;
+    background-color: #e1e1e1
+}
+
+.view-date {
+    font-size: 25px;
+    margin-right: 7px;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.view-setdate {
+    font-size: 25px;
+    margin-top: 2px;
+    cursor: pointer;
+    margin-right: 7px;
+}
+
+.week-day {
+    border: none;
+}
+
+.weak-day-maindiv {
+    margin: auto;
+}
+
+.nav-div {
+    margin-top: 3px;
+}
+
+.desc-noti {
+    margin-top: 10px;
+}
+
+.aprov-div {
+    border: 1px solid #b0b1b1;
+}
+
+.list-empty {
+    margin-top: 10%;
+}
+
+.text-truncate-notification {
+    width: 60%;
+    white-space: nowrap;
+    float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.btn-primary{
+    &.disabled, 
+    &:disabled {
+      &:hover{
+        background: #585958 !important;
+        border-color: #585958 !important;
+      }
+    }
+  }

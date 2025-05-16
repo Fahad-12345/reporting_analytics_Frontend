@@ -1,0 +1,27 @@
+
+
+ .password-icon, .copy-icon, .fa-copy {
+    position: absolute;
+    right: 25px;
+    top: 31px;
+}
+
+.fa-copy {
+	top: 5px;
+}
+
+.copy-icon {
+    color: #a6a2a2;
+}
+
+.copy-icon:hover  {
+    color: #34c3ee;
+}
+
+.password-icon .icon-eye-show, .copy-icon .icon-eye-show  {
+    color: #34c3ee;
+}
+
+.password-icon .icon-eye-show:hover, .copy-icon .icon-eye-show:hover {
+    color: #00a650;
+}

@@ -1,0 +1,8 @@
+<section class="template-preview-page">
+    <div class="container-fluid">
+        <div class="modal-body">
+            <angular-editor id="preview" [(multiplePreviews)]="multiplePreviews" (multiPdfSelectIntance)="multiPdfSelectIntance.emit($event)" [placeholder]="'Enter text here...'" [(ngModel)]="layoutService.htmlStringValue">
+            </angular-editor>
+        </div>
+    </div>
+</section>

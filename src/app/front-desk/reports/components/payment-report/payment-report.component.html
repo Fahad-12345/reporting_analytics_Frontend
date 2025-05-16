@@ -1,0 +1,898 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+
+<div class="row user-info pt-2">
+  <div class="col-12">
+    <h4 class="my-0 color-green mt-2">Payment Report</h4>
+    <hr class="line-bottom mb-3" />
+  </div>
+</div>
+<div class="row pom-report">
+  <div class="col-12">
+    <div class="card text-center border-0">
+      <ul class="nav nav-tabs card-header-tabs m-0">
+        <li class="nav-item">
+          <a
+            routerLinkActive="active"
+            class="nav-link"
+            [routerLink]="['/front-desk/reports/payment-reports']"
+            [queryParams]="{ type: 1 }"
+            >Payment Detail Report</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            routerLinkActive="active"
+            class="nav-link"
+            [routerLink]="['/front-desk/reports/payment-reports']"
+            [queryParams]="{ type: 2 }"
+            >Payment Summary Report</a
+          >
+        </li>
+      </ul>
+      <div class="card-body border-pumice border-top-0">
+        <div class="tab-content">
+          <ng-container *ngIf="paymentReportTypeId == paymentReportType.Detail">
+            <div *ngTemplateOutlet="paymentDetailReportTemplate"></div>
+          </ng-container>
+
+          <ng-container
+            *ngIf="paymentReportTypeId == paymentReportType.Summary"
+          >
+            <div *ngTemplateOutlet="paymentSummaryReportTemplate"></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-------------Customise table column Modal Template----------------------->
+
+<div
+  class="modal fade modal-scroll"
+  bsModal
+  #CustomizeColumnModal="bs-modal"
+  [config]="{ backdrop: 'static', keyboard: false }"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="mySmallModalLabel"
+  aria-hidden="true"
+>
+
+  <div class="modal-dialog modal-lg">
+	
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px">
+          Customize Columns
+        </h4>
+        <button
+          type="button"
+          class="close ms-0"
+          aria-label="Close"
+          (click)="onCancel()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column
+          [modalCols]="modalCols"
+          (event)="onSelectHeaders($event)"
+          (singleSelection)="onSingleSelection($event)"
+        ></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2" (click)="onCancel()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-success" (click)="onConfirm(true)">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--------------Payment Detail report------------->
+<ng-template #paymentDetailReportTemplate>
+  <!-- <app-filter-reports
+  #ReportFilterComponent
+  [filtersIncludes]="filtersIncludesReport"
+  [isArReport]="true"
+  [isArSummaryReport]="true"
+  (resetFilterEvent)="resetFilter($event)"
+  (reportFilter)="applyFilter($event)"
+></app-filter-reports> -->
+
+
+
+
+
+
+<app-filter-reports
+#ReportFilterComponent
+[filtersIncludes]="
+paymentReportTypeId == paymentReportType.Detail
+? filtersIncludesForDetailReport
+: filtersIncludesForSummaryReport
+"
+ [isArReport]="true" 
+[mandatoryFields]="['date_type', 'start_date','end_date']"
+[isPaymentDetailReport] = "true"
+[isArSummaryReport]="true"
+(resetFilterEvent)="resetFilter($event)"
+(reportFilter)="applyFilter($event)"
+(billRecepientChangeEvent)="onBillRecepientChangeEvent($event)"
+(groupDataEvent)="onCatchGroupDataEvent($event)"
+></app-filter-reports>
+    <div *ngIf="paymentReportTypeId == paymentReportType.Detail" class="col-6 col-sm-6 edit-block text-start">
+    <div class="form-group field option-field mb-2 d-inline-block">
+      <ul>
+        <li>Show</li>
+        <li>
+          <!-- <select class="custom-select" name="limit" id="limit" > -->
+          <select
+            class="custom-select"
+            name="limit"
+            id="limit"
+            [(ngModel)]="defaultPagination.per_page"
+            (change)="entryCountSelection($event.target.value)"
+          >
+            <!-- <option [value]="20">Items per page</option> -->
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="30">30</option>
+            <option [value]="40">40</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </li>
+        <li>entries</li>
+      </ul>
+    </div>
+  </div>
+  <div class="report buttons d-flex justify-content-end mb-3">
+    <div class="column-reports-button">
+      <button
+        type="button"
+        class="btn btn-default mx-2 mb-2 mb-sm-0"
+        (click)="openCustomoizeColumn()"
+      >
+        Customize Columns
+      </button>
+    </div>
+    <div class="export-reports-button">
+      <button
+        type="button"
+        (click)="generatePaymentDetailReportExcel()"
+        class="btn btn-success mx-2 mb-2 mb-sm-0"
+        [disabled]="rowData?.length == 0"
+      >
+        <i class="fa fa-file-excel"></i> Export Detail Report
+      </button>
+    </div>
+  </div>
+  <div class="nf-reports">
+
+    
+    
+    
+    <ngx-datatable
+    class="bootstrap payment-detail-table"
+    [columnMode]="'force'"
+    [rowHeight]="'auto'"
+    [scrollbarH]="true"
+    [reorderable]="true"
+    #paymentReportTable
+    [virtualization]="false"
+    [externalPaging]="true" 
+    [count]="totalRecord"
+    [footerHeight]="50"
+    [rows]="rowData"
+    [offset]="nf2Offset"
+    [limit]="defaultPagination.per_page"
+    (page)="onPageChange($event)"
+      >
+      <!-- <ngx-datatable class="bootstrap" [columnMode]='"force"' [rowHeight]="'auto'" [scrollbarH]="true"
+
+			[virtualization]="false" [footerHeight]="0" [externalPaging]="false" [rowClass]="getRowClass"
+			[rows]="paymentSummaryReportData" [externalPaging]="false"> -->
+      
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Bill/Invoice ID"
+        prop="bill_no"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Case ID"
+        prop="case_id"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Case Type"
+        prop="case_type"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Practice Location"
+        prop="practice_location"
+        [minWidth]="80"
+      >
+        <ng-template
+          let-value="value"
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+        >
+          <div
+            class="tooltip-outer"
+            container="body"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ value }}"
+          >
+            {{ value }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Patient Name"
+        prop="patient_name"
+        [minWidth]="80"
+      >
+        <ng-template
+          let-value="value"
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+        >
+          <div
+            class="tooltip-outer"
+            container="body"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ value }}"
+          >
+            {{ value }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Provider name"
+        prop="provider_name"
+        [minWidth]="80"
+      >
+        <ng-template
+          let-value="value"
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+        >
+          <div
+            class="tooltip-outer"
+            container="body"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ value }}"
+          >
+            {{ value }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Attorney"
+        prop="attorney_name"
+        [minWidth]="80"
+      >
+        <ng-template
+          let-value="value"
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+        >
+          <div
+            class="tooltip-outer"
+            container="body"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ value }}"
+          >
+            {{ value }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Firm name"
+        prop="firm_name"
+        [minWidth]="80"
+      >
+        <ng-template
+          let-value="value"
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+        >
+          <div
+            class="tooltip-outer"
+            container="body"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ value }}"
+          >
+            {{ value }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Specialty"
+        prop="specialty"
+        [minWidth]="80"
+      >
+        <ng-template
+          let-value="value"
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+        >
+          <div
+            class="tooltip-outer"
+            container="body"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ value }}"
+          >
+            {{ value }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+
+      <!-- <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Insurance Name"
+        prop="insurance_name"
+        [minWidth]="100"
+      >
+        <ng-template
+          let-value="value"
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+        >
+          <div
+            class="tooltip-outer"
+            container="body"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ value }}"
+          >
+            {{ value }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column> -->
+
+      
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="DOA"
+        prop="doa"
+        [minWidth]="50"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Bill/Invoice Date"
+        prop="billed_date"
+        [minWidth]="80"
+      > 
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="First Visit Date"
+        prop="first_visit_date"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Last visit Date"
+        prop="last_visit_date"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Date Of Birth"
+        prop="date_of_birth"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="Bill/Invoice Recipient Type"
+      prop="bill_recipient_type"
+      [minWidth]="80"
+    >
+    </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Bill/Invoice Recipient Name"
+        prop="bill_recipient_name"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Billed/Invoice Amount"
+        prop="billed_amount"
+        [minWidth]="90"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div>
+             {{ (value || 0 )| currency}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Paid Amount"
+        prop="paid_amount"
+        [minWidth]="80"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div>
+             {{ (value || 0 )| currency}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Outstanding"
+        prop="outstanding_amount"
+        [minWidth]="70"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div>
+            {{ (value || 0 )| currency}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Write off"
+        prop="write_off"
+        [minWidth]="60"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div>
+             {{ (value || 0 )| currency}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Over payment"
+        prop="over_payment"
+        [minWidth]="80"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div>
+             {{ (value || 0 )| currency}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Interest"
+        prop="interest"
+        [minWidth]="80"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div>
+             {{ (value || 0 )| currency}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <!-- <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Claim ID"
+        prop="claim_no"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column> -->
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Bill Status"
+        prop="bill_status"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="EoR Status"
+        prop="eor_status"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Denial Status"
+        prop="denial_status"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Verification Status"
+        prop="verification_status"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Payment Status"
+        prop="payment_status"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Payment Type"
+        prop="payment_type"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Check No"
+        prop="check_no"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Posted Date"
+        prop="posted_date"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Check Date"
+        prop="check_date"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Check Amount"
+        prop="check_amount"
+        [minWidth]="80"
+      >
+        <ng-template let-value="value" ngx-datatable-cell-template>
+          <div>
+             {{ (value || 0 )| currency}} 
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="No. Of Days"
+        prop="no_of_days"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+
+      <!-- <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Visit type"
+        prop="visit_type"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column> -->
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Invoice Category"
+        prop="invoice_category"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Paid By"
+        prop="paid_by"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Denial Type"
+        prop="denial_type"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Created At"
+        prop="created_at"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Updated At"
+        prop="updated_at"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Payment Created At"
+        prop="payment_created_at"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Payment Updated At"
+        prop="payment_updated_at"
+        [minWidth]="80"
+      >
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</ng-template>
+<!------------Payment Summary report----------------->
+<ng-template #paymentSummaryReportTemplate>
+	<app-filter-reports #ReportFilterComponent
+		[filtersIncludes]="paymentReportTypeId == paymentReportType.Detail ? filtersIncludesForDetailReport : filtersIncludesForSummaryReport"
+		[isArReport]="true" [isPaymentSummaryReport]="true"
+    [BrdHiddenFilters]="false"
+     [isArSummaryReport]="true" [mandatoryFields]="['date_type', 'group_by']"
+		(resetFilterEvent)="resetFilter($event)" (reportFilter)="applyFilter($event)"
+		(billRecepientChangeEvent)="onBillRecepientChangeEvent($event)"
+		(endDateEvent)="onEndDateEvent()" (endDateCancelledEvent)="onEndDateCancelledEvent()"
+		(groupDataEvent)="onCatchGroupDataEvent($event)"></app-filter-reports>
+		<!-- <div class="report buttons d-flex justify-content-end mb-3">
+			<div class="export-reports-button">
+				<button type="button" (click)="generatePaymentSummaryDetailReportExcel()" class="btn btn-success mx-2 mb-2  mb-sm-0 " [disabled]="paymentSummaryReportData?.length == 0">
+					<i class="fa fa-file-excel"></i> Export Detail Report    
+				</button>
+			</div>
+		</div> -->
+	<div class="report buttons d-flex justify-content-end mb-3">
+		<div class="export-reports-button">
+			<button type="button" (click)="generatePaymentSummaryReportExcel()" class="btn btn-success mx-2 mb-2  mb-sm-0 " [disabled]="paymentSummaryReportData?.length == 0">
+				<i class="fa fa-file-excel"></i> Export Summary Report
+			</button>
+		</div>
+	</div>
+	<div class="nf-reports">
+    <!-- table-height -->
+		<ngx-datatable class="bootstrap "[headerHeight]="50"
+    [rowHeight]="50"
+    [columnMode]="'force'"
+    [scrollbarH]="true"
+    [scrollbarV]="true"
+    [reorderable]="false"
+    [externalPaging]="false" 
+    [rowClass]="getRowClass"
+		[rows]="paymentSummaryReportData" 
+    [ngStyle]="{'height': summaryTableHeight}"
+    [externalPaging]="false">
+    <ngx-datatable-column *ngIf = "viewById" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [name]="viewByName"
+				prop="bill_date" [minWidth]="140" >
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex} ">
+						{{rowIndex == lastIndex && !subGroupBy && !groupBy  ? 'Total' : subGroupBy && rowIndex == lastIndex ? null : value }}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" [name]="groupBy"
+				prop="group_by_name" [minWidth]="140">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						{{value}}
+						<!-- {{rowIndex == lastIndex && !subGroupBy  ? value : rowIndex == lastIndex ? null : value }} -->
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="subGroupBy" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+				[name]="subGroupBy" prop="subgroup_by_name" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						{{rowIndex == lastIndex ? '' :value }}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Billed Amount"
+				prop="billed_amount" [minWidth]="80" >
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 )  | currency }} 
+						</ng-container>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Check Amount"
+				prop="paid_amount" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 )  | currency }} 
+						</ng-container>
+						
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Outstanding"
+				prop="outstanding_amount" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 )  | currency }} 
+						</ng-container>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Write off"
+				prop="write_off_amount" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 )  | currency }} 
+						</ng-container>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Over payment"
+				prop="overpayment" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 )  | currency }} 
+						</ng-container>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Interest"
+				prop="interest_amount" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 )  | currency }} 
+						</ng-container>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+    <div *ngIf="lastRowData.length !== 0 && showSummaryTable" class="summary-footer">
+      <ng-container *ngFor="let column of Summarycolumns; let isFirst = first">
+        <div class="summary-column" [ngClass]="column?.prop" [style.margin-left.%]="calculateLeftMargin(column?.prop)">
+          {{ isFirst || countAggregate ? lastRowData[column?.prop] : lastRowData[column?.prop] || 0  | currency  }}
+        </div>
+      </ng-container>
+    </div>
+	</div>
+ 
+</ng-template>
+

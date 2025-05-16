@@ -1,0 +1,43 @@
+::ng-deep .transportation-view-modal{
+    .modal-body{
+        padding: 0 !important;
+    }
+    .modal-body.modal-pt-15{
+        padding: 0 !important;
+    }
+}
+
+.main-title{
+    margin: 0 0 0 9px;
+    font-size: 1.125rem;
+}
+
+.form-gaps {
+    .form-control {
+        margin-bottom: 0 !important;
+    }
+}
+::ng-deep.appointment-app-form{
+	form{
+		.form-group {
+			&.field {
+				margin-bottom: 0.25rem !important;
+			}
+		}
+	}
+}
+
+::ng-deep.cpt-text{
+	span {
+		&.ng-value-label {
+			&.tooltip-outer {
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+				@media screen and (max-width:768px) {
+					max-width: 75px;
+				}
+			}
+		}
+	}
+}

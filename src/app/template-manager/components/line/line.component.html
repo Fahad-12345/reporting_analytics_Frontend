@@ -1,0 +1,7 @@
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="row justify-content-end"></div>
+<div class="column-content line-content alignment-center" [ngClass]="{ 'vertical-line':!object.horizontal}">
+
+    <div class="droped-line-style"  [ngClass]="{ 'line-solid':object.typeLine=='Solid','line-dotted':object.typeLine=='Dotted',
+	'line-dashed':object.typeLine=='Dashed','line-1px':object.size=='1px','line-2px':object.size=='2px','line-3px':object.size=='3px'
+	,'line-4px':object.size=='4px','line-5px':object.size=='5px'}" [ngStyle]="!object?.horizontal ? {'border-color': object.color, 'min-height': '100px'} : {'border-color': object.color}"></div>
+</div>

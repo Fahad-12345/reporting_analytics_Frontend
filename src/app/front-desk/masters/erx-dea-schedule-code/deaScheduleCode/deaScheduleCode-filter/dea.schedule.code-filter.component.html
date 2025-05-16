@@ -1,0 +1,76 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="row">
+	<div class="col-md-12">
+		<div class="card search-filter-block border-0 mt-3">
+			<form autocomplete="off" [formGroup]="deaSchedulerCodeForm">
+				<div class="form">
+					<div class="card-body mb-3">
+						<div class="row mx-0">
+							<div class="field-block">
+								<div class="row" [class.dynamic-collapse]="!isCollapsed">
+									<div class="col-md-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': deaSchedulerCodeForm.get('ncit_code').value != '' && deaSchedulerCodeForm.get('ncit_code').value != null }">
+											<label class="form-label" for="ncit_code">Ncit Code
+											</label>
+											<input type="text" id="ncit_code" class="form-control form-input"
+												notFirstCharactorSpace formControlName="ncit_code">
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': deaSchedulerCodeForm.get('ncpdp_preferred_term').value != '' && deaSchedulerCodeForm.get('ncpdp_preferred_term').value != null }">
+											<label class="form-label" for="ncpdp_preferred_term">Ncpdp Preferred Term
+											</label>
+											<input type="text" id="ncpdp_preferred_term" class="form-control form-input"
+												notFirstCharactorSpace formControlName="ncpdp_preferred_term">
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': deaSchedulerCodeForm.get('federal_dea_class_code').value != '' && deaSchedulerCodeForm.get('federal_dea_class_code').value != null }">
+											<label class="form-label" for="federal_dea_class_code">Federal Dea Class
+												Code
+											</label>
+											<input type="text" id="federal_dea_class_code"
+												class="form-control form-input" notFirstCharactorSpace
+												formControlName="federal_dea_class_code">
+										</div>
+									</div>
+									<div class="col-md-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': deaSchedulerCodeForm.get('federal_dea_class_code_desc').value != '' && deaSchedulerCodeForm.get('federal_dea_class_code_desc').value != null }">
+											<label class="form-label" for="federal_dea_class_code_desc">Federal Dea
+												Class Code Desc
+											</label>
+											<input type="text" id="federal_dea_class_code_desc"
+												class="form-control form-input" notFirstCharactorSpace
+												formControlName="federal_dea_class_code_desc">
+										</div>
+									</div>
+									<div class="col-md-12 text-center search-filter-btn float-left mb-3">
+										<button class="btn btn-success mt-0 me-3" (click)="filterDeaSchedulerCode({})"> Filter
+										</button>
+										<button class="btn btn-primary mt-0" (click)="resetDeaSchedulerCodeList() "
+											[disabled]="resetDeaSchedulerCodeFilterResetDisabledCheck()"> Reset</button>
+									</div>
+
+								</div>
+							</div>
+							<div class="colps-btn-block">
+								<button class="btn plus-btn position-relative float-right mt-0" style="right: 0;"
+									(click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+									aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+									[class.btn-success]="isCollapsed" type="button">
+									<span [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- ======================================== -->
+<!-- </div> -->

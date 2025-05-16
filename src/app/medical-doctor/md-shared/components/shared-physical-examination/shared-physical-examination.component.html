@@ -1,0 +1,253 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="section-frame reduce-height-tab border-0 pb-md-5 me-1" style="border: 1px solid #a2a3a2 !important;
+padding: 8px;
+">
+	<div class="form h-100" [formGroup]="form">
+		<div class="custom-scrollbar" id="ngx-scroll-to">
+			<div class="row mb-3">
+				<div class="col-12">
+					<div class="option-bar bg-white p-2 text-xl-start text-center">
+						<ul class="types-list list-inline text-center mt-2">
+							<li class="list-inline-item text-start" style="min-width: inherit;">The patient is a
+							</li>
+							<li class="list-inline-item text-start" style="min-width: inherit;">
+								<label for="wellDeveloped" class="d-block chkbox position-relative m-0"
+									[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'wellDeveloped')}">
+									<input id="wellDeveloped" type="checkbox" formControlName="wellDeveloped">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">well developed</span>
+								</label>
+							</li>
+							<li class="list-inline-item text-start" style="min-width: inherit;">
+								<label for="wellNourished" class="d-block chkbox position-relative m-0"
+									[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'wellNourished')}">
+									<input id="wellNourished" type="checkbox" formControlName="wellNourished">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">well nourished</span>
+								</label>
+							</li>
+							<li class="list-inline-item text-start" style="min-width: inherit;">
+								{{patient.gender|lowercase}},
+							</li>
+							<li class="list-inline-item text-start" style="min-width: inherit;"> in </li>
+							<li class="list-inline-item text-start" style="min-width: inherit;">
+								<label for="noAcute" class="d-block position-relative m-0"
+									[ngClass]="{'radio-light-pink':checkCarryForward(form,'painLevel')}">
+									<input id="noAcute" name="painLevel" type="radio" value="no acute"
+										formControlName="painLevel" appEnhanceRadio
+										[oldValue]="form.controls.painLevel.value">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">no acute</span>
+								</label>
+							</li>
+							<li class="list-inline-item text-start" style="min-width: inherit;">
+								<label for="mild" class="d-block position-relative m-0"
+									[ngClass]="{'radio-light-pink':checkCarryForward(form,'painLevel')}">
+									<input id="mild" name="painLevel" type="radio" value="mild"
+										formControlName="painLevel" appEnhanceRadio
+										[oldValue]="form.controls.painLevel.value">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">mild</span>
+								</label>
+							</li>
+							<li class="list-inline-item text-start" style="min-width: inherit;">
+								<label for="moderate" class="d-block position-relative m-0"
+									[ngClass]="{'radio-light-pink':checkCarryForward(form,'painLevel')}">
+									<input id="moderate" name="painLevel" type="radio" value="moderate"
+										formControlName="painLevel" appEnhanceRadio
+										[oldValue]="form.controls.painLevel.value">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">moderate</span>
+								</label>
+							</li>
+							<li class="list-inline-item text-start" style="min-width: inherit;">
+								<label for="severe" class="d-block position-relative m-0"
+									[ngClass]="{'radio-light-pink':checkCarryForward(form,'painLevel')}">
+									<input id="severe" name="painLevel" type="radio" value="severe"
+										formControlName="painLevel" appEnhanceRadio
+										[oldValue]="form.controls.painLevel.value">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">severe</span>
+								</label>
+							</li>
+							<li class="list-inline-item text-start" style="min-width: inherit;"> distress secondary
+								to
+								pain.</li>
+						</ul>
+						<div class="alert alert-secondary my-2" role="alert"
+							*ngIf='form.get("wellDeveloped").value || form.get("wellNourished").value ||form.get("painLevel").value'>
+							<div class="row">
+								<div class="col-12 col-lg-9 align-self-center">
+									<b>Preview:</b>
+									<ng-container
+										*ngIf='form.get("wellDeveloped").value || form.get("wellNourished").value ||form.get("painLevel").value'>
+										The patient is a
+										<b>{{(form.get("wellDeveloped").value)?((form.get("wellNourished").value)?"well developed, ":"well developed "):" "}}</b>
+										<b>{{(form.get("wellNourished").value)?"well nourished ":" "}}</b>
+										{{patient.gender|lowercase}}<ng-container *ngIf="form.get('painLevel').value">,
+											in
+											<b>{{form.get("painLevel").value}}</b>
+											distress secondary to pain.
+										</ng-container>
+									</ng-container>
+								</div>
+								<div class="col-12 col-lg-3 text-lg-end text-center">
+									<!-- <button type="button" class="btn btn-default" (click)="reset()">Reset</button> -->
+									<button type="button" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-secondary btn-clear ms-1 text-white"
+										(click)="clear()">Clear</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<strong class="sub-title py-1" style="border-bottom: 1px solid #a8a9a8 !important;"><span
+							class="sub-head d-inline-block">Select body parts</span>
+						<ul class="head-item list-inline align-self-end course-block d-inline-block m-0">
+							<li class="list-inline-item mb-1" formArrayName="bodyPartExaminations"
+								*ngFor="let item of form.get('bodyPartExaminations')['controls']; let i = index">
+								<label [formGroupName]="i" class="d-block chkbox position-relative m-0"
+									for="{{'body_part_id'+i}}"
+									[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+									<input type="checkbox" formControlName="checked"
+										(change)="triggerScrollTo('body_part_scroll'+i);" id="{{'body_part_id'+i}}">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">{{item.value.name}}
+									</span>
+								</label>
+							</li>
+						</ul>
+					</strong>
+					<ng-container formArrayName="bodyPartExaminations"
+						*ngFor="let item of form.get('bodyPartExaminations')['controls']; let i = index">
+						<div class="sub-bodyparts types-box mb-2" [formGroupName]="i" *ngIf="item.value.checked">
+							<div class="types-box ad-border bg-white p-2">
+								<strong class="sub-title float-left" id="body_part_scroll{{i}}">{{item.value.name}}
+
+								</strong>
+								<ul class="types-list list-inline float-left position-relative radio-btn-disable">
+									<span formArrayName="condition"
+										*ngFor="let bodyPartCondition of getCondition(item); let j = index"
+										class="d-inline-block sub-selection">
+										<li class="list-inline-item text-start pb-0" style="min-width: inherit;">
+											<label [formGroupName]="j" for="{{'body_part'+i+j}}"
+												class="d-block chkbox position-relative m-0"
+												[ngClass]="{'checkbox-light-pink':checkCarryForward(bodyPartCondition,'checked')}">
+												<input id="{{'body_part'+i+j}}" type="checkbox"
+													formControlName="checked">
+												<span class="fake-input position-absolute"></span>
+												<span class="fake-label d-block">{{bodyPartCondition.value.name}}</span>
+											</label>
+										</li>
+										<span *ngFor="let data1 of bodyPartConditions; let k = index">
+											<span [formGroupName]="j"
+												*ngIf="data1.bodyPartId==item.value.id && data1.conditionStates">
+
+												<span *ngFor="let states of data1.conditionStates; let l = index">
+													<li class="list-inline-item text-start pb-0"
+														style="min-width: inherit;"
+														*ngIf="bodyPartCondition.value.id==states.bodyPartConditionId">
+														<label for="{{'state'+i+j+k+l}}"
+															class="d-block position-relative m-0"
+															[ngClass]="{'radio-light-pink':checkCarryForward(bodyPartCondition,'state')}">
+															<input id="{{'state'+i+j+k+l}}" appEnhanceRadio
+																[oldValue]="bodyPartCondition.value.state"
+																[value]="setValues(states)" type="radio"
+																formControlName="state"
+																[disableControl]="!bodyPartCondition.value.checked">
+															<span class="fake-input position-absolute"></span>
+															<span class="fake-label d-block">{{states.state}}</span>
+														</label>
+													</li>
+												</span>
+											</span>
+										</span>
+									</span>
+									<!-- <li class="list-inline-item" >
+																		<label class="d-block chkbox position-relative m-0" for="{{'body_part_id'+i}}" [formGroupName]="i">
+																			<input    type="checkbox" formControlName="checked" id="{{'body_part_id'+i}}" >
+																			<span class="fake-input position-absolute"></span>
+																			<span class="fake-label d-block">{{form.controls['complaints'].controls[i].value.name}} </span>
+																		</label>
+																	</li> -->
+								</ul>
+								<div class="notes-box position-relative w-100">
+									<div class="types-box ad-border bg-white p-3" style="border-radius: 0;">
+
+										<!-- <textarea class="form-control" rows="3" style="min-height:30px !important" formControlName="comment"></textarea> -->
+
+
+										<div class="form-group m-0"
+											[ngClass]="{'focused': item.get('comment').value != '' && item.get('comment').value != null }"
+											style="overflow: visible;">
+											<label for="comment" class="form-label">Comments </label>
+											<textarea class="form-control form-input" rows="3"
+												[ngClass]="{'bg-light-pink':checkCarryForward(item,'comment')}"
+												style="min-height:70px !important" formControlName="comment"></textarea>
+										</div>
+
+
+										<div class="row pt-3 align-items-center">
+											<div class="col-md-8 col-xl-9 form-group field m-0">
+												<!-- Note: Comments will
+													be replaced whenever
+													you change the above selection. -->
+											</div>
+											<div class="col-md-4 col-xl-3 text-end">
+												<button type="button" class="btn btn-secondary ms-1 text-white"
+													[disabled]="!mainService.isenableSaveRecordMedicalDoctor() || checkDisbaleButton(item)"
+													(click)="clearExamination(item)">Clear</button>
+											</div>
+										</div>
+										<!-- <div class="mt-2 mb-0 alert alert-secondary" role="alert"
+												*ngIf="generateString(item.value.bodyPartKey, getCondition(item)) ||item.get('comment').value">
+												<div class="row">
+													<div class="col align-self-center"
+														*ngIf="generateString(item.value.bodyPartKey, getCondition(item)) ||item.get('comment').value">
+														<ng-container
+															*ngIf="generateString(item.value.bodyPartKey, getCondition(item))">
+															<strong class="d-inline-block">Preview:</strong>
+															{{generateString(item.value.bodyPartKey, getCondition(item))}}
+														</ng-container>
+														<div *ngIf="item.get('comment').value"><b>Comments:</b>
+														</div>
+														<span
+															[innerHTML]="item.get('comment').value|textareaLineBreaks"></span>
+													</div>
+													<div class="col align-self-center text-end">
+														<button type="button" class="btn btn-secondary ms-1 text-white"
+															(click)="clearExamination(item)">Clear</button>
+													</div>
+												</div>
+											</div> -->
+										<!-- <div class="messaging-block p-2">
+																<div class="message-holder receiving">
+																	<div class="message-box w-100">
+																		<div class="frame p-2 no-rborder position-relative">
+																			<textarea class="form-control" rows="3" style="min-height:30px !important" formControlName="comment"></textarea>
+																		</div>
+																	</div>
+																</div>
+															</div> -->
+									</div>
+								</div>
+							</div>
+						</div>
+					</ng-container>
+				</div>
+
+			</div>
+		</div>
+		<!-- </perfect-scrollbar> -->
+		<div class="paging-bar form-btn text-center my-1 mt-2">
+			<button href="javascript:void(0)" class="btn btn-primary" (click)="back()"><span
+					class="icon-left-arrow me-1"></span> Back</button>
+			<a *ngIf="mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-info mx-2" (click)="saveForLater()"><span
+					class="icon-save-continue me-1"></span> Save For Later</a>
+			<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" class="btn btn-success" (click)="next()"><span
+					class="icon-save-continue me-1"></span> Save & Continue</button>
+		</div>
+	</div>
+</div>

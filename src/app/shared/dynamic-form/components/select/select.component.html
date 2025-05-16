@@ -1,0 +1,30 @@
+<div [ngClass]="field.classes">
+	<div [formGroup]="group" class="form-group field"
+		[class.focused]="group.get(field.name).value != '' && group.get(field.name).value != null">
+		<label class="form-label mb-0" [for]="id">{{field.label}}</label>
+		<select class="form-select text-truncate" *ngIf="field.input_type_status=='default'" [formControlName]="field.name" [name]="id" [id]="id" [ngbTooltip]="selectedField" container="body" tooltipClass="table-custom-tooltip" #option (change)= "fieldChange(option)">
+			<option style="visibility: hidden;" value="" disabled selected></option>
+			<option  *ngFor="let option of field.options" [ngValue]="option.value"
+			>
+		<ng-container > 
+			<span [ngbTooltip]="selectedField" container="body"  tooltip-append-to-body="true"
+ 			tooltipClass="table-custom-tooltip">{{field?.qualifierBoolean?option?.qualifier_name:option.label | slice:0:90}} 
+		</span>		
+
+			</ng-container>
+			</option>
+		</select>
+		<span *ngIf="group.get(field.name).value != '' && group.get(field.name).value != null"
+			(click)="removeData()" class="icon-plus select-cross-icon" ></span>
+
+			<ng-select *ngIf="field.input_type_status=='selectState'" [formControlName]="field.name" class="ng-value-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{selectedField}}" container="body" bindLabel="name" bindValue="name" [items]="field.options"  #option (change)= "fieldChange($event)" >
+				<ng-template ng-option-tmp let-item="item">
+					<span class="ng-value-label border-0 tooltip-outer"  tooltipClass="table-custom-tooltip" ngbTooltip="{{item.fullName}}" container="body">{{item.name}}</span>
+					</ng-template>
+				</ng-select>
+		<div *ngFor="let validation of field.validations">
+			<small class="form-text text-muted danger"
+				*ngIf="group.get(field.name).hasError(validation.name) && group.get(field.name).touched">{{validation.message}}</small>
+		</div>
+	</div>
+</div>

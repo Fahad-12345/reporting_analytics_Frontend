@@ -1,0 +1,104 @@
+<div class="col-12 h-100">
+    <perfect-scrollbar>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h1 class="card-title text-white m-0">{{title}} Hospital Information</h1>
+                    </div>
+                    <div class="card-body">
+                      <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+                          <div class="form" action="#">
+                                <div class="row fields-holder">
+                                    <div class="col-12">
+                                        <div class="form-group fields-holder" [ngClass]="{'focused': form.get('name').value != ''}">
+                                            <label for="name" class="form-label">Name *</label>
+                                            <input type="text" id="name" class="form-control form-input" formControlName="name">
+                                            <small class="form-text text-muted danger" *ngIf="form.get('name').errors?.required && (form.get('name').dirty || form.get('name').touched)">Please enter Name!</small>
+                                            <small class="form-text text-muted danger" *ngIf="form.get('name').errors?.maxLength?.requiredLength==50">Maximum characters should be 50!</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fields-holder">
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field">
+                                            <!-- <label for="facilityType" class="form-label">Facility Type</label> -->
+                                            <select formControlName="area" [ngClass]="{'focused': form.get('area').value != ''}" class="custom-select">
+                                                <option value="">Select Area</option>
+                                                <option *ngFor="let area of areas" [value]="area.location">{{ area.location }}</option>
+                                            </select>
+                                            <!-- <small class="form-text text-muted danger" *ngIf="!form.get('facilityTypeId').valid && (form.get('facilityTypeId').dirty || form.get('facilityTypeId').touched)">Please select Role</small> -->
+                                        </div>
+                                    </div>
+
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('address').value != ''}">
+                                            <label for="address" class="form-label">Address</label>
+                                            <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+                                            <input ngx-google-places-autocomplete [options]="{
+                                                types: [],
+                                                componentRestrictions: { country: 'US' }
+                                                }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event)" class="form-control form-input" formControlName="address"  />
+                                                <small class="form-text text-muted danger" *ngIf="form.get('address').errors?.required && (form.get('address').dirty || form.get('address').touched)">Please enter address!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('city').value != ''}">
+                                            <label for="city" class="form-label">City</label>
+                                            <input type="text" id="city" class="form-control form-input" formControlName="city" [readonly]="form.get('address').value != ''">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('state').value != ''}">
+                                            <label for="state" class="form-label">State</label>
+                                            <input type="text" id="state" class="form-control form-input" formControlName="state"  [readonly]="form.get('address').value != ''">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('zip').value != ''}">
+                                            <label for="zip" class="form-label">Zip</label>
+                                            <input type="tel" id="zip" class="form-control form-input" formControlName="zip" mask="00000"  [readonly]="form.get('address').value != ''">
+                                            <small class="form-text text-muted danger" *ngIf="form.get('zip').errors?.maxLength?.requiredLength==5">Maximum characters should be 5</small>
+                                        </div>
+                                    </div>
+                              </div>
+
+                              <div class="row fields-holder">
+                                <div class="col-12">
+                                    <tag-input [placeholder]="'Enter Day'" [secondaryPlaceholder]="'Enter Day'" class="form-control ps-2 pe-2 pt-0 pb-0 d-inline-block" formControlName="dayList" [onlyFromAutocomplete]="true" (onAdd)="onItemAdded($event)">
+                                        <tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="dayListItems"></tag-input-dropdown>
+                                    </tag-input>      
+                                </div>
+                              </div>
+
+                          
+                              <div class="row mt-3">
+                                  <div class="col-xs-4 col-lg-12">
+                                      <div class="form-group field">
+                                          <!-- <label for="facilityType" class="form-label">Facility Type</label> -->
+                                          <select formControlName="facilityTypeId" [ngClass]="{'focused': form.get('facilityTypeId').value != ''}" class="custom-select">
+                                              <option value="">Select Facility Type</option>
+                                              <option *ngFor="let type of facilityTypes" [value]="type.id">{{ type.name }}</option>
+                                          </select>
+                                          <small class="form-text text-muted danger" *ngIf="!form.get('facilityTypeId').valid && (form.get('facilityTypeId').dirty || form.get('facilityTypeId').touched)">Please select Role</small>
+                                      </div>
+                                  </div>
+                              </div>
+
+                              <div class="row" style="margin-top:20px">
+                                  <div class="col-12">
+                                      <button type="button" class="btn btn-default d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" (click)="goBack()">Back</button>
+                                      <button type="submit" class="btn btn-primary d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;">Submit</button>
+                                  </div>
+                              </div>
+
+                              
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </perfect-scrollbar>  
+</div>

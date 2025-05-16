@@ -1,0 +1,3 @@
+@mixin modal-header-style {
+	@include padding-tb-lr(8px, 15px);
+}

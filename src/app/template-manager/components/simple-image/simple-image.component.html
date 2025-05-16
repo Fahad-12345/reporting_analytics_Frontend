@@ -1,0 +1,25 @@
+<!-- <div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end"><button class="btn btn-default btn-clear">Clear</button></div> -->
+<div class="column-content" [ngClass]="{'alignment-top': object.alignment == 'top','image-box':object.paths,'alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+  <div class="row"  *ngIf="object.paths && object.paths.length > 1">
+    <div class="col-6 align-self-center mb-3" *ngFor="let item of object.paths; let i = index;">
+    <div class="d-flex">
+      <img id='check'
+      [ngClass]="{'disabled-image':(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)}"
+       [src]="raw[i]" height="300" [ngStyle]="object.width>=0 ? {'width': object.width + '%', 'height': 'auto'} : {'width': '100%'}" class="img-fluid mx-auto" (click)="openImage()" />
+     </div>
+  </div>
+  </div>
+  <div class="row"  *ngIf="object.paths && object.paths.length == 1">
+    <div class="col-12" *ngFor="let item of object.paths; let i = index;">
+    <div class="d-flex align-self-center">
+      <img id='check'
+      [ngClass]="{'disabled-image':(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)}"
+      [src]="raw[i]" height="300" [ngStyle]="object.width>=0 ? {'width': object.width + '%', 'height': 'auto'} : {'width': '100%'}" class="img-fluid mx-auto" (click)="openImage()" />
+     </div>
+  </div>
+  </div>
+    <div *ngIf="!object.paths.length" class="h-100 text-center alignment-center" (click)="openImage()">
+        <span class="d-block">No Image Added</span>
+    </div>
+</div>
+<canvas id="temp" hidden></canvas>

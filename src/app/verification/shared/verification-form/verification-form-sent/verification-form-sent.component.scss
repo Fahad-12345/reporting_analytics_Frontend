@@ -1,0 +1,49 @@
+@import "../../../../../assets/sass/abstracts/variables/colors";
+.view-hov:hover {
+  color: green;
+}
+
+.verification-progress {
+  position: relative;
+  .progress-slider {
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    left: 0;
+    .progress-bar {
+      background-color: $green-haze;
+      font-size: 12px;
+      line-height: 1;
+    }
+  }
+}
+
+
+		.btn {
+      &.save-btn{
+        width: 6.5rem;
+      }
+      &.pom-gen{
+        width: 12.5rem !important;
+      }
+    }
+
+   
+    .search-filter-btn {
+      &.justify-content-center {
+          justify-content: center;
+      }
+      &.justify-content-start {
+          justify-content: flex-start;
+      }
+      .btn {
+        &.save-btn{
+          width: 6.5rem;
+        }
+        &.pom-gen{
+          width: 12.5rem !important;
+        }
+      }
+    }
+     
+  

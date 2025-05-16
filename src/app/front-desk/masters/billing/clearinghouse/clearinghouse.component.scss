@@ -1,0 +1,49 @@
+@import './../../../../../assets/sass/components/new-search-filters';
+
+::ng-deep .add-payer-modal {
+    &.modal_extraDOc {
+        .modal-dialog {
+            max-width: 1500px;
+
+            .modal-content {
+                .modal-body {
+                    padding-top: 0.9375rem !important;
+                    .form-group {
+                        .form-control {
+                            margin-bottom: 0;
+                            height: 1.875rem;
+                        }
+                    }
+                    label{
+                        font-size: 0.67rem;
+                        @media only screen and (max-width: 1120px){
+                            font-size: 0.6rem;
+                        }
+                    }
+                   
+                }
+            }
+        }
+    }
+
+}
+
+.action-icon {
+    .badge-info {
+        padding: 2px 10px 3px;
+        font-size: 12px;
+        line-height: 1;
+        margin: 0;
+        font-weight: 350;
+
+        &.wrap-text {
+            max-width: 45% !important;
+        }
+    }
+}
+.datatable-body-cell-label {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+ }
+

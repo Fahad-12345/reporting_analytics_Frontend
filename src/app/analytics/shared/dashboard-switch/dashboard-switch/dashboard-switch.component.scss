@@ -1,0 +1,40 @@
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    background-color: #f1f1f1;
+    border-radius: 25px;
+    overflow: hidden;
+    padding: 1.5px;
+  }
+  
+  .toggle-switch input[type="radio"] {
+    display: none;
+  }
+  
+  .toggle-switch label {
+    font-size: 12px;
+    flex: 1;
+    text-align: center;
+    padding: 7px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .toggle-switch input[type="radio"]:checked + label {
+    font-weight: bold;
+    background-color: #28a745; 
+    color: white;
+    border: 1px solid #5a5555; 
+    border-radius: 50%; 
+    width: 30px; 
+    height: 30px; 
+    margin: 0.5px; 
+  }
+  
+
+  .toggle-switch label:hover {
+    background-color: #ccc;
+  }

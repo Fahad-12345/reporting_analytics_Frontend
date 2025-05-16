@@ -1,0 +1,536 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class=" col-12 p-0">
+  <div class="document-manager add-user px-0">
+    <div class="user-info">
+      <div class="row">
+        <div class="col-md-12">
+          <h4 class="mt-0 mb-0 color-green">{{(practiceId)?"Edit": "Add"}} Practice</h4>
+        </div>
+      </div>
+    </div>
+    <hr class="line-bottom">
+
+    <div class="card search-filter-block mt-3">
+      <form [formGroup]="practiceForm" autocomplete="off">
+        <div class="form">
+          <div class="card-body">
+            <div class="row ">
+			
+				<div class="col-lg-6">
+					<div class="form-group field" [ngClass]="{'focused': practiceForm.get('name').value != ''}">
+					  <label class="form-label" for="name">Practice Name*</label>
+					  <input formControlName="name" type="text" id="name" class="form-control form-input" 
+					  [allowedLength] = "199" 
+					  [currentValue] ="practiceForm.getRawValue()?.name"
+					  appBlockCopyPaste
+					  specficCharacterLengthDirective 
+					  notFirstCharactorSpace>
+					  <small class="form-text text-muted danger"
+						*ngIf="practiceForm.get('name').errors?.required && (practiceForm.get('name').dirty || practiceForm.get('name').touched)"> This field is required</small>
+					</div>
+	
+				  </div>
+
+
+              <div class="col-lg-6">
+                <div class="form-group field" [ngClass]="{'focused': practiceForm.get('qualifier').value != ''}">
+                  <label class="form-label" for="qualifier">Short Name*</label>
+                  <input formControlName="qualifier" type="text" id="qualifier" class="form-control form-input" 
+				  [allowedLength] = "14" 
+				  [currentValue] ="practiceForm.getRawValue()?.qualifier"
+				  appBlockCopyPaste
+				  specficCharacterLengthDirective 
+				  notFirstCharactorSpace>
+                  <small class="form-text text-muted danger"
+                    *ngIf="practiceForm.get('qualifier').errors?.required && (practiceForm.get('qualifier').dirty || practiceForm.get('qualifier').touched)"> This field is required</small>
+                </div>
+
+              </div>
+              <ng-container formArrayName="locations">
+                <ng-container formGroupName="0">
+                  <div class="col-12 col-md-6">
+                    <div class="form-group field"
+                      [ngClass]="{'focused': getLocationForm(0).get('address').value != ''}">
+                      <label class="form-label" for="Street">Street Address</label>
+                      <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+                      <input ngx-google-places-autocomplete [options]="{
+                              types: [],
+                              componentRestrictions: { country: 'US' }
+                              }" #placesRef="ngx-places" placeholder=""
+                        (onAddressChange)="handleAddressChange($event, 'practice')" formControlName="address"
+                        type="text" id="address" class="form-control form-input">
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <div class="form-group field" [ngClass]="{'focused': getLocationForm(0).get('floor').value != ''}">
+                      <label class="form-label" for="Suite">Suite / Floor</label>
+                      <input type="text" id="Suite" class="form-control form-input" formControlName="floor">
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-group field" [ngClass]="{'focused': getLocationForm(0).get('city').value != ''}">
+                      <label class="form-label" for="City">City</label>
+                      <input formControlName="city" type="text" id="city" class="form-control form-input">
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-group field" [ngClass]="{'focused': getLocationForm(0).get('state').value != ''}">
+                      <label class="form-label" for="State">State</label>
+                      <!-- <input formControlName="state" type="text" id="state" class="form-control form-input"> -->
+                      <ng-select formControlName="state" class="ng-value-label border-0 tooltip-outer"  ngbTooltip="{{selectedState}}" (change)="stateChange($event)" tooltipClass="table-custom-tooltip" [items]="allStates" container="body" bindLabel="name" bindValue="name">
+                        <ng-template ng-option-tmp let-item="item">
+                          <span class="ng-value-label border-0 tooltip-outer"  tooltipClass="table-custom-tooltip" ngbTooltip="{{item.fullName}}" container="body">{{item.name}}</span>
+                        </ng-template>
+                        </ng-select>                    </div>
+                  </div>
+
+                  <!-- <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-group field" [ngClass]="{'focused': getLocationForm(0).get('zip').value != ''}">
+                      <label class="form-label" for="Zip">Zip</label>
+                      <input formControlName="zip" type="text" mask="00000" maxlength="5" id="zip"
+                        class="form-control form-input">
+                      <small class="form-text text-muted danger" class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('zip').value && getLocationForm(0).get('zip').value.length>0 && getLocationForm(0).get('zip').value.length<5 && getLocationForm(0).get('zip').touched">
+                        Invalid Format: 00000
+                      </small>
+                    </div>
+                  </div> -->
+				  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-group field" [ngClass]="{'focused': getLocationForm(0).get('zip').value != ''}">
+                      <label class="form-label" for="Zip">Zip</label>
+                      <input formControlName="zip" type="text"  id="zip"
+                        class="form-control form-input">
+                      <small class="form-text text-muted danger" class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('zip').value && getLocationForm(0).get('zip').errors?.pattern  && getLocationForm(0).get('zip').touched">
+                      {{zipFormatMessage.format_usa}}
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-group field" [ngClass]="{'focused': getLocationForm(0).get('phone').value != ''}">
+                      <label class="form-label" for="phone">Phone No</label>
+                      <input formControlName="phone" type="text" id="phone" mask='000-000-0000'
+                        [dropSpecialCharacters]="true" class="form-control form-input">
+                      <small class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('phone').value && getLocationForm(0).get('phone').value.length>0 && getLocationForm(0).get('phone').value.length<10 && getLocationForm(0).get('phone').touched">
+                        Invalid Format: 000-000-0000
+                      </small>
+                      <!-- <small class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('phone').errors?.required && (getLocationForm(0).get('phone').dirty || getLocationForm(0).get('phone').touched)">Please
+                        enter your Phone Number!</small> -->
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-group field" [ngClass]="{'focused': getLocationForm(0).get('ext_no').value != ''}">
+                      <label class="form-label" for="ext_no">Extension</label>
+                      <input formControlName="ext_no" type="text" id="ext_no" class="form-control form-input"
+                        appOnlyNumeric maxlength="10">
+                      <small class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('ext_no').value && getLocationForm(0).get('ext_no').value.length>0 && getLocationForm(0).get('ext_no').value.length<1  && getLocationForm(0).get('ext_no').touched">
+                        Extension length is not valid
+                      </small>
+                      <!-- <small class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('ext_no').value?.length < 2 && 
+                              (getLocationForm(0).get('ext_no').dirty || getLocationForm(0).get('ext_no').touched)">Extension
+                        length cannot be
+                        less than 2!</small> -->
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-group field"
+                      [ngClass]="{'focused': getLocationForm(0).get('cell_no').value != ''}">
+                      <label class="form-label" for="cell_no">Alt.Phone No.</label>
+                      <input formControlName="cell_no" type="text" id="cell_no" class="form-control form-input"
+                        mask='000-000-0000' [dropSpecialCharacters]="true">
+                      <small class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('cell_no').value && getLocationForm(0).get('cell_no').value.length>0 && getLocationForm(0).get('cell_no').value.length<10 ">
+                        Invalid Format: 000-000-0000
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4 mb-1">
+                    <div class="form-group field" [ngClass]="{'focused': getLocationForm(0).get('fax').value != ''}">
+                      <label class="form-label" for="fax">Fax</label>
+                      <input formControlName="fax" type="text" mask='000-000-0000' id="fax"
+                        [dropSpecialCharacters]="true" class="form-control form-input">
+                      <small class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('fax').value && getLocationForm(0).get('fax').value.length>0 && getLocationForm(0).get('fax').value.length<10 && getLocationForm(0).get('fax').touched">
+                        Invalid Format: 000-000-0000
+                      </small>
+                    </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="form-group field mb-3"
+                    [ngClass]="{'focused': getLocationForm(0).get('email').value != null}">
+                      <label class="form-label" for="Email">Email</label>
+                      <input formControlName="email" type="email" id="email" class="form-control form-input">
+                      <!-- <small class="form-text text-muted danger" class="form-text text-muted danger"
+                        *ngIf="getLocationForm(0).get('email').errors?.pattern && (getLocationForm(0).get('email').dirty || getLocationForm(0).get('email').touched)">
+                        Invalid email address.</small> -->
+                        <small class="form-text text-muted danger"
+                        *ngIf="(getLocationForm(0).get('email').dirty || getLocationForm(0).get('email').touched) && getLocationForm(0).get('email').errors?.pattern">Email field is invalid</small>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+            </div>
+
+            <div class="row">
+              <ng-container formArrayName="locations">
+                <ng-container formGroupName="0">
+                  <div class="col-12 col-sm-8 col-md-6 col-lg-8 col-xl-6">
+                    <button class="btn mb-4 text-start w-50 ma-filter-btn" type="button" (click)="onCopyProvider()">
+                      <label for=" same_as_provider" class="chkbox position-relative my-1">
+                        <input id="same_as_provider" name="same_as_provider" value=""
+                          [checked]="this.getLocationForm(0).controls['same_as_provider'].value"
+                          ng-checked="same_as_provider" type="checkbox">
+                        <span class="fake-input position-absolute"></span>
+                        <span class="fake-label text-white d-block py-0">Check if billing same as provider</span>
+                      </label>
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <!-- <div class="col-md-6 text-end">
+                <button class="btn btn-primary mt-0 mb-4 py-2" type="button" data-bs-toggle="modal"
+                  (click)="openModal(practiceLocation)"><i class="icon-plus me-1"></i> Add Location</button>
+              </div> -->
+            </div>
+
+            <ng-container formArrayName="locations">
+              <ng-container formGroupName="0">
+                <ng-container formArrayName="billing">
+                  <ng-container formGroupName="0">
+                    <div class="row">
+                      <div class="col-lg-12 col-md-12">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('provider_name').value != ''}">
+                          <label class="form-label" for="provider_name">Billing Provider Name</label>
+                          <input formControlName="provider_name" type="text" id="provider_name"
+                            class="form-control form-input">
+                          <small class="form-text text-muted danger" class="form-text text-muted danger"
+                            *ngIf="getBillingForm(0, 0).get('provider_name').errors?.required && (getBillingForm(0, 0).get('provider_name').dirty || getBillingForm(0, 0).get('provider_name').touched)">Provider
+                            name is required field.</small>
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('address').value != ''}">
+                          <label class="form-label" for="Street">Street Address</label>
+                          <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+                          <input ngx-google-places-autocomplete [options]="{
+                            types: [],
+                            componentRestrictions: { country: 'US' }
+                            }" #placesRef="ngx-places" placeholder=""
+                            (onAddressChange)="handleAddressChange($event, 'biller')" formControlName="address"
+                            type="text" id="address" class="form-control form-input">
+                        </div>
+
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('floor').value != ''}">
+                          <label class="form-label" for="billing_floor">Suite / Floor</label>
+                          <input type="text" id="billing_floor" class="form-control form-input" formControlName="floor">
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('city').value != ''}">
+                          <label class="form-label" for="billing_city">City</label>
+                          <input formControlName="city" type="text" id="billing_city" class="form-control form-input">
+                        </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('state').value != '' }">
+                          <label class="form-label" for="billing_state">State</label>
+                          <!-- <input formControlName="state" type="text" id="billing_state" class="form-control form-input"> -->
+                          <ng-select formControlName="state" class="ng-value-label border-0 tooltip-outer"  ngbTooltip="{{selectedPracticeState}}" (change)="practiceStateChange($event)" tooltipClass="table-custom-tooltip" [items]="allStates" container="body" bindLabel="name" bindValue="name">
+                            <ng-template ng-option-tmp let-item="item">
+                              <span class="ng-value-label border-0 tooltip-outer"  tooltipClass="table-custom-tooltip" ngbTooltip="{{item.fullName}}" container="body">{{item.name}}</span>
+                            </ng-template>
+                            </ng-select>
+                        </div>
+                     </div>
+
+                    <!-- <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('zip').value != ''}">
+
+                          <label class="form-label" for="billing_zip">Zip</label>
+                          <input formControlName="zip" type="text"
+                            [mask]="getLocationForm(0).controls['same_as_provider'].value? null : '00000'" maxlength="5"
+                            id="billing_zip" class="form-control form-input">
+                          <small class="form-text text-muted danger"
+                            *ngIf="!getLocationForm(0).controls['same_as_provider'].value && getBillingForm(0, 0).get('zip').value && getBillingForm(0, 0).get('zip').value.length>0 && getBillingForm(0, 0).get('zip').value.length<5 && getLocationForm(0).get('fax').touched">
+                            Invalid Format: 00000
+                          </small>
+                        </div>
+                    </div> -->
+					<div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('zip').value != ''}">
+
+                          <label class="form-label" for="billing_zip">Zip</label>
+                          <!-- <input type="text" formControlName="zip"> -->
+                          <input formControlName="zip" type="text"
+                            
+                            id="billing_zip" class="form-control form-input">
+                          <small class="form-text text-muted danger"
+                            *ngIf="!getLocationForm(0).controls['same_as_provider'].value && getBillingForm(0, 0).get('zip').value && getBillingForm(0, 0).get('zip').errors?.pattern && getBillingForm(0, 0).get('zip').touched ">
+                            {{zipFormatMessage.format_usa}}						
+                          </small>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('phone').value != ''}">
+                          <label class="form-label" for="billing_phone">Phone No</label>
+                          <input formControlName="phone" type="text" id="billing_phone" mask="000-000-0000"
+                            [dropSpecialCharacters]="true" class="form-control form-input">
+                          <small class="form-text text-muted danger"
+                            *ngIf="!getLocationForm(0).controls['same_as_provider'].value && getBillingForm(0, 0).get('phone').value && getBillingForm(0, 0).get('phone').value.length>0 && getBillingForm(0, 0).get('phone').value.length<10 ">
+                            Valid Format: 000-000-0000
+                          </small>
+                        </div>
+                      </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('ext_no').value != ''}">
+                          <label class="form-label" for="billing_ext">Extension</label>
+                          <input formControlName="ext_no" type="text" id="billing_ext" class="form-control form-input"
+                            appOnlyNumeric maxlength="10">
+                          <!-- <small 
+                            *ngIf="getBillingForm(0, 0).get('ext_no').value && getBillingForm(0, 0).get('ext_no').value.length>0 && getBillingForm(0, 0).get('ext_no').value.length<1 ">
+                            Extension length is not valid
+                          </small> -->
+                          <!-- <small class="form-text text-muted danger" *ngIf="getBillingForm(0, 0).get('ext_no').value?.length < 2 && 
+                   (getBillingForm(0, 0).get('ext_no').dirty || getBillingForm(0, 0).get('ext_no').touched)">Extension
+                            length
+                            cannot be
+                            less than 2!</small> -->
+                        </div>
+                      </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('cell_no').value != ''}">
+                          <label class="form-label" for="billing_cell_no">Alt. Phone No.</label>
+                          <input formControlName="cell_no" type="text" id="billing_cell_no" mask="000-000-0000"
+                            [dropSpecialCharacters]="true" class="form-control form-input">
+                          <small class="form-text text-muted danger"
+                            *ngIf="!getLocationForm(0).controls['same_as_provider'].value && getBillingForm(0, 0).get('cell_no').value && getBillingForm(0, 0).get('cell_no').value.length>0 && getBillingForm(0, 0).get('cell_no').value.length<10 && getBillingForm(0, 0).get('cell_no').touched">
+                            length of Phone No is not valid
+                          </small>
+                        </div>
+                    </div>
+
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('fax').value != ''}">
+                          <label class="form-label" for="billing_fax">Fax</label>
+                          <input formControlName="fax" type="text" id="billing_fax" mask="000-000-0000"
+                            [dropSpecialCharacters]="true" class="form-control form-input">
+                          <small class="form-text text-muted danger"
+                            *ngIf="!getLocationForm(0).controls['same_as_provider'].value && getBillingForm(0, 0).get('fax').value &&  getBillingForm(0, 0).get('fax').value.length>0 &&  getBillingForm(0, 0).get('fax').value.length<10 &&  getBillingForm(0, 0).get('fax').touched">
+                            Fax length is not valid
+                          </small>
+                        </div>
+                      </div>
+
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('email').value != null}">
+                          <label class="form-label" for="billing_email">Email</label>
+                          <input formControlName="email" type="email" id="billing_email"
+                            class="form-control form-input">
+
+                          <small class="form-text text-muted danger"
+                            *ngIf="getBillingForm(0, 0).get('email').errors?.pattern && (getBillingForm(0, 0).get('email').dirty || getBillingForm(0, 0).get('email').touched)">
+                            Invalid email address.</small>
+                        </div>
+                      </div>
+
+                      <div class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('npi').value != ''}">
+                          <label class="form-label" for="npi_number">NPI/Group No</label>
+                          <input formControlName="npi" type="text" id="npi_number" appOnlyNumeric maxlength="10"
+                            class="form-control form-input" allowedPaste>
+                        </div>
+					</div>
+
+					<div class="col-lg-4 col-md-6 front-desk-block dynamic-form-block">
+						<div class="form-group">
+							<div class="radio-block ng-untouched ng-pristine ng-invalid">
+								<span class="" for="id">The Tax ID #</span>
+								<ul class="list-inline d-flex justify-content-end">
+									<li class="list-inline-item">
+										<label for="tin" class="d-block position-relative m-0">
+											<input appEnhanceRadio [oldValue]="getBillingForm(0, 0).get('tax_id_check').value" id="tin" checked="checked" type="radio"
+												[value]="1" formControlName="tax_id_check">
+											<span class="fake-input position-absolute"></span>
+											<span class="fake-label d-block">TIN</span>
+										</label>
+									</li>
+
+									<li class="list-inline-item">
+										<label for="ssn" class="d-block position-relative m-0">
+											<input appEnhanceRadio id="ssn"  [oldValue]="getBillingForm(0, 0).get('tax_id_check').value" checked="checked" type="radio"
+												[value]="2" formControlName="tax_id_check">
+											<span class="fake-input position-absolute"></span>
+											<span class="fake-label d-block">SSN</span>
+										</label>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+                    <div *ngIf="practiceForm.controls.locations['controls'][0]['controls']['billing']['controls'][0].get('tax_id_check').value == 1" class="col-12 col-md-6 col-lg-4">
+                        <div  class="form-group field mb-3"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('tin').value != ''}">
+                          <label class="form-label" for="tin_number">EIN/TIN</label>
+                          <input formControlName="tin" type="text" mask='00-0000000' appOnlyNumeric
+                            [dropSpecialCharacters]="true" id="tin_number" class="form-control form-input">
+                          <!-- <small class="form-text text-muted danger"
+                            *ngIf=" getBillingForm(0, 0).get('tin').value &&  getBillingForm(0, 0).get('tin').value.length>0 &&  getBillingForm(0, 0).get('tin').value.length<9 &&  getBillingForm(0, 0).get('tin').touched">
+                            EIN/TIN length is not valid
+                          </small> -->
+                        </div>
+					</div>
+					  
+					<div *ngIf="practiceForm.controls.locations['controls'][0]['controls']['billing']['controls'][0].get('tax_id_check').value ==2" class="col-12 col-md-6 col-lg-4">
+                        <div class="form-group field mb-3"
+                          [ngClass]="{'focused': getBillingForm(0, 0).get('tin').value != ''}">
+                          <label class="form-label" for="ssn">EIN/TIN</label>
+                          <input formControlName="ssn" type="text" mask='000-00-0000' appOnlyNumeric
+                            [dropSpecialCharacters]="true" id="ssn" class="form-control form-input">
+                          <!-- <small class="form-text text-muted danger"
+                            *ngIf=" getBillingForm(0, 0).get('ssn').value &&  getBillingForm(0, 0).get('ssn').value.length>0 &&  getBillingForm(0, 0).get('ssn').value.length<9 ">
+                            EIN/TIN length is not valid
+                          </small> -->
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                      <div class="form-group field mb-3"
+                        [ngClass]="{'focused': getBillingForm(0, 0).get('dol').value != ''}">
+                        <label class="form-label" for="dol">DOL(GRP#)</label>
+                        <input formControlName="dol" type="text" appOnlyNumeric maxlength="15"
+                           id="dol" class="form-control form-input">
+                        <!-- <small class="form-text text-muted danger"
+                          *ngIf=" getBillingForm(0, 0).get('ssn').value &&  getBillingForm(0, 0).get('ssn').value.length>0 &&  getBillingForm(0, 0).get('ssn').value.length<9 ">
+                          EIN/TIN length is not valid
+                        </small> -->
+                      </div>
+                  </div>
+
+                  <div class="col-lg-4 col-md-6 front-desk-block dynamic-form-block">
+                    <div class="form-group">
+                      <div class="radio-block ng-untouched ng-pristine ng-invalid">
+                        <span class="" for="id">Generate PDF</span>
+                        <ul class="list-inline d-flex justify-content-end">
+                          <li class="list-inline-item">
+                            <label for="citimed" class="d-block position-relative m-0">
+                              <input appEnhanceRadio [oldValue]="getBillingForm(0, 0).get('generate_document_using').value" id="citimed" checked="checked" type="radio"
+                                [value]="'citimed'" formControlName="generate_document_using">
+                              <span class="fake-input position-absolute"></span>
+                              <span class="fake-label d-block">Citimed</span>
+                            </label>
+                          </li>
+        
+                          <li class="list-inline-item">
+                            <label for="optimum" class="d-block position-relative m-0">
+                              <input appEnhanceRadio id="optimum"  [oldValue]="getBillingForm(0, 0).get('generate_document_using').value" checked="checked" type="radio"
+                                [value]="'optimum'" formControlName="generate_document_using">
+                              <span class="fake-input position-absolute"></span>
+                              <span class="fake-label d-block">Optimum</span>
+                            </label>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                    </div>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+			</ng-container>
+			<div class="row">
+				<app-signature #signatureComponent class="col-lg-6 sign-area"  [link] = "linkSingature" [selectedId]="selectedId" [(signature)]="signature" [signatures]="listSignature"></app-signature>
+				<app-signature-listing class="col-lg-6" (onDelete) = "onDeleteSignature($event)"(selectedIdChange)="selectedId= $event" [signatures]="listSignature"></app-signature-listing>
+			</div>
+
+            <div class="col-md-12 px-0" *ngIf="practiceLocations?.data?.length<1"> <label><b>*Note:</b> At least one
+                Location is required.</label>
+			</div>
+			
+            <button [disabled]="disableAddLocationBtn || practiceForm.get('name').value == ''"
+              (click)="openLocationModal()" class="btn btn-primary mt-2 mb-3 py-2 d-flex align-items-center" type="button"><i class="icon-plus-circle me-2"></i> Add
+			  Location
+			</button>
+
+            <div class="row">
+              <div class="col-md-12 text-center mb-3">
+				<button [disabled]="startLoader" type="button" class="btn btn-primary mt-0 me-3" (click)="cancel()">
+					Cancel
+				</button>
+                <button [disabled]="startLoader ||practiceLocations?.data?.length<1"
+                  type="button" (click)="onSubmit()" class="btn btn-success ma-add-practice-btn mt-0">
+                  {{(practiceId)?"Update": "Save & Continue"}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="document-content-area mt-3">
+      <div class="card mb-0">
+        <div class="card-header py-1">
+          <div class="row align-items-center">
+            <div class="col-8 col-md-6 pe-0 form">
+              <span>Practice Location(s)</span>
+            </div>
+            <!-- <div class="col-4 col-md-6 text-sm-end">
+
+              <button class="btn slide-btn float-right mt-0" [class.btn-primary]="!showLocation"
+                [class.btn-success]="showLocation" (click)="toggleShow()" type="button"><span class=""
+                  [class.icon-plus]="!showLocation" [class.icon-minus]="showLocation"></span></button>
+            </div> -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <app-practice-location-table-component *ngIf="showLocation" [dropDownRegion]="dropDownRegion" [page]="facilityPage"
+      context='addpractice' [options]="locationOption" [practiceLocations]="practiceLocations" [practiceId]='practiceId'
+      (onAddLocation)="onAddLocation($event)" (onEditLocation)="onEditLocation($event)"
+      [mainPracticeStatus]="true"
+      (updateListing)="updateListing()" (onPageChange)="getPracticeLocation($event)">
+    </app-practice-location-table-component>
+
+
+  </div>
+</div>
+<!-- 
+<ng-template #practiceLocation let-modal>
+  <practice-location [id]="id" (closeModel)="closeModel($event)" [locationData]="locationData"
+    [dropDownRegion]="dropDownRegion" disableLocation="practiceForm.controls.name.disabled">
+  </practice-location>
+</ng-template> -->
+
+
+

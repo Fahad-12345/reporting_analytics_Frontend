@@ -1,0 +1,67 @@
+<!-- <div class="row justify-content-center my-3">
+	<div class="col-md-8 col-lg-5 text-center"> -->
+<div *ngIf="!hide_title" class="row">
+	<div class="col-md-12 form-group">
+		<input type="text" (input)="onTitleChange($event)" (focusout)="focusTitle()" placeholder="Signature Title*"
+			[ngModelOptions]="{standalone: true}" [(ngModel)]="file_title" class="form-control"
+			[disabled]="isDisabledTemplateFormControl">
+			<small class="form-text text-muted danger"
+			*ngIf="file_title_touched && (file_title == '' || file_title == null)">This field is required</small>
+		<!-- {{file_title}} -->
+	</div>
+</div>
+
+
+	<ng-signature-pad #singatureDoctor *ngIf="!link && showSignature" 
+		(click)="onClick()" 
+		[(points)]="signaturePoint"
+		[clearButtonText]="clearButtonText" 
+		format="blob" 
+		[responsive]="true" 
+		[emitOnDragEnd]="true" 
+		[showDoneButton]="false"
+		[showClearButton]="editable && editPad && ( !!signaturePoint?.length || file_title ) " 
+		[width]="width"
+		[height]="height"
+		[editable]="editPad" 
+		(done)="done($event)" 
+		(cleared)="onClear()"
+		[penColor]='' 
+		[backgroundColor]="">
+	</ng-signature-pad>
+
+<!-- <ng-container *ngIf="isLoading"><i  style="color:#34c3ee " class="fas fa-spinner fa-pulse"></i>
+		</ng-container> -->
+
+
+<div *ngIf="link" class="mb-2">
+	<img class="img-fluid signature-img" [src]="link">
+</div>
+
+<div class="sign-loader" *ngIf="isLoading && editPad">
+	<i class="fas fa-spinner fa-pulse"></i>
+</div>
+<button *ngIf="showButtons && link && !isDisabledTemplateFormControl" [disabled]="!editPad" class="btn btn-default text-white" (click)="clearLink()">Clear</button>
+<button *ngIf="showButtons && !isDisabledTemplateFormControl" [disabled]="!editPad" class="btn btn-success text-white">
+	<label class="text-white mb-0 text-nowrap">
+		<input accept="image/png,image/jpeg" (change)="onFileChange($event)" style="display: none;" type="file" />
+		<i class="icon-upload"></i> Upload Signature
+	</label>
+</button>
+
+
+<!-- <button *ngIf="link" class="btn btn-default text-white" (click)="clearLink()">Clear</button> -->
+<!-- 		
+		<button class="btn btn-success text-white">
+			<label class="text-white mb-0">
+				<input accept="image/*" (change)="onFileChange($event)" 
+					style="display: none;" type="file" />
+				<i class="icon-upload"></i> Upload
+			</label>
+		</button> -->
+
+
+<!-- {{signature | json}} -->
+<!-- </div> -->
+<!-- </div> -->
+<!-- <img [src]="signatureImage" *ngIf="signatureImage" /> -->

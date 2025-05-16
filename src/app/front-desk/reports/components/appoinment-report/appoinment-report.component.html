@@ -1,0 +1,432 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+
+<div class="row user-info pt-2">
+  <div class="col-12">
+    <h4 class="my-0 color-green mt-2">Appointment Status Report</h4>
+    <hr class="line-bottom mb-3" />
+  </div>
+</div>
+<div class="row pom-report">
+  <div class="col-12">
+    <div class="card text-center border-0">
+      <ul class="nav nav-tabs card-header-tabs m-0">
+        <li class="nav-item">
+          <a
+            routerLinkActive="active"
+            class="nav-link"
+            [routerLink]="['/front-desk/reports/appointment-reports']"
+            [queryParams]="{ type: 1 }"
+            >Status Report</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            routerLinkActive="active"
+            class="nav-link"
+            [routerLink]="['/front-desk/reports/appointment-reports']"
+            [queryParams]="{ type: 2 }"
+            >Summary Report</a
+          >
+        </li>
+      </ul>
+      <div class="card-body border-pumice border-top-0">
+        <div class="tab-content">
+          <ng-container *ngIf="appointmentStatusReportTypeId == appointmentStatusReportType.Detail">
+            <div *ngTemplateOutlet="paymentDetailReportTemplate"></div>
+          </ng-container>
+
+          <ng-container
+            *ngIf="appointmentStatusReportTypeId == appointmentStatusReportType.Summary"
+          >
+            <div *ngTemplateOutlet="paymentSummaryReportTemplate"></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-------------Customise table column Modal Template----------------------->
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--------------Payment Detail report------------->
+<ng-template #paymentDetailReportTemplate>
+<app-filter-reports
+#ReportFilterComponent
+[filtersIncludes]="
+appointmentStatusReportTypeId == appointmentStatusReportType.Detail
+? filtersIncludesForDetailReport
+: filtersIncludesForSummaryReport
+"
+[isArReport]="true" 
+ [isAppointmentStatusReport]="true"
+[mandatoryFields]="['date_type', 'start_date','end_date']"
+(resetFilterEvent)="resetFilter($event)"
+(reportFilter)="applyFilter($event)"
+(billRecepientChangeEvent)="onBillRecepientChangeEvent($event)"
+(groupDataEvent)="onCatchGroupDataEvent($event)"
+></app-filter-reports>
+
+<div class="row">
+	<div class="col-6 col-sm-6 edit-block text-start">
+		<div class="form-group field option-field mb-2 d-inline-block">
+		  <ul>
+			<li>Show</li>
+			<li>
+			  <select
+				class="custom-select"
+				name="limit"
+				id="limit"
+				[(ngModel)]="defaultPagination.per_page"
+				(change)="entryCountSelection($event.target.value)"
+			  >
+				<option [value]="10">10</option>
+				<option [value]="20">20</option>
+				<option [value]="30">30</option>
+				<option [value]="40">40</option>
+				<option [value]="50">50</option>
+				<option [value]="100">100</option>
+			  </select>
+			</li>
+			<li>entries</li>
+		  </ul>
+		</div>
+	  </div>
+	<div class="col-6 col-sm-6 d-flex align-items-center justify-content-end">
+		
+		<button type="button" (click)="generateStatusPDF()" class="btn btn-primary me-2" [disabled]="appointmentStatusReport?.length == 0">
+			<i class="fa fa-file-pdf"></i> Export to pdf
+		</button>
+		<button type="button" (click)="generateStatusReportExcel()" class="btn btn-success me-2" [disabled]="appointmentStatusReport?.length == 0">
+			<i class="fa fa-file-excel"></i> Export to Excel
+		</button>
+		
+		<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+			 Customize Columns
+		</button>
+	
+		
+	</div>
+</div>
+  <div class="nf-reports modal_pad"> 
+    <ngx-datatable class="bootstrap payment-detail-table"
+	#appointmentStatusList  
+	[rows]="appointmentStatusReport" 
+	[reorderable]="true"
+	[columnMode]="'force'"  
+	[footerHeight]="50" 
+	[rowHeight]="'auto'" 
+	
+	[virtualization]="false" 
+	[scrollbarH]="true" 
+	[externalPaging]="true"
+	[count]="totalRecord" 
+	[offset]="nf2Offset" 
+	[limit]="defaultPagination.per_page" 
+	(page)="onPageChange($event)"
+	
+	>
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Case ID" [width]="55" [minWidth]="55"
+		prop="case_id">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value }}">
+				<a class="underline-hov" (click)="navigateTo(row.case_id)"
+				[routerLink]="['/front-desk/cases/edit/'+row?.case_id+'/patient/patient_summary']"
+			   *ngIf="aclService?.hasPermission(userPermissions?.patient_case_list_edit_case);else disableCaseNo">{{ row?.case_id }}</a>
+			   <ng-template #disableCaseNo>
+				   <span>{{ row?.case_id }}</span>
+			   </ng-template>
+			  </div>
+			</ng-template>
+	</ngx-datatable-column>
+
+	<ngx-datatable-column  [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Patient Name" prop="patient_name" [width]="87" [minWidth]="87">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="row">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.patient_name}}">
+				{{row?.patient_name}} 
+			  </div>
+		</ng-template>
+	  </ngx-datatable-column>
+
+          <ngx-datatable-column name="Case Type" prop="case_type" [width]="65" [minWidth]="65" [sortable]="false">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="row">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.case_type_name}}">
+                   {{row?.case_type_name}}
+				</div>
+			</ng-template>
+
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Insurance" prop="insurance" [width]="65" [minWidth]="65" [sortable]="false">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.insurance_name}}">
+					{{row?.insurance_name}}
+				 </div>
+			</ng-template>
+        </ngx-datatable-column>
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Practice Location"  [width]="110" [minWidth]="110"
+		prop="practice_location">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.facility_location}}">
+				{{row?.facility_location}}
+			</div>
+		</ng-template>
+	</ngx-datatable-column> 
+		
+		
+
+	<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider" [sortable]="false" prop="provider"  [width]="65" [minWidth]="65">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.provider_name}}">
+				{{row?.provider_name}} 
+			</div>
+		</ng-template>
+	</ngx-datatable-column>
+
+	<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Specialty" prop="speciality"  [width]="65" [minWidth]="65">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.speciality_name}}">
+				{{row?.speciality_name}}
+			</div>
+		</ng-template>
+	  </ngx-datatable-column>
+
+	  <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Type" prop="visit_type" [width]="70" [minWidth]="70">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.appointment_type}}">
+				{{row?.appointment_type}}
+			</div>
+		</ng-template>
+	</ngx-datatable-column>
+
+	  <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop = "appt_date" name="Appt Date" [width]="75" [minWidth]="75">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.appointment_date}}">
+				{{row?.appointment_date}}
+			</div>
+		</ng-template>
+	  </ngx-datatable-column>
+
+	  <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Appt Time" prop = "appt_time" [width]="75" [minWidth]="75">
+		<ng-template ngx-datatable-cell-template  let-row="row" let-value="value">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{timeConversion(row?.scheduled_date_time) | date: 'hh:mm a'}}">
+				{{timeConversion(row?.scheduled_date_time) | date: 'hh:mm a'}}
+			</div>
+		</ng-template>
+	  </ngx-datatable-column>
+
+          <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Appt Status" prop="appt_status" [width]="80" [minWidth]="80">
+            <ng-template ngx-datatable-cell-template  let-row="row"   let-value="value">
+				
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.appointment_status_name}}">
+					{{row?.appointment_status_name }}
+				</div>
+            </ng-template>
+          </ngx-datatable-column>
+      
+          <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Referring Physician" [width]="90" [minWidth]="90">
+            <ng-template ngx-datatable-cell-template let-row="row"  let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.physician_name}}">
+					{{row?.physician_name}}
+				</div>
+            </ng-template>
+          </ngx-datatable-column>
+
+		  <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Clinic/Practice" [width]="90" [minWidth]="70">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.in_house_name || row?.outside_referring_name}}">
+				{{row?.in_house_name || row?.outside_referring_name}}
+			  </div>
+			</ng-template>
+		  </ngx-datatable-column>
+
+		  <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="true" name="Clinic/Practice Location Address" [width]="90" [minWidth]="70">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{ row?.in_house_address || row?.outside_referring_address }}">
+				{{ row?.in_house_address || row?.outside_referring_address}}
+			  </div>
+			</ng-template>
+		  </ngx-datatable-column>
+		  
+		  <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Actions" [width]="80" [minWidth]="100">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="historyStats(row)">
+					<i class="fa fa-history"></i>
+				</a>
+			</ng-template>
+		  </ngx-datatable-column>
+          
+     </ngx-datatable>
+</div>
+
+
+</ng-template>
+<!------------Appointment Summary report----------------->
+<ng-template #paymentSummaryReportTemplate>
+	<app-filter-reports #ReportFilterComponent
+		[filtersIncludes]="appointmentStatusReportTypeId == appointmentStatusReportType.Detail ? filtersIncludesForDetailReport : filtersIncludesForSummaryReport"
+		[isArReport]="true" [isAppointmentSummaryReport]="true"
+    	[BrdHiddenFilters]="false"
+    	 [isArSummaryReport]="true" [mandatoryFields]="['date_type', 'group_by']"
+		(resetFilterEvent)="resetFilter($event)" (reportFilter)="applyFilter($event)"
+		(billRecepientChangeEvent)="onBillRecepientChangeEvent($event)"
+		(endDateEvent)="onEndDateEvent()" (endDateCancelledEvent)="onEndDateCancelledEvent()"
+		(groupDataEvent)="onCatchGroupDataEvent($event)"></app-filter-reports>
+
+	<div class="report buttons d-flex justify-content-end mb-3">
+		<div class="export-reports-button">
+			<button type="button" (click)="downloadAsPDF()" class="btn btn-primary me-2" [disabled]="paymentSummaryReportData?.length == 0">
+				<i class="fa fa-file-pdf"></i> Export to Pdf
+			</button>
+			<button type="button" (click)="generateAppointmentSummaryReportExcel()" class="btn btn-success mx-2 mb-2  mb-sm-0 " [disabled]="paymentSummaryReportData?.length == 0">
+				<i class="fa fa-file-excel"></i> Export to Excel
+			</button>
+		</div>
+	</div>
+	<div class="nf-reports">
+		<ngx-datatable class="bootstrap "[headerHeight]="50"
+    [rowHeight]="50"
+    [columnMode]="'force'"
+    [scrollbarH]="true"
+    [scrollbarV]="true"
+    [reorderable]="false"
+    [externalPaging]="false" 
+    [rowClass]="getRowClass"
+	[rows]="paymentSummaryReportData" 
+    [ngStyle]="{'height': summaryTableHeight}"
+    [externalPaging]="false">
+    <ngx-datatable-column *ngIf = "viewById" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [name]="viewByName"
+				prop="view_by_name" [minWidth]="140" >
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex} ">
+						{{rowIndex == lastIndex && !subGroupBy && !groupBy  ? 'Total' : subGroupBy && rowIndex == lastIndex ? null : value }}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" [name]="groupBy"
+				[prop]="groupbyColumnProp" [minWidth]="140">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						{{value}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="subGroupBy" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+				[name]="subGroupBy" prop="subgroup_by_name" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						{{rowIndex == lastIndex ? '' :value }}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="VC"
+				prop="vc" [minWidth]="80" >
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 ) }} 
+						</ng-container>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="SC"
+				prop="sc" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 ) }} 
+						</ng-container>
+						
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="NS"
+				prop="ns" [minWidth]="80">
+				<ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 ) }} 
+						</ng-container>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Total"
+				prop="total" [minWidth]="80"> 
+				<ng-template let-value="value" ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+					<div [ngClass]="{'text-bold' : rowIndex == lastIndex}">
+						<ng-container *ngIf="(countAggregate && billDate) || (rowIndex == lastIndex && countAggregate)">
+							{{ value || 0 }} 
+						</ng-container>
+						<ng-container *ngIf="!countAggregate || !billDate && rowIndex != lastIndex ">
+							{{ (value || 0 ) }} 
+						</ng-container>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+		</ngx-datatable>
+		<div *ngIf="lastRowData && showSummaryTable" class="summary-footer">
+			
+			<ng-container *ngFor="let column of Summarycolumns">
+			  <div class="summary-column" [ngClass]="column?.prop" 
+				   [style.margin-left.%]="calculateLeftMargin(column?.prop)">
+
+				<ng-container *ngIf="column?.prop === 'Grand Total'">
+					{{'Grand Total'}}
+				</ng-container>
+				<ng-container *ngIf="column?.prop === 'VC'">
+				  {{ lastRowData.totalVC || 0 }}
+				</ng-container>
+				<ng-container *ngIf="column?.prop === 'SC'">
+				  {{ lastRowData.totalSC || 0 }}
+				</ng-container>
+				<ng-container *ngIf="column?.prop === 'NS'">
+				  {{ lastRowData.totalNS || 0 }}
+				</ng-container>
+				<ng-container *ngIf="column?.prop === 'Total'">
+				  {{ lastRowData.grandTotal || 0 }}
+				</ng-container>
+			  </div>
+			</ng-container>
+		  </div>
+			
+		  
+	</div>
+ 
+</ng-template>
+
+
+
+

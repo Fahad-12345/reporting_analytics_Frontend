@@ -1,0 +1,11 @@
+@import './../../../../../../../assets/sass/components/new-search-filters';
+.mat-icon-button {
+  position: absolute;
+  top: 25px !important;
+}
+
+.collapse-overflow {
+  overflow: unset !important;
+  -webkit-transition: 0.5s all;
+  transition: 0.5s all;
+}

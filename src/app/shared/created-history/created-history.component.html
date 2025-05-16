@@ -1,0 +1,112 @@
+<div class="modal-header">
+	<h4 class="modal-title">{{title}}</h4>
+	<button type="button" class="close" aria-label="Close" (click)="closeModel()">
+			<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body">
+<ngx-datatable class="bootstrap" [rows]="billHistory" [columnMode]='"force"'
+	[footerHeight]="50" [rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true">
+		<ngx-datatable-column *ngIf="!isEbill" [sortable]='false' [canAutoResize]="true" name="Created By" prop="created_by"
+				[width]="150">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="
+						{{row?.created_by_name?((row?.created_by_name?.first_name?row?.created_by_name?.first_name:'')+(row?.created_by_name?.middle_name?' '+row?.created_by_name?.middle_name:'')+(row?.created_by_name?.last_name?' '+row?.created_by_name?.last_name:'')):''}}
+						{{row?.created_by_data?((row?.created_by_data?.first_name?row?.created_by_data?.first_name:'')+(row?.created_by_data?.middle_name?' '+row?.created_by_data?.middle_name:'')+(row?.created_by_data?.last_name?' '+row?.created_by_data?.last_name:'')):''}}
+						" container="body">
+						{{row?.created_by_name?((row?.created_by_name?.first_name?row?.created_by_name?.first_name:'')+(row?.created_by_name?.middle_name?' '+row?.created_by_name?.middle_name:'')+(row?.created_by_name?.last_name?' '+row?.created_by_name?.last_name:'')):''}}
+						{{row?.created_by_data?((row?.created_by_data?.first_name?row?.created_by_data?.first_name:'')+(row?.created_by_data?.middle_name?' '+row?.created_by_data?.middle_name:'')+(row?.created_by_data?.last_name?' '+row?.created_by_data?.last_name:'')):''}}
+					</div>
+				</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column *ngIf="!isEbill" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Created At"
+			prop="created_at" [width]="80" [sortable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ row?.created_at ? (row.created_at | date: datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A' }}" container="body">
+					{{ row?.created_at ? (row.created_at | date: datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A' }}
+
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column *ngIf="!isEbill" [sortable]='false' [canAutoResize]="true" name="Updated By" prop="updated_by_user"
+				[width]="150">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="
+						{{row?.updated_by_name?((row?.updated_by_name?.first_name?row?.updated_by_name?.first_name:'')+(row?.updated_by_name?.middle_name?' '+row?.updated_by_name?.middle_name:'')+(row?.updated_by_name?.last_name?' '+row?.updated_by_name?.last_name:'')):''}}
+						{{row?.updated_by_data?((row?.updated_by_data?.first_name?row?.updated_by_data?.first_name:'')+(row?.updated_by_data?.middle_name?' '+row?.updated_by_data?.middle_name:'')+(row?.updated_by_data?.last_name?' '+row?.updated_by_data?.last_name:'')):''}}
+						" container="body">
+						{{row?.updated_by_name?((row?.updated_by_name?.first_name?row?.updated_by_name?.first_name:'')+(row?.updated_by_name?.middle_name?' '+row?.updated_by_name?.middle_name:'')+(row?.updated_by_name?.last_name?' '+row?.updated_by_name?.last_name:'')):''}}
+						{{row?.updated_by_data?((row?.updated_by_data?.first_name?row?.updated_by_data?.first_name:'')+(row?.updated_by_data?.middle_name?' '+row?.updated_by_data?.middle_name:'')+(row?.updated_by_data?.last_name?' '+row?.updated_by_data?.last_name:'')):''}}
+					</div>
+				</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column *ngIf="!isEbill" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Updated At"
+			prop="updated_at" [width]="80" [sortable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ row?.updated_at ? (row.updated_at | date: datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A' }}" container="body">
+					{{ row?.updated_at ? (row.updated_at | date: datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A' }}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column *ngIf="isEbill" name="Bill Category Code Description" prop="bill_code_description" [sortable]="false"
+		[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="80" cellClass="action-icon count-hold">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			ngbTooltip="{{row?.category?.description}}">
+			  {{ row?.category?.description | truncate:60:'...'}}
+		  </div>
+		</ng-template>
+	  </ngx-datatable-column>
+
+	  <ngx-datatable-column *ngIf="isEbill" name="Bill Status Code Description" prop="bill_status_description" [sortable]="false"
+		[canAutoResize]="true" [draggable]="false" [resizeable]="false" [canAutoResize]="true" [width]="60" cellClass="action-icon count-hold">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			ngbTooltip="{{row?.status?.description}}">
+			{{row?.status?.description | truncate:60:'...'}}
+		  </div>
+		</ng-template>
+	  </ngx-datatable-column>
+
+	  <ngx-datatable-column *ngIf="isEbill" name="Information Source" prop="info_source" [sortable]="false" [canAutoResize]="true"
+		[draggable]="false" [resizeable]="false" [width]="60" cellClass="action-icon count-hold">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			ngbTooltip="{{row?.entity?.name}}">
+			{{row?.entity?.name}}
+		  </div>
+		</ng-template>
+	  </ngx-datatable-column>
+
+	  <ngx-datatable-column *ngIf="isEbill" name="Descriptive Message" prop="desc_message" [sortable]="false" [canAutoResize]="true"
+		[draggable]="false" [resizeable]="false" [width]="80" cellClass="action-icon count-hold">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			ngbTooltip="{{row?.combination_message?.description}}">
+			{{row?.combination_message?.description | truncate:60:'...'}}
+		  </div>
+		</ng-template>
+	  </ngx-datatable-column>
+
+	  <ngx-datatable-column *ngIf="isEbill" name="Message From Clearing House" prop="clearinghouse_message" [sortable]="false"
+		[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="80" cellClass="action-icon count-hold">
+		<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			ngbTooltip="{{row?.message}}">
+			{{row?.message | truncate:60:'...'}}
+		  </div>
+		</ng-template>
+	  </ngx-datatable-column>
+	  
+	  <ngx-datatable-column *ngIf="isEbill" name="Status Update Date" [width]="50" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="date_of_service">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.created_at | date:commonService.slashDateFormat_MM_dd_yyyy() }}">
+		  {{row?.created_at | date:commonService.slashDateFormat_MM_dd_yyyy()}}
+		  </div>
+		  </ng-template>
+	  </ngx-datatable-column>
+	</ngx-datatable>
+</div>

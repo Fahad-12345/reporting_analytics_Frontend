@@ -1,0 +1,227 @@
+<form class="form" autocomplete="off" [formGroup]="addPayment">
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group mb-1">
+        <label for="check_date">Check Date*
+        </label>
+        <div class="d-block position-relative">
+          <input appDateOnly  type="text" class="form-control form-input mb-0 date-field" matInput [matDatepicker]="check_date" appInputDateMask
+            id="check_date" formControlName="check_date">
+          <mat-datepicker-toggle matSuffix [for]="check_date"></mat-datepicker-toggle>
+          <mat-datepicker #check_date></mat-datepicker>
+          <small class="form-text text-muted danger"
+            *ngIf="addPayment.get('check_date').errors?.required && (addPayment.get('check_date').dirty || addPayment.get('check_date').touched || submitted)">
+			This field is required
+          </small>
+          <!-- <small class="form-text text-muted danger"
+          *ngIf="addPayment.get('check_date').errors?.invalid_date && (addPayment.get('check_date').dirty || addPayment.get('check_date').touched || submitted)">
+          Please
+          enter valid check date (MM/DD/YYYY).
+        </small> -->
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-1">
+        <label for="check_no">Check No*
+        </label>
+        <input class="form-control mb-1" type="text" formControlName="check_no" [allowedLength]="49"
+          [currentValue]="addPayment.getRawValue()?.check_no" specficCharacterLengthDirective appBlockCopyPaste
+          notFirstCharactorSpace>
+        <small class="form-text text-muted danger check-no-margin"
+          *ngIf="addPayment.get('check_no').errors?.required && (addPayment.get('check_no').dirty || addPayment.get('check_no').touched || submitted)">
+		  This field is required
+        </small>
+        <small class="form-text text-muted danger"
+          *ngIf="addPayment.get('check_no').errors?.maxlength && (addPayment.get('check_no').dirty || addPayment.get('check_no').touched || submitted)">
+          Allowed only limit of 50 characters.
+        </small>
+        <small class="form-text text-muted danger"
+          *ngIf="addPayment.get('check_no').errors?.pattern && (addPayment.get('check_no').dirty || addPayment.get('check_no').touched || submitted)">
+          Please
+          enter valid check no.
+        </small>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+      <div class="form-group mb-2">
+        <label for="interest_amount">Check Amount:<sup>*</sup></label>
+        <input type="text" class="form-control currency mb-0" currencyMask formControlName="check_amount"
+          [options]="customCurrencyMaskConfig" (keydown.space)="$event.preventDefault()">
+        <i class="fa fa-dollar-sign"></i>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.controls['check_amount'].hasError('required')) && (addPayment.get('check_amount').dirty || addPayment.get('check_amount').touched || submitted) ">
+		  This field is required</small>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('check_amount').dirty || addPayment.get('check_amount').touched) && (addPayment.get('check_amount')?.errors?.max || addPayment.get('check_amount')?.errors?.min) && !addPayment.controls['check_amount'].hasError('required') ">Please
+          enter valid check
+          amount.</small>
+      </div>
+    </div>
+    <div class="col-md-12" *ngIf="showFieldAction(selectPaymentTypeAction.getFieldNameShow().showInterestAmount())">
+      <div class="form-group">
+        <label for="interest_amount">Interest Amount:<sup>*</sup></label>
+        <input type="text" class="form-control currency mb-0" formControlName="interest_amount" currencyMask
+          [options]="customCurrencyMaskConfig" (keydown.space)="$event.preventDefault()">
+        <i class="fa fa-dollar-sign"></i>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.controls['interest_amount'].hasError('required') || (interestAmountShow && addPayment.get('interest_amount').value === null ) ) && (addPayment.get('interest_amount').dirty || addPayment.get('interest_amount').touched) ">
+		  This field is required</small>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('interest_amount').dirty || addPayment.get('interest_amount').touched) && (addPayment.get('interest_amount')?.errors?.max || addPayment.get('interest_amount')?.errors?.min) && !addPayment.controls['interest_amount'].hasError('required') ">Please
+          enter valid interest
+          amount!</small>
+        <!-- <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('interest_amount').dirty || addPayment.get('interest_amount').touched) && (addPayment.get('interest_amount')?.value >  addPayment.get('check_amount')?.value) ">
+          Please interest amount should be less then to check amount!</small> -->
+      </div>
+    </div>
+
+    <!-- <div class="col-md-12" *ngIf="showFieldAction(selectPaymentTypeAction.getFieldNameShow().showBillAmount())">
+      <div class="form-group mb-2">
+        <label for="bill_amount">Bill Amount*</label>
+        <input type="text" class="form-control currency mb-0" formControlName="bill_amount" currencyMask
+          (keydown.space)="$event.preventDefault()" [options]="customCurrencyMaskConfig">
+        <i class="fa fa-dollar-sign"></i>
+        <small class="form-text text-muted danger"
+          *ngIf="addPayment.controls['bill_amount'].hasError('required') && (addPayment.get('bill_amount').dirty || addPayment.get('bill_amount').touched) ">Please
+          enter check amount.</small>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('bill_amount').dirty || addPayment.get('bill_amount').touched) && (addPayment.get('bill_amount')?.errors?.max || addPayment.get('bill_amount')?.errors?.min ) && !addPayment.controls['bill_amount'].hasError('required') ">Please
+          enter valid
+          amount.</small>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('bill_amount').dirty || addPayment.get('bill_amount').touched) && (addPayment.get('bill_amount')?.value >  addPayment.get('check_amount')?.value) ">
+          Please bill amount should be less then to check amount.</small>
+      </div>
+    </div> -->
+
+    <!-- <div class="col-md-12" *ngIf="showFieldAction(selectPaymentTypeAction.getFieldNameShow().showOverAmount())">
+      <div class="form-group mb-2">
+        <label for="check_amount">OverPayment Amount*</label>
+        <input type="text" class="form-control currency mb-0" formControlName="over_amount" currencyMask
+          (keydown.space)="$event.preventDefault()" [options]="customCurrencyMaskConfig">
+        <i class="fa fa-dollar-sign"></i>
+        <small class="form-text text-muted danger"
+          *ngIf="addPayment.controls['over_amount'].hasError('required') && (addPayment.get('over_amount').dirty || addPayment.get('over_amount').touched) ">Please
+          enter OverPayment amount.</small>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('over_amount').dirty || addPayment.get('over_amount').touched) && (addPayment.get('over_amount')?.errors?.max || addPayment.get('over_amount')?.errors?.min ) && !addPayment.controls['over_amount'].hasError('required') ">Please
+          enter valid
+          amount.</small>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('over_amount').dirty || addPayment.get('over_amount').touched) && (addPayment.get('over_amount')?.value >  addPayment.get('check_amount')?.value) ">
+          Please OverPayment amount should be less then to check amount.</small>
+      </div>
+    </div> -->
+    <div class="col-12">
+      <label for="types" class="text-capitalize">Payment Type*</label>
+      <div class="form-group mb-2" #paymentTypeRef>
+        <ng-multiselect-dropdown id="types" name="types" [settings]="bpDropdownSettingsPaymentType" [placeholder]="'Select Payment Type'"
+          [data]="paymentReceptionTypes" (onSelect)="onItemSelectReception($event)"
+          (onDeSelect)="onItemDeSelectReception($event)" (onSelectAll)="onSelectAllReception($event)"
+          (onDeSelectAll)="onItemDeSelectAllReception($event)" formControlName="types"
+           (click)="paymentFormValidation('paymentType')"
+           class="ng-select-ellipsis top-n3 d-block handle-arrow " [disabled]="addPayment.get('id').value">
+        </ng-multiselect-dropdown>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('types').errors?.required && payment_TypeClick ) || (!addPayment.get('types').value && submitted) ">
+		  This field is required
+        </small>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <label for="by_id" class="text-capitalize">Payment By*</label>
+      <div class="form-group mb-2" #paymentByRef>
+        <ng-multiselect-dropdown id="by_id" name="by_id"  [settings]="bpDropdownSettingsPayment" [placeholder]="'Select Payment By'" [data]="paidbyComingData"
+          formControlName="by_id"  (click)="paymentFormValidation('paymentBy')"
+          [class.disabled_custom]="disablePayment" class="ng-select-ellipsis top-n3 d-block" (onSelect)="getPaymentByInfo($event)"
+          >
+        </ng-multiselect-dropdown>
+        <h6 class="form-text text-success" *ngIf="addPayment.get('by_id').value  && !addPayment.get('by_id').errors?.required">
+          {{paymentByInfoMesg }}
+        </h6>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('by_id').errors?.required  && payment_ByClick) || (!addPayment.get('by_id').value && submitted)">
+		  This field is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12">
+      <label for="status_id" class="text-capitalize">Payment Status</label>
+      <div class="form-group mb-2" #paymentStatusRef>
+        <ng-multiselect-dropdown id="status_id" name="status_id"   [settings]="bpDropdownSettingsPayment" [placeholder]="'Select Payment Status'"
+          [data]="paymentStatusComingData" formControlName="status_id"
+          [class.disabled_custom]="disablePayment" class="ng-select-ellipsis top-n3 d-block">
+        </ng-multiselect-dropdown>
+        <!-- <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('status_id').errors?.required  && (addPayment.get('status_id').dirty || addPayment.get('status_id').touched ))">
+          Please
+          enter payment status.
+        </small> -->
+      </div>
+    </div>
+
+    <div class="col-12">
+      <label for="action_type_id" class="text-capitalize">Action Type*</label>
+      <div class="form-group mb-2" #actionTypeRef>
+        <ng-multiselect-dropdown id="action_type_id" name="action_type_id" [settings]="bpDropdownSettingsPayment" [placeholder]="'Select Action Type'"
+          [data]="actionTypeData" formControlName="action_type_id" 
+          (onSelect)="onItemSelect($event)" (click)="paymentFormValidation('actionType')"
+          [class.disabled_custom]="disablePayment" [disabled]="actionTypeDisabled"
+          class="ng-select-ellipsis top-n3 d-block">
+        </ng-multiselect-dropdown>
+        <small class="form-text text-muted danger"
+          *ngIf="(addPayment.get('action_type_id').errors?.required && payment_actionClick ) || (!addPayment.get('action_type_id').value && submitted)">
+		  This field is required
+        </small>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group mb-0">
+        <label for="description">Description</label>
+        <textarea class="form-control" rows="3" formControlName="description" style="margin-bottom: 8px;"
+          notFirstCharactorSpace></textarea>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group view-icon">
+        <label for="action_type">File Name</label>
+        <input class="form-control" type="text" formControlName="file_name">
+        <div *ngIf="paymentEditModel.getMediaExist()">
+          <a class="pdf-view">
+            <i class="icon-eye" (click)="viewDocFile(paymentEditModel.getMediaFileLink())"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-1">
+      <label style="vertical-align: middle; margin-top: 0;" for="file" class="pe-1 d-none">Choose File</label>
+      <input type="file" id="file" #file class="file file_style d-none" #pFile (click)="pFile.value = null"
+        (change)="handleFileInput($event.target.files)" accept="application/pdf" />
+      <label (click)="file.click()" for="file-upload" class="custom-file-upload btn btn-success text-white mb-2">
+        <i class="fa fa-upload" aria-hidden="true"></i> Upload a File
+      </label>
+      <span class="ms-2" *ngIf="!addPayment?.value?.id" style="word-break: break-all;">{{fileToUpload? fileToUpload.name
+        :null}}</span>
+      <span class="ms-2" *ngIf="addPayment?.value?.id" style="word-break: break-all;">{{fileToUpload? fileToUpload.name
+        : paymentEditModel.getMediaExist() ? addPayment.get('file_name').value : '' }} </span>
+
+    </div>
+
+    <div class="col-12 search-filter-block  mt-3">
+      <div class="row justify-content-center search-filter-btn mb-0">
+        <button class="btn btn-primary mx-2 mb-3" type="button" (click)="resetPayment()"
+          [disabled]="checkInputs()"> {{addPayment?.value?.id ? 'Cancel' : 'Clear' }}</button>
+        <button class="btn btn-success mx-2 mb-3" (click)="postPayments()"
+          [disabled]="addPayment.invalid">
+          {{(addPayment?.value?.id)?'Update':'Save'}} </button>
+
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- !addPayment.valid || (addPayment.get('interest_amount').value === null && interestAmountShow) || -->

@@ -1,0 +1,27 @@
+@import "../../../../../assets/sass/abstracts/variables/colors" ;
+
+::ng-deep .form {
+  .taxonomy-block {
+    .taxonomy-info {
+      ::ng-deep & > .form-group {
+        margin-bottom: 1rem;
+        .form-label {
+          transform: translateY(-1.4375rem);
+          margin-left: -0.5625rem;
+          font-size: 0.6875rem;
+          font-weight: 500;
+          color: $light-black !important;
+          width: 90%;
+        }
+        .chos-cross {
+          .select-cross-icon {
+            top: -12px;
+            right: 3px;
+            font-size: 10px;
+            color: $light-black;
+          }
+        }
+      }   
+    }
+  }
+}

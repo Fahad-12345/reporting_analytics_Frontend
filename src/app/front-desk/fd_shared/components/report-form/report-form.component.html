@@ -1,0 +1,13 @@
+<div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center">
+    <h6 class="color-blue">{{title}}
+    </h6>
+    <a class="success float-right" tooltip="Edit" (click)="enableForm(enableflag)">
+        <i class="icon-pencil"></i>
+    </a>
+</div>
+<div class="card-body mb-3">
+    <dynamic-form [fields]="fieldConfig">
+    </dynamic-form>
+
+
+</div>

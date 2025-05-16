@@ -1,0 +1,358 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="tab-pane fade show active" role="tabpanel"
+	*ngIf="aclService.hasPermission(userPermissions.master_visit_type_view)">
+	<div class="d-block text-end">
+		<button type="button" (keydown.enter)="$event.preventDefault()"
+			*ngIf="aclService.hasPermission(userPermissions.master_visit_type_add_new)"
+			class="btn btn-default round-btn" href="javascript:void(0)" data-bs-toggle="modal"
+			(click)="openModel(visittypeModel)" title="visit_type_new_add">
+			<span class="icon-plus-circle"></span> Add New 
+		</button>
+	</div>
+	<form class="form mb-2" autocomplete="off" [formGroup]="searchForm" *ngIf="aclService.hasPermission(userPermissions.master_visit_type_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-3" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+					<label class="form-label" for="name">Name</label>
+					<input type="text" id="name" class="form-control form-input" formControlName="name">
+				</div>
+				<div class="form-group">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'cpt_codes_ids'"
+						[showSelectFieldList]="selectedMultipleFieldFiter['cpt_codes_ids']"
+						[showSelectFieldOnRefresh]="searchForm.get('cpt_codes_ids').value" 
+						[lableName]="'CPT Codes'"
+						[bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'"
+						[conditionalExtraApiParamsForSelectedData]="{'cpt_codes_ids':searchForm.get('cpt_codes_ids').value}"
+						[bindId]="'id'" [apiPath]="EnumApiPath.get_cpt_list"  [conditionalExtraApiParams]="conditionalExtraApiParams"
+						(valueChange)="selectionOnValueChange($event,searchForm,'cpt_codes_ids')" 
+						[loadByDefaultApi]="true" [ngSelectShow]="true"
+						[multiple]="true" [conditionalExtraApiParamsForSelectedData]="{'cpt_codes_ids':searchForm.get('cpt_codes_ids').value}" >
+					</app-ng-select-shareable> 
+				</div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('description').value != '' && searchForm.get('description').value != null }">
+					<label class="form-label" for="description">Comments</label>
+					<input type="text" id="description" class="form-control form-input" formControlName="description">
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success" (click)="setPage({ offset: 0 });" title="visit_type_filter">Filter</button>
+				<button class="btn btn-primary" (click)="onResetFilter()" [disabled]="checkInputs()" title="visit_type_reset">Reset</button>
+			</div>
+		</div>
+	</form>
+	<!-- <div class="search-filter mb-2">
+		<div class="d-block">
+			<button type="button" (keydown.enter)="$event.preventDefault()"
+				*ngIf="aclService.hasPermission(userPermissions.master_visit_type_add_new)"
+				class="btn btn-default round-btn float-right" href="javascript:void(0)" data-bs-toggle="modal"
+				(click)="openModel(visittypeModel)">
+				<span class="icon-plus-circle"></span> Add New 
+			</button>
+		</div>
+		<form autocomplete="off" [formGroup]="searchForm"
+			*ngIf="aclService.hasPermission(userPermissions.master_visit_type_filter)">
+			<div class="form">
+				<div class="search-filter-body">
+					<div class="row">
+						<div class="col-12 col-lg-9 col-xl-10">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group field"
+										[ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+										<label class="form-label" for="name">Name</label>
+										<input type="text" id="name" class="form-control form-input"
+											formControlName="name">
+									</div>
+								</div>
+								<div  class="col-md-4">
+									<div class="form-group field">
+									<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'cpt_codes_ids'"
+														[showSelectFieldList]="selectedMultipleFieldFiter['cpt_codes_ids']"
+														 [showSelectFieldOnRefresh]="searchForm.get('cpt_codes_ids').value" 
+														 [lableName]="'CPT Codes'" [bindlable]="'CPTNameDescription'" [searchLableName]="'cpt_codes_ids'"
+														 [conditionalExtraApiParamsForSelectedData]="{'cpt_codes_ids':searchForm.get('cpt_codes_ids').value}"
+														 [bindId]="'id'" [apiPath]="EnumApiPath.get_cpt_list"  [conditionalExtraApiParams]="conditionalExtraApiParams"
+														 (valueChange)="selectionOnValueChange($event,searchForm,'cpt_codes_ids')" 
+														 [loadByDefaultApi]="true"
+										 				[multiple]="true" [conditionalExtraApiParamsForSelectedData]="{'cpt_codes_ids':searchForm.get('cpt_codes_ids').value}" ></app-ng-select-shareable> 
+									</div>
+								</div>   
+								<div class="col-sm-4">
+									<div class="form-group field"
+										[ngClass]="{'focused': searchForm.get('description').value != '' && searchForm.get('description').value != null }">
+										<label class="form-label" for="description">Comments</label>
+										<input type="text" id="description" class="form-control form-input"
+											formControlName="description">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-lg-3 col-xl-2">
+							<div class="row justify-content-center mb-3 mb-xl-0">
+								<div class="col-5 col-sm-3 col-md-2 col-lg-6 col-xl-6 align-self-center">
+									<button class="btn btn-success w-100 me-3" (click)="setPage({ offset: 0 });">
+										Filter
+									</button>
+								</div>
+								<div class="col-5 col-sm-3 col-md-2 col-lg-6 col-xl-6 align-self-center">
+									<button class="btn btn-primary w-100" (click)="searchFormReset()" [disabled]="checkInputs()">Reset</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div> -->
+
+	<div class="card data-table p-0 border-0">
+		<div class="row">
+			<div class="col-12 col-sm-6 edit-block text-start">
+				<div class="form-group field option-field mb-2 d-inline-block">
+					<ul>
+						<li>Show</li>
+						<li>
+
+							<select class="custom-select" name="limit" id="limit"
+								(change)="pageLimit($event.target.value)" [(ngModel)]="page.size">
+								<option [value]="10" selected>10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+				<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+					Customize Columns
+				</button>
+			</div>
+		</div>
+		<ngx-datatable #visitTypeList [rows]="visitingtypeData" [columnMode]='"force"' class='bootstrap action-icon action-bdg'
+			[footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false"
+			[externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+			[scrollbarH]="true" (page)="setPage($event)">
+
+			<ngx-datatable-column name="Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+ 			prop="name">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name}}" container="body">
+						{{row.name}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Short Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+			prop="qualifier">
+			   <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				   <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.qualifier}}" container="body">
+					   {{row.qualifier}}</div>
+			   </ng-template>
+		   </ngx-datatable-column>
+
+
+			<ngx-datatable-column name="CPT Codes" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+			prop="code_ids">
+		
+			   <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  <div *ngIf="row && row.code_ids && row.code_ids.length>0;else all">
+					<span class="badge badge-info tooltip-outer d-inline-block wrap-text" *ngFor="let cpt of row.code_ids"  tooltipClass="table-custom-tooltip" ngbTooltip="{{cpt.name +(cpt.description?' - '+cpt.description:'')}}" container="body">
+						{{cpt.name +(cpt.description?' - '+cpt.description:'')}}
+					</span>
+				</div>
+				<ng-template #all>
+					<div   class="action-icon">
+						<span class="badge badge-info tooltip-outer d-inline-block wrap-text"   tooltipClass="table-custom-tooltip" ngbTooltip="All" container="body">
+							All
+						</span>
+					</div>
+				</ng-template>
+				
+				
+			   </ng-template>
+		   </ngx-datatable-column>
+
+			<ngx-datatable-column name="Comments" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+ 			prop="description">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description ||'N/A'}}" container="body">
+						{{row.description ||'N/A'}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+			  
+			<ngx-datatable-column name="Actions" [width]="150" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+ 			cellClass="action-icon" [sortable]="false">
+				<ng-template ngx-datatable-header-template name="Actions">
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_visit_type_edit)"
+						(change)="$event ? masterToggle() : null"
+						[checked]="VisitTypeSelection.hasValue() && isAllSelected()"
+						[indeterminate]="VisitTypeSelection.hasValue() && !isAllSelected()" disabled>
+					</mat-checkbox>
+					Actions
+
+				</ng-template>
+
+				<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_visit_type_edit)"
+						(click)="$event.stopPropagation()" (change)="$event ? VisitTypeSelection.toggle(row) : null"
+						[checked]="VisitTypeSelection.isSelected(row)" disabled title="{{rowIndex}}-checkbox">
+					</mat-checkbox>
+
+					<a *ngIf="aclService.hasPermission(userPermissions.master_visit_type_edit)" class="edit-hov mx-1"
+						ngbTooltip="Edit" container="body" (click)="openModel(visittypeModel,row, rowIndex)" href="javascript:void(0)"
+						role="button" title="{{rowIndex}}-edit"><i class="icon-pencil"></i></a>
+
+						<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="visitTypeHistoryStats(row)">
+							<i class="fa fa-history"></i>
+						</a>
+				</ng-template>
+			</ngx-datatable-column>
+
+		</ngx-datatable>
+
+	</div>
+</div>
+<ng-template #visittypeModel let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">{{title}} Visit Type</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_visit_type" (click)="resetModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+		<form autocomplete="" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group field mb-1"
+						[ngClass]="{'focused': form.get('name')?.value != '' && form.get('name')?.value != null }">
+						<label for="visit_name" class="form-label">Visit Type Name*</label>
+						<input type="text" class="form-control mb-0" formControlName="name" id="visit_name" notFirstCharactorSpace>
+						<small class="form-text text-muted danger" *ngIf="form.get('name').errors?.required && 
+                            (form.get('name').dirty || form.get('name').touched)">This field is required</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group field mb-1"
+						[ngClass]="{'focused': form.get('qualifier')?.value != '' && form.get('qualifier')?.value != null }">
+						<label for="qualifier" class="form-label">Short Name*</label>
+						<input type="text" class="form-control mb-0" formControlName="qualifier" id="short_name"
+						[allowedLength] = "14"
+			             [currentValue] ="form.getRawValue()?.qualifier" specficCharacterLengthDirective 
+			           appBlockCopyPaste
+						notFirstCharactorSpace>
+						<small class="form-text text-muted danger" *ngIf="form.get('qualifier').errors?.required && 
+                            (form.get('qualifier').dirty || form.get('qualifier').touched)">This field is required</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				
+				<div  class="col-md-12">
+					<div class="form-group field mb-1 cpt-plc-hold search-label">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"   [filterFieldName]="'cpt_codes_ids'"
+										[showSelectFieldList]="selectedMultipleFieldFiter['cpt_codes_ids']"
+										 [showSelectFieldOnRefresh]="form.get('cpt_codes_ids').value"  [ngSelectShow]="true"
+										 [lableName]="'CPT Codes'" [bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'"
+										 [bindId]="'id'" [apiPath]="EnumApiPath.get_cpt_list"  [conditionalExtraApiParams]="conditionalExtraApiParams"
+										 (valueChange)="selectionOnValueChange($event,form,'cpt_codes_ids')" [loadByDefaultApi]="true"
+										 [multiple]="true" [forceApiHitonOpen]="true" placeholder="All" [conditionalExtraApiParamsForSelectedData]="{'cpt_codes_ids':form.get('cpt_codes_ids').value}"></app-ng-select-shareable> 
+					</div>
+				</div>   
+	
+			</div>
+			<div class="row">
+			<div class="col-md-6">
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" 
+				ngbTooltip="If enabled, the Reading Provider selection dropdown will become available while creating and updating an appointment.">
+					<mat-checkbox formControlName="is_reading_provider" id="is_reading_provider"> Reading Provider</mat-checkbox>
+				</div>
+
+			</div>
+			<div class="col-md-6">
+				<mat-checkbox formControlName="avoid_checkedin" id="avoid_checkedin"> 
+					<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" 
+					ngbTooltip="If enabled, the Providers/technicians would be able to initiate the appointment without checked-in patient from KIOSK.">
+						Avoid checked-in
+					</div>
+				</mat-checkbox>
+
+			</div>
+		</div>
+			<div class="row">
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" 
+					ngbTooltip="If enabled, the selected CPT codes will become visible while creating, updating, and viewing an appointment.">
+				<div class="col-md-12 right">
+						<mat-slide-toggle formControlName="enable_cpt_codes" id="enable_cpt_codes" [labelPosition]="'before'">Show CPT</mat-slide-toggle>
+					</div>
+
+				</div>
+
+			</div>
+
+			<div class="form-group row mb-2">
+				<div class="col-md-12">
+					<div class="form-group field mb-3"
+						[ngClass]="{'focused': form.get('description')?.value != '' && form.get('description').value != null }">
+						<label for="visit_description" class="form-label">Comments</label>
+						<textarea class="form-control mb-0" rows="3" formControlName="description" id="visit_description" 
+						[allowedLength] = "250"
+						[maxlength]="maxlength"
+						[currentValue] ="form.getRawValue()?.description" specficCharacterLengthDirective
+							 notFirstCharactorSpace></textarea>
+						<small class="form-text text-muted danger" *ngIf="form.get('description').errors?.required && 
+                            (form.get('description').dirty || form.get('description').touched)">Please enter
+							comments!</small>
+							<small class="form-text text-end f-w-600" >Remaining Characters:{{form?.get('description')?.value?.length}}/{{maxlength}}</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12 modal-btn-width text-center">
+					<button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+						(click)="resetModel()" title="visit_type_cancel">Cancel</button>
+					<button  type="submit" title="visit_type_submit" [disabled]="form.invalid || disableBtn" class="btn btn-success">{{buttonTitle}}</button>
+				</div>
+			</div>
+
+		</form>
+	</div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

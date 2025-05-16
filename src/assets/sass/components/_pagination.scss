@@ -1,0 +1,91 @@
+.custom-pagination {
+	background: $emperor;
+	justify-content: flex-end !important;
+	@include px-to-rem(font-size, 13px, false);
+	@include px-to-rem(height, 32px, false);
+	@include px-to-rem(margin-bottom, 0px, false);
+	@include padding-tb-lr(5px, 15px);
+	border-radius: 0px !important;
+
+	span {
+		color: $white;
+		float: left;
+		@include px-to-rem(font-size, 14px, false);
+	}
+
+	ul {
+		justify-content: flex-end !important;
+
+
+		li {
+			&.active {
+				a {
+					background: $picton-blue !important;
+					border: 1px solid $picton-blue !important;
+					line-height: 1.125rem;
+				}
+
+			}
+			&.disabled{
+				cursor: not-allowed;
+			}
+
+			.page-link {
+				color: $black;
+				@include px-to-rem(height, 21px, false);
+				min-width: 21.3125px;
+				border: none;
+				line-height: 1.25rem;
+				@include px-to-rem(padding, 0px 4px 0px 3px, false);
+				background: $white;
+				@include border-radius(3px);
+				@include px-to-rem(margin, 1px 3px 0px 3px, false);
+				text-align: center;
+
+			}
+		}
+	}
+
+	.pagination-first {
+		a {
+			@include px-to-rem(font-size, 0px, false);
+			&:before {
+				content: "\72";
+				@include custom-pagination-icon();
+			}
+		}
+	}
+
+	.pagination-prev {
+		a {
+			@include px-to-rem(font-size, 0px, false);
+			&:before {
+				content: "\6f";
+				@include custom-pagination-icon();
+			}
+		}
+	}
+
+	.pagination-next {
+		a {
+			@include px-to-rem(font-size, 0px, false);
+			&:before {
+				content: "\70";
+				@include custom-pagination-icon();
+			}
+		}
+	}
+
+	.pagination-last {
+		a {
+			@include px-to-rem(font-size, 0px, false);
+			&:before {
+				content: "\71";
+				@include custom-pagination-icon();
+			}
+		}
+	}
+
+}
+
+	

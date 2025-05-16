@@ -1,0 +1,104 @@
+@import "style";
+.angular-editor {
+    position: relative;
+     ::ng-deep [contenteditable=true]:empty:before {
+        content: attr(placeholder);
+        color: #868e96;
+        opacity: 1;
+    }
+    .angular-editor-wrapper {
+        position: relative;
+        .angular-editor-textarea {
+            min-height: 5rem;
+            padding: 0.5rem 0.8rem 1rem 0.8rem;
+            border: 1px solid #ddd;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            overflow-y: hidden;
+            word-break: break-all;
+            position: relative;
+            &:focus,
+            &.focus {}
+             ::ng-deep blockquote {
+                margin-left: 1rem;
+                border-left: 0.2em solid #dfe2e5;
+                padding-left: 0.5rem;
+            }
+        }
+        .angular-editor-textarea:before {
+            content: "\00a0"
+        }
+         ::ng-deep p {
+            margin-bottom: 0;
+        }
+        .angular-editor-placeholder {
+            display: none;
+            position: absolute;
+            top: 0;
+            padding: 0.5rem 0.8rem 1rem 0.9rem;
+            color: #6c757d;
+            opacity: 0.75;
+        }
+        &.show-placeholder {
+            .angular-editor-placeholder {
+                display: block;
+                font-size: 13px;
+            }
+        }
+        &.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+}
+
+.contextmenu {
+    position: absolute;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+}
+
+::ng-deep .ng-select .ng-arrow-wrapper {
+    width: 25px;
+    padding-right: 0 !important;
+}
+
+::ng-deep .gridster-item-content {
+    height: 100% !important;
+}
+
+::ng-deep .ng-auto {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    top: -15px;
+}
+
+.label-editor {
+    // background-color: #34c3ee;
+    // color: #fff;
+    // padding: 3px 6px;
+    // border-radius: 4px;
+    // margin-bottom: 0;
+    // font-size: 12px;
+    background-color: #34c3ee;
+    color: #fff;
+    padding: 3px 6px;
+    border-radius: 4px;
+    margin-bottom: 0;
+    font-size: 12px;
+    display: flex;
+}
+
+// ::ng-deep .bs-popover-left>.arrow::after {
+//     right: 1px;
+//     border-width: 0.5rem 0 0.5rem 0.5rem;
+//     border-left-color: #34c3ee !important;
+// }
+::ng-deep .my-custom-arrow .popover-arrow {
+    margin-top: -0.5rem;
+}
+
+.ng-autocomplete {
+    width: 100%;
+}

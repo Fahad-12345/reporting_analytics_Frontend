@@ -1,0 +1,90 @@
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end"><button class="btn btn-default btn-clear" (click)="clearFunc()">Clear</button></div>
+<div [ngClass]="{'disabled-column':(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)
+,'required-intellisense':!isFilled()}">
+    <div *ngIf="object.preDefind" class="column-content imran" id="test{{object.uicomponent_name}}" [ngClass]="{ 'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+        <div *ngIf="object.is_required" class="required-box"></div>
+
+        <p class="gridster-item-content" id="inputText1">Search {{object.preDefinedObj.title}}:</p>
+        <div class="form-group">
+            <div class="intellisense-box">
+                <div class="intellisene-field" (clickOutside)="closeResults()">
+                    <input id="intellisenseSearch" appendTo="body" [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)" class="form-control" placeholder="Search..."
+                        type="text" (click)="searchOptions($event)" (input)="searchOptions($event)" (keydown.enter)="addOption($event)" autocomplete="off">
+                    <div class="intellisense-results" [ngStyle]="( layoutService.editorView && !layoutService.isShowEditor) || (layoutService.isInstancePreview)  ? {'position':'unset'} : {'position' : 'absolute'}" *ngIf="object.searchData.length>0 && !resultClose" style="display: block;">
+                        <ul>
+                            <li *ngFor="let item of object.searchData; let i = index;">
+                                <a *ngIf="layoutService.editorView == false" (mousedown)="selectOption(item)" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.label)"></a>
+                                <a *ngIf="layoutService.editorView == true" (mousedown)="selectOption(item)" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.label)"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="input-group-prepend">
+                        <button class="input-group-text search-btn" type="submit"><span
+                                class="icon-search"></span></button>
+                    </div>
+                </div>
+                <div class="selected-items" *ngIf="object.answers.length>0">
+                    <ul>
+                        <li *ngFor="let item of object.answers; let i = index;">
+                            <a class="trash" [ngStyle]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui) ? {'pointer-events':'none'} : {'display' : 'inline-block'}" (click)="deleteOption(item)">
+                                <i class="fa fa-times"></i></a>
+                            <span [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.instanceLabel)"></span>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div *ngIf="!layoutService.isInstancePreview && !layoutService.editorView && object.preDefind"
+        class="column-content gridster-item-content" id="test{{object.uicomponent_name}}"
+        [ngClass]="{ 'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+        <div *ngIf="object.is_required" class="required-box"></div>
+        <p id="inputText{{object.uicomponent_name}}" style="font-weight:bold;" class="gridster-item-content"
+            [innerHTML]="object.preDefinedObj.title+': '">
+        </p>
+        <div *ngIf="!layoutService.isInstancePreview && !layoutService.editorView" class="form-group focus-field ">
+            <label class="control-label"></label>
+            <textarea  placeholder="Text will be filled during doctor evaluation"
+                type="text" class="form-control" disabled></textarea>
+        </div>
+    </div> -->
+    <div *ngIf="!object.preDefind" class="column-content" id="test{{object.uicomponent_name}}" [ngClass]="{ 'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+        <div *ngIf="object.is_required" class="required-box"></div>
+        <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [hidden]="object.isStatement == false || layoutService.editorView == false" (click)="textClick()" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+        </p>
+        <angular-editor [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)" *ngIf="object.isStatement == true && layoutService.editorView == false" class="ui-component-editor gridster-item-content "
+            id="{{object.uicomponent_name}}Editor" [(obj)]="object" [(ngModel)]="object.statement" (ngModelChange)="statementUpdate()">
+        </angular-editor>
+        <div class="form-group">
+            <div class="intellisense-box">
+                <div class="intellisene-field" (clickOutside)="closeResults()">
+                    <input [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)" id="intellisenseSearch2" class="form-control" placeholder="Search..." type="text" autocomplete="off"
+                        (click)="searchOptions($event)" (input)="searchOptions($event)" (keydown.enter)="addOption($event)">
+                    <div class="intellisense-results" *ngIf="object.searchData.length>0 && !resultClose" style="display: block;">
+                        <ul>
+                            <li *ngFor="let item of object.searchData; let i = index;">
+                                <a *ngIf="layoutService.editorView == false" (mousedown)="selectOption(item)" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.label)"></a>
+                                <a *ngIf="layoutService.editorView == true" (mousedown)="selectOption(item)" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.instanceLabel)"></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="input-group-prepend">
+                        <button class="input-group-text search-btn" type="submit"><span
+                                class="icon-search"></span></button>
+                    </div>
+                </div>
+                <div class="selected-items" *ngIf="object.answers.length>0">
+                    <ul>
+                        <li *ngFor="let item of object.answers; let i = index;">
+                            <a class="trash" [ngStyle]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui) ? {'pointer-events':'none'} : {'display' : 'inline-block'}" (click)="deleteOption(item)">
+                                <i class="fa fa-times"></i></a>
+                            <span [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.instanceLabel)"></span>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

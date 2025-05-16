@@ -1,0 +1,69 @@
+
+@media (max-width: 1440.98px) {
+    ::ng-deep.ngx-datatable {
+      &.bulk-add-bill-table {
+        ::ng-deep.datatable-header  {
+          ::ng-deep.datatable-header-cell {
+            ::ng-deep.datatable-header-cell-label {
+              line-height: 1.2 !important;
+              white-space: normal !important;
+          }
+          }
+        }
+      }
+    }
+  }
+  
+  .bulk-add-bill {
+    display: flex;
+    justify-content: flex-end;
+  
+    .btn {
+      min-width: 100px;
+    }
+  }
+  
+  
+    ::ng-deep .bulk-add-bill-table {
+      &.fixed-header {
+        .datatable-header {
+          background-color: #34c3ee;
+          .datatable-header-cell {
+            white-space: pre-wrap !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+  
+            .datatable-header-cell-label,
+            .datatable-header-cell-template-wrap {
+              line-height: 0.9125rem !important;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-wrap: wrap;
+              padding: 2px 0;
+  
+            }
+          }
+  
+        }
+        .datatable-body {
+          max-height: 250px;
+          overflow: hidden auto !important;
+        }
+      }
+    }
+  
+    .action-delete {
+      &[disabled] {
+        pointer-events: none;
+        opacity: 0.5;
+      }
+    }
+    
+    .datatable-overflow {
+      width: calc(100% - 20px);
+      padding: 0;
+      margin: 0 auto;
+    }
+

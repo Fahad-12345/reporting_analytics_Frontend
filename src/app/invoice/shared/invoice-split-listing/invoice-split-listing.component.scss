@@ -1,0 +1,64 @@
+.bill-detail-list li {
+  display: inline;
+  padding: 5px 20px 6px;
+  color: #00a650;
+  border-radius: 3px;
+  background: #f5f5f5;
+  margin: 5px 10px;
+
+  &:first-child {
+      margin-left: 0px;
+  }
+}
+
+::ng-deep .datatable-body-cell-label {
+  white-space: nowrap;
+  width: 95%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  .tooltip-outer {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+}
+
+.currency {
+  .fa-dollar-sign {
+    position: absolute;
+    bottom: 9px;
+    left: 10px;
+    font-size: 14px;
+    color: #5e5b5b;
+  }
+
+  .form-label {
+    left: 1.5rem;
+  }
+
+  &.focused {
+    .form-label {
+      margin-left: -1.5rem !important;
+    }
+  }
+
+  .form-control {
+    padding-left: 20px !important;
+  }
+}
+
+::ng-deep .modal-lg-package-generate {
+  .modal-dialog {
+    max-width: 52% !important;
+  }
+}
+
+::ng-deep .ngx-datatable {
+  &.invoice-listing-table {
+    .datatable-body-row {
+      & > div {
+        transform: translate3d(0, 0px, 0px) !important; 
+      }
+    }
+  }
+}

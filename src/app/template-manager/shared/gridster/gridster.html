@@ -1,0 +1,6 @@
+<div class="gridster-column" *ngFor="let column of gridColumns; let i = index;"
+	[ngStyle]="{height: gridRows.length * curRowHeight - $options.margin + 'px', width: curColWidth - $options.margin + 'px', transform: 'translateX(' + curColWidth * i + 'px)'}"></div>
+<div class="gridster-row" *ngFor="let row of gridRows; let i = index;" [ngStyle]="{width: gridColumns.length * curColWidth - $options.margin + 'px', height: curRowHeight - $options.margin + 'px', transform: 'translateY(' + curRowHeight * i + 'px)'}">
+</div>
+<ng-content></ng-content>
+<gridster-preview class="gridster-preview"></gridster-preview>

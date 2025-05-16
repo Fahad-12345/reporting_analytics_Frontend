@@ -1,0 +1,43 @@
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end">
+    <button class="btn btn-default btn-clear" (click)="clearFunc()">Clear</button>
+</div>
+<div [ngClass]="{'disabled-column':(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)
+,'required-checkbox':!isFilled()}">
+    <div id="test{{object.uicomponent_name}}" class="column-content layout-fix" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+
+        <div *ngIf="object.is_required" class="required-box"></div>
+        <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [hidden]="object.isStatement == false || layoutService.editorView == false" (click)="textClick()" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+        </p>
+        <angular-editor *ngIf="object.isStatement == true && layoutService.editorView == false" [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)" class="ui-component-editor gridster-item-content "
+            id="{{object.uicomponent_name}}Editor" [(obj)]="object" [(ngModel)]="object.statement" (ngModelChange)="statementUpdate()">
+        </angular-editor>
+        <div class="checkboxes-list">
+            <div *ngFor="let option of object.options ; let i = index" class="gridster-item-content">
+                <label class="checkbox" [ngClass]="{'no-labelOption':option?.label.length===0}" (click)="optionSelect(object.options, i, $event)">
+				<input type="checkbox" id="abc" [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)" [checked]="option?.selected == true">
+				<span class="fake-input position-absolute"></span>
+      			<span *ngIf="object.displayOption && layoutService.editorView == false" class="fake-label d-block" style="white-space: pre;" for="abc" [innerHTML]="sanitizer.bypassSecurityTrustHtml(option?.label)"></span>
+				<span *ngIf="object.displayOption && layoutService.editorView == true" class="fake-label d-block" style="white-space: pre;" for="abc" [innerHTML]="sanitizer.bypassSecurityTrustHtml(option?.instanceLabel)"></span>
+				<span *ngIf="!object.displayOption" class="fake-label d-block" for="abc">&nbsp;</span>
+			</label>
+                <div class="checkbox-value">
+                    <angular-editor [ngClass]="{'inputBold': option.isBold, 'inputItalic': option.isItalic,'inputUnderline': option.isUnderLine,'inputLeftAlign': option.isAlign==1,'inputCenterAlign': option.isAlign==2,'inputRightAlign': option.isAlign==3
+            ,'inputJustify': option.isAlign==4,'inputFont1': option.fontSize==1,'inputFont2': option.fontSize==2,'inputFont3': option.fontSize==3,'inputFont4': option.fontSize==4,'inputFont5': option.fontSize==5
+          ,'inputFont6': option.fontSize==6,'inputFont7': option.fontSize==7}" [(obj)]="object" *ngIf="option.input && !option.validationValue?.type" [(placeholder)]="option.commentsPlaceholder" id="commentsField{{object.uicomponent_name}}{{i}}" [disabled]="option?.selected == false || (object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)"
+                        type="text" [(ngModel)]="option.inputValue" [(style.height.px)]="option.height" maxlength={{object.maxCharLength}} (change)="addComments($event, i)" (keyup)="addComments($event, i)" class="gridster-item-content"></angular-editor>
+                    <input [ngClass]="{'inputBold': option.isBold, 'inputItalic': option.isItalic,'inputUnderline': option.isUnderLine,'inputLeftAlign': option.isAlign==1,'inputCenterAlign': option.isAlign==2,'inputRightAlign': option.isAlign==3
+          ,'inputJustify': option.isAlign==4,'inputFont1': option.fontSize==1,'inputFont2': option.fontSize==2,'inputFont3': option.fontSize==3,'inputFont4': option.fontSize==4,'inputFont5': option.fontSize==5
+        ,'inputFont6': option.fontSize==6,'inputFont7': option.fontSize==7}" *ngIf="option.validationValue?.type && (option.validationValue?.type!='number') " type="{{option.validationValue?.type}}" id="commentsField{{object.uicomponent_name}}{{i}}"
+                        min="{{option.minLimit}}" max="{{option.maxLimit}}" [disabled]="option?.selected == false || (object.selected_linked_ui_component != object.linked_ui && !object.is_single_select)
+            || (!object.selected_linked_ui_component && object.linked_ui)" [(style.height.px)]="option.height" class="form-control gridster-item-content" maxlength='1000' (change)="addComments($event, i)" (keyup)="addComments($event, i)" [(ngModel)]="option.inputValue">
+                    <input [ngClass]="{'inputBold': option.isBold, 'inputItalic': option.isItalic,'inputUnderline': option.isUnderLine,'inputLeftAlign': option.isAlign==1,'inputCenterAlign': option.isAlign==2,'inputRightAlign': option.isAlign==3
+          ,'inputJustify': option.isAlign==4,'inputFont1': option.fontSize==1,'inputFont2': option.fontSize==2,'inputFont3': option.fontSize==3,'inputFont4': option.fontSize==4,'inputFont5': option.fontSize==5
+        ,'inputFont6': option.fontSize==6,'inputFont7': option.fontSize==7}" *ngIf="option.validationValue?.type && option.validationValue?.type=='number' " type="{{option.validationValue?.type}}" id="commentsField{{object.uicomponent_name}}{{i}}" min="{{option.minLimit}}"
+                        max="{{option.maxLimit}}" [disabled]="option?.selected == false || (object.selected_linked_ui_component != object.linked_ui && !object.is_single_select)
+            || (!object.selected_linked_ui_component && object.linked_ui)" placeholder="{{option.commentsPlaceholder}}" [(style.height.px)]="option.height" class="form-control gridster-item-content" maxlength='1000' (change)="addComments($event, i)"
+                        (keyup)="addComments($event, i)" [(ngModel)]="option.inputValue" (blur)="onBlur($event, i)">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

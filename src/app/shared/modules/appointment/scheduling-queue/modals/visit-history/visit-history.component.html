@@ -1,0 +1,208 @@
+<div class="modal-header" style="background-color: #4b4b4b;color: #fff;padding: 8px 15px;font-size: 18px;">
+	<h4 class="modal-title" style="text-align: center;">Patient/Case History</h4>
+	<button style="background-color: #4b4b4b;color: #fff" type="button" class="close" data-dismiss="modal"
+		(click)="activeModal.close()">&times;</button>
+</div>
+<form style="height:100%">
+	<div class="modal-body px-3">
+		<div class="row">
+
+			<div class="col-md-6 col-lg-4 col-xl-3">
+				<label class="title" for="">Practice-Location</label>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="selectedPracticLocation">
+					<select class="form-select select" [ngModelOptions]="{standalone: true}" (change)="changePracticeLocation($event)" [(ngModel)]="clinicFilter"
+					>
+					<option value='' selected ></option>
+					<option value={{clinic.id}} *ngFor="let clinic of allClinics" title="{{clinic.facility_full_name}}">
+						{{clinic.qualifier}}
+					</option>
+				</select>
+				</span>
+			</div>
+			<div class="col-md-6 col-lg-4 col-xl-3">
+				<label class="title" for="">Specialty</label>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="selectedSpecialityName">
+					<select class="form-select select" [ngModelOptions]="{standalone: true}" (change)="changeSpeciality($event)" [(ngModel)]="specFilter"
+					>
+					<option value='' selected ></option>
+					<option *ngFor="let spec of allSpeciality; let i=index" value={{spec.id}} title="{{spec.name}}">
+						{{spec.qualifier}}
+					</option>
+				</select>
+				</span>
+			</div>
+
+			<div class="col-md-6 col-lg-4 col-xl-3">
+
+					<app-mat-date-picker-sharedable [classesName]="['form-group','field', 'vertical-label-cross']" [lableName]="'Date'"(valueChange)="onChangeDate($event)" [defaultDate]="date"  [placeholder]="''" ></app-mat-date-picker-sharedable>
+
+			</div>
+			<div class="col-md-6 col-lg-4 col-xl-3">
+				<label class="title" for="">Appointment Status</label>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left">
+					<select class="form-select select" [ngModelOptions]="{standalone: true}" [(ngModel)]="appStatusFilter">
+						<option value='' selected ></option>
+						<option *ngFor="let st of allowedAppointmentStatus; let i=index" value={{st.id}}>
+							{{st.name}}
+						</option>
+					</select>
+				</span>
+			</div>
+			<div class="col-md-6 col-lg-4 col-xl-3">
+				<label class="title" for="">Visit Status</label>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+					<select class="form-select select" [ngModelOptions]="{standalone: true}" [(ngModel)]="visitStatusFilter">
+						<option value='' selected ></option>
+						<option *ngFor="let st of allowedVisitStatus; let i=index" value={{st.id}}>
+							{{st.name}}
+						</option>
+					</select>
+				</span>
+			</div>
+			<div class="col-md-6 col-lg-4 col-xl-3 checkboxes">
+				<label>
+					<input type="checkbox"  [ngModelOptions]="{standalone: true}" [(ngModel)]="isCancelledAppoint"/>
+
+					<span>Cancelled Appointments</span></label>
+			</div>
+			
+		</div>
+	
+		<div class="row" >
+			<div class="col-md-12 text-center search-filter-btn mt-3">
+				<button class="btn btn-primary mt-0 me-3" type="button" (click) = "resetFilter()" > Reset</button>
+				<button class="btn btn-success mt-0 " type="submit" (click) = "applyFilter()" > Filter
+				</button>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-md-12 edit-block px-2 mt-2 mb-1">
+				<div class="form-group field option-field mb-2 d-inline-block">
+					<ul class="title">
+						<li>Show</li>
+						<li>
+							<select class="custom-select" [ngModelOptions]="{standalone: true}"
+								style="height:28px !important" [(ngModel)]="this.page.size"
+								(change)="changeNoOfEntries($event.target.value)">
+								<option value="10">10</option>
+								<option value="20">20</option>
+								<option value="30">30</option>
+								<option value="40">40</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				 <ngx-datatable class="bootstrap scroll-hide" [rows]="data" [columnMode]="'force'" [headerHeight]="50"
+					[footerHeight]="50" [rowHeight]="'auto'" [limit]="page?.size" [scrollbarH]="true" [count]="page.totalElements"
+					(page)="changePage($event)" [offset]="page.pageNumber" [externalPaging]="true">
+					  <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Date" prop="id" [width]="60">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Date
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+							ngbTooltip="{{row?.scheduled_date_time |CurrentTimeZonePipe:storageData:this.storageData | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+							{{row?.scheduled_date_time |CurrentTimeZonePipe:storageData:this.storageData| date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+						</div>
+							
+
+						</ng-template>
+					</ngx-datatable-column>
+					<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Time" prop="id" [width]="50">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Time
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+							ngbTooltip="{{row?.scheduled_date_time |CurrentTimeZonePipe:storageData:this.storageData | date: datePipeService.hourMinAmPmTimeFormat()}}">
+							{{row?.scheduled_date_time|CurrentTimeZonePipe:storageData:this.storageData| date: datePipeService.hourMinAmPmTimeFormat()}}
+						</div>
+						</ng-template>
+					</ngx-datatable-column>
+				 <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Status" prop="id" [width]="90">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Appt. Status
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div  class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+								ngbTooltip="{{row?.appointment_status_name ? row?.appointment_status_name : 'N/A'}}">
+								{{row?.appointment_status_name ? row?.appointment_status_name : 'N/A'}}
+							</div>
+						</ng-template>
+					</ngx-datatable-column>
+				<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Status" prop="id" [width]="80">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Visit Status
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+								ngbTooltip="{{row?.visit_status_name ? row?.visit_status_name : 'N/A'}}">
+								{{row?.visit_status_name ? row?.visit_status_name : 'N/A'}}
+							</div>
+						</ng-template>
+					</ngx-datatable-column>
+							<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Reason" prop="id" [width]="130">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Cancellation Reason
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+								ngbTooltip="{{row?.cancelled && row?.cancelled_comments ? row?.cancelled_comments :row?.pushed_to_front_desk && row?.pushed_to_front_desk_comments?row.pushed_to_front_desk_comments: 'N/A'}}">
+								{{row?.cancelled && row?.cancelled_comments ? row?.cancelled_comments :row?.pushed_to_front_desk && row?.pushed_to_front_desk_comments?row.pushed_to_front_desk_comments: 'N/A'}}
+							</div>
+						</ng-template>
+					</ngx-datatable-column>
+					 <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Specialty" prop="id" [width]="75">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Specialty
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+								<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+								ngbTooltip="{{row?.speciality_name}}">
+								{{row?.speciality_qualifier?row?.speciality_qualifier:'N/A'}}
+							</div>	
+						</ng-template>
+					</ngx-datatable-column>
+				<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider" prop="id" [width]="65">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Provider
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div *ngIf="row?.doctor_first_name" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+								ngbTooltip="{{row.doctor_first_name}} {{row.middle_name?row.middle_name+' ':''}}{{row.doctor_last_name}}">
+								{{row.doctor_first_name}} {{row.middle_name?row.middle_name+' ':''}}{{row.doctor_last_name}}		
+							</div>
+
+							<div *ngIf="!row?.doctor_first_name">
+								N/A
+							</div>
+						</ng-template>
+
+					</ngx-datatable-column>
+					 	<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Clinic" prop="id" [width]="120">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Practice Location
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				
+							<div *ngIf="row?.facility_qualifier" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+								ngbTooltip="{{row?.facility_name}} - {{row?.facility_location_name}}">
+								{{row?.facility_qualifier}} - {{row?.facility_location_qualifier}}
+							</div>
+									<div *ngIf="!row?.facility_qualifier"  class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+									ngbTooltip="N/A">
+									N/A</div>
+						</ng-template>
+					</ngx-datatable-column> 
+				</ngx-datatable> 
+			</div>
+
+		</div>
+	</div>
+</form>
+<!-- modal end -->

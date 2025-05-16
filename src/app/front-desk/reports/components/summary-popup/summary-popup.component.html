@@ -1,0 +1,27 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title">Select Option</h5>
+    <button type="button" class="close" (click)="activeModal.close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-group">
+      <label>
+        <input type="checkbox" [(ngModel)]="facility" (change)="onCheckboxChange('facility')">
+        <span class="fake-label ms-3">Export on Practice Level</span>
+      </label>
+    </div>
+    <div class="form-group">
+      <label>
+        <input type="checkbox" [(ngModel)]="facility_location" (change)="onCheckboxChange('facility_location')">
+        <span class="fake-label ms-3">Export on Practice Location Level</span>
+      </label>
+    </div>
+
+    <div class="text-center">
+      <button (click)="save()" class="btn btn-success">Save & Continue</button>
+    </div>
+  </div>
+</div>

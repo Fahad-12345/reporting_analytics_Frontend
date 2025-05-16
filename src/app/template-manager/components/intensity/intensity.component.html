@@ -1,0 +1,36 @@
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end"><button class="btn btn-default btn-clear" (click)="clearFunc()">Clear</button></div>
+<div [ngClass]="{'disabled-column':(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)}">
+
+    <div class="column-content active-column" [ngClass]="{ 'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+        <div *ngIf="object.is_required" class="required-box"></div>
+        <!-- <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [hidden]="object.isStatement == true && layoutService.editorView == false" (click)="textClick()" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+    </p> -->
+        <angular-editor [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui) " *ngIf="object.isStatement == true && layoutService.editorView == false" class="ui-component-editor gridster-item-content "
+            id="{{object.uicomponent_name}}Editor" [(obj)]="object" [(ngModel)]="object.statement" (ngModelChange)="statementUpdate()">
+        </angular-editor>
+        <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [hidden]="object.isStatement == false || layoutService.editorView == false" (click)="textClick()" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+        </p>
+        <!-- <input id="inputTextArea{{object.uicomponent_name}}" type="text" class="form-control gridster-item-content"
+		*ngIf="editText && !layoutService.editorView && object.isStatement == true" (clickOutside)="textAreaClick()"
+		[(ngModel)]="boundStatement">  -->
+
+
+        <div class="d-flex justify-content-center align-items-center ">
+            <span class="me-2 intensity-label">{{object.minLabel}}</span>
+
+            <span class="me-2">{{object.options.floor}}</span>
+            <form class="w-100">
+                <div class="gridster-item-content">
+                    <ngx-slider *ngIf="((object.selected_linked_ui_component == object.linked_ui) || (object.selected_linked_ui_component && object.linked_ui && object.is_single_select)) && !(object.readOnly)" [(value)]="object.value" [(options)]="options" (valueChange)="valueChange($event)">
+                    </ngx-slider>
+                    <ngx-slider *ngIf="!(((object.selected_linked_ui_component == object.linked_ui) || (object.selected_linked_ui_component && object.linked_ui && object.is_single_select)) && !(object.readOnly))" [(value)]="object.value" [(options)]="options2" (valueChange)="valueChange($event)">
+                    </ngx-slider>
+                </div>
+            </form>
+            <span class="ms-2">{{object.options.ceil}}</span>
+            <span class="ms-2 intensity-label">{{object.maxLabel}}</span>
+        </div>
+
+
+    </div>
+</div>

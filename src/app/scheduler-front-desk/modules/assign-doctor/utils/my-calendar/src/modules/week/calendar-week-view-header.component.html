@@ -1,0 +1,32 @@
+<ng-template #defaultTemplate let-days="days" let-locale="locale" let-dayHeaderClicked="dayHeaderClicked"
+  let-eventDropped="eventDropped">
+  <div class="cal-day-headers" style="border-bottom: none !important;">
+    <!-- empty cell -->
+    <div class="cal-header" style="width: 95px !important; min-width: 95px; flex: none !important;"
+      [hidden]="clinicIndex != 0">
+    </div>
+    <!-- weekdays -->
+    <!-- <div class="cal-header" *ngFor="let day of days; trackBy:trackByWeekDayHeaderDate" [class.cal-past]="day.isPast"
+      [class.cal-today]="day.isToday" [class.cal-future]="day.isFuture" [class.cal-weekend]="day.isWeekend"
+      style="width: 118px !important; flex: none !important;" (mwlClick)="dayHeaderClicked.emit({day: day})"
+      mwlDroppable dragOverClass="cal-drag-over"
+      (drop)="eventDropped.emit({event: $event.dropData.event, newStart: day.date})">
+      <div>{{ day.date.toString().substring(0,3) }}</div>
+      <span>{{ day.date | calendarDate:'weekViewColumnSubHeader':locale }}</span>
+      {{day.cssClass}}
+	</div> -->
+	
+	<div class="cal-header" *ngFor="let day of days; trackBy:trackByWeekDayHeaderDate" [class.cal-past]="day.isPast"
+      [class.cal-today]="day.isToday" [class.cal-future]="day.isFuture" 
+      style="width: 118px !important; flex: none !important;" (mwlClick)="dayHeaderClicked.emit({day: day})"
+      mwlDroppable dragOverClass="cal-drag-over"
+      (drop)="eventDropped.emit({event: $event.dropData.event, newStart: day.date})">
+      <div>{{ day.date.toString().substring(0,3) }}</div>
+      <span>{{ day.date | calendarDate:'weekViewColumnSubHeader':locale }}</span>
+      {{day.cssClass}}
+    </div>
+  </div>
+</ng-template>
+<ng-template [ngTemplateOutlet]="customTemplate || defaultTemplate"
+  [ngTemplateOutletContext]="{days: days, locale: locale, dayHeaderClicked: dayHeaderClicked, eventDropped: eventDropped}">
+</ng-template>

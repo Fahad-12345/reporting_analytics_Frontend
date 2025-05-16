@@ -1,0 +1,19 @@
+// Width mixin px to rem
+@mixin width($width) {
+    width: calc($width / $base-px-value) + rem;
+}
+
+// Height mixin px to rem
+@mixin height($height) {
+    height: calc($height / $base-px-value) + rem;
+}
+
+// Sizing shortcuts
+@mixin size($width, $height) {
+	width: $width;
+	height: $height;
+}
+
+@mixin square($size) {
+	@include size($size, $size);
+}

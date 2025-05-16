@@ -1,0 +1,300 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="edit-block align-items-end align-items-sm-center">
+                <h6 class="float-left color-blue">{{title}} </h6>
+                <div class="float-right custom-tooltip-hov">
+                    <a href="javascript:void(0)" data-original-title="Edit" tooltip="Edit"
+                        (click)="enableForm(enableflag)">
+                        <i class="icon-pencil"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="card-bod">
+                <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                    <div class="form" action="#">
+
+                        <div class="row fields-holder">
+
+                            <div class="col-12 col-xl-8">
+                                <div class="form-group radio-block in-stop-work in-md-radio">
+                                    <span class="float-md-left">Had prior surgery or operation(e.g., arthroscopy,
+                                        endoscopy, etc.) of any kind? *</span>
+                                    <ul class="list-inline float-md-right">
+                                        <li class="list-inline-item">
+                                            <label for="hadSurgery_yes" class="d-block position-relative m-0">
+                                                <input id="hadSurgery_yes" checked="checked" type="radio" [value]="true"
+                                                    formControlName="hadSurgery" (click)="addSurgeryItems()">
+                                                <span class="fake-input position-absolute"></span>
+                                                <span class="fake-label d-block">Yes</span>
+                                            </label>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <label for="treatedOnSite_no" class="d-block position-relative m-0">
+                                                <input id="treatedOnSite_no" checked="checked" type="radio"
+                                                    [value]="false" formControlName="hadSurgery"
+                                                    (click)="clearSurgeryItems()">
+                                                <span class="fake-input position-absolute"></span>
+                                                <span class="fake-label d-block">No</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                    <small class="alert-text form-text text-muted danger position-absolute"
+                                        *ngIf="!form.get('hadSurgery').valid && (form.get('hadSurgery').dirty || form.get('hadSurgery').touched)">Please
+                                        select any option!</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="form.get('hadSurgery').value == true">
+                            <div class="mb-3 bordered pb-3 bg-white">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <a (click)="addSurgeryItems()" class="btn btn-primary color-white"><i
+                                                class="icon-plus me-2"></i> Add New</a>
+                                    </div>
+                                </div>
+                                <div class="row mt-3" formArrayName="prevSurgArr"
+                                    *ngFor="let surgery of form['controls'].prevSurgArr['controls']; let i=index;">
+                                    <div [formGroupName]="i" class="col-12">
+                                        <div class="row fields-holder"
+                                            [ngClass]="{'focused': surgery.get('dateOfSurgery').value != null }">
+                                            <div class="col-12 col-sm-6 col-md-6 col-xl-2 align-self-top">
+                                                <div class="form-group field option-field mb-xl-2">
+                                                    <label for="dateOfSurgery-{{i}}" class="form-label">Date of
+                                                        Surgery</label>
+                                                    <input type="date" id="dateOfSurgery-{{i}}"
+                                                        class="form-control form-input" formControlName="dateOfSurgery">
+                                                    <small class="form-text text-muted danger"
+                                                        *ngIf="!surgery.get('dateOfSurgery').valid && (surgery.get('dateOfSurgery').dirty || surgery.get('dateOfSurgery').touched)">This
+                                                        field is required!</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6 col-md-6 col-xl-3 align-self-top">
+                                                <div class="form-group mb-xl-2">
+                                                    <label for="typeOfSurgeryId-{{i}}" class="form-label">Type of
+                                                        Surgery</label>
+                                                    <select formControlName="typeOfSurgeryId" class="custom-select">
+                                                        <option value="">Select Type of Surgery</option>
+                                                        <option *ngFor="let type of surgicalTypes" [value]="type.id">
+                                                            {{ type.name }}</option>
+                                                    </select>
+                                                    <small class="form-text text-muted danger"
+                                                        *ngIf="!surgery.get('typeOfSurgeryId').valid && (surgery.get('typeOfSurgeryId').dirty || surgery.get('typeOfSurgeryId').touched)">This
+                                                        field is required!</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-xl-7 pe-4 pe-md-5 align-self-top custom-tooltip-hov">
+                                                <div class="form-group radio-block in-stop-work in-md-radio mb-md-2">
+                                                    <span class="float-md-left">Was this surgery related to the body
+                                                        part being tested today?</span>
+                                                    <ul class="list-inline float-md-right">
+                                                        <li class="list-inline-item">
+                                                            <label for="surgeryTestedToday_yes_{{i}}"
+                                                                class="d-block position-relative m-0">
+                                                                <input id="surgeryTestedToday_yes_{{i}}"
+                                                                    checked="checked" type="radio" [value]="true"
+                                                                    formControlName="surgeryTestedToday">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">Yes</span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <label for="surgeryTestedToday_no_{{i}}"
+                                                                class="d-block position-relative m-0">
+                                                                <input id="surgeryTestedToday_no_{{i}}"
+                                                                    checked="checked" type="radio" [value]="false"
+                                                                    formControlName="surgeryTestedToday">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">No</span>
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                    <small
+                                                        class="alert-text form-text text-muted danger position-absolute"
+                                                        *ngIf="!surgery.get('surgeryTestedToday').valid && (surgery.get('surgeryTestedToday').dirty || surgery.get('surgeryTestedToday').touched)">Please
+                                                        any on option!</small>
+                                                </div>
+                                                <a href="javascript:coid(0);"
+                                                    class="remove-btn position-absolute pt-1 pe-0 pe-md-2"
+                                                    tooltip="Delete" style="top: 0; right: 0;"
+                                                    (click)="removeSurgeryItem(i)"><i class="icon-remove"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+
+                        <div class="row mt-1 fields-holder">
+                            <div class="col-12 col-xl-8">
+                                <div class="form-group radio-block in-stop-work in-md-radio">
+                                    <span class="float-md-left">Prior diagnostic imaging study or examination (MRI, CT,
+                                        Ultarsound , X-Ray) *</span>
+                                    <ul class="list-inline float-md-right">
+                                        <li class="list-inline-item">
+                                            <label for="hadExamination_yes" class="d-block position-relative m-0">
+                                                <input id="hadExamination_yes" checked="checked" type="radio"
+                                                    [value]="true" formControlName="hadExamination"
+                                                    (click)="addDiagnosticItem()">
+                                                <span class="fake-input position-absolute"></span>
+                                                <span class="fake-label d-block">Yes</span>
+                                            </label>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <label for="hadExamination_no" class="d-block position-relative m-0">
+                                                <input id="hadExamination_no" checked="checked" type="radio"
+                                                    [value]="false" formControlName="hadExamination"
+                                                    (click)="clearExamationItems()">
+                                                <span class="fake-input position-absolute"></span>
+                                                <span class="fake-label d-block">No</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                    <small class="alert-text form-text text-muted danger position-absolute"
+                                        *ngIf="!form.get('hadExamination').valid && (form.get('hadExamination').dirty || form.get('hadExamination').touched)">Please
+                                        any on option!</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="form.get('hadExamination').value == true">
+                            <div class="mb-3 bordered pb-3 bg-white">
+                                <div class="row">
+                                    <div class="col-12 mb-3 float-right">
+                                        <a (click)="addDiagnosticItem()" class="btn btn-primary color-white">
+                                            <i class="icon-plus me-2"></i> Add New
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row mt-3" formArrayName="surgeryExaminationArr"
+                                    *ngFor="let diagnostic of form['controls'].surgeryExaminationArr['controls']; let i=index;">
+                                    <div [formGroupName]="i" class="col-12">
+                                        <div class="row fields-holder"
+                                            [ngClass]="{'focused': diagnostic.get('typeOfStudy').value != null}">
+                                            <div class="col-12 col-sm-6 align-self-top">
+                                                <div class="form-group field option-field mb-md-2">
+                                                    <label for="typeOfStudy-{{i}}" class="form-label">Type of
+                                                        Study</label>
+                                                    <input type="text" id="typeOfStudy-{{i}}"
+                                                        class="form-control form-input" formControlName="typeOfStudy">
+                                                    <small class="form-text text-muted danger"
+                                                        *ngIf="!diagnostic.get('typeOfStudy').valid && (diagnostic.get('typeOfStudy').dirty || diagnostic.get('typeOfStudy').touched)">This
+                                                        field is required!</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6 pe-4 pe-md-5 custom-tooltip-hov">
+                                                <div class="form-group field mb-2">
+                                                    <label for="bodyPartId" class="form-label">Body Part</label>
+                                                    <select formControlName="bodyPartId" id="bodyPartId"
+                                                        class="custom-select">
+                                                        <option value="">Select Type of Surgery</option>
+                                                        <option *ngFor="let part of bodyParts" [value]="part.id">
+                                                            {{ part.name }}</option>
+                                                    </select>
+                                                    <small class="form-text text-muted danger"
+                                                        *ngIf="!diagnostic.get('bodyPartId').valid && (diagnostic.get('bodyPartId').dirty || diagnostic.get('bodyPartId').touched)">This
+                                                        field is required!</small>
+
+                                                </div>
+                                                <a href="javascript:coid(0);"
+                                                    class="remove-btn position-absolute pt-1 pe-0 pe-md-2"
+                                                    style="top: 0; right: 0;" tooltip="Delete"
+                                                    (click)="removeDiagnosticItem(i)"><i class="icon-remove"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <div class="row fields-holder">
+                            <div class="col-12 col-xl-8">
+                                <div class="form-group radio-block in-stop-work in-md-radio mb-0">
+                                    <span class="float-md-left">Experienced an18y problem related to a previous mri
+                                        examination or mri procedure? *</span>
+                                    <ul class="list-inline float-md-right">
+                                        <li class="list-inline-item">
+                                            <label for="experiencedProblem_yes" class="d-block position-relative m-0">
+                                                <input id="experiencedProblem_yes" checked="checked" type="radio"
+                                                    [value]="true" formControlName="experiencedProblem">
+                                                <span class="fake-input position-absolute"></span>
+                                                <span class="fake-label d-block">Yes</span>
+                                            </label>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <label for="experiencedProblem_no" class="d-block position-relative m-0">
+                                                <input id="experiencedProblem_no" checked="checked" type="radio"
+                                                    [value]="false" formControlName="experiencedProblem"
+                                                    (change)="clearDescriptions()">
+                                                <span class="fake-input position-absolute"></span>
+                                                <span class="fake-label d-block">No</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                    <small class="alert-text form-text text-muted danger position-absolute"
+                                        *ngIf="!form.get('experiencedProblem').valid && (form.get('experiencedProblem').dirty || form.get('experiencedProblem').touched)">Please
+                                        any on option!</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="form.get('experiencedProblem').value == true">
+                            <div class="bordered pb-0 bg-white mt-2 mb-1">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="row fields-holder">
+                                            <div class="col-12 col-sm-8 col-md-9 col-lg-10">
+                                                <div class="form-group field mb-3"
+                                                    [ngClass]="{'focused': form.get('description').value != '' && form.get('description').value != null }">
+                                                    <label for="description" class="form-label">Describe
+                                                        Diagnostics</label>
+                                                    <input type="text" id="description" class="form-control form-input"
+                                                        formControlName="description">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+                                                <a (click)="addDescription(form.get('description').value)"
+                                                    class="btn btn-primary color-white">
+                                                    <i class="icon-plus me-2"></i> Add New
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngIf="form['controls'].expProblemArr['controls'].length > 0">
+                                            <div class="col-12">
+                                                <ul class="types-list list-inline description-lists mb-3">
+                                                    <li class="list-inline-item"
+                                                        *ngFor="let description of form['controls'].expProblemArr['controls']; let i=index">
+                                                        {{ description.value }} <a
+                                                            class="float-right remove-desription-btn"
+                                                            (click)="removeDescription(i)"><i
+                                                                class="icon-remove me-2"></i></a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <div class="row form-btn justify-content-center" *ngIf="formEnabled">
+                            <div class="col-9 col-sm-5 col-md-4 col-lg-3 col-xl-2 text-center">
+                                <a href="javascript:void(0)" class="btn btn-primary w-100"
+                                    (click)="disableForm()"><span class="icon-left-arrow me-1"></span> Back</a>
+                            </div>
+                            <div class="col-9 col-sm-5 col-md-4 col-lg-3 col-xl-2 text-center">
+                                <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                                        class="icon-save-continue me-1"></span>
+                                    {{ disableBtn == false ? 'Save & Continue' : 'Please Wait...' }}</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,100 @@
+@import '../../../../../assets/sass/abstracts/variables/colors';
+.main-panel {
+	max-height: 250px;
+	overflow-y: scroll;
+  }
+.example-chip-list {
+	::ng-deep &.mat-mdc-form-field {
+		width: 100% !important;
+		margin-top: 0px;
+	
+		&.mat-focused .mat-mdc-form-field-label {
+			color: #17a2b8;
+		}
+	}
+	
+	::ng-deep .mat-mdc-form-field-flex {
+		border-radius: 4px;
+		padding: 3px 5px 1px;
+		background: #fff !important;
+		min-height: 30px;
+		
+		@media only screen and (min-width: 1600px) {
+			min-height: 32px;
+		  }
+	}
+	
+	::ng-deep .mat-mdc-chip-input {
+		padding-left: 10px;
+	}
+
+	::ng-deep .mat-mdc-form-field-label {
+		margin-top: 7px;
+	}
+	::ng-deep .mat-mdc-form-field-infix {
+		border-top: 0px;
+		padding: .2em 0;
+		
+	label {
+		font-weight: 500;
+		font-size: .75rem;
+		margin-bottom: 0;
+		width: -webkit-fit-content !important;
+		padding: 0 5px;
+		background: #fff;
+		margin-top: 2px;
+	}
+	
+	}
+	
+	::ng-deep .mat-mdc-form-field-underline {
+		display: none;
+	}
+	
+	::ng-deep .mat-chip-list-wrapper input.mat-mdc-input-element {
+		font-size: 14px;
+		margin-left: 0px;
+	}
+
+	::ng-deep .mat-mdc-text-field-wrapper {
+		padding-bottom: 12px;
+	}
+	}
+	::ng-deep .mat-cr-ui {
+		.mat-mdc-option {
+		  border-bottom: 1px solid $abbey;
+		  :where(.mdc-form-field) {
+			label {
+			  padding-left: 12px;
+			}
+		  }
+		}    
+	}
+	::ng-deep .mat-mdc-option {
+		pointer-events: none;
+		.mdc-list-item__primary-text {
+		  font-size: 0.75em !important;
+		  pointer-events: auto;
+		}
+	  }
+	.chip-list-outer {
+		margin-bottom: 20px;
+    	display: flex;
+		flex-wrap: wrap;
+	
+	::ng-deep .mat-mdc-chip {
+		padding: 3px 13px 3px 15px;
+		font-size: 12px;
+		background: #ebf5ff;
+		box-shadow: 0 1px 4px #4f4c4c3d;
+		min-height: 30px;
+		margin: 5px 10px 20px 0px;
+		float: left;
+	
+		.mat-mdc-chip-remove.mat-icon {
+			width: 13px;
+			height: 13px;
+			font-size: 15px;
+			}
+		}
+	}

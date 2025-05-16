@@ -1,0 +1,186 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div *ngIf="aclService.hasPermission(userPermissions.master_referring_physician_view) || 
+aclService.hasPermission(userPermissions.master_referring_physician_add_new) || 
+aclService.hasPermission(userPermissions.master_referring_physician_edit) || 
+aclService.hasPermission(userPermissions.master_referring_physician_delete)">
+<div class="search-filter">
+	<div class="d-block" *ngIf="aclService.hasPermission(userPermissions.master_referring_physician_add_new)">
+		<button class="btn btn-default round-btn float-right" (click)="getPhysicianByID(null,PhysicianModal,action.ADD)">
+			<span class="icon-plus-circle"></span> Add New
+		</button>
+	</div>
+	<app-physician-filter (onFilterPhysicianList)="get_filtered_data($event)">
+	</app-physician-filter>
+</div>
+<div class="data-table">
+	<div class="row mt-2">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit"
+							(change)="setPhysicianPageSize($event.target.value)" [(ngModel)]="physicianPage.size">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+			<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+				Customize Columns
+			  </button>
+			<button *ngIf="selection.selected.length && aclService.hasPermission(userPermissions.master_referring_physician_delete)" type="button"
+			class="btn btn-primary mx-2 mb-2 mb-sm-0 float-right" (click)="Delete_all()">
+			Delete {{selection.selected.length ==  physicianList?.result?.data?.length ? 'All' : ''}} [{{selection.selected.length}}]
+			</button>
+		</div>
+	</div>
+	<ngx-datatable class="bootstrap" #phyList [rows]="physicianList?.result?.data" [columnMode]='"force"' [footerHeight]="50"
+	[rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+		[count]="physicianList?.result?.total" (page)="setReactionPageNumber($event)" [offset]="physicianOffSet"
+		[limit]="physicianPage.size">
+		<ngx-datatable-column name="Referring Name" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" [width]="150">
+			<ng-template let-row="row" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.first_name }} {{row.middle_name }} {{row.last_name }}" container="body">
+					{{row.first_name }} {{row.middle_name }} {{row.last_name }}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Clinic/ Practice Name" prop="clinics"
+		[width]="200" cellClass="action-icon">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		  <span class="badge badge-info tooltip-outer d-inline-block wrap-text" *ngFor="let clinic of row.clinics" container="body" tooltipClass="table-custom-tooltip"
+		  ngbTooltip="{{clinic && clinic.clinic && clinic.clinic.name ? clinic.clinic.name : 'N/A'}}" container="body">
+		  {{clinic && clinic.clinic && clinic.clinic.name ? clinic.clinic.name : 'N/A'}}
+		  </span>
+      <span class="badge badge-info tooltip-outer d-inline-block wrap-text" *ngFor="let facility of row.facilities" container="body" tooltipClass="table-custom-tooltip"
+		  ngbTooltip="{{facility && facility.facility && facility.facility.name ? facility.facility.name : 'N/A'}}" container="body">
+		  {{facility && facility.facility && facility.facility.qualifier ? facility.facility.qualifier : 'N/A'}}
+		  </span>
+		</ng-template>
+	  </ngx-datatable-column>
+	  <ngx-datatable-column name="Cell Number" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+	  [resizeable]="false" prop="cell_no" [width]="100">
+	  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+			  ngbTooltip="{{value ||'N/A' | phoneFormatPipe}}" container="body">
+			  {{value ||'N/A' | phoneFormatPipe}}</div>
+	  </ng-template>
+  </ngx-datatable-column>
+		<ngx-datatable-column name="Email" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="email" [width]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="NPI" [sortable]="false" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" prop="npi_no" [width]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="License No." [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="license_no" [width]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Specialty" prop="specialities"
+		[width]="110" cellClass="action-icon">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		  <span class="badge badge-info tooltip-outer d-inline-block wrap-text" *ngFor="let speciality of row.specialities" container="body" tooltipClass="table-custom-tooltip"
+		  ngbTooltip="{{speciality && speciality.speciality && speciality.speciality.name ? speciality.speciality.name : 'N/A'}}"container="body">
+		  {{speciality && speciality.speciality && speciality.speciality.name ? speciality.speciality.name : 'N/A'}}
+		  </span>
+		</ng-template>
+	  </ngx-datatable-column>
+
+		<ngx-datatable-column name="Actions" sortable="false" prop="id" cellClass="action-icon" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false">
+			<ng-template ngx-datatable-header-template name="Actions">
+
+				<mat-checkbox id="selectall" class="selectall" (change)="$event ? physicianMasterToggle() : null"
+					[checked]="selection.hasValue() && isphysicianAllSelected()"
+					[indeterminate]="selection.hasValue() && !isphysicianAllSelected()">
+				</mat-checkbox>
+				Actions
+			</ng-template>
+			<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+				<mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+					[checked]="selection.isSelected(row)">
+				</mat-checkbox>
+				<!-- VIEW BUTTON -->
+				<!-- <a class="mx-1 view-hov" ngbTooltip="View" container="body" href="javascript:void(0)" role="button"
+					(click)="getPhysicianByID(row,PhysicianModal,action.VIEW)"><i class="icon-eye"></i></a> -->
+				<!-- EDIT BUTTON CURRENTLY NOT REQUIRED -->
+				<a *ngIf="aclService.hasPermission(userPermissions.master_referring_physician_edit)"
+					class="mx-1 edit-hov" ngbTooltip="Edit" container="body" href="javascript:void(0)" role="button"
+					(click)="getPhysicianByID(row,PhysicianModal,action.EDIT)"><i class="icon-pencil"></i>
+				</a>
+					<!-- history icon -->
+				<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="physicianHistoryStats(row)">
+					<i class="fa fa-history"></i>
+				</a>
+				<!-- DELETE BUTTON CURRENTLY NOT REQUIRED -->
+				<a  *ngIf="aclService.hasPermission(userPermissions.master_referring_physician_delete)"
+					class="mx-1 remove-hov me-1" ngbTooltip="Delete" container="body" href="javascript:void(0)"
+					role="button" (click)="getPhysicianByID(row,PhysicianModal,action.DELETE)"><i
+					class="icon-remove"></i>
+				</a>
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>
+</div>
+<ng-template #PhysicianModal let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-static-name" class="modal-title text-capitalize">{{physicianDetail.action}} Referring Physician</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<app-physician-add-edit [physicianDetail]="physicianDetail"></app-physician-add-edit>
+	</div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

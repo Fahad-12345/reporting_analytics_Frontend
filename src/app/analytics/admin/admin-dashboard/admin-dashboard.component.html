@@ -1,0 +1,249 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<div class="container mt-4" >
+<div class="header-container-dashboard d-flex align-items-center">
+  <div class="heading">{{pageTitle}}</div>
+  <div class="button-container-dashboard ms-auto">
+    <app-dashboard-switch [checkedButton]="this.dashboard.Admin"></app-dashboard-switch>
+  </div>
+</div>
+
+<app-global-filters (selectedFilterVal)="onCaptureFilterSelectEvent($event)"></app-global-filters>
+  <app-summery-stats [filters]="filters" *ngIf="filters != undefined"></app-summery-stats>
+  <div class="row  mt-3">
+    <div class="col-4">
+      <div class="card admin">
+        <div class="card-body">
+          <div class="billed-title-wrap d-flex justify-content-between">
+            <div class="billed-title">Billed Amount vs Check Amount 
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This graph shows the correlation between the “Amount Billed” over a certain period of time and the “Check Amount” against that billed amount in the same time. Data in this graph is shown according to “billed date”. Check Amount is “Checked Amount” from the system. The “Bill Recipient” dropdown in the chart lets you filter data further according to bill recipient types."
+              container="body"> <img  class="info-graph" src="assets/icons/info.svg" alt=""><img id="csv-icon" (click)="billedvsRecivedPayment()"  class="info-graph" src="assets/icons/share.svg" alt=""></span>     
+                </div>          
+            <div class="dropdown me-1">
+              <select class="btn btn-light dropdown-toggle drops dropdown-options top-margin " (change)="onDropDownSelect($event.target.value,2)">
+                <option *ngIf="dropDownFlagBvP"  value="" disabled selected>Bill Recipient</option>
+                <option class="dropdown-item drop-options" value="All">All</option>
+                <option class="dropdown-item drop-options" *ngFor="let option of dropDownOptions"
+                  value="{{option?.value}}">{{option?.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="billed-img" >
+            <canvas  id="billAmountCanvas">{{billedAmountChart}}</canvas>
+          </div>
+          <div class="total-amounts">
+            <div class="total-amnt-text ms-2">
+                <span class="title">Total Billed Amount:</span> <span class="amount">{{totalBilledAmount | currency }}</span>
+                <span class="title">Total Check Amount:</span> <span>{{totalPaymentReceived | currency}}</span>
+            </div>
+        </div>
+        
+        </div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div class="card admin">
+        <div class="card-body">
+          <div class="sum-billed-wrap d-flex justify-content-between mb-2">
+          <div class="claim-heading-name mb-1">Claims Overview
+            <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This table offers a comprehensive overview of the different types of bill journeys. The claim status in the table shows the different status at which a billed amount resides within the system. The value at the top of the table in bold indicates the total ‘Billed Amount’ against the bill recipient selected from the drop down, which is calculated according to the “billed date”. The progress bar under it refers to the total payments received which is the ‘Checked Amount’ against the bill recipient also calculated according to the “billed date”. The table shows the number of claims against each status along with their respective claim amount. The claim amount is the total ‘Billed Amount’ of each status calculated against the bill recipient chosen. The bill recipient drop down includes “All, Insurance, Patient, Employer and Law Firm”. 
+             "container="body"><img  class="info-graph" src="assets/icons/info.svg" alt=""><img id="csv-icon" (click)="claimsOverview()"  class="summary-icons" src="assets/icons/share.svg" alt=""></span>          
+          </div> 
+          <div class="dropdown me-1">
+            <select class="btn btn-light dropdown-toggle drops dropdown-options top-margin" (change)="onDropDownSelect($event.target.value,3)">
+              <option *ngIf="dropDownFlagBvP"  value="" disabled selected>Bill Recipient</option>
+              <option class="dropdown-item drop-options" value="All">All</option>
+              <option class="dropdown-item drop-options" *ngFor="let option of dropDownOptions"
+                value="{{option?.value}}">{{option?.name}}</option>
+            </select>
+          </div>  
+        </div>       
+          <div class="claim-subheading mb-3">Total Claim Amount</div>
+          <div class="claim-sub-amount mb-2">{{billed | currency:'$'}}</div>
+          <div class="claim-progress-bar mb-4">
+            <div class="progress">
+              <div class="progress-bar" role="progressbar" [style.width]="paidPercent ? paidPercent+'%' : 0"
+                aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{paidPercent ? paidPercent : 0}}%</div>
+            </div>
+          </div>
+          <div class="claim-typet">
+            <app-dynamic-table [rows]="claimOverViewRowsData" [columns]="claimOverViewColumns" [tableType]="'claim_overview'"></app-dynamic-table>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <div class="col-3">
+      <div class="card admin">
+        <div class="card-body">
+          <div class="billed-title-wrap d-flex justify-content-between">
+            <div class="top-billed-title">Top 10 Billing {{specialityTitle}}
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="A list of the top ten billed specialties and providers in descending order.
+              A list of the top ten billed specialties and providers in descending order. The list comprises of the top ten specialties or individual providers that generate the highest billed amount, arranged in descending order. The “Billed Amount” is calculated according to the “Billed Date”. This list and donut chart offer valuable insights into the distribution of billing amounts across different specialties or individual providers according to the filters selected. 
+              " container="body"><img  class="info-graph" src="assets/icons/info.svg" alt=""><img id="csv-icon" (click)="topBillingSpecialities()"  class="summary-icons" src="assets/icons/share.svg" alt=""></span>
+            </div>
+            <div class="dropdown  float-right pb-0">
+              <select class="btn btn-light dropdown-toggle drops dropdown-options top-margin"
+                (change)="onSelectTopTenBillingAmountType()" [(ngModel)]="billingAmountType">
+                <option class="dropdown-item drop-options" value="Specialities">Specialties</option>
+                <option class="dropdown-item drop-options" value="Providers">Providers</option>
+              </select>
+            </div>
+          </div>
+          <div class="billed-speciality-img mt-2 d-flex justify-content-center">
+            <canvas id="billedBySpecialtyChartCanvas">{{billedBySpecialtyChart}}</canvas>
+          </div>
+          <div class="billed-speciality-section mt-3 ">
+            <ul class="list-group billed-list">
+              <div class="billed-list-title d-flex justify-content-between pe-2 ps-4 pt-2 pb-1">
+               
+                <li *ngIf="billingAmountType == 'Specialities'" >Specialty</li>
+                <li *ngIf="billingAmountType == 'Providers'" >Providers</li>
+                <li>Billed Amount</li>
+            </div>
+              <li *ngFor="let speciality of specialitiesdata"
+                class="list-group-item d-flex justify-content-between align-items-center tooltip-outer" tooltipClass="table-custom-tooltip"
+                container="body" ngbTooltip="{{speciality?.name}}"
+                [disableTooltip]="speciality?.name?.length <= 12 ">
+                <div class="left-content">
+                  <i
+                    [style.color]="speciality?.backGroundColor"
+                    class="fa fa-solid fa-square "></i>        
+                   
+                      {{speciality?.name | truncate : 12 }}
+
+                </div>
+                    
+                    <div class="right-content">
+                      {{speciality?.amount | currency:'$'}}
+                  </div>
+
+        
+                    
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-4">
+      <div class="card admin">
+        <div class="card-body">
+          <div class="highest-paying d-flex justify-content-between ">
+            <div class="highest-paying-heading">
+              Highest Paying {{SelectedPayer['payer_type_name']}}
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows a list of the top ten payers along with the bill count and their total amount in reference to the payer.  The payer information is according to the option selected from the dropdown, the information shown can be against the insurance, firm, employer or patient. The number of bills shows the total bills calculated according to the “Checked Date” and the total amount on the other hand shows the “Checked Amount” of those bills.
+              " container="body"><img  class="info-graph" src="assets/icons/info.svg" alt=""><img id="csv-icon" (click)="highestPayer()"  class="summary-icons" src="assets/icons/share.svg" alt=""></span>           
+            </div>
+              <div class="highest-paying-selector">
+              <div class="dropdown me-1">
+
+                <select class=" btn btn-light dropdown-toggle drops dropdown-options top-margin "
+                  (change)="onDropDownHighestPayerSelect($event.target.value)">
+                  <option class="dropdown-itemdrop-options drop-options" value="1">Patient</option>
+                  <option class="dropdown-itemdrop-options drop-options" value="2" selected>Insurance</option>
+                  <option class="dropdown-itemdrop-options drop-options" value="3">Firm</option>
+                  <option class="dropdown-itemdrop-options drop-options" value="4">Employer</option>
+
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="highest-paying-list mt-5" >
+            <app-dynamic-table [rows]="SelectedPayer['payer_data']" [columns]="highestPayerColumn" ></app-dynamic-table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-5">
+      <div class="card admin">
+        <div class="card-body">
+      
+            <div class="sum-billed-wrap d-flex justify-content-between mb-2">
+              <div class="heading-sum-billed-amt mt-2">Account Receivables Aging
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This bar graph shows the ‘Outstanding Amount’ according to the selected bill recipient. The bill recipient dropdown lets you filter data further according to bill recipient types. The bill recipient drop down includes “All, Insurance, Patient, Employer and Law Firm”. The “Outstanding Amount” is calculated according to the “Billed Date”. The graphs purpose is to show aging of the bill calculated by using the current date. However, the outstanding amount of the bills will be those that have been created within the time stamp selected by the user. 
+                 " container="body"><img class="info-graph" src="assets/icons/info.svg" alt=""><img id="csv-icon" (click)="accoutReceivableAging()"  class="summary-icons" src="assets/icons/share.svg" alt=""></span>              
+              </div>              
+              <div class="dropdown me-1 mt-2">
+                <select class="btn btn-light dropdown-toggle drops dropdown-options top-margin" (change)="onDropDownSelect($event.target.value,1)">
+                  <option *ngIf="dropDownFlagAmounts" value="" disabled selected>Bill Recipient</option>
+                  <option class="dropdown-item drop-options" value="All">All</option>
+                  <option class="dropdown-item drop-options" *ngFor="let option of dropDownOptions"
+                    value="{{option?.value}}">{{option?.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="sum-billed-section" >
+              <canvas id="amountCaseWiseTypeCanvas" >{{amountCaseWiseTypeChart}}</canvas>
+            </div>
+          
+        </div>
+      </div>
+    </div>
+    <!-- <div class="col-3">
+      <div class="card">
+        <div class="card-body">
+          <div class="revenue-heading">Revenue by Location
+            <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="A list of the locations arranged in descending order, providing insights on the revenue they generate. Each location has a progress bar that shows their particular amount against the total amount of revenue generated by all the locations.  " container="body"><img  class="info-graph" src="assets/icons/info.svg" alt=""></span>          </div>
+          <div class="revenue-list mt-5">
+            <ul class="list-group list-group-flush revenue-group">
+              <div class="revenue-list-titles d-flex justify-content-between ps-3 pe-3 pt-3">
+                <li>Location</li>
+                <li>Revenue</li>
+
+              </div>
+              <li class="list-group-item " *ngFor="let location of revenueData">
+                <div class="revenue-wrap d-flex justify-content-between ">
+                  <div class="revenue-name">
+                    {{location.facility_qualifier}} - {{ location.facility_location_name }}
+                  </div>
+                  <div class="revenue-num">${{ location.revenue | number : '1.2-2' }}</div>
+                </div>
+                <div class="progress progress-revenue">
+                  <mat-progress-bar mode="determinate" [value]="calculateProgressBarValue(location.revenue, location.facility_location_id)"
+                    [color]="'#6c7ac6'"></mat-progress-bar>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+    <div class="col-3">
+      <div class="card admin">
+        <div class="card-body">
+          <div class="revenue-heading">Revenue by Location
+            <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="A list of the locations arranged in descending order, providing insights on the revenue they generate. The revenue shows the “Payments Received” by a location which is the “Checked Amount” calculated according to the “Billed Date”. Each location has a progress bar that shows its particular amount against the total amount of revenue generated by all the locations. The list also provides an insight of the “Billed Amount” on hover of each location which is calculated according to the “Billed Date”.  "
+              container="body"><img class="info-graph" src="assets/icons/info.svg" alt=""><img id="csv-icon" (click)="revenueByLocation()"  class="summary-icons" src="assets/icons/share.svg" alt=""></span>
+          </div>
+          <div class="revenue-list mt-5">
+            <ul class="list-group list-group-flush revenue-group">
+              <div class="revenue-list-titles d-flex justify-content-between ps-3 pe-3 pt-3">
+                <li>Location</li>
+                <li>Revenue</li>
+              </div>
+              <li class="list-group-item" *ngFor="let location of revenueData">
+                <div class="revenue-wrap d-flex justify-content-between" (mouseover)="showBilled(location)" (mouseout)="hideBilled(location)">
+                  <div class="revenue-name">
+                    {{location.facility_qualifier}} - {{location.facility_location_name}}
+                  </div>
+                  <div class="revenue-num">${{location.revenue | number : '1.2-2'}}</div>
+                </div>
+                <div class="progress progress-revenue" >
+                  <mat-progress-bar mode="determinate" [value]="calculateProgressBarValue(location.revenue, location.facility_location_id)"
+                    [color]="'#6c7ac6'"></mat-progress-bar>
+                  <div *ngIf="location.showBilledValue" class="tooltipRevenue">Billed Amount = {{location.billed_amount | currency}}</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+
+  </div>
+</div>

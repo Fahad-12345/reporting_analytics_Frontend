@@ -1,0 +1,104 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="row firm-data-table">
+	<div class="col-12">
+		<div class="edit-block">
+			<div class="float-right mt-2" *ngIf="aclService.hasPermission(userPermissions.master_clinic_add_new)">
+				<button class="btn btn-primary round-btn ms-2" type="button" [hidden]=btnhide
+					(click)="addSecondayLocation()"> <i class="icon-plus-circle"></i> Add
+					Location</button>
+			</div>
+		</div>
+	</div>
+	<div class="col-12">
+		<ngx-datatable class='bootstrap scroll-hide custom-scroll-x' [rows]="allLocationsOfClinic" [columnMode]='"force"'
+			[footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false">
+			<ngx-datatable-column name="Street Address" [sortable]="false" [width]="100" prop="street_address" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A'}}">
+						<span>{{value || 'N/A'}}</span>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Suite/Floor
+			" [sortable]="false" [width]="80" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="floor">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value?value : 'N/A' }}">
+						<span>{{value?value : 'N/A' }}</span>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="City" [sortable]="false" prop="city" [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A'}}">
+						<span>{{value || 'N/A'}}</span>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="State" [sortable]="false" prop="state" [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A'}}">
+						<span>{{value || 'N/A'}}</span>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Zip" [sortable]="false" prop="zip" [width]="50" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A'}}">
+						{{value || 'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Phone No" [sortable]="false" prop="phone" [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A' | phoneFormatPipe}}">
+						{{value || 'N/A' | phoneFormatPipe}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Extension" [sortable]="false" prop="fax" [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="extension">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A'}}">
+						{{value || 'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Fax" [sortable]="false" prop="fax" [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="fax">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A' | phoneFormatPipe}}">
+						{{value || 'N/A' | phoneFormatPipe}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			
+
+			<ngx-datatable-column name="Email" [sortable]="false" prop="email" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A'}}">
+						<span>{{value || 'N/A'}}</span>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Actions" [width]="80" [sortable]="false" cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-header-template name="Actions">
+					Actions
+				</ng-template>
+
+				<ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+					<mat-slide-toggle class="me-2" tooltip="Location Status" [(ngModel)]="row.status" [labelPosition]="'before'" (change)="changeStatus(row,$event)"></mat-slide-toggle>
+					<a	*ngIf="aclService.hasPermission(userPermissions.master_clinic_edit)"
+						class="edit-hov mx-1" tooltip="Edit" (click)="getSingleClinicWithSingleLocation(row)"
+						href="javascript:void(0)" role="button"><i class="icon-pencil"></i>
+					</a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="clinicHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+	</div>
+
+</div>
+

@@ -1,0 +1,252 @@
+<div class="col-12">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-center custom-tooltip-hov">
+                    <h1 class="card-title text-white m-0">{{title}}
+                        <a class="success p-0 float-right text-white" href="javascript:void(0)" tooltip="Edit"
+                            (click)="enableForm(enableflag)">
+                            <i class="icon-pencil me-2"></i>
+                        </a>
+                    </h1>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                        <div class="form" action="#">
+
+                            <div class="row mt-3 fields-holder">
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('accidentDate').value != '' && form.get('accidentDate').value != null }">
+                                        <label for="accidentDate" class="form-label">Accident Date *</label>
+                                        <input type="date" id="accidentDate" class="form-control form-input"
+                                            formControlName="accidentDate">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="form.get('accidentDate').errors?.required && (form.get('accidentDate').dirty || form.get('accidentDate').touched)">Please
+                                            enter Date of Accident!</small>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('accidentTime').value != '' && form.get('accidentTime').value != null }">
+                                        <label for="accidentTime" class="form-label">Accident Time</label>
+                                        <input type="time" id="accidentTime" class="form-control form-input"
+                                            formControlName="accidentTime">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fields-holder">
+                                <div class="col-xl-12 col-lg-12">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('caseEstablished').value != ''}">
+                                        <label for="caseEstablished" class="form-label">Case Established? *</label>
+                                        <input type="text" id="caseEstablished" class="form-control form-input"
+                                            formControlName="caseEstablished">
+                                        <!-- <small class="form-text text-muted danger" *ngIf="form.get('caseEstablished').errors?.required && (form.get('caseEstablished').dirty || form.get('caseEstablished').touched)">This field is required!</small> -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fields-holder">
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-group">
+                                        <span class="d-block">Taxi or Limo Driver? *</span>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <label for="limoDriver" class="d-block position-relative m-0">
+                                                    <input id="limoDriver" checked="checked" type="radio"
+                                                        value="Limo Driver" formControlName="limoDriver">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Limo Driver</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="taxiDriver" class="d-block position-relative m-0">
+                                                    <input id="taxiDriver" checked="checked" type="radio"
+                                                        value="Taxi Driver" formControlName="limoDriver">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Taxi Driver</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="!form.get('limoDriver').valid && (form.get('limoDriver').dirty || form.get('limoDriver').touched)">Please
+                                            select Limo Driver Option!</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-group">
+                                        <span class="d-block">Have you had an Independent Medical Examination (IME)?
+                                            *</span>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <label for="ime_yes" class="d-block position-relative m-0">
+                                                    <input id="ime_yes" checked="checked" type="radio" value="true"
+                                                        formControlName="ime">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Yes</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="ime_no" class="d-block position-relative m-0">
+                                                    <input id="ime_no" checked="checked" type="radio" value="false"
+                                                        formControlName="ime">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">No</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="!form.get('ime').valid && (form.get('ime').dirty || form.get('ime').touched)">Please
+                                            select IME Option!</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fields-holder">
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-group">
+                                        <span class="d-block">Were you injured at your workplace? *</span>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <label for="injuredAtYourPlace_yes"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="injuredAtYourPlace_yes" checked="checked" type="radio"
+                                                        value="true" formControlName="injuredAtYourPlace">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Yes</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="injuredAtYourPlace_no"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="injuredAtYourPlace_no" checked="checked" type="radio"
+                                                        value="false" formControlName="injuredAtYourPlace">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">No</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="!form.get('injuredAtYourPlace').valid && (form.get('injuredAtYourPlace').dirty || form.get('injuredAtYourPlace').touched)">Please
+                                            Injured At Work Place Option!</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-6 col-lg-12">
+                                    <div class="form-group">
+                                        <span class="d-block">Are you pregnant?</span>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <label for="pregnancyCondition_yes"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="pregnancyCondition_yes" checked="checked" type="radio"
+                                                        value="Yes" formControlName="pregnancyCondition">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Yes</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="pregnancyCondition_no"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="pregnancyCondition_no" checked="checked" type="radio"
+                                                        value="No" formControlName="pregnancyCondition">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">No</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="pregnancyCondition_not_sure"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="pregnancyCondition_not_sure" checked="checked"
+                                                        type="radio" value="Not Sure"
+                                                        formControlName="pregnancyCondition">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Not Sure</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="!form.get('pregnancyCondition').valid && (form.get('pregnancyCondition').dirty || form.get('pregnancyCondition').touched)">Please
+                                            pregnant condition Option!</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row fields-holder">
+                                <div class="col-xl-12 col-lg-12">
+                                    <div class="form-group">
+                                        <span class="d-block">At the time of accident I was *</span>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item">
+                                                <label for="driverCondition_driver"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="driverCondition_driver" checked="checked" type="radio"
+                                                        value="Driver" formControlName="driverCondition">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Driver</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="driverCondition_pessenger"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="driverCondition_pessenger" checked="checked" type="radio"
+                                                        value="Pessenger" formControlName="driverCondition">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Passenger</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="driverCondition_pedestrain"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="driverCondition_pedestrain" checked="checked"
+                                                        type="radio" value="Pedestrain"
+                                                        formControlName="driverCondition">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Pedestrain</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="driverCondition_bicyclist"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="driverCondition_bicyclist" checked="checked" type="radio"
+                                                        value="Bicyclist" formControlName="driverCondition">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Bicyclist</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="driverCondition_other"
+                                                    class="d-block position-relative m-0">
+                                                    <input id="driverCondition_other" checked="checked" type="radio"
+                                                        value="Other" formControlName="driverCondition">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Other</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="!form.get('driverCondition').valid && (form.get('driverCondition').dirty || form.get('driverCondition').touched)">Please
+                                            driver condition Option!</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row" style="margin-top:20px" *ngIf="!form.disabled">
+                                <div class="col-12">
+                                    <!-- <button type="button" class="btn btn-default d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" (click)="goBack()">Back</button> -->
+                                    <button type="submit" class="btn btn-primary d-inline-block"
+                                        style="width: auto; min-width: 100px; margin: 0 5px!important;"
+                                        [disabled]="disableBtn"><img alt="continue" src="assets/images/continue.png">
+                                        {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

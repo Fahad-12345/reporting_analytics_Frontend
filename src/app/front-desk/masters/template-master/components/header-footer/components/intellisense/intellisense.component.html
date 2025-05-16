@@ -1,0 +1,47 @@
+<div *ngIf="object.preDefind" class="column-content gridster-item-content" id="test{{object.uicomponent_name}}" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [innerHTML]="object.preDefinedObj.title">
+    </p>
+    <div class="form-group focus-field ">
+        <label class="control-label"></label>
+        <textarea *ngIf="!layoutService.isInstancePreview" type="text" class="form-control" placeholder="Text will be filled during doctor evaluation" disabled></textarea>
+        <textarea *ngIf="layoutService.isInstancePreview" placeholder="Text will be filled during doctor evaluation" type="text" class="form-control" disabled></textarea>
+    </div>
+</div>
+
+
+<div *ngIf="!object.preDefind" class="column-content" id="test{{object.uicomponent_name}}" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [hidden]="!((!editText || layoutService.editorView) && (object.isStatement == true))" (click)="textClick()" [innerHTML]="object.statement">
+    </p>
+    <input id="inputTextArea{{object.uicomponent_name}}" type="text" class="form-control gridster-item-content" [(ngModel)]="boundStatement" *ngIf="editText && !layoutService.editorView && object.isStatement == true" (clickOutside)="textAreaClick()">
+    <!-- <p class="gridster-item-content">Search By Options</p> -->
+    <div class="form-group">
+        <div *ngIf="layoutService.openTemplate" class="intellisense-box">
+
+            <div class="intellisene-field">
+
+                <input id="intellisenseSearch2" class="form-control" placeholder="Search..." type="text" (click)="searchOptions($event)" (input)="searchOptions($event)">
+                <div class="intellisense-results" *ngIf="object.options.length>0">
+                    <ul>
+                        <li *ngFor="let item of searchData; let i = index;"><a (mousedown)="selectOption(item)">{{item.label}}</a></li>
+
+                    </ul>
+                </div>
+                <div class="input-group-prepend">
+                    <button class="input-group-text search-btn" type="submit"><span class="icon-search"></span></button>
+                </div>
+            </div>
+
+
+
+            <div class="selected-items" *ngIf="object.answers.length>0">
+                <ul>
+                    <li *ngFor="let item of object.answers; let i = index;"><span (click)="deleteOption(item)">
+							<i class="fa fa-times"></i></span> {{item.label}}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <textarea [disabled]="!layoutService.openTemplate" type="text" class="form-control gridster-item-content"></textarea>
+    </div>
+</div>

@@ -1,0 +1,124 @@
+<div class="row user-info pt-2">
+    <div class='col-md-12'>
+        <h4 class="my-0 color-green">Waiting List</h4>
+    </div>
+</div>
+<hr class="line-bottom">
+
+<div class="row" *ngIf="aclService.hasPermission(userPermissions.scheduler_waiting_list_doctor_view)">
+    <div class="col-md-12 mb-1">
+        <div class="card search-filter-block mt-2 border-0">
+            <form [formGroup]="myForm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-9 col-xl-10">
+                            <div class="row">
+                                <div class="col-md-6 form-group">
+                                    <select class="form-select select" [ngModelOptions]="{standalone: true}" [(ngModel)]="priorityFilter">
+										<option value="All">All</option>
+										<option value="WalkIn">WalkIn</option>
+										<option value="Emergency">Emergency</option>
+										<option value="No Show">No Show</option>
+									</select>
+                                </div>
+                                <div class="col-md-6 form-group">
+                                    <select class="form-select select" [ngModelOptions]="{standalone: true}" [(ngModel)]="doctorFilter">
+										<option value="Any Doctor">Any</option>
+										<option [value]="doctorName">{{doctorName}}</option>
+									</select>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-2">
+                            <div class="row justify-content-center mb-xl-0 mb-lg-0 mb-3 mb-md-4">
+                                <div class="col-4 col-sm-3 col-md-3 col-lg-6 align-self-center">
+                                    <button class="btn btn-success w-100" type="submit" (click)="applyFilter()">
+										Filter
+									</button>
+                                </div>
+                                <div class="col-4 col-sm-3 col-md-3 col-lg-6 align-self-center">
+                                    <button class="btn btn-primary w-100" type="button" (click)="resetFilter()">
+										Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+
+    </div>
+</div>
+<div class="row main-page" *ngIf="aclService.hasPermission(userPermissions.scheduler_waiting_list_doctor_view)">
+    <div class="col-md-4 list_doc">
+
+        <div class="main-scroll">
+            <div class="ps-0 pe-0">
+                <div class="bg-white">
+                    <div class="main-container w3-ul list-group main-page-container">
+                        <div class="row notifi-list-doc" *ngFor="let noti of temprorayArrayForDisplay; let i = index">
+
+                            <div class="col-md-3 noti-list">
+                                <img alt="Avatar" src='{{noti.picture}}' class="list">
+                            </div>
+                            <div class="col-md-6 col-lg-5 descripton">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="w3-large row"><b>{{noti.firstName}} {{noti.middleName}}
+												{{noti.lastName}}</b>
+                                        </div>
+                                        <div class="row">Chart no: {{noti.chartNo}}</div>
+
+                                        <div class="row priority-column">Priority:
+                                            <span class="priority-desc">{{noti.priorityDescription}}</span>
+                                        </div>
+
+                                        <div class="row">Status: {{noti.status}}</div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-lg-4 time-tab">
+                                <span id="time">
+									<ejs-timepicker [min]="assignmentStartTime" [value]='noti.timeToMove'
+										[step]="appointmentDuration" (change)="changeTime($event,i)"></ejs-timepicker>
+								</span><br><br><br>
+                                <span [ngClass]="{'disabled': !moveToRightApp}" (click)="moveToCalendar(noti)" class="nextSymbol"><i class="fas fa-hand-point-right fa-2x hand-icon"></i>
+								</span>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 col-sm-2"></div>
+                            <a class="col-md-4 col-sm-4 show-more-less" *ngIf="isShowMore===false" (click)="loadMoreItems()"><i class="fa fa-angle-down fa-3x"></i></a>
+                            <div class="col-md-4 col-sm-2"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-6 Calender_list" *ngIf="showCalendar" id="test-scroll">
+        <table class="table-width">
+            <tr>
+                <td>
+                    <mwl-calendar-week-view-day [viewDate]="viewDate" [clinicId]="calenderClinics" [hourSegments]="hourSegments" (childEvent)="removeSideEntry($event)" (startEvaluation)="startEvaluation($event)" [weekStartsOn]="weekStartOn" (eventClicked)="eventClicked($event.event)">
+                    </mwl-calendar-week-view-day>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row" *ngIf="!aclService.hasPermission(userPermissions.scheduler_waiting_list_doctor_view)">
+    <div class="col-md-12">
+        <h6 class="my-0 color-red">No Access Permission</h6>
+    </div>
+</div>

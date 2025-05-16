@@ -1,0 +1,77 @@
+<div class="row">
+    <div class="col-md-12 master-user pt-3">
+        <nav class="left-nav p-0">
+            <ul class="list-unstyled">
+
+                <li class="button--wayra"  *ngIf="aclService.hasPermission(userPermissions.master_user_list_tab) && !isSameUser">
+                    <a class="d-block"  [class.active]="router.url.includes('creation/edit') || router.url.includes('creation/list')"  
+                        routerLink="/front-desk/masters/users/creation/list">User</a>
+                </li>
+
+                <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_user_roles_tab) && !isSameUser">
+                    <a class="d-block" routerLinkActive="active" routerLink="/front-desk/masters/users/role">User
+                        Roles</a>
+                </li>
+                <!--   <li class="button&#45;&#45;wayra">
+                    <a class="d-block" routerLinkActive="active"
+                        routerLink="/front-desk/masters/users/creation">Creation</a>
+                </li>-->
+                <!-- --------------------------- Below Code is working Commented for now.  -->
+                <!-- <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_groups_menu)">
+                    <a class="d-block" routerLinkActive="active" routerLink="/front-desk/masters/users/group">Group</a>
+                </li> -->
+                <!-- ---------------------------   -->
+
+                <!-- <li class="button&#45;&#45;wayra">
+                    <a class="d-block" routerLinkActive="active" routerLink="/front-desk/masters/users/hash-tag">Hash
+                        Tag</a>
+                </li>-->
+                <li class="button--wayra"
+                    *ngIf="aclService.hasPermission(userPermissions.master_user_designation_tab) && !isSameUser">
+                    <a class="d-block" routerLinkActive="active"
+                        routerLink="/front-desk/masters/users/designation">Designation</a>
+                </li>
+                <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_user_department_tab) && !isSameUser">
+                    <a class="d-block" routerLinkActive="active"
+                        routerLink="/front-desk/masters/users/department">Department</a>
+                </li>
+                <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_tab) && !isSameUser">
+                    <a class="d-block" routerLinkActive="active"
+                        routerLink="/front-desk/masters/users/employment-type">Employment Type</a>
+                </li>
+                <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_by_tab) && !isSameUser">
+                    <a class="d-block" routerLinkActive="active"
+                        routerLink="/front-desk/masters/users/employment-by">Employment By</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!--     <nav class="left-nav text-center">
+            <ul class="list-unstyled">
+                <ng-template ngFor let-link [ngForOf]="links">
+                    <ng-container>
+                        <li class="button&#45;&#45;wayra" [class.dropdown]="link && link.subLinks && link.subLinks.length>0"
+                            routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                            <a *ngIf="link && link.subLinks && link.subLinks.length>0" class="d-block dropdown-toggle"
+                                href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false"><span [class]="link.icon"></span> {{link.priv_title}} </a>
+                            <a *ngIf="!(link.subLinks && link.subLinks.length>0)" routerLink="/{{link.link}}"
+                                href="javascript:void(0)" class="d-block"
+                                [class.active]="router.url.substr(1)===link.link">{{link.priv_title}}</a>
+                            <ul class="dropdown-menu p-0 m-0 w-100" aria-labelledby="navbarDropdownMenuLink"
+                                *ngIf="link && link.subLinks && link.subLinks.length>0">
+                                <li *ngFor="let subLinks of link.subLinks">
+                                    <a class="d-block" [routerLink]="[link.link + '/' + subLinks.link]"><span
+                                            [class]="subLinks.icon"></span> {{subLinks.name}}</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ng-container>
+                </ng-template>
+
+            </ul>
+        </nav>-->
+        <router-outlet></router-outlet>
+
+    </div>
+</div>

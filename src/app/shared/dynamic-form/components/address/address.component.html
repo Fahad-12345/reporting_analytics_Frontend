@@ -1,0 +1,17 @@
+<div [ngClass]="field.classes">
+  <div class="form-group field" 
+    [class.focused]="group.get(field.name).value != '' && group.get(field.name).value != null" [formGroup]="group">
+    <label class="form-label" *ngIf="field.label" [for]="id">{{field.label}}</label>
+    <input [name]="id" [id]="id" id="{{this.id}}" [readonly]="field.configs?.readonly" (focus)="handInputfield()" ngx-google-places-autocomplete [options]="{
+    types: [],
+    componentRestrictions: { country: 'US' }
+    }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event)"
+      class="form-control form-input" [formControlName]="field.name" [alt]="field.label"/>
+
+    <div *ngFor="let validation of field.validations">
+      <small class="form-text text-muted danger"
+        *ngIf="group.get(field.name).hasError(validation.name) && group.get(field.name).touched">{{validation.message}}</small>
+    </div>
+
+  </div>
+</div>

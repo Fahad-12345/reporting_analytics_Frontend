@@ -1,0 +1,158 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="col-12 user-info pt-1 px-0">
+	<h4 class="my-0 color-green">Proofing License</h4>
+</div>
+<hr class="line-bottom">
+<div class="search-filter mt-3">
+	<div class="d-block">
+		<button class="btn btn-default round-btn float-right" (click)="getLicense()"
+			[disabled]="isDisabledGetNewLicense">
+			<span class="icon-plus-circle"></span> Get New License
+		</button>
+	</div>
+	<app-proofing-license-filter (onFilterProofingLicenseList)="get_filtered_data($event)">
+	</app-proofing-license-filter>
+</div>
+<div class="data-table">
+	<div class="row mt-2">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit"
+							(change)="setProofingLicensePageSize($event.target.value)" [(ngModel)]="proofingLicensePage.size">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+			<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+				Customize Columns
+			</button>
+		</div>
+	</div>
+	<ngx-datatable class="bootstrap" #proofingLiscenceList [rows]="proofingLicenseList?.result?.data" [columnMode]='"force"'
+		[footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+		[count]="proofingLicenseList?.result?.total" (page)="setproofingLicensePageNumber($event)"
+		[offset]="proofingLicenseOffSet" [limit]="proofingLicensePage.size">
+		<ngx-datatable-column name="Order ID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="order_id" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Key" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="license_key" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Expiry Date" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="expiry_date" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value ? (value  | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}" container="body">
+					{{value ? (value | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="User" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="user" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value?.basic_info?.first_name ? value?.basic_info?.first_name : 'N/A'}} {{value?.basic_info?.middle_name}} {{value?.basic_info?.last_name}}"
+					container="body">
+					{{value?.basic_info?.first_name ? value?.basic_info?.first_name : 'N/A'}}
+					{{value?.basic_info?.middle_name}} {{value?.basic_info?.last_name}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="License Status" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="license_status" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value == 1 ? 'Active' : (value == 0 ? 'Deactive' : 'N/A')}}" container="body">
+					{{value == 1 ? 'Active' : (value == 0 ? 'Deactive' : 'N/A')}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="User Status" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="user_license_status" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value.name ? value.name : 'N/A'}}" container="body">
+					{{value.name ? value.name : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Actions" [sortable]="false" prop="id" cellClass="action-icon" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<!-- ASSIGN USER BUTTON DISPLAY WHEN USER LICENSE STATUS IS NO PROOFING -->
+				<button *ngIf="row?.user_license_status?.id == 1" class="assign_user_icon mx-1" ngbTooltip="Assign User" container="body"
+					(click)="assignUserProofingLicenseByID(row,proofingLicenseModal)">
+					<i class="fa fa-user-plus"></i>
+				</button>
+				<!-- REVOKE BUTTON DISPLAY WHEN ACTIVE USER LICENSE STATUS -->
+				<button *ngIf="row?.user_license_status?.id == 3" class="revoke_icon mx-1" ngbTooltip="Revoke"
+					container="body" (click)="proofingLicenseRevoke(row?.user_id)">
+					<i class="fa fa-minus-circle"></i>
+				</button>
+				<!-- RENEWAL DISPLAY WHEN ACTIVE OR SUSPEND USER LICENSE STATUS -->
+				<button *ngIf="row?.user_license_status?.id == 3 || row?.user_license_status?.id == 4"
+					class="renewal_icon mx-1" ngbTooltip="Renewal" container="body"
+					(click)="proofingLicenseRenewal(row)">
+					<i class="fa fa-user-circle"></i>
+				</button>
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>
+<!-- MODAL -->
+<ng-template #proofingLicenseModal let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-static-name" class="modal-title text-capitalize">{{proofingLicenseDetail.action}}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<app-proofing-license-detail [proofingLicenseDetail]="proofingLicenseDetail" (onLicenseAttachedSuccessfully)="OnLicenseAttachedSuccessfully()"></app-proofing-license-detail>
+	</div>
+</ng-template>
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

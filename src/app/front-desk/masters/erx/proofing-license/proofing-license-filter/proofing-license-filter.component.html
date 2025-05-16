@@ -1,0 +1,75 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<!-- <div class="search-filter">
+	<div class="d-block">
+		<a href="javascript:void(0)" class="btn btn-default round-btn float-right">
+			<span class="icon-plus-circle"></span> Add New
+		</a>
+	</div> -->
+<div class="search-filter-body">
+	<form class="form" [formGroup]="proofingLicenseFilterForm">
+		<div class="row">
+			<div class="col-xl-10">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group field"
+							[ngClass]="{'focused': proofingLicenseFilterForm.get('exp_date').value != '' && proofingLicenseFilterForm.get('exp_date').value != null }">
+							<label class="form-label" for="dob">Expiry Date (mm/dd/yyyy)</label>
+							<input appDateOnly [matDatepicker]="exp_date" type="text" id="exp_date" [min]="min"
+								formControlName="exp_date" class="form-control form-input"
+								(dateInput)="seelctExpiryDate()">
+							<span
+								*ngIf="proofingLicenseFilterForm.get('exp_date').value != '' && proofingLicenseFilterForm.get('exp_date').value != null"
+								(click)="proofingLicenseFilterForm?.get('exp_date')?.reset()"
+								class="icon-plus date-cross-icon"></span>
+							<!-- <small class="form-text text-muted danger"
+								*ngIf="proofingLicenseFilterForm.get('exp_date').errors?.invalid_date && (proofingLicenseFilterForm.get('exp_date').dirty && proofingLicenseFilterForm.get('exp_date').touched)">
+								Invalid Date Format
+							</small> -->
+							<mat-datepicker-toggle [for]="exp_date"></mat-datepicker-toggle>
+							<mat-datepicker #exp_date></mat-datepicker>
+	
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group field"
+							[ngClass]="{'focused': proofingLicenseFilterForm.get('license_status').value != '' && proofingLicenseFilterForm.get('license_status').value != null || (proofingLicenseFilterForm.get('license_status').value == 0) }">
+							<label class="form-label" for="license_status">License Status</label>
+							<ng-select [searchable]="false" [items]="licenseStatuses" bindLabel="name" bindValue="id"
+								formControlName="license_status" [closeOnSelect]="false">
+							</ng-select>
+							<!-- (clear)="closeLicenseStatus()" -->
+							<!-- <input type="text" id="license_status" class="form-control form-input"
+								> -->
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group field"
+							[ngClass]="{'focused': proofingLicenseFilterForm.get('user_status').value != '' && proofingLicenseFilterForm.get('user_status').value != null }">
+							<label class="form-label" for="user_status">User Status</label>
+							<ng-select [searchable]="false" bindLabel="name" bindValue="id" [items]="userStatusLists"
+								formControlName="user_status" [closeOnSelect]="false">
+							</ng-select>
+							<!-- (clear)="closeUserStatus()" -->
+							<!-- <input type="text" id="user_status" class="form-control form-input"
+								formControlName="user_status"> -->
+						</div>
+					</div>
+				</div>
+	
+			</div>
+			<div class="col-xl-2">
+				<div class="row justify-content-center mb-3 mb-xl-0">
+					<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+						<button class="btn btn-success btn-block me-3" (click)="filterProofingLicense({})">
+							Filter</button>
+					</div>
+					<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+						<button class="btn btn-primary btn-block" (click)="reset_proofingLicense_list() "
+							[disabled]="proofingLicense_reset_disabled()">Reset</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<!-- </div> -->

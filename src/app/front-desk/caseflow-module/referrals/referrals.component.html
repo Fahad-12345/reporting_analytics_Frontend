@@ -1,0 +1,255 @@
+<div class="front-desk-block referrals-info nav-tab-block">
+
+  <ul class="nav nav-tabs mt-1 text-center" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="Physician-info-tab" data-bs-toggle="tab" href="#Physician-info" role="tab"
+        aria-controls="Physician-info" aria-selected="true">
+        Physician's Information <span *ngIf="_showValidationIconPhyInfo"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+    </li>
+
+    <!-- <li class="nav-item">
+              <a class="nav-link active" id="Refferred-info-tab" data-bs-toggle="tab" href="#Refferred-info" role="tab" aria-controls="Refferred-info" aria-selected="true">Refferred Information</a>
+             </li> -->
+
+  </ul>
+
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="Physician-info" role="tabpanel" aria-labelledby="Physician-info-tab">
+      <div class="mb-0">
+        <div class="position-relative">
+          <app-shimmer-loader class="d-block" [ngClass]="{'shimer-control': caseFlowService?.loadSpin}" [loaderSpin]="caseFlowService?.loadSpin">
+          </app-shimmer-loader>
+        <app-referring-form #form1 [title]="'Referring Physician'" [type]="'Referring'" [caseId]="caseId">
+        </app-referring-form>
+        </div>
+        <!-- <app-referring-form #form2 [title]="'Primary Care Physician Information'" [type]="'Primary'"
+          [referring]="primaryCare" [caseId]="caseId"></app-referring-form> -->
+
+
+        <!-- <div class="pull-right edit-block">
+                      <h6 class="pull-left color-blue d-inline-block" style="margin-left: 21px;">Referring Physician's Information</h6> 
+                      <a href="#"><i class="icon-pencil"></i></a></div>
+                  <form action="" autocomplete="off">
+                      <div class="form">
+                   <div class="card-body" style="margin-bottom:20px;">
+                          <div class="row fields-holder">
+    
+                              <div class="col-lg-4 col-md-12">
+                                  <div class="form-group field">
+                                      <label class="form-label">First Name</label>
+                                      <input type="text" class="form-control form-input" name="f_name">
+                                   </div>
+                                </div>
+    
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="form-group field">
+                                        <label class="form-label">Middle Name</label>
+                                        <input type="text" class="form-control form-input" name="m_name">
+                                     </div>
+                                  </div>
+    
+                                  <div class="col-lg-4 col-md-12">
+                                      <div class="form-group field">
+                                          <label class="form-label">Last Name</label>
+                                          <input type="text" class="form-control form-input" name="l_name">
+                                       </div>
+                                    </div>
+    
+                                    <div class="col-lg-4 col-md-12">
+                                        <div class="form-group field">
+                                            <label class="form-label">Clinic Name</label>
+                                            <input type="text" class="form-control form-input" name="clinic">
+                                         </div>
+                                      </div>
+    
+                                      <div class="col-lg-4 col-md-12">
+                                          <div class="form-group field">
+                                              <label class="form-label">Email</label>
+                                              <input type="email" class="form-control form-input" name="email">
+                                           </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-12">
+                                            <div class="form-group field">
+                                                <label class="form-label">Phone Number *</label>
+                                                <input type="email" class="form-control form-input" name="phone">
+                                             </div>
+                                          </div>
+    
+                            
+    
+                              <div class="col-lg-4 col-md-12">
+                                  <div class="form-group field">
+                                      <label class="form-label">Street Address</label>
+                                      <input type="email" class="form-control form-input" name="street">
+                                   </div>
+                                </div>
+    
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="form-group field">
+                                        <label class="form-label">Suite/floor </label>
+                                        <input type="email" class="form-control form-input" name="suite">
+                                     </div>
+                                  </div>
+    
+                                  <div class="col-lg-4 col-md-12">
+                                      <div class="form-group field mb-0">
+                                          <label class="form-label">City </label>
+                                          <input type="email" class="form-control form-input" name="city">
+                                       </div>
+                                    </div>
+    
+                                    <div class="col-lg-4 col-md-12">
+                                        <div class="form-group field mb-0">
+                                            <label class="form-label">State</label>
+                                            <input type="email" class="form-control form-input" name="state">
+                                         </div>
+                                      </div>
+                            </div>
+                            
+                 </div>
+                 <div class="pull-right edit-block">
+                 <h6 class="pull-left color-blue d-inline-block" style="margin-left: 21px;">Primary Care Physician's Information</h6> 
+                 <a href="#"><i class="icon-pencil"></i></a></div>
+    
+                 <div class="card-body">
+                    <div class="row fields-holder">
+    
+                        <div class="col-lg-4 col-md-12">
+                            <div class="form-group field">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control form-input" name="f_name">
+                             </div>
+                          </div>
+    
+                          <div class="col-lg-4 col-md-12">
+                              <div class="form-group field">
+                                  <label class="form-label">Middle Name</label>
+                                  <input type="text" class="form-control form-input" name="m_name">
+                               </div>
+                            </div>
+    
+                            <div class="col-lg-4 col-md-12">
+                                <div class="form-group field">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control form-input" name="l_name">
+                                 </div>
+                              </div>
+    
+                              <div class="col-lg-4 col-md-12">
+                                  <div class="form-group field">
+                                      <label class="form-label">Clinic Name</label>
+                                      <input type="text" class="form-control form-input" name="clinic">
+                                   </div>
+                                </div>
+    
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="form-group field">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control form-input" name="email">
+                                     </div>
+                                  </div>
+                                  <div class="col-lg-4 col-md-12">
+                                      <div class="form-group field">
+                                          <label class="form-label">Phone Number *</label>
+                                          <input type="email" class="form-control form-input" name="phone">
+                                       </div>
+                                    </div>
+    
+                        <div class="col-lg-4 col-md-12">
+                            <div class="form-group field">
+                                <label class="form-label">Street Address</label>
+                                <input type="email" class="form-control form-input" name="street">
+                             </div>
+                          </div>
+    
+                          <div class="col-lg-4 col-md-12">
+                              <div class="form-group field">
+                                  <label class="form-label">Suite / floor </label>
+                                  <input type="email" class="form-control form-input" name="suite">
+                               </div>
+                            </div>
+    
+                            <div class="col-lg-4 col-md-12">
+                                <div class="form-group field mb-0">
+                                    <label class="form-label">City </label>
+                                    <input type="email" class="form-control form-input" name="city">
+                                 </div>
+                              </div>
+    
+                              <div class="col-lg-4 col-md-12">
+                                  <div class="form-group field mb-0">
+                                      <label class="form-label">State</label>
+                                      <input type="email" class="form-control form-input" name="state">
+                                   </div>
+                                </div>
+                        
+                      </div>
+           </div>
+    
+                 <div class="row">
+                    <div class="col-lg-3 col-sm-6 col-5 offset-lg-3 text-center">
+                      <a href="javascript:void(0)" class="btn btn-primary"><img src="assets/images/back-arrow.png" alt="back-arrow"> Back</a>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 col-7 text-center">
+                      <button class="btn btn-success"><img src="assets/images/continue.png" alt="continue"> Save & Continue</button>
+                    </div>
+                  </div>
+                    </div>
+                  </form> -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 
+<div class="col-12">
+    <div class="row">	
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header text-center">
+            <h1 class="card-title text-white m-0">Referred & Advertisement Information
+                <a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit" [routerLink]="['referr/edit']">
+                  <i class="icon-pencil me-2"></i>
+                </a>
+            </h1>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-12 mb-3">
+                  <table class="table table-striped table-bordered w-100">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>Referred By</th>
+                        <th>Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let refer of referrals">
+                        <td>{{ refer.refferedByName }}</td>
+                        <td>{{ refer.description }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <table class="table table-striped table-bordered w-100">
+                      <thead class="thead-dark">
+                        <tr>
+                          <th>Advertisement</th>
+                          <th>Name</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let ad of advertisement">
+                          <td>{{ ad.advertismentName }}</td>
+                          <td>{{ ad.description }}</td>
+                        </tr>
+                      </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div> -->

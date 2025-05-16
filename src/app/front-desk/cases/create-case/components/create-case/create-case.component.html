@@ -1,0 +1,13 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<app-case-header [patient]="patient"></app-case-header>
+<hr class="line-bottom">
+<div class="row">
+  <div class="col-12">
+
+    <app-case-left-sidebar></app-case-left-sidebar>
+
+  </div>
+  <div class="col-12">
+    <app-create-case-form [disableBtn]="disableBtn" (submit)="onSubmit($event)"></app-create-case-form>
+  </div>
+</div>

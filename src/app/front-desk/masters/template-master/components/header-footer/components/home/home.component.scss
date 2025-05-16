@@ -1,0 +1,538 @@
+@import "../../../../../../../template-manager/assets/newStyle.css";
+@import '../../../../../../../template-manager/assets/fonts-temp/css/all.min.css';
+@import '../../../../../../../template-manager/assets/fonts-temp/fonts.css';
+.pop {
+	height: 50px;
+	width: 40%;
+	margin-left: 20px;
+	border: 1px solid saddlebrown;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+
+// .draggable {
+// 	padding: 10px;
+// 	width: 200px;
+// 	// border: solid 2px #000;
+// 	margin-left: 20px;
+// 	text-align: center;
+// 	font-family: Arial, Helvetica, sans-serif;
+// }
+
+.complete-section {
+	position: absolute;
+	top: 0px;
+	right: 3px;
+	font-size: 13px;
+	color: #00a650;
+}
+
+.check-option:hover .complete-section {
+	color: #fff;
+}
+
+.check-option.active .complete-section {
+	color: #fff;
+}
+
+#template-manager .instance-container .check-option {
+	position: relative;
+	padding-right: 20px !important;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+// .cdk-drag-preview {
+//   box-sizing: border-box;
+//   border-radius: 4px;
+//   box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+//               0 8px 10px 1px rgba(0, 0, 0, 0.14),
+//               0 3px 14px 2px rgba(0, 0, 0, 0.12);
+// }
+
+// .cdk-drag-animating {
+//   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+// }
+
+// .example-box:last-child {
+//   border: none;
+// }
+
+// .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+//   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+// }
+
+// .example-custom-placeholder {
+//   background: #f7f7f7;
+//   border: solid 3px #999;
+//   min-height: 60px;
+//   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+// }
+
+
+
+.example-box {
+	cursor: move;
+	background: white;
+	font-size: 14px;
+}
+
+
+
+
+
+.cdk-drag-animating {
+	transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+	transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+.editor-tag .autocomplete-container .input-container .x {
+	right: 5px;
+	top: 3px;
+	transform: none;
+}
+
+.editor-tag .autocomplete-container .input-container .x i {
+	font-size: 16px;
+}
+
+.editor-tag {
+	cursor: text;
+	font-size: 16px;
+	padding: 10px 10px 10px 10px;
+	border-radius: 5px;
+	background: white;
+	border: 1px #cccccc solid;
+
+	& .tag-item {
+		line-height: 20px;
+		border-radius: 14px;
+		height: 20px;
+		font-size: 14px;
+		display: inline-block;
+		background: gray;
+		color: white;
+		padding-left: 5px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		padding-right: 15px;
+		white-space: nowrap;
+		max-width: 100%;
+		position: relative;
+
+		.remove-tag {
+			cursor: pointer;
+			position: absolute;
+			right: 5px;
+			z-index: 9;
+		}
+
+		.remove-tag:hover {
+			color: red;
+		}
+	}
+
+	& .tag-item:not(:first-child) {
+		margin-left: 5px;
+	}
+
+	& input {
+		margin: 0;
+		border: none;
+		outline: none;
+		border-radius: 5px;
+	}
+}
+
+
+
+#template-manager .main-section.full-Section {
+	width: 1%;
+}
+
+
+
+
+
+.card .card-header {
+	background: #f7f7f7;
+	padding: .5rem .5rem;
+	border-radius: 0;
+	border-bottom: 1px solid #e2e2e2;
+}
+
+.card .card-header .card-title {
+	font-size: 14px;
+	line-height: normal;
+	color: #888888;
+	margin: 0;
+	font-family: 'Robo to', sans-serif;
+	font-weight: 600;
+	padding: 5.5px 0 3px 5.5px;
+}
+
+.card-header .card-action {
+	float: right;
+}
+
+.card-header .card-action a {
+	color: #888888;
+	font-size: 17px;
+	display: inline-block;
+	margin-right: 4px;
+}
+
+.card-header .card-action a:hover {
+	color: #00a650;
+}
+
+.card-header .card-action a.action-danger:hover {
+	color: #c1272d;
+}
+
+.card-header .card-action a.action-warning:hover {
+	color: #ffd200;
+}
+
+.card-header .card-action a.toggle {
+	font-size: 15px;
+}
+
+.card-header.section-header {
+	background: #dedede !important;
+	padding: .2rem;
+}
+
+.card .card-header .card-action a.toggle.collapsed:before {
+	content: "\e902";
+}
+
+.card .card-header .card-action a.toggle:before {
+	content: "\e906";
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+}
+
+.card .card-header.collapsed {
+	background: #fcfcfc;
+	cursor: pointer;
+}
+
+.card .card-header.collapsed .card-action a.toggle:before {
+	content: "\e902";
+}
+
+.card .card-header .card-action a.toggle:before {
+	content: "\e906";
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+}
+
+
+
+.card .card-body {
+	border: none;
+	padding: 1rem;
+}
+
+.card .card-section-title {
+	font-size: 14px !important;
+	line-height: normal;
+	color: #888888 !important;
+	margin: 0;
+	font-family: 'Roboto', sans-serif !important;
+	font-weight: 500 !important;
+	padding: 5px 0 3px 5px;
+}
+
+
+
+.card.primary-section .card-header .card-section-title {
+	position: relative;
+	cursor: all-scroll;
+	padding-left: 15px;
+}
+
+.card.primary-section .card-header .card-section-title:before {
+	content: "\e90a";
+	font-family: 'icomoon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	position: absolute;
+	left: 3px;
+	top: 4px;
+	color: #e1e1e1;
+	font-size: 20px;
+}
+
+.card.secondary-section {
+	margin: 0 -1.07rem -1.07rem;
+}
+
+.card.secondary-section .card-header .card-section-title {
+	position: relative;
+	cursor: all-scroll;
+	padding-left: 15px;
+}
+
+.card.secondary-section .card-header .card-section-title:before {
+	content: "\e90a";
+	font-family: 'icomoon' !important;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-align: center;
+	position: absolute;
+	left: 3px;
+	top: 4px;
+	color: #e1e1e1;
+	font-size: 20px;
+}
+
+.card.secondary-section .card-header.section-header {
+	background: #fff;
+}
+
+// .cke_button[title="Source"],
+// .cke_button[title="Find"],
+// .cke_button[title="Replace"],
+// .cke_button[title="Select All"],
+// .cke_button[title="Spell Checker"],
+// .cke_button[title="Form"],
+// .cke_button[title="Checkbox"],
+// .cke_button[title="Radio Button"],
+// .cke_button[title="Text Field"],
+// .cke_button[title="Textarea"],
+// .cke_button[title="Selection Field"],
+// .cke_button[title="Image Button"],
+// .cke_button[title="Hidden Field"],
+// .cke_button[title="Cut (Ctrl+X)"],
+// .cke_button[title="Copy (Ctrl+C)"],
+// .cke_button[title="Paste (Ctrl+V)"],
+// .cke_button[title="Paste as plain text (Ctrl+Shift+V)"],
+// .cke_button[title="Undo (Ctrl+Z)"],
+// .cke_button[title="Redo (Ctrl+Y)"],
+// .cke_button[title="Flash"],
+// .cke_button[title="Table"],
+// .cke_button[title="Smiley"],
+// .cke_button[title="IFrame"],
+// .cke_button[title="About CKEditor"],
+// .cke_button[title="Show Blocks"],
+// .cke_button[title="Text direction from right to left"],
+// .cke_button[title="Templates"],
+// .cke_button[title="New Page"],
+// .cke_button[title="Preview"],
+// .cke_button[title="Save"],
+// .cke_button[title="Paste from Word"],
+// .cke_button[title="Button"],
+// .cke_button[title="Strikethrough"],
+// .cke_button[title="Subscript"],
+// .cke_button[title="Superscript"],
+// .cke_button[title="Copy Formatting (Ctrl+Shift+C)"],
+// .cke_button[title="Remove Format"],
+// .cke_button[title="Create Div Container"],
+// .cke_button[title="Text direction from left to right"],
+// .cke_button[title="Text direction from right to left"],
+// .cke_button[title="Set language"],
+// .cke_button[title="Link (Ctrl+L)"],
+// .cke_button[title="Unlink"],
+// .cke_button[title="Anchor"],
+// .cke_button[title="Image"],
+// .cke_button[title="Insert Horizontal Line"],
+// .cke_button[title="Insert Special Character"],
+// .cke_button[title="Insert Page Break for Printing"],
+// .cke_button[title="IFrame"],
+// .cke_button[title="Increase Indent"],
+// .cke_button[title="Block Quote"] {
+// 	display: none !important;
+// }
+
+.cke_toolbar_separator {
+	display: none;
+}
+
+// .cke_toolgroup{
+//   display: none;
+// }
+
+.angular-editor-button[title="HTML Code"],
+.angular-editor-button[title="Superscript"],
+.angular-editor-button[title="Subscript"],
+// .angular-editor-button[title="Justify Center"],
+// .angular-editor-button[title="Justify Right"],
+// .angular-editor-button[title="Justify Left"],
+// .angular-editor-button[title="Justify Full"],
+.angular-editor-button[title="Indent"],
+.angular-editor-button[title="Outdent"],
+.angular-editor-button[title="Unordered List"],
+.angular-editor-button[title="Background Color"],
+.angular-editor-button[title="Insert Link"],
+.angular-editor-button[title="Unlink"],
+.angular-editor-button[title="Insert Image"],
+.angular-editor-button[title="Insert Video"],
+// .angular-editor-button[title="Horizontal Line"],
+.angular-editor-button[title="Horizontal Line"],
+.angular-editor-button[title="Ordered List"],
+.angular-editor-button[title="Strikethrough"],
+.angular-editor-button[title="select-heading"],
+.angular-editor-button[title="select-font"],
+.angular-editor-button[title="Clear Formatting"],
+.angular-editor-button[title="Text Color"] {
+	display: none !important;
+}
+
+
+
+
+.angular-editor-button[title="Undo"] {
+	margin-left: 7px;
+}
+
+.angular-editor-toolbar-set {
+	padding-top: 3px;
+	margin-right: 0px !important;
+}
+
+
+.angular-editor-toolbar-set .font-size-display {
+	display: inline-block !important;
+}
+
+// .angular-editor-toolbar-set ae-select {
+// 	display: none !important;
+// }
+
+// .angular-editor-button{
+//   width: 58px;
+// }
+.no-left-section .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+	// min-width: 4rem !important;
+	// margin-right: -2px;
+}
+
+.angular-editor-textarea {
+	margin-top: 0px !important;
+}
+
+.angular-editor-toolbar {
+	background-color: transparent !important;
+	padding: 0 !important;
+	border: none !important;
+}
+
+.angular-editor-toolbar .angular-editor-toolbar-set {
+	padding: 0;
+}
+
+.right-section .angular-editor-toolbar {
+	white-space: nowrap;
+}
+
+
+body {
+	color: #888888;
+}
+
+.column-action {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+
+.column-action a {
+
+	color: #c1272d;
+	font-size: 18px;
+	border-radius: 16px;
+	box-shadow: 1px 1px 10px #00000029;
+	display: block;
+	line-height: 13px;
+	background: #fff;
+}
+
+.column-action .dropdown-menu.show {
+	border-color: #c1272d !important;
+}
+
+.column-content .column-action .dropdown-menu.show:before {
+	border-color: #c1272d transparent;
+}
+
+table.table-drop tr td.active-column {
+	background: #34c3ee05;
+}
+
+
+.column-content {
+	padding: 10px;
+	position: relative;
+}
+
+
+.action-box {
+	position: relative;
+	z-index: 99;
+}
+
+.action-box .row-actions {
+	position: absolute;
+	right: -2px;
+	bottom: -4px;
+}
+
+.action-box .row-actions a {
+	display: inline-grid;
+	font-size: 16px;
+	color: #888;
+	margin: 0 2px;
+	background: #fff;
+	border-radius: 20px;
+	box-shadow: 0px 0px 5px #0000000d;
+}
+
+.top-btn {
+	margin-bottom: 5px;
+}
+
+.l-scroll {
+	max-height: 29vh !important;
+	overflow-y: auto !important;
+	padding-right: 2px !important;
+}

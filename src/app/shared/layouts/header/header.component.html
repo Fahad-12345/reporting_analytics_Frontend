@@ -1,0 +1,64 @@
+<div 
+lass="container-fluid">
+	<div class="row">
+		<!-- logo -->
+		<div class="box logo-holder pos-left position-absolute">
+			<strong class="logo"><a [routerLink]="['/#']"><img src="assets/images/logo.svg"
+						alt="Medical Doctor"></a></strong>
+			<div class="triangle-with-shadow"></div>
+		</div>
+		<div class="col-12">
+			<!-- main nav -->
+			<nav class="navbar navbar-expand-lg text-capitalize">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+					data-target="#mobile-menu" aria-controls="mobile-menu" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<span class="bar top"></span>
+					<span class="bar middle"></span>
+					<span class="bar bottom"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-end align-items-center" id="mobile-menu">
+					<div class="user-area">
+						<div class="avatar"><img class="d-block" src="assets/images/avatar.jpg" alt="avatar"></div>
+						<strong class="title d-block text-capitalize">John Smith</strong>
+						<a class="email" href="mailto:ashton.champlin@example.com">ashton.champlin@example.com</a>
+					</div>
+					<ul class="navbar-nav">
+						<li class="nav-item active"> <a [routerLink]="['/']" class="nav-link hvr-shutter">Home</a> </li>
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link hvr-shutter">Link</a> </li>
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link hvr-shutter">Link</a> </li>
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link hvr-shutter">Link</a> </li>
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link hvr-shutter">Link</a> </li>
+					</ul>
+					<ul class="navbar-nav additional-links ms-auto">
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link p-0 text-white"><span
+									class="icon-settings"></span></a> </li>
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link p-0 text-white help"><span
+									class="icon-if-help"></span></a> </li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+		<div class="box pos-right position-absolute text-center">
+			<div class="user-area dropdown">
+				<div class="avatar"><img class="d-block" src="assets/images/avatar.jpg" alt="avatar"></div>
+				<strong class="title d-block text-capitalize">
+					<a [routerLink]="['/#']" class="dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true"
+						aria-expanded="false">John Smith</a>
+				</strong>
+				<a class="email" href="mailto:ashton.champlin@example.com">ashton.champlin@example.com</a>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+					<ul class="additional-links">
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link p-0 text-white"><span
+									class="icon-settings"></span></a> </li>
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link p-0 text-white help"><span
+									class="icon-if-help"></span></a> </li>
+						<li class="nav-item"> <a [routerLink]="['/#']" class="nav-link p-0 text-white"><span
+									class="icon-power-off"></span></a> </li>
+					</ul>
+				</div>
+			</div>
+			<div class="triangle-with-shadow"></div>
+		</div>
+	</div>
+</div>

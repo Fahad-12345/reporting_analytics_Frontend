@@ -1,0 +1,393 @@
+.center {
+    flex: 0 0 31.333333% !important;
+    max-width: 31.333333% !important;
+}
+
+.modal-header .close {
+    padding: 0rem !important;
+    margin: 0rem 0rem 0rem auto !important;
+    font-size: 18px;
+    padding: 8px 15px;
+}
+
+.title {
+    color: #212529;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 0rem !important;
+}
+
+input[type='checkbox'] {
+    margin-top: 3px !important;
+}
+
+@media only screen and (min-width: 750px) and (max-width: 899px) {
+    .app-prio {
+        flex: 0 0 34.333333%;
+        max-width: 34.333333%;
+    }
+    .exam-room {
+        flex: 0 0 32.333333%;
+        max-width: 32.333333%;
+    }
+    .rac-tab {
+        flex: 0 0 41.666667%;
+        max-width: 41.666667%;
+    }
+    .repeat-every {
+        flex: 0 0 30%;
+        max-width: 30%;
+    }
+    .end-by-after {
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+    }
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1365px) {
+    .check {
+        top: 4px;
+    }
+}
+
+@media only screen and (min-width: 1366px) {
+    .check {
+        top: 4px;
+    }
+}
+
+select.form-control {
+    padding: 0px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    padding: 0 !important;
+    margin: 6px !important;
+}
+
+input[type="checkbox"] {
+    width: 7% !important;
+    height: 16px !important;
+}
+
+.spinner {
+    position: fixed;
+    top: 101px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #28a745 !important;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.27);
+}
+
+.form-control {
+	height: 30px;
+}
+
+.docItem {
+    max-height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin: auto 2%;
+}
+
+.Conflict {
+    max-height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid grey !important;
+    margin-left: -5%;
+}
+
+.scrollbar-primary::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: grey;
+}
+
+.line {
+    border-left: 1.5px solid black;
+    height: 90px;
+}
+
+.error1 {
+    color: red !important;
+}
+
+.btn-info {
+    color: white !important;
+    margin-top: 4%;
+}
+
+.automatic {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin-top: 5%;
+}
+
+.a:not([href]):not([tabindex]) {
+    color: white !important;
+    text-decoration: none;
+}
+
+.docSelectedItem {
+    max-height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-left: -7%
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 5px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 2px solid rgba(0, 0, 0, 0.125);
+    width: 110%;
+}
+
+.doclist {
+    flex-direction: column;
+    margin-bottom: 0;
+}
+
+.selecteddoc {
+    width: 109% !important;
+}
+
+.list-group-item-action:hover,
+.list-group-item-action:focus {
+    color: #495057 !important;
+    text-decoration: none !important;
+    background-color: #28a745 !important;
+}
+
+.btn {
+    border: 1px solid #00000021 !important;
+}
+
+.conflict {
+    margin-left: 12%;
+    height: 100%;
+    width: 108%;
+}
+
+.sideColor {
+    width: 1%;
+    height: 32px;
+    border-left: none !important;
+    border-left-width: 15px;
+    padding: 0;
+    margin-left: -8%;
+}
+
+.search {
+    margin-left: 2%;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 899px) {
+    .ran-rec {
+        padding-left: 1px !important;
+    }
+}
+
+select,
+input {
+    height: 30px !important;
+}
+
+input[type='checkbox'] {
+    margin-top: 3px !important;
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1365px) {
+    .check {
+        top: 4px;
+    }
+}
+
+@media only screen and (min-width: 1366px) {
+    .check {
+        top: 4px;
+    }
+}
+
+select.form-control {
+    padding: 0px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    padding: 0 !important;
+    margin: 6px !important;
+}
+
+input[type="checkbox"] {
+    width: 7% !important;
+    height: 16px !important;
+}
+
+.spinner {
+    position: fixed;
+    top: 101px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.form-control:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #28a745 !important;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.27);
+}
+
+.form-control {
+    height: 34px;
+}
+
+.docItem {
+    max-height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin: auto 2%;
+}
+
+.Conflict {
+    max-height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid grey !important;
+    margin-left: -5%;
+}
+
+.scrollbar-primary::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: grey;
+}
+
+.line {
+    border-left: 1.5px solid black;
+    height: 90px;
+}
+
+.error1 {
+    color: red !important;
+}
+
+.btn-info {
+    color: white !important;
+    margin-top: 4%;
+}
+
+.automatic {
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    margin-top: 5%;
+}
+
+.a:not([href]):not([tabindex]) {
+    color: white !important;
+    text-decoration: none;
+}
+
+.docSelectedItem {
+    max-height: 150px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    margin-left: -7%
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 5px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 2px solid rgba(0, 0, 0, 0.125);
+    width: 110%;
+}
+
+.doclist {
+    flex-direction: column;
+    margin-bottom: 0;
+}
+
+.selecteddoc {
+    width: 109% !important;
+}
+
+.list-group-item-action:hover,
+.list-group-item-action:focus {
+    color: #495057 !important;
+    text-decoration: none !important;
+    background-color: #28a745 !important;
+}
+
+.conflict {
+    margin-left: 12%;
+    height: 100%;
+    width: 108%;
+}
+
+.sideColor {
+    width: 1%;
+    height: 32px;
+    border-left: none !important;
+    border-left-width: 15px;
+    padding: 0;
+    margin-left: -8%;
+}
+
+.search {
+    margin-left: 2%;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+.btn-outline-secondary {
+    background-color: white !important;
+    color: #6d6969;
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #34c3ee !important;
+    color: white
+}
+
+.btn-outline-secondary:active {
+    background-color: #34c3ee !important;
+}
+
+.complaints-height {
+    height: 90% !important;
+}

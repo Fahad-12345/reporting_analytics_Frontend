@@ -1,0 +1,156 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center mt-2"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_vehicle_view)">
+    <h6 class="color-blue d-inline-block">{{title}}
+    </h6>
+    <a class="success float-right"
+        *ngIf="case?.is_finalize && aclService.hasPermission(userPermissions.patient_case_list_insurance_vehicle_edit)"
+        tooltip="Edit" (click)="enableForm(enableflag)">
+        <i class="icon-pencil"></i>
+    </a>
+</div>
+<div class="card card-bg w-100 mt-0"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_vehicle_view)">
+    <form [formGroup]="vehicleForm" autocomplete="off">
+        <div class="form">
+            <dynamic-form [fields]="fieldConfig" (submit)="submit($event)">
+            </dynamic-form>
+
+            <div class="edit-block">
+                <h6 class="color-blue mt-2">Related Vehicle's Information
+                </h6>
+            </div>
+            <div class="data-table">
+                <div class="row">
+                    <div class="col-md-12 text-end">
+                        <a href="javascript:void(0)" class="btn btn-default round-btn me-2"
+                            *ngIf="selection.selected.length" (click)="confirmDel()">
+                            <span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+                        </a>
+
+                        <a *ngIf=" aclService.hasPermission(userPermissions.patient_case_list_insurance_vehicle_edit)" class="btn btn-primary round-btn w-auto" (click)="vehicleInfoModal(saveVehicle)"
+                            href="javascript:void(0)">Add Vehicle</a>
+                    </div>
+                </div>
+                <ngx-datatable class="bootstrap scroll-hide" [rows]="vehicleInfos" [scrollbarH]="true"
+                    [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+
+                    <ngx-datatable-column name="Vehicle No." prop="vehicle_no" [width]="80">
+                        <ng-template let-column="column" ngx-datatable-template>
+                            Vehicle No.
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            {{'vehicle no ' +row.vehicle_no }}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Year" prop="year" [width]="60"></ngx-datatable-column>
+                    <ngx-datatable-column name="Make" prop="make" [width]="80"></ngx-datatable-column>
+                    <ngx-datatable-column name="Model" prop="model" [width]="80"></ngx-datatable-column>
+                    <ngx-datatable-column name="Color" prop="color" [width]="80"></ngx-datatable-column>
+                    <ngx-datatable-column name="State" prop="state" [width]="80">
+                        <ng-template let-column="column" ngx-datatable-template>
+                            State
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            {{row.state}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Insured by" prop="insurance_id" [width]="80">
+                        <ng-template let-column="column" ngx-datatable-template>
+                            Insurance
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            {{row.insurance?.insurance_name}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Effective date" prop="effective_date" [width]="90">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                            Effective date
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            {{row.effective_date? (row.effective_date | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : ''}}
+                            <!-- {{value |date:'mediumDate'}} -->
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Expiry date" prop="expiry_date" [width]="90">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                            Expiry date 
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            {{row.expiry_date? (row.expiry_date | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : ''}}
+                            <!-- {{value |date:'mediumDate'}} -->
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="License Plate No." prop="license_plate_number" [width]="110">
+                    </ngx-datatable-column>
+
+
+                    <ngx-datatable-column name="Policy No." prop="policy_no" [width]="80"></ngx-datatable-column>
+                    <ngx-datatable-column name="Owner Name" prop="ownerName" [width]="100">
+                        <ng-template let-column="column" ngx-datatable-template>
+                            Owner Name
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            {{ row?.contact_information?.owner?.first_name + ' ' + row?.contact_information?.owner?.middle_name + ' ' + row?.contact_information?.owner?.last_name }}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Driver Name" prop="ownerName" [width]="100">
+                        <ng-template let-column="column" ngx-datatable-template>
+                            Driver Name
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            {{ row?.contact_information?.driver?.first_name?row?.contact_information?.driver?.first_name:'' + ' ' + row?.contact_information?.driver?.middle_name?row?.contact_information?.driver?.middle_name:'' + ' ' + row?.contact_information?.driver?.last_name?row?.contact_information?.driver?.last_name:'' }}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Actions" sortable="false" prop="id" [width]="110">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                            Actions
+                            <!-- <mat-checkbox (change)="$event ? masterToggle($event) : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                            </mat-checkbox> -->
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" let-rowIndex=rowIndex ngx-datatable-cell-template>
+
+                            <!-- <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                            </mat-checkbox> -->
+                            <a *ngIf=" aclService.hasPermission(userPermissions.patient_case_list_insurance_vehicle_edit)" href="javascript:void(0)" class="success edit-hov p-0 mx-2" data-original-title="Edit"
+                                tooltip="Edit" (click)="vehicleInfoModal(saveVehicle, row.vehicle_no, row,rowIndex)">
+                                <i class="icon-pencil"></i>
+                            </a>
+               
+                            <a *ngIf=" aclService.hasPermission(userPermissions.patient_case_list_insurance_vehicle_edit)" href="javascript:void(0)" class="danger remove-hov p-0 mx-1" data-original-title="Delete"
+                                tooltip="Delete" (click)="confirmDel(rowIndex,row.vehicle_no)">
+                                <i class="icon-remove"></i>
+                            </a>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+
+<ng-template #saveVehicle let-modal style="max-width: 500px;">
+    <div class="modal-header">
+        <h5 class="modal-title">{{vehicleTitle}} Vehicle Information</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="modal-body">
+        <form class="form" [formGroup]="vehicleDetailform" autocomplete="off">
+            <div class="row fields-holder">
+                <div class="col-12">
+                    <!-- {{vehicleDetailform?.value|json}} -->
+                    <dynamic-form #dymanic2 (onReady)="onReady($event)" [fields]="modalfieldConfig"
+                        (submit)="onSubmitVehicleDetail($event)">
+                    </dynamic-form>
+                </div>
+            </div>
+        </form>
+    </div>
+</ng-template>

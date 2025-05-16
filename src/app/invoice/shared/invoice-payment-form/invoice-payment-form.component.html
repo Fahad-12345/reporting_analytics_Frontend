@@ -1,0 +1,13 @@
+<div class="row pt-3 bill_modal_hold">
+	<!-- <div class="col-lg-3">
+	  <app-invoice-payment-form-split></app-invoice-payment-form-split>
+	</div> -->
+	<div class="col-lg-9 pt-3 pt-lg-0">
+	  <div class="row pt-1">
+		<div class="col-12">
+			<!-- <app-payment-list-split #paymentSplitList (changePaymentData) = "changePaymentDataSplit($event)" [editForm]="false" ></app-payment-list-split> -->
+			<app-payment-list-split #paymentSplitList [InvoicePaymentColumns]="true"></app-payment-list-split>
+		</div>
+	  </div>
+	</div>
+  </div>

@@ -1,0 +1,97 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="front-desk-block billing-info">
+  <div class="card text-center">
+    <div class="cart">
+      <div class="card-body border-0 mt-0 p-0">
+        <div class="data-table mb-0">
+          <div *ngIf="showDocTable">
+            <div class="row align-items-center doc-action-btn" *ngIf='Selection.selected.length'>
+              <div class="col-12 text-end pb-2">
+                <button type="button" (click)="printMultipleFiles()" class="btn btn-outline-secondary">
+                  View <span class="text-success">
+                    [{{Selection.selected.length}}]
+                  </span>
+                </button>
+                <button type="button" (click)="openEmailModal()" class="btn btn-outline-secondary">
+                  Merge <span class="text-success">
+                    [{{Selection.selected.length}}]
+                  </span>
+                </button>
+                <button type="button" (click)="openEmailModal()" class="btn btn-outline-secondary">
+                  Download <span class="text-success">
+                    [{{Selection.selected.length}}]
+                  </span>
+                </button>
+                <!-- <button type="button" (click)="printMultipleFiles()" class="btn btn-outline-secondary">
+              Print <span class="badge">
+                [{{Selection.selected.length}}]
+              </span>
+            </button> -->
+              </div> 
+            </div>
+            <ngx-datatable class="bootstrap scroll-hide custom-scroll-x table" [rows]="files" columnMode="force"
+              [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="page.size"
+              [externalPaging]="true" [virtualization]="false" [count]="page.totalElements" [offset]="page.pageNumber-1"
+              (page)="changeDocumentPageNumber($event.offset)">
+              <ngx-datatable-column [width]="120" name="Name">
+                <ng-template ngx-datatable-cell-template let-row="row" class="asdfasdf">
+                  <span class="tooltip-outer d-inline-block" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.file_title}}">
+                    {{row.file_title}}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="120" name="View">
+                <ng-template ngx-datatable-cell-template let-row="row" class="asdfasdf">
+                  <div class="tooltip-outer" tooltipClass="table-custom-tooltip">
+					<!-- <span (click)="openInWindow(row.link)">View</span> -->
+					<a  class="view-hov mx-1"
+					(click)="openInWindow(row?.pre_signed_url)" href="javascript:void(0)" role="button"><i class="icon-eye"></i></a>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <!-- <ngx-datatable-column name="Actions" [width]="210" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false" cellClass="action-icon count-hold">
+                <ng-template ngx-datatable-header-template name="Actions">
+            
+                  <mat-checkbox 
+                  (change)="$event ? masterToggle() : null" [checked]="Selection.hasValue() && isSelected()"
+                  [indeterminate]="Selection.hasValue() && !isSelected()">
+                  </mat-checkbox>
+                  Actions
+            
+                </ng-template>
+            
+                <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+                  <mat-checkbox 
+                  (click)="$event.stopPropagation()" (change)="$event ? Selection.toggle(row) : null"
+                  [checked]="Selection.isSelected(row)">
+                  </mat-checkbox>
+            
+                </ng-template>
+                </ngx-datatable-column> -->
+
+            </ngx-datatable>
+          </div>
+        </div>
+      </div>
+      <!-- <div>
+        <button [disabled] = "Selection.selected.length==0" type="button" (click)="generatePDF()" class="btn btn-success mx-2 mb-2 mb-sm-0">
+            Generate Envelop <span *ngIf="Selection.selected.length!=0" class="text-white">
+              [{{Selection.selected.length}}]
+            </span>
+        </button>
+        <button disabled type="button" (click)="generatePDF()" class="btn btn-primary mx-2 mb-2 mb-sm-0">
+            Generate Packet <span *ngIf="Selection.selected.length!=0" class="text-white">
+              [{{Selection.selected.length}}]
+            </span>
+        </button>
+        <button [disabled] = "Selection.selected.length==0" type="button" (click)="generatePDF()" class="btn btn-warning text-white mx-2 mb-2 mb-sm-0">
+            Generate POM <span *ngIf="Selection.selected.length!=0" class="text-white">
+              [{{Selection.selected.length}}]
+            </span>
+        </button>
+      </div> -->
+    </div>
+  </div>
+</div>
+

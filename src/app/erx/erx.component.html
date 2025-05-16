@@ -1,0 +1,42 @@
+<!-- 
+<div id="wrapper" *ngIf="!router.url.includes('front-desk')">
+
+    <header id="header">
+      <app-main-header></app-main-header>
+      <app-front-desk-navbar></app-front-desk-navbar>
+    </header>
+  
+ 
+    <main id="main">
+      <div class="main-container page-scroller">
+        <router-outlet></router-outlet>
+      </div>
+
+      <footer>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p>Copyrights@ovada.com</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  
+  </div> -->
+  <ng-container *ngIf="!router.url.includes('front-desk')">
+    <router-outlet></router-outlet>
+  </ng-container>
+  <div *ngIf="router.url.includes('front-desk')" class="front-desk-block patient-insurance nav-tab-block">
+  
+    <ul class="nav nav-tabs mt-1 text-center" id="myTab" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="!isActive('prescribe')"
+          routerLink="/front-desk/cases/edit/{{caseId}}/erx">Task List</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link"  [class.active]="isActive('prescribe')"
+          routerLink="/front-desk/cases/edit/{{caseId}}/erx/prescribe">Prescribe</a>
+      </li>
+    </ul>
+    <router-outlet></router-outlet>
+
+  </div>

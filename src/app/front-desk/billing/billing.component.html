@@ -1,0 +1,1553 @@
+
+<div class="front-desk-block billing-info">
+	<div class="card text-center">
+		<div class="card-header pb-0" style="padding-bottom: 0 !important;" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_view)">
+			<ul class="nav nav-tabs card-header-tabs float-left border-bottom-0" style="margin-bottom: -1px !important;">
+				<li  class="nav-item">
+					<a class="nav-link active" id="Visit-desk-tab" data-bs-toggle="tab" href="#Visit-desk" role="tab"
+						aria-controls="Visit-desk" aria-selected="true">Visit Desk</a>
+				</li>
+				<!-- <li *ngIf="aclService.hasPermission('can_access_patient_billing_billed_visit')" class="nav-item">
+          <a class="nav-link" id="billed-visit-tab" data-bs-toggle="tab" href="#billed-visit" role="tab"
+            aria-controls="billed-visit" aria-selected="false" disable>Billed Visit</a>
+        </li>
+        <li *ngIf="aclService.hasPermission('can_access_patient_billing_packeted')" class="nav-item  disabled">
+          <a class="nav-link disabled" id="packeted-tab" data-bs-toggle="tab" href="#packeted" role="tab"
+            aria-controls="packeted" aria-selected="false">Packeted</a>
+        </li>
+        <li *ngIf="aclService.hasPermission('can_access_patient_billing_pom')" class="nav-item  disabled">
+          <a class="nav-link disabled" id="POM-tab" data-bs-toggle="tab" href="#POM" role="tab" aria-controls="POM"
+            aria-selected="false">POM</a>
+        </li> -->
+			</ul>
+		</div>
+		<div class="card-body border-top-0">
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade show active" id="Visit-desk" role="tabpanel" aria-labelledby="Visit-desk-tab">
+					<div class="row search-filter-block m-0 mb-3" *ngIf="!adminVisit && lstSpecialities.length>0 && aclService.hasPermission(userPermissions.patient_case_list_visits_specialty_filters)">
+						<div class="card-body" style="padding-bottom: 16px !important;">
+							<div class="row px-2">
+								<div class="field-block">
+									<div class="row">
+										<div class="col-lg-12 col-md-12">
+											<nav class="p-0 visit-desk-info text-start">
+												<ul class="list-unstyled">
+													<li class="list-speciality" *ngFor='let item of lstSpecialities; let i=index'>
+														<button type="button" class="btn btn-primary btn-lg"
+															(click)='specialitySearch(item,i);'
+															[ngClass]="{ 'visitdeskClass': item.checked === true }">{{item.name}}
+															<ul class="custom-btn-tooltip list-unstyled float-right">
+																<span>({{item.visit_session_count}})</span>
+																<li class="btn-tooltip-top">
+																	<p class="mb-1">Finalized {{item.finalized_count}}
+																	</p>
+																	<p class="mb-0">Unfinalized
+																		{{item.unfinalized_count}}</p>
+																	<i></i>
+																</li>
+															</ul>
+														</button>
+													</li>
+												</ul>
+											</nav>
+										</div>
+									</div>
+								</div>
+
+								<div class="colps-btn-block" *ngIf="lstSpecialities.length>5">
+									<button class="btn plus-btn float-right mt-0" aria-label="Open Close collapse" aria-selected="false"
+										(click)="specialityisCollapsed = !specialityisCollapsed"
+										[attr.aria-expanded]="!specialityisCollapsed" aria-controls="collapseBasic"
+										[class.btn-primary]="specialityisCollapsed"
+										[class.btn-success]="!specialityisCollapsed" type="button"><span class=""
+											[class.icon-plus]="!specialityisCollapsed"
+											[class.icon-minus]="specialityisCollapsed"></span></button>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+
+					<div class="card search-filter-block">
+						<div class="card search-filter-block mt-1 mb-3" style="padding:0px; border:none;">
+							<!-- <div> -->
+							<!-- <a *ngIf="aclService.hasPermission('patient_billing_visit_desk_can_add_new_visit')"
+                href="javascript:void(0)" data-bs-toggle="modal" data-target="#add-visit" 
+                style="color:#fff; background: #34c3ee; border-color:#34c3ee;">
+                <span style="font-size: 15px;">Add New Visit</span> <span class="fa fa-plus-circle ms-2"></span>
+              </a> -->
+							<!-- <a *ngIf="aclService.hasPermission('patient_billing_visit_desk_can_add_new_visit')"
+                href="javascript:void(0)" (click)="openModal(modal)" class="btn btn-default round-btn float-right">
+                Add New Visit<span class="icon-plus-circle ms-2"></span>
+              </a>
+            </div> -->
+							<form autocomplete="off" [formGroup]="searchForm" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_list_filters)"
+								(key.enter)="$event.preventDefault();submitFilter()">
+								<div class="form visit-desk-form ng-check">
+                  <div class="card-body" style="padding-bottom: 0px !important;">
+										<div class="row px-2">
+											<div class="field-block">
+												<div class="row" [class.dynamic-collapse]="!isCollapsed">
+													<div class="col-xl-3 col-lg-4 col-sm-6">
+                          <!-- [ngClass]="{'by-default-danger': (this.adminVisit && searchForm.get('facility_location_ids').value==null || searchForm.get('facility_location_ids').value=='') }" -->
+														<app-ng-select-shareable   [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_location_ids'"
+														[showSelectFieldList]="selectedMultipleFieldFiter['facility_location_ids']"
+														 [showSelectFieldOnRefresh]="searchForm.get('facility_location_ids').value" 
+														 [lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" 
+														 [qulifierShown] = "true" 
+                             [showSelectAll] ="true" [conditionalExtraApiParams]="{order:'asc'}"
+                             [showGroupBy] = "true"	 [ngSelectShow]="true"
+														 [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+														 (valueChange)="selectionOnValueChange($event,'facility_location_ids')" 
+														 [multiple]="true"></app-ng-select-shareable> 
+                             <!-- <small class="form-text text-muted danger validation-msg"
+                             *ngIf="this.adminVisit && searchForm.get('facility_location_ids').hasError('required') && submitted">
+                              This field is required</small> -->
+													</div>
+                          
+                          <!-- <div class="col-xl-3 col-lg-4 col-sm-6" *ngIf="adminVisit">
+														<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'case_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['case_ids']"
+                            [showSelectFieldOnRefresh]="searchForm.get('case_ids').value"
+                            [lableName]="'Case ID'" [bindlable]="'id'" [mainApiPath]="requestServerpath.kios_api_path"
+                            [bindId]="'id'" [apiPath]="EnumApiPath.NF2PomCaseIdApiPath" [searchLableName]="'id'"  
+                            (valueChange)="selectionOnValueChange($event,'case_ids')" 
+                            [multiple]="true"></app-ng-select-shareable> 
+													</div> -->
+                          <div class="col-xl-3 col-lg-4 col-sm-6" *ngIf="adminVisit">
+                              <div class="form-group field"
+                                [ngClass]="{'focused': searchForm.get('case_ids').value != '' && searchForm.get('case_ids').value != null }">
+                                <label class="form-label" for="case_ids">Case ID</label>
+                                <input appOnlyNumeric type="number" id="case_ids"
+                                  class="form-control form-input"
+                                  formControlName="case_ids" >
+                              </div>
+													</div>
+													<div class="col-xl-3 col-lg-4 col-sm-6 ">
+														<app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'provider_ids'"
+														[showSelectFieldList]="selectedMultipleFieldFiter['provider_ids']"
+														 [showSelectFieldOnRefresh]="searchForm.get('provider_ids').value" 
+														 [lableName]="'Provider Name'"
+                             [showSelectAll] ="true"
+                             [showGroupBy] = "false" [bindlable]="'full_name'" [searchLableName]="'doctor_name'"
+														 [bindId]="'id'" [apiPath]="EnumApiPath.providerApiPath"   	 [ngSelectShow]="true"
+														 (valueChange)="selectionOnValueChange($event,'provider_ids')" 
+														 [multiple]="true"></app-ng-select-shareable> 
+													</div>
+                          
+													<div *ngIf="adminVisit" class="col-xl-3 col-lg-4 col-sm-6">
+														<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_ids'"
+														[showSelectFieldList]="selectedMultipleFieldFiter['speciality_ids']"
+														 [showSelectFieldOnRefresh]="searchForm.get('speciality_ids').value" 
+														 [lableName]="'Specialty'"
+                             [showSelectAll] ="true"
+                             [showGroupBy] = "true" [bindlable]="'name'" 
+														 [qulifierShown] ="true" 	 [ngSelectShow]="true"
+														 [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+														 (valueChange)="selectionOnValueChange($event,'speciality_ids')" 
+														 [multiple]="true"></app-ng-select-shareable> 
+													</div>
+                          <div class="col-xl-3 col-lg-4 col-sm-6">
+													
+														
+																<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'appointment_type_ids'"
+														[showSelectFieldList]="selectedMultipleFieldFiter['appointment_type_ids']"
+														 [showSelectFieldOnRefresh]="searchForm.get('appointment_type_ids').value" 
+														 [lableName]="'Visit Type'" 
+                             [showSelectAll] ="true" [conditionalExtraApiParams]="{order:'asc'}"
+                             [showGroupBy] = "true"[bindlable]="'name'" 
+														 [qulifierShown] ="true" 	 [ngSelectShow]="true"
+														 [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeVisitTypeApiPath"  
+														 
+														 (valueChange)="selectionOnValueChange($event,'appointment_type_ids')" 
+														 [multiple]="true"></app-ng-select-shareable> 
+													
+													</div>
+													<div class="col-xl-3 col-lg-4 col-sm-6">
+													<app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'employer_ids'"
+													[lableName]="'Employer'" [bindlable]="'employer_name'" [showSelectFieldList]=" selectedMultipleFieldFiter['employer_ids']"
+													[showSelectFieldOnRefresh]="searchForm && searchForm.get('employer_ids').value ? searchForm.get('employer_ids').value[0] : null"
+													[bindId]="'id'" 
+                          [showSelectAll] ="true"
+                          [showGroupBy] = "false" [apiPath]="EnumApiPath.scheduleFeeEmployerApiPath"
+													(valueChange)="selectionOnValueChange($event,'employer_ids')" 	 [ngSelectShow]="true"
+													[multiple]="true"></app-ng-select-shareable> 
+													</div>
+													<!-- <div class="col-sm-6 col-xl-3">
+														<div class="form-group field"
+															[ngClass]="{'focused': searchForm.get('doa').value != '' && searchForm.get('doa').value != null }">
+															<label class="form-label" for="doa">DOA (mm/dd/yyyy)</label>
+															<input appDateOnly [matDatepicker]="doa" type="text"
+																id="doa" formControlName="doa"
+																class="form-control form-input" [max]="2099-01-01">
+															<span
+																*ngIf="searchForm.get('doa').value != '' && searchForm.get('doa').value != null"
+																(click)="searchForm?.get('doa')?.reset()"
+																class="icon-plus date-cross-icon"></span>
+															<mat-datepicker-toggle [for]="doa">
+															</mat-datepicker-toggle>
+															<mat-datepicker #doa></mat-datepicker>
+														</div>
+													</div> -->
+													<div class="col-xl-3 col-lg-4 col-sm-6"> 
+														<div class="form-group field"
+														[ngClass]="{'focused': searchForm.get('visit_date_range1').value != '' && searchForm.get('visit_date_range1').value != null || (searchForm.get('visit_date_range1').errors?.invalid_date) || ( searchForm.get('visit_date_range1').errors?.invalid_date  && searchForm.get('visit_date_range1').errors?.invalid_date?.text != DATEFORMAT) }">
+														<label class="form-label" for="visit_date_range1">Visit Date From (mm/dd/yyyy)</label>
+														<input   [matDatepicker]="visit_date_range1" [appInputDateMask]="visit_date_range1" [min]="min"  id="visit_date_range1" formControlName="visit_date_range1"
+														  class="form-control form-input" [max]="2099-01-01">
+														<span *ngIf=" searchForm.get('visit_date_range1').value != '' && searchForm.get('visit_date_range1').value != null || (searchForm.get('visit_date_range1').errors?.invalid_date) || ( searchForm.get('visit_date_range1').errors?.invalid_date  && searchForm.get('visit_date_range1').errors?.invalid_date?.text != DATEFORMAT)"
+														  (click)="searchForm?.get('visit_date_range1')?.reset()" class="icon-plus date-cross-icon"></span>
+														<mat-datepicker-toggle [for]="visit_date_range1"></mat-datepicker-toggle>
+														<mat-datepicker #visit_date_range1></mat-datepicker>
+														<small class="form-text text-muted danger text-start ng-star-inserted"
+														  *ngIf="searchForm.get('visit_date_range1').errors?.invalid_date || searchForm.get('visit_date_range1').errors?.invalid_date  && searchForm.get('visit_date_range1').errors?.invalid_date?.text != DATEFORMAT">
+														  Date format should be accurate
+														  </small>
+														</div>
+													  </div>
+												
+													  <div class="col-xl-3 col-lg-4 col-sm-6">
+														<div class="form-group field"
+														  [ngClass]="{'focused': searchForm.get('visit_date_range2').value != '' && searchForm.get('visit_date_range2').value != null || (searchForm.get('visit_date_range2').errors?.invalid_date) || ( searchForm.get('visit_date_range2').errors?.invalid_date  && searchForm.get('visit_date_range2').errors?.invalid_date?.text != DATEFORMAT) }">
+														  <label class="form-label" for="visit_date_range2">Visit Date To (mm/dd/yyyy)</label>
+														  <input  class="form-control form-input date-field"
+                              id ="visit_date_range2"
+                               [matDatepicker]="visit_date_range2" 
+                               [appInputDateMask]="visit_date_range2"
+                               id="visit_date_range2"
+															formControlName="visit_date_range2" [min]=" searchForm.get('visit_date_range1').value || min ">
+															<span *ngIf="searchForm.get('visit_date_range2').value != '' && searchForm.get('visit_date_range2').value != null || (searchForm.get('visit_date_range2').errors?.invalid_date) || ( searchForm.get('visit_date_range2').errors?.invalid_date  && searchForm.get('visit_date_range2').errors?.invalid_date?.text != DATEFORMAT)"
+															(click)="searchForm?.get('visit_date_range2')?.reset()" class="icon-plus date-cross-icon"></span>
+														  <mat-datepicker-toggle matSuffix [for]="visit_date_range2"></mat-datepicker-toggle>
+														  <mat-datepicker #visit_date_range2></mat-datepicker>
+														  <small class="form-text text-muted danger text-start ng-star-inserted"
+															*ngIf="searchForm.get('visit_date_range2').errors?.invalid_date || searchForm.get('visit_date_range2').errors?.invalid_date  && searchForm.get('visit_date_range2').errors?.invalid_date?.text != DATEFORMAT ">
+															Date format should be accurate
+														  </small>
+														  <small class="form-text text-muted danger text-start"
+														  *ngIf="searchForm.get('visit_date_range1').value && searchForm.get('visit_date_range2').value  && (searchForm.get('visit_date_range1').value > searchForm.get('visit_date_range2').value) ">
+														  Visit date to should be greater than to visit date from.
+														</small>
+														</div>
+													  </div>
+
+													
+													<!-- <div class="col-sm-6 col-xl-3 d-inline-block float-left">
+														<div class="form-group field mb-0"
+															[ngClass]="{'focused': searchForm.get('icd_code_ids').value != '' && searchForm.get('icd_code_ids').value != null }">
+						
+															<app-mat-autocomplete (onkeyUp)="search($event,'icd')"  [multiple]="true" (onChangeEmitter)="onSelectCode($event)" [placeHolder] ="'ICD-10 Codes'"  [options]="lstIcd"></app-mat-autocomplete>
+
+														</div>
+													</div> -->
+													<div *ngIf= "adminVisit" class="col-xl-3 col-lg-4 col-sm-6">
+														<div class="form-group field">
+                              <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'case_type_ids'"
+                                [showSelectFieldList]="selectedMultipleFieldFiter['case_type_ids']"
+                                [showSelectFieldOnRefresh]="searchForm.get('case_type_ids').value" [lableName]="'Case Type'"
+                                [bindlable]="'name'" [ngSelectShow]="true" [showSelectAll]="true" [showGroupBy]="true" [bindId]="'id'"
+                                [apiPath]="EnumApiPath.scheduleFeeCaseTypeApiPath" (valueChange)="selectionOnValueChange($event,'case_type_ids')"
+                                [multiple]="true">
+                              </app-ng-select-shareable>
+														</div>
+													</div>
+													<!-- <div class="col-sm-6 col-xl-3 d-inline-block float-left">
+														<div class="form-group field"
+															[ngClass]="{'focused': searchForm.get('no_of_days').value != '' && searchForm.get('no_of_days').value != null }">
+															<label class="form-label" for="no_of_days">No. of
+																Days</label>
+															<input type="text" id="no_of_days"
+																class="form-control form-input"
+																formControlName="no_of_days">
+														</div>
+													</div> -->
+													<div class="col-xl-3 col-lg-4 col-sm-6">
+													<div class="form-group field"
+														[ngClass]="{'focused': searchForm.get('no_of_days_from').value != '' && searchForm.get('no_of_days_from').value != null }">
+														<label class="form-label" for="no_of_days_from">No. of
+															Days From</label>
+														<input appOnlyNumeric type="number" id="no_of_days_from"
+															class="form-control form-input"
+															formControlName="no_of_days_from" >
+															<!-- <small class="form-text text-muted danger float-left"
+															*ngIf="searchForm.get('no_of_days_from').value > searchForm.get('no_of_days_to').value">
+															No. Of Days From should less than No. Of Days To
+															</small> -->
+													</div>
+													</div>
+													<div class="col-xl-3 col-lg-4 col-sm-6">
+														<div class="form-group field"
+															[ngClass]="{'focused': searchForm.get('no_of_days_to').value != '' && searchForm.get('no_of_days_to').value != null }">
+															<label class="form-label" for="no_of_days_to">No. of
+																Days To</label>
+															<input appOnlyNumeric type="number" id="no_of_days_to"
+																class="form-control form-input"
+																formControlName="no_of_days_to" >
+																<small class="form-text text-muted danger float-left"
+															*ngIf="searchForm.get('no_of_days_to').value && searchForm.get('no_of_days_to').value < searchForm.get('no_of_days_from').value">
+															No. Of Days To should greater than No. Of Days From 
+															</small>
+														</div>
+														</div>
+													<!-- <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+														<div class="form-group field"
+															[ngClass]="{'focused': searchForm.get('insurance_id').value != '' && searchForm.get('insurance_id').value != null }">
+															<label class="form-label" for="insurance_id">Insurance
+																Name</label>
+														
+															<ng-select formControlName="insurance_id" id="name"
+																(keyup)="search($event,'insurance')"
+																[items]="lstInsurance" [multiple]="false"
+																bindLabel="insurance_name" bindValue="id">
+															</ng-select>
+														</div>
+													</div> -->
+													<!-- <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+														<div class="form-group field"
+															[ngClass]="{'focused': searchForm.get('claim_no').value != '' && searchForm.get('claim_no').value != null }">
+															<label class="form-label" for="claim_no">Claim#</label>
+															<input type="text" id="claim_no"
+																class="form-control form-input"
+																formControlName="claim_no">
+														</div>
+													</div> -->
+													<div class="col-xl-3 col-lg-4 col-sm-6">
+														<div class="form-group field">
+                              <app-ng-select-shareable #statusNgSelect [events]="eventsSubject.asObservable()" [filterFieldName]="'visit_status_ids'"
+                                [showSelectFieldList]="selectedMultipleFieldFiter['visit_status_ids']"
+                                [showSelectFieldOnRefresh]="searchForm.get('visit_status_ids').value" [lableName]="'Status'"
+                                [bindlable]="'name'" 
+                                [forceApiHitonOpen]="true"
+                                [ngSelectShow]="true" [showSelectAll]="true" [showGroupBy]="true" [bindId]="'id'"
+                                [mainApiPath]="requestServerpath.fd_api_url_vd"
+                                [apiPath]="BillingApiPath.getStatusList" (valueChange)="selectionOnValueChange($event,'visit_status_ids')"
+                                [multiple]="true">
+                              </app-ng-select-shareable>
+															<!-- <option>Finalized</option>
+                              <option>Unfinalized</option>
+                            </select> -->
+															<!-- <input type="text" id="status" class="form-control form-input" formControlName="status"> -->
+														</div>
+													</div>
+                          <div class="col-xl-3 col-lg-4 col-sm-6">
+														<div class="form-group field" 	[ngClass]="{'focused': (searchForm.get('billable').value != '' && searchForm.get('billable').value != null) || labelName.billable }">
+															<label class="form-label"
+																for="billable">Billable </label>
+															<ng-select class="ng-label" formControlName="billable" 
+																id="billable" [items]="lstBillable"
+                                (open)="labelMovetoAbove(true, 'billable')" (close)="labelMovetoAbove(false, 'billable')" (clear)="ngSelectClear('billable')"
+																 bindLabel="name" bindValue="name" [closeOnSelect]="false">
+
+                                 <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index" let-search="searchTerm">
+                                    <!-- <input id="item-{{index}}" type="checkbox" [checked]="item$.selected" /> -->
+                                    <!-- {{ item.name }} -->
+                                    <div class="checkbox-btn">
+                                      <input id="item-{{index}}" type="checkbox" [checked]="item$.selected" />
+                                      <span  class="fake-input"></span>
+                                      <span  class="fake-label">
+                                        {{ item.name }}
+                                      </span>
+                                    </div>
+                                </ng-template>
+															</ng-select>
+														</div>
+													</div>
+                          <div class="col-xl-3 col-lg-4 col-sm-6">
+                            <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'report_upload_status'"
+                              [showSelectFieldList]="lstReportUploadedStatus" [lists]="lstReportUploadedStatus" [Is_static_data]="true"
+                              [showSelectFieldOnRefresh]="searchForm && searchForm.get('report_upload_status').value ? searchForm.get('report_upload_status').value : null"
+                              [lableName]="'Report Uploaded Status'"
+                              [showSelectAll] ="true"
+                              [showGroupBy] = "true"
+                              (valueChange)="selectionOnValueChange($event,'report_upload_status')">
+                            </app-ng-select-shareable> 
+                          </div>
+                          <div class="col-xl-3 col-lg-4 col-sm-6">
+                            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'firm_ids'"
+                              [showSelectFieldList]="selectedMultipleFieldFiter['firm_ids']"
+                              [showSelectFieldOnRefresh]="searchForm.get('firm_ids').value" 
+                              [lableName]="'Firm Name'" [bindlable]="'full_name'" [searchLableName]="'name'" 
+                              [bindId]="'id'" 
+                              [showSelectAll] ="true"
+                              [showGroupBy] = "false" [apiPath]="EnumApiPath.firmurlApiPath"  
+                              (valueChange)="selectionOnValueChange($event,'firm_ids')" 
+                              [multiple]="true">
+                            </app-ng-select-shareable>    
+                          </div>
+                          <div class="col-xl-3 col-lg-4 col-sm-6">
+                            <app-ng-select-shareable [events]="eventsSubject.asObservable()" 
+                              [filterFieldName]="'insurance_ids'"
+                              [showSelectFieldList]="selectedMultipleFieldFiter['insurance_ids']"
+                              [showSelectFieldOnRefresh]="searchForm.get('insurance_ids').value"
+                              [lableName]="'Insurance Name'" [bindlable]="'insurance_name'" [searchLableName]="'insurance_name'"
+                              [bindId]="'id'" [conditionalExtraApiParams]="{order:'asc'}"
+                              [showSelectAll] ="true"
+                              [showGroupBy] = "false" [apiPath]="EnumApiPath.insuranceBillsApiPath"  
+                              (valueChange)="selectionOnValueChange($event,'insurance_ids')" 
+                              [multiple]="true">
+                            </app-ng-select-shareable>  
+                          </div>
+                          <div class="col-xl-3 col-lg-4 col-sm-6">
+                            <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'created_by_ids'"
+                              [showSelectFieldList]="selectedMultipleFieldFiter['created_by_ids']"
+                              [showSelectFieldOnRefresh]="searchForm.get('created_by_ids').value" [lableName]="'Created By'"
+                              [showSelectAll] ="true"
+                              [showGroupBy] = "false"
+                              [bindlable]="'full_name'" [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"
+                              (valueChange)="selectionOnValueChange($event,'created_by_ids')" [multiple]="true"></app-ng-select-shareable>
+                          </div>
+                          <div class="col-sm-6 col-lg-4 col-xl-3">
+                            <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'updated_by_ids'"
+                              [showSelectFieldList]="selectedMultipleFieldFiter['updated_by_ids']"
+                              [showSelectFieldOnRefresh]="searchForm.get('updated_by_ids').value" [lableName]="'Updated By'"
+                              [showSelectAll] ="true"
+                              [showGroupBy] = "false"
+                              [bindlable]="'full_name'" [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"
+                              (valueChange)="selectionOnValueChange($event,'updated_by_ids')" [multiple]="true"></app-ng-select-shareable>
+                          </div>
+                          <div class="col-xl-3 col-lg-4 col-sm-6">
+                            <div class="form-group field"
+                              [ngClass]="{'focused': (searchForm.get('created_at').value != '' && searchForm.get('created_at').value != null) || searchForm.get('created_at').errors?.invalid_date  || searchForm.get('created_at').errors?.invalid_date }">
+                              <label class="form-label" for="createdAt">Created At (mm/dd/yyyy)</label>
+                              <input [matDatepicker]="created_at" [appInputDateMask]="created_at" [min]="min" class="form-control form-input" id="dueDate"
+                                formControlName="created_at">
+                              <mat-datepicker-toggle matSuffix [for]="created_at"></mat-datepicker-toggle>
+                              <mat-datepicker #created_at></mat-datepicker>
+                              <small class="form-text text-muted danger"
+                                *ngIf="searchForm.get('created_at').errors?.invalid_date && searchForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT  ">Date
+                                format should be accurate</small>
+                            </div>
+                          </div>
+                          
+                          <div class="col-xl-3 col-lg-4 col-sm-6">
+                            <div class="form-group field"
+                              [ngClass]="{'focused': (searchForm.get('updated_at').value != '' && searchForm.get('updated_at').value != null) || searchForm.get('updated_at').errors?.invalid_date  || searchForm.get('updated_at').errors?.invalid_date }">
+                              <label class="form-label" for="UpdatedAt">Updated At (mm/dd/yyyy)</label>
+                              <input [matDatepicker]="updated_at" [appInputDateMask]="updated_at" [min]="min" class="form-control form-input" id="dueDate"
+                                formControlName="updated_at">
+                              <mat-datepicker-toggle matSuffix [for]="updated_at"></mat-datepicker-toggle>
+                              <mat-datepicker #updated_at></mat-datepicker>
+                              <small class="form-text text-muted danger"
+                                *ngIf="searchForm.get('updated_at').errors?.invalid_date && searchForm.get('updated_at').errors?.invalid_date?.text != DATEFORMAT  ">Date
+                                format should be accurate</small>
+                            </div>
+                          </div>
+                          
+                         <div
+														class="col-md-12 text-center search-filter-btn float-left mb-0 mb-sm-3">
+														<button class="btn btn-success mb-3 mb-sm-0 me-3"
+															(click)="submitFilter();">
+															Filter </button>
+
+														<button class="btn btn-primary mb-3 mb-sm-0" (click)="resetFilter()" [disabled]="checkInputs()">
+															Reset</button>
+													</div>
+												</div>
+
+											</div>
+											<div class="colps-btn-block">
+												<button class="btn plus-btn float-right mt-0" 
+                        aria-label="Open Close collapse"  
+                        (click)="isCollapsed = !isCollapsed" 
+                        [attr.aria-expanded]="!isCollapsed" 
+                        aria-controls="collapseBasic" 
+                        [class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed"
+												type="button">
+                          <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+                        </button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="card data-table p-0 mt-1" style="border:none;">
+							<div class="card-body">
+								<div class="row">
+									<div class="col-md-6 edit-block mb-2">
+										<div class="form-group field option-field mb-0 text-start">
+											<ul>
+												<li>Show</li>
+												<li><select (change)="pageSizeChange($event)"  [(ngModel)]="page.size" class="custom-select">
+														<option value="10">10</option>
+														<option value="20">20</option>
+														<option value="30">30</option>
+														<option value="50">50</option>
+														<option value="100">100</option>
+													</select>
+												</li>
+												<li>Entries</li>
+											</ul> 
+										</div>
+									</div>
+									<div class="col-md-6 d-flex justify-content-end mb-2">
+										<!-- [disabled]="row?.visit_session_state_id== 1 || row?.visit_session_state_id == 3 || row?.billable === 0" -->
+										<button
+										*ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_create_bill) && selection.selected.length>0"
+											class="btn btn-primary d-inline-block ms-2" [disabled]="disableView" (click)="createVistsBill()"
+											type="button"><i class="fa fa-file-invoice-dollar" style="margin-right:5px;
+                                                            font-size: 18px; line-height: 0px;"></i> Create
+											Bill <span *ngIf="this.selection.selected.length!=0" >[{{this.selection.selected.length!=0?this.selection.selected.length:''}}]</span></button>
+										
+											<button *ngIf="selection.selected.length>0"  type="button" 	 (click)="deleteVisitSession()" class="btn btn-danger ms-2" >
+												<i class="icon-remove"></i> Delete 
+												<span *ngIf="this.selection.selected.length!=0" >[{{this.selection.selected.length!=0?this.selection.selected.length:''}}]</span>
+											</button>	
+
+                      <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+                        Customize Columns
+                     </button>
+										
+											<button  type="button" 	 (click)="exportToExcel()" class="btn btn-success text-white ms-2">
+												<i class="fa fa-file-excel"></i> Export To CSV
+											</button>	
+											
+																	
+									</div>
+
+								</div>
+								
+
+								<div class="row">
+									<!-- Employer Information -->
+									<div class="col-xl-12 col-lg-12 mb-3">
+										<ngx-datatable class="bootstrap white-space-wrap custom-scroll-x visit-bill-table"
+											#billingList [rows]="lstBilling" [scrollbarH]="true" [columnMode]="'force'"  [rowHeight]="'auto'"
+											[headerHeight]="50" [footerHeight]="50" 
+											[externalPaging]="true" [count]="page.totalElements"
+                      (sort)="sorting($event)"  [externalSorting]="true" [sortType]="'single'"
+											[offset]="page.pageNumber-1" [limit]="page.size"
+											(page)="onPageChange($event)">
+
+											<ngx-datatable-column *ngIf="adminVisit" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Case ID" [width]="80"
+												prop="case_id">
+												<ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+													<a class="tooltip-outer underline-hov" tooltipClass="table-custom-tooltip" container="body"
+														ngbTooltip="{{value }}"  [routerLink]="['/front-desk/cases/edit/'+row?.case_id+'/patient/patient_summary']">
+														{{value }}
+                        </a>
+												</ng-template>
+											</ngx-datatable-column>
+
+											<ngx-datatable-column *ngIf="adminVisit" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Patient Name" prop="patient" [width]="100">
+												<ng-template ngx-datatable-cell-template let-value="row">
+												  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+												  ngbTooltip="{{value?.p_first_name}} {{value?.p_middle_name}}
+												  {{value?.p_last_name}}">
+												  {{value?.p_first_name}} {{value?.p_middle_name}}
+												  {{value?.p_last_name}}
+												</div>
+												</ng-template>
+											  </ngx-datatable-column>
+
+											<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Practice-Location" [width]="130"
+												prop="practice_location">
+												<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+													<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+														ngbTooltip="{{row?.facility_name}}-{{row?.practice_location_name}}">
+														<!-- {{value && value.facility_location && value.facility_location.facility && value.facility_location.facility.name?value.facility_location.facility.name:null}} -->
+														{{row?.facility_qualifier
+														}}-{{row?.practice_location_qualifier
+														}}
+													</div>
+												</ng-template>
+											</ngx-datatable-column>
+											<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider Name" [sortable]="false" prop="provider"
+												[width]="100">
+												<ng-template ngx-datatable-cell-template let-value="row">
+													<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+														ngbTooltip="{{value?.doc_first_name}} {{value?.doc_middle_name}}
+                            {{value?.doc_last_name}}{{value?.billing_title | AddBillingTitle}}">
+                            {{value?.doc_first_name}} {{value?.doc_middle_name}}
+                            {{value?.doc_last_name}}{{value?.billing_title | AddBillingTitle}}
+							<!-- {{value?.doc_last_name}}{{addBillingTitle(value?.billing_title)}} -->
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Specialty" prop="speciality" [width]="100">
+                        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.speciality_name}}">
+                            <span> {{row?.speciality_qualifier}}</span>
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <!-- *ngIf="adminVisit" -->
+					            <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="DOA" prop="date_of_accident" [width]="80">
+                        <ng-template ngx-datatable-cell-template let-row="row">
+                          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.accident_date | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+                            <span> {{row?.accident_date | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Type" prop="visit_type" [width]="80">
+                        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.appointment_type_name}}">
+                            <span> {{row?.appointment_type_qualifier}}</span>
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Insurance Name" [width]="130"
+                            prop="insurance">
+                            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                                popoverClass="visit-bill-popover"
+                                [ngbPopover]="popContentInsuranceName"
+                                triggers="mouseenter:mouseleave">
+                                {{row?.insurance_name}}
+                                </div>
+                                <ng-template #popContentInsuranceName>
+                                <table class="w-100 text-start">
+                                <tbody>
+                                  <tr>
+                                  <td>
+                                    <span class="font-bold">{{row?.insurance_name}}</span>
+                                    {{row?.insurance_location_name ? ' - ' + row?.insurance_location_name : ''}}{{row?.insurance_location_street_address ? ', ' + row?.insurance_location_street_address : ''}}{{row?.insurance_location_apartment_suit ? ', ' + row?.insurance_location_apartment_suit : ''}}
+                                    {{row?.insurance_location_city ? ', ' + row?.insurance_location_city : ''}}{{row?.insurance_location_state ? ', ' + row?.insurance_location_state : ''}} {{row?.insurance_location_zip}}
+                                  </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              </ng-template>
+                            </ng-template>
+                      </ngx-datatable-column>
+                    
+					            <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Employer Name" [width]="120"
+                            prop="employer">
+                            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                                popoverClass="visit-bill-popover"
+                                [ngbPopover]="popContentEmployerName"
+                                triggers="mouseenter:mouseleave">
+                                {{row?.employer_name}}
+                                </div>
+                                <ng-template #popContentEmployerName>
+                                <table class="w-100 text-center">
+                                <tbody>
+                                  <tr>
+                                  <td>
+                                    {{row?.employer_name}}
+                                  </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              </ng-template>
+                            </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Firm Name" [width]="130"
+                            prop="firm">
+                            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                                popoverClass="visit-bill-popover"
+                                [ngbPopover]="popContentFirmName"
+                                triggers="mouseenter:mouseleave">
+                                {{row?.firm_name}}
+                                </div>
+                                <ng-template #popContentFirmName>
+                                <table class="w-100 text-start">
+                                <tbody>
+                                  <tr>
+                                  <td>
+                                    <span class="font-bold">{{row?.firm_name}}</span>
+                                    {{row?.firm_location_name ? ' - ' + row?.firm_location_name : ''}}{{row?.firm_street_address ? ', ' + row?.firm_street_address : ''}}{{row?.firm_apartment_suite ? ', ' + row?.firm_apartment_suite : ''}}
+                                    {{row?.firm_city ? ', ' + row?.firm_city : ''}}{{row?.firm_state ? ', ' + row?.firm_state : ''}} {{row?.firm_zip}}
+                                  </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              </ng-template>
+                            </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Date" prop="date_of_service" [width]="70">
+                        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+                          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                            ngbTooltip=" {{ row?.visit_date && row?.visit_date.replace(' ', 'T') | date: datePipeService.slashDateFormat_MM_dd_yyyy()  }}">
+                            <span>  {{ row?.visit_date && row?.visit_date.replace(' ', 'T') | date: datePipeService.slashDateFormat_MM_dd_yyyy()  }}</span>
+                          </div>
+                        </ng-template>
+                      </ngx-datatable-column>
+                      <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="ICD-10 Codes" prop="icd_codes" [width]="100">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+             <div
+              *ngIf="filterTheCPTCode(row?.visit_session_code, 1).length>0"
+              class="tooltip-outer"
+              popoverClass="visit-bill-popover"
+              [ngbPopover]="popContent"
+              triggers="mouseenter:mouseleave"
+              container="body">
+              {{filterTheCPTCode(row?.visit_session_code, 1)[0]?.code_name}}<span
+               *ngIf="filterTheCPTCode(row?.visit_session_code,1).length>1"
+               >...</span>
+             </div>
+             <ng-template #popContent>
+              <table class="w-100 text-start">
+               <tbody>
+                <tr
+                 *ngFor="let item of filterTheCPTCode(row?.visit_session_code, 1); let x = index"
+                >
+                 <td>
+                  <span class="font-bold">{{item.code_name}}</span> -
+                  {{item.description}}
+                 </td>
+                </tr>
+               </tbody>
+              </table>
+             </ng-template>
+            </ng-template>
+           </ngx-datatable-column>
+           <ngx-datatable-column
+            [sortable]="false"
+            [canAutoResize]="true"
+            [draggable]="false"
+            [resizeable]="false"
+            name="CPT Codes"
+            prop="cpt_codes"
+            [width]="100">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+             <div
+              *ngIf="filterTheCPTCode(row?.visit_session_code, 2).length>0"
+              class="tooltip-outer"
+              popoverClass="visit-bill-popover"
+              [ngbPopover]="popContent"
+              triggers="mouseenter:mouseleave"
+              container="body">
+              {{filterTheCPTCode(row?.visit_session_code, 2)[0].code_name}}<span
+               *ngIf="filterTheCPTCode(row?.visit_session_code, 2).length>1"
+               >...</span>
+             </div>
+             <ng-template #popContent>
+              <table class="w-100 text-start">
+               <tbody>
+                <tr
+                 *ngFor="let item of filterTheCPTCode(row?.visit_session_code, 2); let x = index"
+                >
+                 <td>
+                  <span class="font-bold">{{item.code_name}}</span> -
+                  {{item.description}}
+                 </td>
+                </tr>
+               </tbody>
+              </table>
+             </ng-template>
+            </ng-template>
+           </ngx-datatable-column>
+           <!-- *ngIf="adminVisit" -->
+           <ngx-datatable-column
+            [sortable]="false"
+            [canAutoResize]="true"
+            [draggable]="false"
+            [resizeable]="false"
+            name="Claim #"
+            prop="claim_no"
+            [width]="70">
+            <ng-template ngx-datatable-cell-template let-value="value">
+             <div
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              container="body"
+              ngbTooltip="{{value}}">
+              {{value}}
+             </div>
+            </ng-template>
+           </ngx-datatable-column>
+           <ngx-datatable-column
+            *ngIf="adminVisit"
+            [sortable]="false"
+            [canAutoResize]="true"
+            [draggable]="false"
+            [resizeable]="false"
+            name="Case Type"
+            prop="case_type"
+            [width]="80"
+           >
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+             <div
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              container="body"
+              ngbTooltip="{{row?.case_type_name}}"
+             >
+              <span> {{row?.case_type_name}}</span>
+             </div>
+            </ng-template>
+           </ngx-datatable-column>
+           <ngx-datatable-column
+            [sortable]="false"
+            [canAutoResize]="true"
+            [draggable]="false"
+            [resizeable]="false"
+            name="No. of Days"
+            prop="no_of_days"
+            [width]="80">
+            <ng-template ngx-datatable-cell-template let-value="value">
+             <div
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              container="body"
+              ngbTooltip="{{value}}">
+              <span> {{value}}</span>
+             </div>
+            </ng-template>
+           </ngx-datatable-column>
+           <ngx-datatable-column
+            [sortable]="false"
+            [canAutoResize]="true"
+            [draggable]="false"
+            [resizeable]="false"
+            name="Status"
+            prop="visit_status"
+            [width]="70">
+            <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+             <div
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              container="body"
+              ngbTooltip="{{row?.visit_status_name}}">
+              <span> {{row?.visit_status_name}}</span>
+             </div>
+            </ng-template>
+           </ngx-datatable-column>
+           <ngx-datatable-column
+            [sortable]="false"
+            [canAutoResize]="true"
+            [draggable]="false"
+            [resizeable]="false"
+            name="Billable"
+            prop="billable"
+            [width]="70"
+           >
+            <ng-template ngx-datatable-cell-template let-value="value">
+             <div
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              container="body"
+              ngbTooltip="{{value===0?'No':'Yes'}}"
+             >
+              <span> {{value===0?'No':'Yes' }}</span>
+             </div>
+            </ng-template>
+           </ngx-datatable-column>
+           <ngx-datatable-column
+            [sortable]="false"
+            [canAutoResize]="false"
+            [draggable]="false"
+            [resizeable]="false"
+            name="Report Uploaded Status"
+            [width]="110"
+            prop="document_uploaded"
+           >
+            <ng-template ngx-datatable-cell-template let-value="value">
+             <div
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              container="body"
+              ngbTooltip="{{value?'Yes':'No'}}"
+             >
+              {{value?'Yes':'No' }}
+             </div>
+            </ng-template>
+           </ngx-datatable-column>
+           <ngx-datatable-column
+            [sortable]="false"
+            [canAutoResize]="false"
+            [draggable]="false"
+            [resizeable]="false"
+            name="Last Uploaded Document Date"
+            prop="last_uploaded_document_date"
+            [width]="110">
+            <ng-template ngx-datatable-cell-template let-value="value">
+             <div
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              container="body"
+              ngbTooltip="{{ value && value.replace(' ', 'T') | date: datePipeService.slashDateFormat_MM_dd_yyyy()  }}">
+              <span>
+                {{ value && value.replace(' ', 'T') | date: datePipeService.slashDateFormat_MM_dd_yyyy()  }}</span>
+             </div>
+            </ng-template>
+           </ngx-datatable-column>
+           <ngx-datatable-column
+            [sortable]="false"
+            [canAutoResize]="true"
+            [draggable]="false"
+            [resizeable]="false"
+            name="Actions"
+            sortable="false"
+            prop="actions"
+            [width]="165">
+            <ng-template let-column="column" ngx-datatable-header-template>
+				<mat-checkbox 
+				(change)="$event ? billsmasterToggle() : null" [checked]="selection.hasValue() && isbillAllSelected()"
+				[indeterminate]="selection.hasValue() && !isbillAllSelected()">
+				</mat-checkbox>
+				Actions 
+            </ng-template>
+            <ng-template
+             let-row="row"
+             let-value="value"
+             let-rowIndex="rowIndex"
+             ngx-datatable-cell-template>
+													<mat-checkbox #checkboxUnbilledVisit *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_create_bill)" (click)="$event.stopPropagation()"
+														(change)="onChecked($event,row,rowIndex)"
+                            [checked]="selection.isSelected(row)">
+													</mat-checkbox>
+													<button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_edit_visit)" class="edit-hov pointer mx-1" ngbTooltip="Edit" container="body"
+														(click)="openModal(modal, row)"
+														role="button" aria-label="Edit">
+                            <i class="icon-pencil text-primary"></i></button>
+                            <span class="tableIcon-condition" ngbTooltip="{{!row?.document_uploaded?'No file':'View'}}" container="body">
+                              <button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_pdfs_view)" class="view-hov pointer mx-1" container="body" [disabled]="disableView || !row?.document_uploaded"
+                                (click)="showDocumentTable(documenttable,row,true)"
+                                role="button" aria-label="View">
+                                <span class="icon-eye text-success"></span>
+                              </button>
+                            </span>
+														<button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_pdfs_view)" class="view-hov pointer mx-1" ngbTooltip="Edit ICD Codes" container="body"
+														(click)="openbulkEditICdCodesModal(row)"
+														 role="button" aria-label="Clone">
+														<i class="fas fa-clone text-purple"></i></button>
+                            <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="billingHistoryStats(row)">
+                              <i class="fa fa-history"></i>
+                            </a>
+														<button class="remove-hov pointer mx-1" ngbTooltip="Delete" container="body" (click)="onDeleteVisit(row)" aria-label="Delete">
+														<i class="icon-remove"></i>
+													  </button>
+													  <button class="remove-hov pointer mx-1" *ngIf= "storageData.getUserId()  ===219 || storageData.getUserId()  ===216 || storageData.getUserId()  ===282 || storageData.getUserId()  ===299" ngbTooltip="Change Visit Type" container="body" (click)="onChangeSpeaclity(row,changeSpecality)" aria-label="Delete">
+														<i class="fa fa-file"></i>
+													  </button>
+            </ng-template>
+           </ngx-datatable-column>
+          </ngx-datatable>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+
+   <div
+    class="modal fade"
+    id="edit-document"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="edit-document"
+    aria-hidden="true"
+   >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+     <div class="modal-content">
+      <div class="modal-header">
+       <h5 class="modal-title">Edit Document</h5>
+       <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+       >
+        <span aria-hidden="true">&times;</span>
+       </button>
+      </div>
+      <div class="modal-body">
+       <form>
+        <div class="form-group row">
+         <label class="col-sm-3 col-form-label">Rename File :</label>
+         <div class="col-sm-9">
+          <input type="text" class="form-control w-100" placeholder="" />
+         </div>
+        </div>
+        <div class="form-group row">
+         <label class="col-sm-3 col-form-label">Tags :</label>
+         <div class="col-sm-9">
+          <textarea class="form-control w-100" rows="5"></textarea>
+         </div>
+        </div>
+
+        <div class="form-group row">
+         <label class="col-sm-3 col-form-label">Move To :</label>
+         <div class="col-sm-9">
+          <input type="text" class="form-control w-100" placeholder="General" />
+         </div>
+        </div>
+
+        <div class="form-group row">
+         <label class="col-sm-3 col-form-label">Copy To :</label>
+         <div class="col-sm-9">
+          <input
+           type="text"
+           class="form-control w-100"
+           placeholder="Claim information"
+          />
+         </div>
+        </div>
+
+        <div class="form-group row">
+         <div class="col-sm-9 offset-sm-3">
+          <div class="row">
+           <div class="col-6">
+            <button type="submit" class="btn bg-green w-100">Submit</button>
+           </div>
+           <div class="col-6">
+            <button
+             type="button"
+             class="btn btn-outline-secondary w-100"
+             data-dismiss="modal"
+            >
+             Close
+            </button>
+           </div>
+          </div>
+         </div>
+        </div>
+       </form>
+      </div>
+     </div>
+    </div>
+   </div>
+
+   <!-- Edit Visit -->
+   <div
+    class="modal fade"
+    id="edit-visit"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="edit-visit"
+    aria-hidden="true"
+   >
+    <div
+     class="modal-dialog modal-dialog-centered add-visit-popup"
+     role="document"
+    >
+     <div class="modal-content">
+      <div class="modal-header">
+       <h5 class="modal-title">Edit Visit</h5>
+       <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+       >
+        <span aria-hidden="true">&times;</span>
+       </button>
+      </div>
+      <div class="modal-body">
+       <form>
+        <div class="form-group row">
+         <label class="col-sm-4 col-form-label">Provider Name</label>
+         <div class="col-sm-8">
+          <input type="text" class="form-control w-100" placeholder="" />
+         </div>
+        </div>
+        <div class="form-group row">
+         <label class="col-sm-4 col-form-label">Visit Date</label>
+         <div class="col-sm-8">
+          <div class="form-group field mb-2">
+           <input type="text" class="form-control form-input" />
+          </div>
+         </div>
+        </div>
+
+        <div class="form-group row">
+         <label class="col-sm-4 col-form-label">Speciality</label>
+         <div class="col-sm-8">
+          <input type="text" class="form-control form-input" />
+         </div>
+        </div>
+
+        <div class="form-group row">
+         <label class="col-sm-4 col-form-label">Visit Type</label>
+         <div class="col-sm-8">
+          <input type="text" class="form-control form-input" />
+         </div>
+        </div>
+
+        <div class="form-group row">
+         <label class="col-sm-4 col-form-label">ICD-10 Codes*</label>
+         <div class="col-sm-8">
+          <input type="text" class="form-control w-100" placeholder="" />
+         </div>
+        </div>
+
+        <div class="form-group row">
+         <label class="col-sm-4 col-form-label">CPT Codes*</label>
+         <div class="col-sm-8">
+          <input type="text" class="form-control form-input" />
+         </div>
+        </div>
+
+		
+
+        <div class="row">
+         <div class="col-sm-8 offset-sm-4">
+          <div class="row">
+           <div class="col-6">
+            <button type="submit" class="btn bg-green w-100">Submit</button>
+           </div>
+           <div class="col-6">
+            <button
+             type="button"
+             class="btn btn-outline-secondary w-100"
+             data-dismiss="modal"
+            >
+             Cancel
+            </button>
+           </div>
+          </div>
+         </div>
+        </div>
+       </form>
+      </div>
+     </div>
+    </div>
+    
+		<ng-template #modal let-modal>
+			<div class="modal-header">
+				<h5 class="modal-title">{{title=='create'?'Add':'Update'}} Visit </h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeEditModal();modal?.dismiss()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body modal-pt-15 visitclass">
+				<form [formGroup]="form">
+					<div class="row">
+						<div class="col-12">
+							
+							<div class="light-list-striped">
+                <ul class="list-unstyled">
+                  <li><label>Practice-Location:</label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.facility_location?.facility_full_name}}">
+						{{editRecord?.facility_location?.qualifier}}</span></li>
+                  <li><label>Provider:</label>
+					<span  class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.doctor?.first_name}} {{editRecord?.doctor?.middle_name?editRecord?.doctor?.middle_name:''}} {{editRecord?.doctor?.last_name}}">
+						{{editRecord?.doctor?.first_name}} {{editRecord?.doctor?.middle_name?editRecord?.doctor?.middle_name:''}} {{editRecord?.doctor?.last_name}} </span></li>
+                  <li><label>Visit Date:</label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.visit_date_format | date: datePipeService.slashDateFormat_MM_dd_yyyy() }}">{{editRecord?.visit_date_format | date: datePipeService.slashDateFormat_MM_dd_yyyy()}} </span></li>
+                </ul>
+                <ul class="list-unstyled">
+                  <li><label>Specialty:</label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.speciality?.name}}">{{editRecord?.speciality?.qualifier}}</span></li>
+                  <li><label>Visit Type:</label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.appointment_type?.name}}">{{editRecord?.appointment_type?.qualifier}}</span></li>
+                  <li><label>Case Type:</label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.kiosk_case?.case_types?.name}}">{{editRecord?.kiosk_case?.case_types?.name}}</span></li>
+                </ul>
+                <ul class="list-unstyled">
+                  <li><label>Insurance:</label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.primary_insurance_name}}">{{editRecord?.primary_insurance_name}}</span></li>
+                  <li><label>Claim #:</label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.primary_claim_no}}">{{editRecord?.primary_claim_no}}</span></li>
+                  <li><label>No. of days:</label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.no_of_days}}">{{editRecord?.no_of_days}}</span></li>
+                </ul>
+						  </div>
+					  </div>
+		<div class="col-12 mb-3" *ngIf="editRecord?.speciality?.speciality_key == 'diagnostic'">
+			<label class="form-label" for="provider">Provider*</label>
+		<ng-select [items]="diagnosticProviders" 
+           bindLabel="name" 
+           bindValue="id" 
+           formControlName="provider_id" (open)="getProvidersForDiagnosticSpecialty()" (change)="getProviderTechnisionForDiagnosticSpecialty()" [closeOnSelect]="false">
+		</ng-select>
+			<!-- <ng-select formControlName="provider_id"  [multiple]="false" (open)="getProvidersForDiagnosticSpecialty()" (change)="getProviderTechnisionForDiagnosticSpecialty()">
+				<ng-option *ngFor="let provider of diagnosticProviders" [value]="provider.user_id">{{provider.first_name}} {{provider && provider.middle_name ? provider.middle_name : ''}} {{provider.last_name}}</ng-option>
+			 </ng-select> -->
+			 <small
+			 class="form-text text-muted danger"
+			 *ngIf="form.get('provider_id').errors?.required && 
+					(form.get('provider_id').dirty || form.get('provider_id').touched)"
+			 >Please select the provider!</small
+			>
+		</div>
+		<div class="col-12" *ngIf="editRecord?.speciality?.speciality_key == 'diagnostic' && form.get('provider_id').value" >
+			<div class="form-group">
+      <app-ng-select-shareable [events]="eventsSubjectTechnician.asObservable()"  [filterFieldName]="'technician_id'"
+      [showSelectFieldList]="selectedMultipleFieldFiter['technician_id']"
+       [showSelectFieldOnRefresh]="form.get('technician_id').value"  [ngSelectShow]="true"
+       [lableName]="'Technician/MA/PA'" [bindlable]="'full_name'" [concateRoleQualifier]="true" [searchLableName]="'technician_id'"
+       [bindId]="'id'" [apiPath]="getTechnicianListing"  [conditionalExtraApiParams]="technicianExtraParams()"
+       (valueChange)="selectionOnValueChange($event,'technician_id')" 
+       [multiple]="false" [forceApiHitonOpen]="technicianAPIhit" ></app-ng-select-shareable> 
+			 </div>
+		</div>
+		<div class="col-12" *ngIf="editRecord?.speciality?.speciality_key == 'diagnostic'">
+			<div class="form-group">
+				<label class="form-label" for="cd">CD (Images)</label>
+				<ng-select
+				 formControlName="cd"
+				 [items]="lstCd"
+				 bindLabel="name"
+				 bindValue="id"
+         [closeOnSelect]="false"
+				>
+				</ng-select>
+			   </div>
+		   </div>
+      <div class="{{showAssertionCode ? 'col-6':'col-12'}}">
+       <div class="form-group">
+        <label class="form-label" for="Billable">Billable*</label>
+        <ng-select
+         formControlName="billable"
+         id="billable"
+         [items]="lstBillable"
+         bindLabel="name"
+         bindValue="id"
+         [closeOnSelect]="false"
+        >
+        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index" let-search="searchTerm">
+          <div class="checkbox-btn">
+            <input id="item-{{index}}" type="checkbox" [checked]="item$.selected" />
+            <span  class="fake-input"></span>
+            <span  class="fake-label px-1">
+              {{ item.name }}
+            </span>
+          </div>
+        </ng-template>
+        </ng-select>
+        <small
+         class="form-text text-muted danger"
+         *ngIf="form.get('billable').errors?.required && 
+                (form.get('billable').dirty || form.get('billable').touched)"
+         >This field is required</small
+        >
+       </div>
+      </div>
+      <div class="col-6" *ngIf="showAssertionCode">
+       <div class="form-group">
+        <label class="form-label" for="assertion_code">Accession No*</label>
+        <input type="text" formControlName="assertion_code" [maxLength]="10" class="form-control form-input mb-0" notFirstCharactorSpace />
+        <small
+         class="form-text text-muted danger"
+         *ngIf="form.get('assertion_code').errors?.required && 
+                (form.get('assertion_code').dirty || form.get('assertion_code').touched)"
+         >This field is required</small
+        >
+       </div>
+      </div>
+      <div class="col-12 mt-3">
+       <div class="form-group mb-2">
+        <app-mat-autocomplete
+         [loader]="showSpinnerIntellicense.icd_10"
+         [selectedOptions]="editRecord.icd_codes"
+         (onkeyUp)="searchWithIcd($event,'icd','search')"
+         (onScrolled)="onScroll($event,'icd')"
+         [max]="12"
+         [selected_case_type_slug]="editRecord.kiosk_case?.case_types?.slug"
+         [allowed_case_type_slugs]="allowed_case_type_slugs"
+         [multiple]="true"
+         (onChangeEmitter)="onCodeChange($event,'icd')"
+         [placeHolder]="icdCodePlaceHolder"
+         [options]="lstIcd"
+        ></app-mat-autocomplete>
+        <small
+        class="form-text text-muted danger"
+        *ngIf="form.get('icd_codes').errors?.required && 
+               (form.get('icd_codes').dirty || form.get('icd_codes').touched)"
+        >This field is required</small
+       >
+       </div>
+      </div>
+
+      <div class="col-12">
+       <div class="form-group mb-2">
+  
+        <!-- [max]="6" -->
+        <app-mat-autocomplete
+         [loader]="showSpinnerIntellicense.cpt_codes"
+         [selectedOptions]="editRecord.cpt_codes"
+         [showconfirmationdialog] = "!selectMultipleCPTs"
+         [dialogMessage]="dialogMessage"
+         (onkeyUp)="searchWithCpt($event,'cpt','search')"
+         (onScrolled)="onScroll($event,'cpt')"         
+         [selected_case_type_slug]="editRecord.kiosk_case?.case_types?.slug"
+         [allowed_case_type_slugs]="allowed_case_type_slugs"
+         [multiple]="selectMultipleCPTs"
+         (onChangeEmitter)="onCodeChange($event,'cpt')"
+         [placeHolder]="cptCodePlaceHolder"
+         [options]="lstcpt"
+        ></app-mat-autocomplete>
+
+        <small
+         class="form-text text-muted danger"
+         *ngIf="form.get('cpt_codes').errors?.required && 
+                (form.get('cpt_codes').dirty || form.get('cpt_codes').touched)"
+         >This field is required</small
+        >
+       </div>
+      </div>
+
+      <div class="col-12">
+       <div class="form-group">
+        <label class="form-label" for="visit_session_state_id">Status*</label>
+        <ng-select
+         formControlName="visit_session_state_id"
+         id="visit_session_state_id"
+         [items]="VisitSessionStatus"
+         (change)="changeSessionId($event)"
+         [multiple]="false"
+         bindLabel="name"
+         bindValue="id"
+         [closeOnSelect]="false"
+        >
+        </ng-select>
+        <small
+         class="form-text text-muted danger"
+         *ngIf="form.get('visit_session_state_id').errors?.required && 
+                (form.get('visit_session_state_id').dirty || form.get('visit_session_state_id').touched)"
+         >This field is required</small
+        >
+       </div>
+      </div>
+
+	  <div class="col-12 " *ngIf="enableReadingProvider">
+		<div class="form-group field mb-1 cpt-plc-hold search-label">
+			<app-ng-select-shareable #readingProviderControl [events]="eventsSubjectReadingProvider.asObservable()"  [filterFieldName]="'reading_provider'"
+               [showSelectFieldList]="showSelectFieldList['reading_provider']"
+                [showSelectFieldOnRefresh]="readingProviderId" 
+								 [lableName]="'Reading Provider'" [bindlable]="'full_name'" [searchLableName]="'reading_provider'"
+								 [bindId]="'id'" [apiPath]="DoctorCalendarUrlsEnum.getProviders" [conditionalExtraApiParams]="{'reading_provider':1,'order': OrderEnum.ASC}"
+								 (valueChange)="onSelectionValueChange($event,form,'reading_provider')"  	 [ngSelectShow]="true"
+								 [multiple]="false" [closeOnSelect]='false' ></app-ng-select-shareable> 
+			</div>	
+	</div>
+
+  <div class="col-12 " *ngIf="editRecord?.speciality?.speciality_key == 'diagnostic'">
+		<div class="form-group field mb-1 cpt-plc-hold search-label">
+			<app-ng-select-shareable [events]="eventsSubjectPhysicians.asObservable()"  [filterFieldName]="'physician_id'"
+										[showSelectFieldList]="showSelectFieldList['physician_id']"
+										[maxLengthName] = "95" [ngSelectShow]="true"
+                    [isReferingPhysician]="true"
+										 [showSelectFieldOnRefresh]="form.get('physician_id').value" 
+										 [lableName]="'Referring Physician'" [bindlable]="'refferingOfficeName'" [searchLableName]="'physician_id'"
+										 [bindId]="'id'" [apiPath]="ReferringPhysician_LocationListing" 
+										 (valueChange)="onSelectionValueChange($event,form,'physician_id')" 
+										 [multiple]="false" [forceApiHitonOpen]="hitAPIonEdit" [clearListOnClick]="true" ></app-ng-select-shareable> 
+			</div>	
+	</div>
+   
+
+      <div class="col-md-12">
+    
+       <div class="file-upload mt-1">
+        <ngx-file-drop [disabled]="disableUpload" (onFileDrop)="dropped($event, uploadDocuments)"
+          browseBtnClassName="btn btn-success py-1 upload-btn printer-alfa">
+          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+          <p>
+            Drag and drop files here to
+        
+          </p>
+          <button [disabled]="disableUpload"
+            *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_edit_visit_upload_documents)">
+            <i></i>
+            <label class="btn btn-success py-1 upload-btn me-3 ms-3">
+            <input
+              (change)="onFileChange($event,uploadDocuments)"
+              style="display: none;"
+              multiple
+              type="file"
+            />
+            <i class="icon-upload"></i> Upload
+            </label>
+          </button>
+          </ng-template>
+        </ngx-file-drop>
+       
+      </div>
+      <div *ngIf="disableUpload" class="file-upload-txt">
+        <span class="text-center text-muted danger">
+          File Upload option is not available as the template is Static/Dynamic
+        </span>
+      </div>
+    
+      </div>
+      <div class="col-md-12 mt-3">
+       <app-visit-document-listing
+        #visitEditDocumentListingComponent
+        [form]="form"
+        [shareVisitDesk]="shareVisitDesk"
+        [files]="currentVisitFile"
+        [visitFileValue]="visitFileValue"
+        [editRecord]="editRecord"
+        (getCurrentRecords)="getCurrentRecords($event)"
+        [folder]="folder"
+       ></app-visit-document-listing>
+      </div>
+     </div>
+
+     <div class="row">
+      <div class="col-md-12 modal-btn-width text-center mt-3">
+       <button
+        type="button"
+        class="btn btn-outline-secondary me-3"
+        data-dismiss="modal"
+        (click)="closeEditModal()"
+       >
+        Cancel
+       </button>
+       <button
+        type="button"
+        (click)="onFormSubmit(form.value)"
+        class="btn btn-success"
+       >
+        {{title=='create'?'Save':'Update'}}
+       </button>
+      </div>
+     </div>
+    </form>
+   </div>
+  </ng-template>
+
+  <ng-template #documenttable let-modal>
+   <div class="modal-header">
+    <h5 class="modal-title">Documents List</h5>
+    <button
+     type="button"
+     class="close"
+     data-dismiss="modal"
+     aria-label="Close"
+     (click)="closeModal();modal?.close()"
+    >
+     <span aria-hidden="true">&times;</span>
+    </button>
+   </div>
+   <app-visit-document-listing
+    #visitListingOuterComponent
+    [shareVisitDesk]="shareVisitDesk"
+    [form]="form"
+    [editRecord]="editRecord"
+    [folder]="folder"
+   ></app-visit-document-listing>
+  </ng-template>
+  <ng-template #uploadDocuments let-modal>
+   <div class="modal-header">
+    <h5 class="modal-title">Upload Documents</h5>
+    <button
+     type="button"
+     class="close"
+     (click)="modal.dismiss('Cross click')"
+     data-dismiss="modal"
+     aria-label="Close"
+    >
+     <span aria-hidden="true">&times;</span>
+    </button>
+   </div>
+   <div class="modal-body">
+    <app-visit-upload-documents
+     [files]="files"
+     [shareVisitDesk]="shareVisitDesk"
+     [uploadFiles]="uploadFiles"
+     [folder]="folder"
+     (closeModal)="closeModal($event)"
+     (startLoader)="setStartLoader($event)"
+    >
+    </app-visit-upload-documents>
+   </div>
+  </ng-template>
+ </div>
+</div>
+
+
+<ng-template #changeSpecality let-modal>
+	<div class="modal-header">
+	 <h5 class="modal-title">Change Specality</h5>
+	 <button
+	  type="button"
+	  class="close"
+	  (click)="modal.dismiss('Cross click');closeModalChangeSpecality()"
+	  data-dismiss="modal"
+	  aria-label="Close"
+	 >
+	  <span aria-hidden="true">&times;</span>
+	 </button>
+	</div>
+	<div class="modal-body">
+
+		<form autocomplete="off" [formGroup]="searchForm" >
+
+	<div class ="row">
+		<div class = "col-6">
+			
+			<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_id'"
+														[showSelectFieldList]="selectedMultipleFieldFiter['speciality_id']"
+														 [showSelectFieldOnRefresh]="searchForm.get('speciality_id').value" 
+														 [lableName]="'Specialty'" [bindlable]="'name'" 	 [ngSelectShow]="true"
+														 [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi+ '?name=Diagnostic'"  
+														 (valueChange)="selectionOnValueChange($event,'speciality_id')"  	 [ngSelectShow]="true"
+														 [multiple]="false">
+														</app-ng-select-shareable> 
+			</div> 
+      <div class= "col-6"> 
+		       
+														<div class="form-group field"
+															[ngClass]="{'focused': (searchForm.get('appointment_type_id')?.value != '' && searchForm.get('appointment_type_id')?.value != null) || labelName.visitType }">
+															<label class="form-label" for="appointment_type_id">Visit
+																Type</label>
+															<ng-select formControlName="appointment_type_id" id="name"
+																[items]="lstVistyTypeDiag" [multiple]="false" (clear)="ngSelectClear('appointment_type_id')"
+                                (open)="labelMovetoAbove(true, 'visitType')" (close)="labelMovetoAbove(false, 'visitType')"
+																bindLabel="name" bindValue="id" [closeOnSelect]="false">
+																<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+																	<div class="ng-value ng-label"
+																	  *ngFor="let item of items | slice:0:1">
+																	  <span class="ng-value-label">{{item?.name}}</span>
+																	  <span class="ng-value-icon right" (click)="clear(item)"
+																		aria-hidden="true">×</span>
+																	</div>
+																	<div class="ng-value bg-none ng-numbers" *ngIf="items?.length > 1">
+																	  <span class="ng-value-label border-0">+{{items?.length -
+																		1}}</span>
+																	</div>
+																  </ng-template>
+															</ng-select>
+															</div>
+															
+	</div>
+	</div>
+			
+	<div class="row">
+		<div class="col-md-12 modal-btn-width text-center mt-3">
+		 <button
+		  type="button"
+		  class="btn btn-outline-secondary me-3"
+		  data-dismiss="modal"
+		  (click)="closeModalChangeSpecality();modal.dismiss('Cross click');"
+		 >
+		  Cancel
+		 </button>
+		 <button
+		  type="button"
+		  (click)="onFormSpecalitySubmit()"
+		  class="btn btn-success"
+		  [disabled] = "(searchForm.value.appointment_type_id===null || searchForm.value.appointment_type_id==='') || 
+		  (searchForm.value.speciality_id===null || searchForm.value.speciality_id==='')"
+		 >
+		 Save
+		 </button>
+		</div>
+	   </div>
+		
+</form>
+</div>
+   </ng-template>
+
+<app-error-message-visit #errorMessageBilling></app-error-message-visit>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+.clinic-page {
+	.card {
+		.card-body {
+			.card-header {
+				.btn {
+					&.btn-outline-secondary {
+						&.hover-danger {
+							&:hover {
+								border-color: #c1272d !important;
+								color: #c1272d !important;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

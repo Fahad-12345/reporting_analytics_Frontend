@@ -1,0 +1,116 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="search-filter mt-3">
+	<form class="form" [formGroup]="pharmacyFilterForm">
+		<div class="search-filter-body" [class.pb-3]="!isCollapsed">
+			<div class="row px-2">
+				<div class="field-block">
+					<div class="row pb-1">
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group field mb-lg-0"
+								[ngClass]="{'focused': pharmacyFilterForm.get('organization_name').value != '' && pharmacyFilterForm.get('organization_name').value != null }">
+								<label class="form-label" for="Organization_Name">Organization Name</label>
+								<input type="text" id="Organization_Name" class="form-control form-input"
+									formControlName="organization_name">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group field mb-lg-0"
+								[ngClass]="{'focused': pharmacyFilterForm.get('pharmacy_type_id').value != '' && pharmacyFilterForm.get('pharmacy_type_id').value != null }">
+								<label class="form-label" for="Pharmacy_Type">Pharmacy Type</label>
+								<ng-select #select [items]="pharmacyTypeLists" formControlName="pharmacy_type_id"
+									bindLabel="name" bindValue="id" [closeOnSelect]="false">
+									<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+										<div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+											<span class="ng-value-label">{{item.name}}</span>
+											<span class="ng-value-icon right" (click)="clear(item)"
+												aria-hidden="true">×</span>
+										</div>
+										<div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+											<span class="ng-value-label border-0">+{{items.length - 2}}</span>
+										</div>
+									</ng-template>
+								</ng-select>
+							</div>
+
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group field mb-0"
+								[ngClass]="{'focused': pharmacyFilterForm.get('zip_code').value != '' && pharmacyFilterForm.get('zip_code').value != null }">
+								<label class="form-label" for="Postal_Code">Postal Code</label>
+								<input type="text" id="Postal_Code" class="form-control form-input"
+									formControlName="zip_code">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3">
+							<div class="form-group field mb-0"
+								[ngClass]="{'focused': pharmacyFilterForm.get('city').value != '' && pharmacyFilterForm.get('city').value != null }">
+								<label class="form-label" for="City">City</label>
+								<input type="text" id="City" class="form-control form-input" formControlName="city">
+							</div>
+						</div>
+					</div>
+					<div class="row collapse-basic pt-3" id="collapseBasic" [collapse]="!isCollapsed">
+						<div class="col-sm-6 col-lg-3 d-inline-block">
+							<div class="form-group field"
+								[ngClass]="{'focused': pharmacyFilterForm.get('address_line1').value != '' && pharmacyFilterForm.get('address_line1').value != null }">
+								<label class="form-label" for="Address_Line">Address Line 1 (Full Name)</label>
+								<input type="text" id="Address_Line" class="form-control form-input"
+									formControlName="address_line1">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3 d-inline-block">
+							<div class="form-group field mb-0"
+								[ngClass]="{'focused': pharmacyFilterForm.get('version').value != '' && pharmacyFilterForm.get('version').value != null }">
+								<label class="form-label" for="version">Version</label>
+								<input type="text" id="version" class="form-control form-input"
+									formControlName="version">
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3 d-inline-block">
+							<div class="form-group field mb-lg-0"
+								[ngClass]="{'focused': pharmacyFilterForm.get('erx_service_levels').value != '' && pharmacyFilterForm.get('erx_service_levels').value != null }">
+								<label class="form-label">Erx Service Level</label>
+								<ng-select (add)="selectServiceLevel($event)" (clear)="clearedServiceLevelsSelcted()"
+									(remove)="removedServiceLevel($event)" [multiple]="true"
+									[items]="pharmacyServiceLevelsLists" bindLabel="name" bindValue="id"
+									formControlName="erx_service_levels" [closeOnSelect]="false">
+									<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+										<div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+											<span class="ng-value-label">{{item.name}}</span>
+											<span class="ng-value-icon right" (click)="clear(item)"
+												aria-hidden="true">×</span>
+										</div>
+										<div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+											<span class="ng-value-label border-0">+{{items.length - 2}}</span>
+										</div>
+									</ng-template>
+								</ng-select>
+							</div>
+						</div>
+						<div class="col-sm-6 col-lg-3 d-inline-block">
+							<div class="form-group field mb-0"
+								[ngClass]="{'focused': pharmacyFilterForm.get('npi').value != '' && pharmacyFilterForm.get('npi').value != null }">
+								<label class="form-label" for="version">NPI Number</label>
+								<input type="text" id="version" class="form-control form-input"
+									formControlName="npi">
+							</div>
+						</div>
+						<div class="col-md-12 text-center search-filter-btn float-left mb-3">
+							<button class=" btn btn-success mt-0 me-3" (click)="filter_pharmacy({})"> Filter </button>
+							<button class="btn btn-primary mt-0" type="button" (click)="reset_pharmacy_list()"
+								[disabled]="pharmacy_reset_disabled()">
+								Reset</button>
+						</div>
+					</div>
+				</div>
+				<div class="colps-btn-block">
+					<button class="btn plus-btn float-right mt-0" (click)="isCollapsed = !isCollapsed"
+						[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"
+						[class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button"><span
+							class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

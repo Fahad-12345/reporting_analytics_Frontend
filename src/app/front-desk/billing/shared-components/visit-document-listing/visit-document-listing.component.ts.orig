@@ -1,0 +1,229 @@
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Page } from '@appDir/front-desk/models/page';
+import { NgbModalOptions, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { StorageData } from '@appDir/pages/content-pages/login/user.class';
+import { BillingService } from '../../service/billing.service';
+import { ToastrService } from 'ngx-toastr';
+import { DocumentManagerServiceService } from '@appDir/shared/components/document-manager/services/document-manager-service.service';
+import { FDServices } from '@appDir/front-desk/fd_shared/services/fd-services.service';
+import { PermissionComponent } from '@appDir/front-desk/permission.abstract.component';
+import { SelectionModel } from '@angular/cdk/collections';
+
+@Component({
+  selector: 'app-visit-document-listing',
+  templateUrl: './visit-document-listing.component.html',
+  styleUrls: ['./visit-document-listing.component.scss']
+})
+export class VisitDocumentListingComponent extends PermissionComponent implements OnInit {
+  @Input() folder;
+  page: Page = new Page()
+  public emailForm: FormGroup;
+  folderId: number
+  userEmail: string;
+  constructor(private modalService: NgbModal, private fb: FormBuilder, private storageData: StorageData,
+    private billingService: BillingService, private toastrService: ToastrService,
+    private documentManagerService: DocumentManagerServiceService,
+    private fd_services: FDServices,) {
+    super()
+    this.page.pageNumber = 1;
+    this.page.size = 10;
+  }
+  files: any[] = []
+  addTagForm: FormGroup;
+  modalRef: NgbModalRef;
+  disableBtn: boolean = false;
+  totalRows: number;
+  Selection = new SelectionModel<Element>(true, []);
+  ngOnInit() {
+
+    this.userEmail = this.storageData.getEmail();
+    this.initializeEmailForm()
+    this.setTagForm()
+  }
+  ngOnChanges(simpleChanges: SimpleChanges) {
+   
+    if (this.folder) {
+      this.folderId = this.folder.id
+      this.getfilesByfolderId(this.folderId)
+    }
+  }
+  masterToggle() {
+    this.isSelected()
+      ? this.Selection.clear()
+      : this.files
+        .slice(0, this.totalRows)
+        .forEach((row) => this.Selection.select(row));
+  }
+  isSelected() {
+    this.totalRows = this.files.length;
+    const numSelected = this.Selection.selected.length;
+    const numRows = this.totalRows;
+    return numSelected === numRows;
+  }
+  getfilesByfolderId(id) {
+    this.startLoader = true;
+    this.documentManagerService.getFilesFromFolderId(id, this.page.size, this.page.pageNumber).subscribe(res => {
+      this.startLoader = false;
+      this.files = res['data']
+      this.page.totalElements = res['count']
+    })
+  }
+  changeDocumentPageSize(event) {
+<<<<<<< HEAD
+    this.page.size = event.target.value;
+=======
+    this.page.size = event
+    this.Selection.clear();
+>>>>>>> 0c2cd425021a8adf0bc3c88c4f6c86bdb16ef0f3
+    this.getfilesByfolderId(this.folderId)
+  }
+  changeDocumentPageNumber(number) {
+    this.page.pageNumber = number + 1;
+    this.Selection.clear();
+    this.getfilesByfolderId(this.folderId)
+  }
+  openInWindow(url) {
+    return `${url}&&authorization=Bearer ${this.storageData.getToken()}`;
+  }
+  getLinkwithAuthToken(link) {
+    let token = this.storageData.getToken()
+    if (token) {
+      return `${link}&token=${token}`
+    }
+    else { return link }
+  }
+  initializeEmailForm() {
+    this.emailForm = this.fb.group({
+      fileIds: [''],
+      to: ['', [Validators.required, Validators.email]],
+      message: ['', [Validators.required, Validators.minLength(10)]],
+    });
+  }
+  openEmailModal = (content, row?): void => {
+    console.log('Selection', this.Selection)
+    let fileIds = this.Selection.selected.map(m => m.id)
+    this.emailForm.reset();
+    row ? this.emailForm.get('fileIds').setValue(row.id) : this.emailForm.get('fileIds').setValue(fileIds)
+    let ngbModalOptions: NgbModalOptions = {
+      backdrop: 'static',
+      keyboard: false, windowClass: 'modal_extraDOc doc-modal'
+    };
+    this.modalRef = this.modalService.open(content, ngbModalOptions);
+  }
+  onSubmitEmailForm(emailForm) {
+    this.disableBtn = true;
+    let requestData = {
+      'to': emailForm.to,
+      'message': emailForm.message,
+      'fileIds': emailForm.fileIds && emailForm.fileIds.length > 0 ? emailForm.fileIds : [emailForm.fileIds],
+    };
+    this.documentManagerService.emailDocument(requestData).subscribe(response => {
+      if (response) {
+        // this.startLoader = false;
+        this.Selection.clear();
+        this.disableBtn = false;
+        this.toastrService.success('Successfully Sent', 'Success');
+        this.modalRef.close();
+      }
+    })
+  }
+  printMultipleFiles() {
+    this.startLoader = true
+    let printids = this.Selection.selected.map(m => m['id'])
+    this.documentManagerService.printFiles({ fileIds: printids }).subscribe(res => {
+      if (res) {
+        window.open(res['data'])
+        this.Selection.clear();
+        this.startLoader = false
+      }
+    })
+  }
+  /**
+  * set tag form
+  */
+  setTagForm() {
+    this.addTagForm = this.fb.group({
+      id: '',
+      tags: [],
+    });
+  }
+  /**
+     * open tag modal
+     */
+  addTagModal = (file, content): void => {
+    let ngbModalOptions: NgbModalOptions = {
+      backdrop: 'static',
+      keyboard: false, windowClass: 'modal_extraDOc doc-modal'
+    };
+    var tags = []
+    if (file.tags) {
+
+      tags = file.tags.split(',')
+    }
+    this.addTagForm['controls']['id'].setValue(file.id);
+    this.addTagForm['controls']['tags'].setValue(tags);
+    this.modalRef = this.modalService.open(content, ngbModalOptions);
+  }
+
+  /**
+    * submit tag form
+    * @param form 
+    */
+  onSubmitAddTag(form) {
+    if (this.addTagForm.valid) {
+      let formValue = this.addTagForm.getRawValue();
+      var tagsStr = '';
+      this.disableBtn = true;
+      if (formValue.tags.length) {
+        var i = 0;
+        for (let tag of formValue.tags) {
+          let comma = i > 0 ? ',' : '';
+          if (typeof (tag) == 'object') {
+            tagsStr = tagsStr + comma + tag.display;
+          } else {
+            tagsStr = tagsStr + comma + tag;
+          }
+          i++;
+        }
+
+      }
+<<<<<<< HEAD
+      formValue['tags'] = tagsStr;
+      this.fd_services.editDocument(formValue).subscribe(res => {
+        if (res.status == true) {
+          this.getfilesByfolderId(this.folderId)
+          this.addTagForm.reset();
+          this.modalRef.close();
+          this.toastrService.success('Tags Updated Successfully', 'Success');
+
+        }
+        this.disableBtn = false;
+      }, err => {
+        this.toastrService.error(err.error.error.message, 'Error')
+      })
+
+=======
+      setTimeout(() => {
+        this.addnewtag ? tagsStr = tagsStr ? tagsStr + ',' + this.addnewtag : this.addnewtag : '';
+        formValue['tags'] = tagsStr;
+        this.fd_services.editDocument(formValue).subscribe(res => {
+          if (res.status == true) {
+            this.getfilesByfolderId(this.folderId)
+            this.addTagForm.reset();
+            this.modalRef.close();
+            this.toastrService.success('Tags Updated Successfully', 'Success');
+          }
+          this.disableBtn = false;
+        }, err => {
+          this.toastrService.error(err.error.error.message, 'Error')
+        })
+      }, 2000);
+>>>>>>> 0c2cd425021a8adf0bc3c88c4f6c86bdb16ef0f3
+    }
+    //  else {
+    //   this.disableBtn = false;
+    //   this.fd_services.touchAllFields(this.addTagForm);
+    // }
+  }
+}

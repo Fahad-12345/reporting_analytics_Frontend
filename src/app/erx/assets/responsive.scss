@@ -1,0 +1,1402 @@
+@media screen and (max-width:1024px) {
+  #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .angular-editor-button {
+    padding: 0.2rem;
+  }
+
+  #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+    width: 24px;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    min-width: 0;
+    line-height: 21px;
+    padding: 0;
+  }
+
+  .ae-font .ae-picker-label:before {
+    width: 10px !important;
+  }
+
+  #template-manager .multi-switch label span {
+    font-size: 9px;
+  }
+
+  #template-manager .property-box .box-body .form-group label.checkbox.d-block {
+    line-height: normal;
+  }
+
+  #template-manager .btn-icons button {
+    padding: 0.2rem !important;
+    width: 20px;
+    font-size: 9px !important;
+  }
+
+  #template-manager .btn-icons button .size-icon {
+    font-size: 9px;
+  }
+
+  #template-manager .btn-icons button.btn-inline-checkbox {
+    padding: 0.2rem !important;
+    font-size: 9px !important;
+    padding-top: 4px !important;
+    width: auto !important;
+  }
+}
+
+@media (min-width: 1101px) {
+
+  #template-manager .left-section,
+  #template-manager .right-section {
+    width: 16%;
+    max-width: 25.5%;
+  }
+}
+
+@media (max-width: 1439px) {
+  #template-manager .btn {
+    padding: .3rem .3rem !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  #template-manager .ui-component .component-body i {
+    font-size: 24px;
+  }
+
+  #template-manager .ui-component .component-header h5 {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  #template-manager .ui-component .component-body i {
+    font-size: 20px;
+  }
+
+  #template-manager .ui-component .component-header h5 {
+    font-size: 11px;
+  }
+
+  #template-manager .ui-component .component-body {
+    padding: 10px;
+  }
+
+  .top-btn.mr_57 {
+    float: left !important;
+    display: block;
+    margin-right: 0;
+    padding: 4px;
+  }
+
+  #template-manager .btn-group.redu-undo {
+    top: 32px;
+  }
+}
+
+@media (max-width: 991px) {
+  .top-btn.mr_57 {
+    float: right !important;
+    margin-right: 57px;
+  }
+
+  #template-manager .btn-group.redu-undo {
+    top: 8px;
+  }
+
+  /* #template-manager .column-content .ng-select.ng-select-multiple {
+        overflow-y: auto;
+        height: 65px !important;
+    } */
+}
+
+@media (max-width: 992px) {
+  #template-manager {
+    display: grid;
+  }
+
+  #template-manager .left-section,
+  #template-manager .right-section {
+    width: 100%;
+    display: block;
+    flex: none;
+    padding: 0;
+  }
+
+  #template-manager .main-section {
+    position: relative;
+    width: 100%;
+    display: block;
+    vertical-align: top;
+    padding: 0px;
+    margin: 20px 0;
+    flex: none;
+  }
+
+  #template-manager .left-section>.card,
+  #template-manager .main-section>.card {
+    min-height: auto;
+  }
+
+  #template-manager .slide-arrow a {
+    display: none;
+  }
+
+  #template-manager .card .card-body .card-section-title {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 767px) {
+  .main-container {
+    padding: 0 15px 10px;
+  }
+
+  #template-manager .card .card-body .card-section-title {
+    max-width: 68%;
+  }
+}
+
+@media (min-width: 1101px) {
+
+  #template-manager .left-section,
+  #template-manager .right-section {
+    width: 16%;
+    max-width: 25.5%;
+  }
+}
+
+@media (max-width: 1100px) {
+  #template-manager .ui-component .component-body i {
+    font-size: 24px;
+  }
+
+  #template-manager .ui-component .component-header h5 {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  #template-manager .ui-component .component-body i {
+    font-size: 20px;
+  }
+
+  #template-manager .ui-component .component-header h5 {
+    font-size: 11px;
+  }
+
+  #template-manager .ui-component .component-body {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 992px) {
+  #template-manager {
+    display: grid;
+  }
+
+  #template-manager .left-section,
+  #template-manager .right-section {
+    width: 100%;
+    display: block;
+    flex: none;
+    padding: 0;
+  }
+
+  #template-manager .main-section {
+    position: relative;
+    width: 100%;
+    display: block;
+    vertical-align: top;
+    padding: 0px;
+    margin: 20px 0;
+    flex: none;
+  }
+
+  #template-manager .left-section>.card,
+  #template-manager .main-section>.card {
+    min-height: auto;
+  }
+
+  #template-manager .slide-arrow a {
+    display: none;
+  }
+
+  #template-manager .card .card-body .card-section-title {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 767px) {
+  .main-container {
+    padding: 0 15px 10px;
+  }
+
+  #template-manager .card .card-body .card-section-title {
+    max-width: 68%;
+  }
+}
+
+/* Safari 11+ */
+
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance: none) and (stroke-color: transparent) {
+    #template-manager input[type=datetime-local]::after {
+      content: "\f133";
+      font-family: 'fontawesome';
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+    }
+  }
+}
+
+
+/* Safari 11+ */
+
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance: none) and (stroke-color: transparent) {
+    #template-manager input[type=datetime-local]::after {
+      content: "\f133";
+      font-family: 'fontawesome';
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+    }
+  }
+}
+
+
+/* Test website on real Safari 11+ */
+
+
+/* Safari 10.1 */
+
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance: none) and (not (stroke-color: transparent)) {
+    #template-manager input[type=datetime-local]::after {
+      content: "\f133";
+      font-family: 'fontawesome';
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+    }
+  }
+}
+
+
+/* Safari 11+ */
+
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance: none) and (stroke-color: transparent) {
+    #template-manager input[type=date]::after {
+      content: "\f133";
+      font-family: 'fontawesome';
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+    }
+  }
+}
+
+
+/* Test website on real Safari 11+ */
+
+
+/* Safari 10.1 */
+
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance: none) and (not (stroke-color: transparent)) {
+    #template-manager input[type=date]::after {
+      content: "\f133";
+      font-family: 'fontawesome';
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+    }
+  }
+}
+
+
+/* Safari 11+ */
+
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance: none) and (stroke-color: transparent) {
+    #template-manager input[type=time]::after {
+      content: "\f017";
+      font-family: 'fontawesome';
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+    }
+  }
+}
+
+
+/* Test website on real Safari 11+ */
+
+
+/* Safari 10.1 */
+
+@media not all and (min-resolution:.001dpcm) {
+  @supports (-webkit-appearance: none) and (not (stroke-color: transparent)) {
+    #template-manager input[type=time]::after {
+      content: "\f017";
+      font-family: 'fontawesome';
+      position: absolute;
+      right: 20px;
+      bottom: 17px;
+    }
+  }
+}
+
+/* CSS specific to iOS devices */
+
+@supports (-webkit-touch-callout: none) {
+  #template-manager select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url(/images/arrow-down.png) !important;
+    padding-right: 20px !important;
+    background-size: 8px !important;
+    background-repeat: no-repeat !important;
+    background-position: right 5px top 11px !important;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  #template-manager .add-section .section-options button {
+    margin: 0 4px;
+    min-width: 34px;
+    font-size: 11px !important;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 62vh;
+  }
+
+  #template-manager .right-scroll {
+    height: 51vh;
+  }
+
+  #template-manager .left-section>.card,
+  #template-manager .main-section>.card {
+    height: 67vh;
+  }
+
+  #template-manager .right-section .card.height-one .card-body {
+    height: 62.5vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 58.7vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 54.6vh;
+  }
+
+  angular-editor .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1rem !important;
+    padding: 0.4rem 0.1rem !important;
+  }
+
+  angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 19px;
+    font-size: 7px;
+  }
+
+  #template-manager .card .card-body {
+    padding: .7rem;
+  }
+
+  #template-manager .middle-scroll {
+    max-height: 59vh;
+  }
+
+  #template-manager .ui-component .component-header:before {
+    top: 3px;
+    font-size: 16px;
+  }
+
+  #template-manager .printpreview-table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .template-manager .input_pro_box .sub-option-box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 32px;
+    font-size: 10px;
+  }
+
+  .input_pro_box .sub-option-box .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 33px;
+  }
+
+  #template-manager .template-title-head {
+    max-width: 16%;
+  }
+}
+
+@media screen and (max-width:992px) {
+  .template-scroller {
+    /* overflow: auto; */
+    height: 86vh;
+  }
+
+  #template-manager .right-section .card .card-body {
+    min-height: 30vh;
+  }
+
+  #template-manager .right-scroll {
+    height: auto;
+  }
+
+  #template-manager .middle-scroll {
+    max-height: auto;
+  }
+
+  #template-manager .left-section>.card,
+  #template-manager .main-section>.card {
+    height: auto;
+  }
+
+  #template-manager .right-section .card.height-one .card-body {
+    height: auto;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: auto;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: auto;
+  }
+}
+
+@media screen and (min-width:993px) {
+  #template-manager .instance-container .instance-columns {
+    height: 51vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 60vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 41vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 39vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 33.5vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 30vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 20vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 47vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 20px;
+    font-size: 8px;
+  }
+
+  #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+    width: 35px;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    font-size: 10px;
+    width: 20.2px;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    height: 29.8px;
+  }
+
+  #template-manager .combine_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 26.5px;
+    font-size: 14px;
+  }
+
+  .master-header-footer-preview .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 23px;
+    font-size: 12px;
+  }
+
+  .master-header-footer-preview #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+    width: 33px;
+  }
+}
+
+@media screen and (min-width:1025px) {
+  #template-manager .instance-container .instance-columns {
+    height: 53vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 60vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1rem !important;
+    font-size: 9px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 44vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 40vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 35vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 32vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 29vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 50vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 22px;
+  }
+
+  #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width:1100px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 69.3vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 65.8vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 62.8vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 59vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 65vh;
+  }
+
+  #template-manager .right-scroll {
+    height: 53.3vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1.1rem !important;
+    font-size: 9px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 46vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 47vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 39vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 35vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 32vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 52vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 23px;
+  }
+}
+
+@media screen and (min-width:1200px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 68.3vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 63.4vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 58.5vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 60vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 66vh;
+  }
+
+  #template-manager .left-section>.card,
+  #template-manager .main-section>.card {
+    height: 73.4vh;
+  }
+
+  #template-manager .middle-scroll {
+    max-height: 62vh;
+  }
+
+  #template-manager .right-scroll {
+    height: 53.3vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1.2rem !important;
+    font-size: 9px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 48vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 49vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 44.5vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 39vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 33vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 54vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 24px;
+  }
+
+  #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+    /* width: 42px; */
+    width: 31px;
+  }
+}
+
+@media screen and (min-width:1300px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 68.5vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 64vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 59.8vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 64vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 70vh;
+  }
+
+  #template-manager .right-scroll {
+    height: 56.3vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1.5rem !important;
+    font-size: 11px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 53vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 54vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 48vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 42vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 40vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 59vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 26px;
+  }
+
+  .subeditor_toolbar .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 25.8px;
+  }
+
+  #template-manager .combine_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 33px;
+  }
+
+  #template-manager .combine_pro_box .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+    width: 36px;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 25px;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 40px;
+  }
+
+  .template-manager .input_pro_box .sub-option-box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 41px;
+  }
+
+  .input_pro_box .sub-option-box .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 40px;
+  }
+
+  .master-header-footer-preview .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 29px;
+  }
+
+  .master-header-footer-preview #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+    width: 37px;
+  }
+
+  .tem_pro_box .ae-font.ae-expanded .ae-picker-options {
+    min-width: 40px;
+  }
+}
+
+@media screen and (min-width:1400px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 68.8vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 64.5vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 60vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 65vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 71vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1.6rem !important;
+    font-size: 11px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 52vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 55vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 50vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 45vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 42vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 58vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 28.1px;
+  }
+
+  .sec_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 28.1px;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 27.1px;
+  }
+
+  #template-manager .custom-textarea .custom-toolbar .btn {
+    width: 32px;
+  }
+
+  .subeditor_toolbar .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 28.3px;
+  }
+
+  #template-manager .combine_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 36px;
+  }
+
+  .template-manager .input_pro_box .sub-option-box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 44.8px;
+  }
+
+  .master-header-footer-preview .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 31.5px;
+  }
+
+  .ae-font.ae-expanded .ae-picker-options {
+    min-width: 40px;
+  }
+}
+
+@media screen and (min-width:1500px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 71.2vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 67vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 63vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 67.3vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 73vh;
+  }
+
+  #template-manager .left-section>.card,
+  #template-manager .main-section>.card {
+    height: 75.4vh;
+  }
+
+  #template-manager .middle-scroll {
+    max-height: 67vh;
+  }
+
+  #template-manager .right-scroll {
+    height: 58.3vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1.7rem !important;
+    font-size: 12px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 57vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 59vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 55vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 47vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 45vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 63vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 30.3px;
+  }
+
+  #template-manager .custom-textarea .custom-toolbar .btn {
+    min-width: 36px;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 31px;
+  }
+
+  .master-header-footer-preview .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 36.6px;
+  }
+}
+
+@media screen and (min-width:1600px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 71.4vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 67.5vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 63.5vh;
+    padding: 14px;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 68vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 73vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1.8rem !important;
+    font-size: 12px;
+  }
+
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 42vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 56vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 59vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 55.5vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 48vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 46vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 62vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 33.2px;
+  }
+
+  #template-manager .custom-textarea .custom-toolbar .btn {
+    min-width: 38px;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 33.5px;
+  }
+
+  .sec_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 33.9px;
+  }
+
+  .subeditor_toolbar .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 33px;
+  }
+
+  #template-manager .combine_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 41px;
+  }
+
+  #template-manager .combine_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 53px;
+  }
+
+  .template-manager .input_pro_box .sub-option-box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 51px;
+  }
+
+  .input_pro_box .sub-option-box .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 55px;
+  }
+}
+
+@media screen and (min-width:1700px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 71.5vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 68vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 64.2vh;
+    padding: 14px;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 69vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 74vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 1.9rem !important;
+    font-size: 12px;
+    width: 35.7px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 61vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 61vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 57vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 49vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 47vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 67vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 36px;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 40px;
+  }
+}
+
+@media screen and (min-width:1800px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 72vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 68.5vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 65.5vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 70vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 76vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 2rem !important;
+    font-size: 12px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 60vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 63vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 59vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 50vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 50vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 66vh;
+  }
+}
+
+@media screen and (min-width:1900px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 72vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 68.5vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 65.5vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 71vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 77vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 2rem !important;
+    font-size: 13px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 65vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 66vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 63vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 51vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 51vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 71vh;
+  }
+
+  .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 41px;
+  }
+
+  .sec_pro_box.angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label,
+  .tem_pro_box.angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 45px;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label {
+    width: 45px;
+  }
+
+  .template-manager .tem_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 41.5px;
+  }
+
+  .template-manager .input_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button,
+  .template-manager .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 40.8px;
+  }
+
+  #template-manager .custom-textarea .custom-toolbar .btn {
+    min-width: 50px;
+  }
+
+  .subeditor_toolbar .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 40.5px;
+  }
+
+  .template-manager .sec_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 41.4px;
+  }
+
+  .template-manager .text_pro_box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 41.4px;
+  }
+
+  .template-manager .input_pro_box .sub-option-box .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 67.4px;
+  }
+
+  .master-header-footer-preview .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    width: 45.8px !important;
+  }
+
+  .ae-font.ae-expanded .ae-picker-options {
+    min-width: 45px;
+  }
+
+  .tem_pro_box .ae-font.ae-expanded .ae-picker-options {
+    min-width: 40px;
+  }
+}
+
+@media screen and (min-width:2000px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 72vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 69vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 65.5vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 72vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 78vh;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set button.angular-editor-button {
+    min-width: 2.1rem !important;
+    font-size: 13px;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 66vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 67vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 64vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 52vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 52vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 72vh;
+  }
+}
+
+@media screen and (min-width:2100px) {
+  #template-manager .right-section .card.height-one .card-body {
+    height: 72.3vh;
+  }
+
+  #template-manager .right-section .card.height-two .card-body {
+    height: 69.8vh;
+  }
+
+  #template-manager .right-section .card.height-three .card-body {
+    height: 67vh;
+  }
+
+  #template-manager .instance-container .instance-columns {
+    height: 75.3vh;
+  }
+
+  #template-manager .instance-container .instance-columns.instance-level {
+    height: 79vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block .card-body {
+    height: 69vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns.instance-level .instance-block.template-preview-level .card-body {
+        height: 69vh;
+    } */
+  #template-manager .instance-container .instance-columns.instance-level .template-preview-page angular-editor .angular-editor-wrapper {
+    height: 65vh;
+  }
+
+  /* #template-manager .instance-container .instance-columns .instance-block.template-preview-level .card-body {
+        height: 54vh;
+    } */
+  #template-manager .template-preview-page angular-editor .angular-editor-wrapper {
+    max-height: 54vh;
+  }
+
+  #template-manager .instance-container .instance-columns .instance-block.have-sub-sections .card-body {
+    height: 75vh;
+  }
+}
+
+@media screen and (max-width:991px) {
+  .template-scroller {
+    /* height: 88vh; */
+    height: inherit;
+  }
+
+  #template-manager input[type=datetime-local],
+  #template-manager input[type=date],
+  #template-manager input[type=time] {
+    height: 30px !important;
+  }
+}
+
+@media screen and (max-width:768px) {
+  .template-scroller {
+    /* height: 88vh; */
+    height: inherit;
+  }
+}
+
+@media only screen and (min-width: 1024px) and (max-height: 1366px) and (-webkit-min-device-pixel-ratio: 1.5) {
+  #template-manager .main-section {
+    flex: 1.7;
+  }
+
+  #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+    width: 31px;
+  }
+
+  #template-manager .custom-textarea .custom-toolbar .btn {
+    min-width: 20px;
+  }
+}

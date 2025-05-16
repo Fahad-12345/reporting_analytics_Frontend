@@ -1,0 +1,65 @@
+<div *ngIf='aclService.hasPermission(this.userPermissions.scheduler_customize_preference_view);else not_scheduler_customize_preference_view' class="card search-filter-block pref-filter my-2">
+<div class="card-body" >
+	<form [formGroup]="preferencesForm" >
+		<div class="row d-flex justify-lg-content-center mb-3 pb-1">
+			<div class="col-lg-3 text-truncate mb-2 mb-lg-0 text-lg-end">
+				<label class="title mb-0">Default Notification Approval</label>
+			</div>
+			<div class="col-sm-6 col-lg-3" *ngIf="preferenceTypes">
+			 <mat-form-field appearance="fill">	
+				<mat-select		
+				formControlName="type" 
+				panelClass="commentsPanel"
+				(selectionChange)="onChangePreferenceType()"
+				>
+				  <mat-option *ngFor="let spec of preferenceTypes" [value]="spec.id">
+					  
+					{{spec.name}}
+				  </mat-option>
+				</mat-select>
+			  </mat-form-field>			 
+			</div>
+
+			<div class="col-sm-6 col-lg-3" *ngIf="preferencesForm.value.type=='3'">
+				<mat-form-field appearance="fill">
+					<!-- <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" ngbTooltip="{{selectedClinic?.facility_name}}-{{selectedClinic?.name}}"> -->
+					<mat-select
+					formControlName= "targetedFascilityLocation"
+					panelClass="commentsPanel" containter="body"
+					class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{selectedClinic?.facility_name}}-{{selectedClinic?.name}}"
+					>
+					  <mat-option *ngFor="let loc of locations" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip z-index-up"  ngbTooltip="{{loc.facility_name}}-{{loc.name}}" [value]="loc.id">
+						{{loc.facility.qualifier}}-{{loc.qualifier}}
+					  </mat-option>
+					</mat-select>
+					<!-- </span> -->
+				  </mat-form-field>
+			</div>
+			<div class="col-sm-6 col-lg-3" *ngIf="preferencesForm.value.type=='2'">
+				<mat-form-field appearance="fill">
+					<mat-select
+					panelClass="commentsPanel"
+					formControlName="preferenceLocation"
+					>
+					  <mat-option *ngFor="let location of preferenceLocation" [value]="location.id">
+						{{location.name}}
+					  </mat-option>
+					</mat-select>
+				  </mat-form-field>				
+			</div>
+			<div class="col-lg-2 text-center text-lg-start mt-3 mt-lg-0">
+				<button [disabled]='!aclService.hasPermission(this.userPermissions.customize_preference_edit)' class="btn btn-success mt-0" (click)="applyPrefenceAction()">
+					Apply
+				</button>
+			</div>
+		</div>
+
+	</form>
+</div>
+</div>
+<ng-template #not_scheduler_customize_preference_view>
+	<h6 class="col-12 color-red">No Access Permission</h6>
+</ng-template>
+
+

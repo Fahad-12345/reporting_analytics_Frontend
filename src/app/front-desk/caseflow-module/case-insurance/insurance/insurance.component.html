@@ -1,0 +1,101 @@
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="insurance-type" role="tabpanel" aria-labelledby="insurance-type-tab">
+        <!-- <a href="javascript:void(0)" tooltip="Edit" (click)="toggleForm()"><i class="icon-pencil"></i></a> -->
+        <div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center" *ngIf="caseData?.is_finalize">
+            <h6 class="pull-left color-blue d-inline-block"></h6>
+            <a href="javascript:void(0)" tooltip="Edit" (click)="toggleForm()" style="margin-top: 31px;">
+                <i class="icon-pencil"></i>
+            </a>
+        </div>
+        <div class="card card-bg mt-3 pt-3 insurance-specific">
+            <div autocomplete="off">
+                <div *ngIf="formReady" class="">
+                    <!-- <ng-container
+                        *ngIf="caseData?.caseType?.type.toLowerCase()=='urgent care' || caseData?.caseType?.type?.toLowerCase()=='drug testing'">
+                        <app-health-insurance-form [title]="'Private Health Insurance Information'"
+                            [insurance]="privateHealthInsurance" [patient]="caseData.patient" [caseId]="caseId"
+                            (getCase)="getCaseEmitter()"></app-health-insurance-form>
+					</ng-container> -->
+				
+
+                    <ng-container>
+				
+							<app-health-insurance-form [title]="'Private Health Insurance Information'"
+                            [insurance]="privateHealthInsurance"
+                            (confirmedForBillingChange)="confirmedForBilling($event,HealthInsuranceFormComponent?.form)"
+                            [patient]="caseData?.patient" [caseId]="caseId" (getCase)="getCaseEmitter()" (resetForm)="FormReset($event)">
+						</app-health-insurance-form>
+						</ng-container>
+
+					
+					
+						
+					<div class="row">
+					<div class="col-md-12 col-lg-8 order-2 order-lg-1">
+						<ng-container>
+							<app-insurance-form #insuranceForm *ngIf="shouldShowPrimary()"
+								(confirmedForBillingChange)="confirmedForBilling($event,InsuranceFormComponent?.form)"
+								[title]="getPrimaryTitle()" insuranceType="primary_health" [insurance]="primaryInsurance"
+								[caseId]="caseId" app-insurance-form (getCase)="getCaseEmitter()"></app-insurance-form>
+						</ng-container>
+					</div>
+
+					<div class="col-md-12 col-lg-4 order-1 order-lg-1 nf2-card-block">
+							<ng-container *ngIf="this.caseData.case_type.slug===CaseTypeSlugEnum.auto_insurance || this.caseData.case_type.slug===CaseTypeSlugEnum.auto_insurance_worker_compensation">
+								<div class="card mb-3 pb-2">
+								<app-envelop-form [caseId]="caseId"></app-envelop-form>
+							<app-nf2-form  [caseId]="caseId"></app-nf2-form>	
+							</div>						   
+						</ng-container>
+					</div>
+				</div>
+
+					
+                    <ng-container>
+                        <app-insurance-form [hidden]='!showSecondaryInsurance' #insuranceForm1
+                            [title]="'Secondary Insurance Information'"
+                            (confirmedForBillingChange)="confirmedForBilling($event,InsuranceFormComponent1?.form)"
+                            [insurance]="secondaryInsurance" (onComponentReady)="onSecondaryInsuranceReady($event)"
+                            [caseId]="caseId" insuranceType="secondary_health" (getCase)="getCaseEmitter()" (resetTertiaryForm)="tertiaryFormReset($event)">
+                        </app-insurance-form>
+                    </ng-container>
+                    <ng-container>
+                        <app-insurance-form [hidden]="!showTertiaryInsurance" #insuranceForm2
+                            [title]="'Tertiary Insurance Information'"
+                            (confirmedForBillingChange)="confirmedForBilling($event,InsuranceFormComponent2?.form)"
+                            insuranceType="tertiarys_health" [insurance]="tertiaryInsurance" [caseId]="caseId"
+                            (getCase)="getCaseEmitter()">
+                        </app-insurance-form>
+                    </ng-container>
+
+
+                    <div *ngIf="!isFormDisabled"  class="row form-btn justify-content-center">
+                        <button *ngIf="this.aclService.hasPermission(this.userPermissions.patient_case_list_insurance_insurance_info_edit)" class="btn btn-primary w-100 mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="goBack()"><i
+                            class="icon-left-arrow me-2"></i> Back</button>
+                        <button *ngIf="this.aclService.hasPermission(this.userPermissions.patient_case_list_insurance_insurance_info_edit)" class="btn btn-success w-100 mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="save($event)"><i
+                            class="icon-save-continue me-2"></i> Save & Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <div class="row">
+                <div class="col-lg-3 col-sm-6 col-5 offset-lg-3 text-center">
+                    <a class="btn btn-primary" href="javascript:void(0)"><img alt="back-arrow"
+                            src="assets/images/back-arrow.png"> Back</a>
+                </div>
+                <div class="col-lg-3 col-sm-6 col-7 text-center">
+                    <button class="btn btn-success" type="submit"><img alt="continue"
+                            src="assets/images/continue.png"> Save &amp; Continue</button>
+                </div>
+            </div> -->
+
+<!-- <div class="tab-pane fade" id="attorney" role="tabpanel" aria-labelledby="attorney-tab">
+<div class="card">
+    <app-attorney-form [title]="'Edit'" [attorney]="attorney" [caseId]="caseId"></app-attorney-form>
+</div>
+</div> -->

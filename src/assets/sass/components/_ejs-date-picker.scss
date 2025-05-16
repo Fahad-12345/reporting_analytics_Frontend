@@ -1,0 +1,23 @@
+.e-control{
+    .e-input-group{
+        margin: 0;
+        .e-label-bottom{
+            @include px-to-rem(padding, 0px 0px 0px 7px, true);
+            margin: 0;
+        }
+        .e-float-line{
+            &:after, 
+            &:before{
+                background: transparent !important;
+            }
+        }
+        .e-label-top{
+            @include ejs-date-picker-label();
+        }
+        &.e-input-focus{
+            .e-label-bottom{
+                @include ejs-date-picker-label();
+            }
+        }
+    }
+}

@@ -1,0 +1,8 @@
+::ng-deep .duplicate-patient{
+    &.modal-sm{
+        max-width: 100%;
+        .modal-dialog{
+            min-height: calc(100% - 65px);
+        }
+    }
+}

@@ -1,0 +1,197 @@
+<form class="form h-100" [formGroup]="form">
+      <perfect-scrollbar>
+          <div class="inner-frame position-relative profile-box p-3 bg-light" style="overflow: visible;">
+              <!-- <strong class="section-title position-absolute">HBOT Notes</strong> -->
+              <div class="row justify-content-center">
+                  <div class="col-lg-6">
+                      <div class="message ad-border pt-2 ps-2 pe-2 pb-0">
+                          <div class="row fields-holder"  style="padding-top: 15px;">
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field  focused">
+                                      <label for="f-name" class="form-label">First Name</label>
+                                      <input type="text" id="f-name" class="form-control form-input" value="{{(patient)?patient.firstName:''}}" disabled="disabled">
+                                  </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field  focused">
+                                      <label for="m-name" class="form-label">Middle Name</label>
+                                      <input type="text" id="m-name" class="form-control form-input" value="{{(patient)?patient.middleName:''}}" disabled="disabled">
+                                  </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field  focused">
+                                      <label for="l-name" class="form-label">Last Name</label>
+                                      <input type="text" id="l-name" class="form-control form-input" value="{{(patient)?patient.lastName:''}}" disabled="disabled">
+                                  </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field  focused">
+                                      <label for="l-name" class="form-label">Date</label>
+                                      <input type="text" id="l-name" class="form-control form-input" value="{{getCurrentDate()}}" disabled="disabled">
+                                  </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field"  [ngClass]="{'focused': form.get('psi').value != '' && form.get('psi').value != null }">
+                                      <label for="psi" class="form-label">PSI</label>
+                                      <input type="text" id="psi" class="form-control form-input" formControlName='psi'>
+                                  </div>
+
+                                  
+                              </div>
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('ata').value != '' && form.get('ata').value != null }">
+                                      <label for="ata" class="form-label">ATA</label>
+                                      <input type="text" id="ata" class="form-control form-input" formControlName='ata'>
+                                  </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field"  [ngClass]="{'focused': form.get('timeStarted').value != '' && form.get('timeStarted').value != null }">
+                                      <label for="timeStarted" class="form-label">Time Started</label>
+                                      <input type="time" id="timeStarted" class="form-control form-input" formControlName='timeStarted'>
+                                  </div>
+                              </div>
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('timeToMaxPsi').value != '' && form.get('timeToMaxPsi').value != null }">
+                                      <label for="timeToMaxPsi" class="form-label">Time to Max PSI</label>
+                                      <input type="time" id="timeToMaxPsi" class="form-control form-input" formControlName='timeToMaxPsi'>
+                                  </div>
+                              </div>   
+                              
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('timeSpentAtMax').value != '' && form.get('timeSpentAtMax').value != null }">
+                                      <label for="timeSpentAtMax" class="form-label">Time Spent At MAX</label>
+                                      <input type="text" id="timeSpentAtMax" class="form-control form-input" formControlName='timeSpentAtMax'>
+                                  </div>
+                              </div>
+                              <div class="col-lg-12">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('totalTimeInChamber').value != '' && form.get('totalTimeInChamber').value != null }">
+                                      <label for="totalTimeInChamber" class="form-label">Total Time In Chamber</label>
+                                      <input type="text" id="totalTimeInChamber" class="form-control form-input" formControlName="totalTimeInChamber">
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-6">
+                      <div class="message ad-border pt-2 ps-2 pe-2 pb-0">
+                          <div class="row justify-content-end fields-holder"  style="padding-top: 15px;">
+                              <!-- <div class="col-xl-5 col-lg-6">
+                                  <div class="form-group field">
+                                      <label for="d-accident" class="form-label">Date of Accident</label>
+                                      <input type="text" id="d-accident" class="form-control form-input">
+                                  </div>
+                              </div> -->
+                              <div class="col-xl-4 col-lg-6">
+                                  <div class="form-group field  focused" >
+                                      <label for="doa" class="form-label">Date of Accident (mm/dd/yyyy)</label>
+                                      <input type="text" id="doa" class="form-control form-input" value="{{(patient)?patient.accidentDate:''}}" disabled="disabled">
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row fields-holder">
+                              <div class="col-lg-6">
+                                  <div class="form-group field">
+                                      <label for="treatmentNo" class="form-label">Treatment #</label>
+                                      <input type="text" id="treatmentNo" class="form-control form-input" formControlName="treatmentNo" disabled="disabled">
+                                  </div>
+                              </div>
+                              <div class="col-lg-6">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('mask').value != '' && form.get('mask').value != null }">
+                                      <label for="mask" class="form-label">MASK</label>
+                                      <input type="text" id="mask" class="form-control form-input" formControlName="mask">
+                                  </div>
+                              </div>
+                              <div class="col-lg-6">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('earPlanes').value != '' && form.get('earPlanes').value != null }">
+                                      <label for="e-planes" class="form-label">Ear Planes</label>
+                                      <input type="text" id="e-planes" class="form-control form-input" formControlName="earPlanes">
+                                  </div>
+                              </div>
+                              <div class="col-lg-6">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('psiEarsPressurized').value != '' && form.get('psiEarsPressurized').value != null }">
+                                      <label for="psi-pressurized" class="form-label">PSI-Ears Pressurized</label>
+                                      <input type="text" id="psi-pressurized" class="form-control form-input" formControlName="psiEarsPressurized">
+                                  </div>
+                              </div>
+                              <div class="col-lg-6">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('timeStartedDown').value != '' && form.get('timeStartedDown').value != null }">
+                                      <label for="tsd" class="form-label">Time Started Down</label>
+                                      <input type="text" id="tsd" class="form-control form-input" formControlName="timeStartedDown">
+                                  </div>
+                              </div>
+                              <div class="col-lg-6">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('timeToZero').value != '' && form.get('timeToZero').value != null }">
+                                      <label for="ttz" class="form-label">Time to Zeor</label>
+                                      <input type="text" id="ttz" class="form-control form-input" formControlName="timeToZero">
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-lg-8 mt-3">
+                      <div class="table-holder mt-2 bg-white">
+                          <table class="table table-bordered m-0" style="border-color: #a2a3a2;">
+                              <tbody>
+                              <tr>
+                                  <td></td>
+                                  <td >START TIME</td>
+                                  <td >END TIME</td>
+                              </tr>
+                              <tr formArrayName="timeReports" *ngFor="let item of form.get('timeReports').value; let i = index;  trackBy:trackByFn">
+                                <ng-container [formGroupName]="i">
+                                  <td>{{item.timeSet}}</td>
+                                  <td style="padding: 2px;"><input type="time" class="form-control" formControlName="timeStarted"></td>
+                                  <td style="padding: 2px;"><input type="time" class="form-control" formControlName="timeEnd"></td>
+                                </ng-container>
+                              </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+                  <div class="col-lg-10 mt-3">
+                      <div class="message ad-border pt-2 ps-2 pe-2 pb-0">
+                          <div class="row fields-holder" style="padding-top: 15px;">
+                              <div class="col-4">
+                                  <div class="form-group field" [ngClass]="{'focused': form.get('technician').value != '' && form.get('technician').value != null }">
+                                      <label for="technician" class="form-label">Technician</label>
+                                      <input type="text" id="technician" class="form-control form-input" formControlName="technician" disabled="disabled">
+                                  </div>
+                              </div>
+                              <div class="col-4">
+                                &nbsp;
+                              </div>
+                              <div class="col-4">
+                                <div class="form-group">
+                                  <label class="position-static text-dark">Patient Signature</label>
+                                  <div class="signature-box"></div>
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group field" [ngClass]="{'focused': form.get('doctorReviewed').value != '' && form.get('doctorReviewed').value != null }">
+                                    <label for="doctorReviewed" class="form-label">Doctor Reviewed</label>
+                                    <input type="text" id="doctorReviewed" class="form-control form-input" formControlName="doctorReviewed">
+                                </div>
+                              </div>
+                              <div class="col-12">
+                                <div class="form-group field" [ngClass]="{'focused': form.get('comment').value != '' && form.get('comment').value != null }">
+                                    <label for="comment" class="form-label">Comments</label>
+                                    <input type="text" id="comment" class="form-control form-input" formControlName="comment">
+                                </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </perfect-scrollbar>
+    <!-- <div class="paging-bar d-flex justify-content-between mb-1">
+      <a class="btn btn-primary" routerLink="['/medical-doctor/treatment-rendered']"><span class="icon-arrow-left-filled d-block"></span>Back</a>
+      <a class="btn btn-primary"><span class="icon-arrow-right-filled d-block"></span>Next</a>
+    </div> -->
+    <div class="paging-bar form-btn text-center mb-1">
+        <button href="javascript:void(0)" class="btn btn-primary me-3" (click)="back()"><span class="icon-left-arrow me-2"></span> Back</button>
+        <!-- <a href="#" class="btn btn-primary"><span class="icon-arrow-left-filled d-block"></span>Back</a> -->
+        <button href="javascript:void(0)" class="btn btn-default me-3" (click)="complete()">Complete Visit</button>
+        <button href="javascript:void(0)" type="submit" class="btn btn-success" (click)="next()"><span class="icon-save-continue me-2"></span> Save & Continue</button>
+      </div>
+  </form>

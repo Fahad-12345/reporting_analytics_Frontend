@@ -1,0 +1,38 @@
+
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end"><button class="btn btn-default btn-clear" (click)="clearPoints()">Clear</button></div>
+
+<div class="column-content" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <textarea type="text" class="form-control" *ngIf="!layoutService.isInstancePreview && !layoutService.editorView && !layoutService.isShowEditor" disabled>Drawing can be filled during doctor evaluation</textarea>
+</div>
+<div style="overflow-x: scroll !important;" *ngIf="layoutService.isInstancePreview || layoutService.editorView || layoutService.isShowEditor" class="column-content" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <div class="row mb-3">
+        <div class="col-auto">
+            <div class="d-flex align-items-center">
+                <i class="icon2-pencil4 text-dark me-2 fs-18"></i>
+                <input class="color-canvas" type="color" value="#000000" (change)="changeColor($event)">
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="d-flex align-items-center">
+                <i class="icon2-color_lenspalette text-dark me-1 fs-30"></i>
+                <input type="color" value="#ffffff" (change)="changeBackgroundColor($event)">
+            </div>
+        </div>
+    </div>
+    <div style="overflow-x: scroll !important;" class="row">
+        <div class="col-12" style="overflow-x: scroll !important;">
+            <canvas class="canvas-proportion" #canvas [height]="object.height" [width]="object.width"></canvas>
+        </div>
+    </div>
+    <div class="row">
+        <!-- <div class="col-auto">
+            <button class="btn btn-primary plus-btn float-right mt-0" type="button" (click)="clearPoints()">Clear</button>
+        </div> -->
+        <div class="col-auto">
+            <button class="btn btn-success plus-btn float-right mt-0" type="button" (click)="openImage()">Upload</button>
+        </div>
+        <!-- <div class="col-auto">
+            <button class="btn btn-success plus-btn float-right mt-0" type="button" (click)="savePoints()">Save</button>
+        </div> -->
+    </div>
+</div>

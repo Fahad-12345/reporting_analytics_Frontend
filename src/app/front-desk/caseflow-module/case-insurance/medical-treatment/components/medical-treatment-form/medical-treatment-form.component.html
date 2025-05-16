@@ -1,0 +1,106 @@
+
+<div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center mt-2"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_medical_treatment_view)">
+    <h6 class="pull-left color-blue d-inline-block">Medical Treatment For This Injury Or
+        Illness
+    </h6>
+    <a href="javascript:void(0)"
+        *ngIf="case?.is_finalize && aclService.hasPermission(userPermissions.patient_case_list_insurance_medical_treatment_edit)"
+        (click)="enableForm()" tooltip="Edit"><i class="icon-pencil"></i></a>
+</div>
+<div class="card card-bg pb-0 mt-0"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_medical_treatment_view)">
+    <div>
+        <dynamic-form [fields]="fieldConfig" (onReady)="onFormReady($event)" (submit)="onSubmit($event)">
+        </dynamic-form>
+        <div class="row fields-holder mt-1" *ngIf="allDoctorRows.length>0" #currentTable>
+            <div class="col-md-6">
+                <h6 class="color-green mb-2 mt-2">Doctor's Detail For Injury/Illness</h6>
+            </div>
+            <div  class="col-md-6 text-end mt-2">
+            
+                <a  href="javascript:void(0)" class="btn btn-success round-btn me-2" *ngIf="selection.selected.length"
+                    (click)="deleteAllDoctors()">
+                    <span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+                </a>
+                <a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_medical_treatment_edit)" class="btn btn-primary round-btn" (click)="addDoctorModal(addCurrentDoctor)"
+                    href="javascript:void(0)">Add Doctor</a>
+
+            </div>
+
+            <div class="col-12 data-table mb-3">
+                <ngx-datatable class="bootstrap scroll-hide" [rows]="allDoctorRows" [scrollbarH]="true"
+                    [columnMode]="'force'" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+                    <ngx-datatable-column name="Type" prop="type" [width]="100">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="First Name" prop="first_name" [width]="100">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Middle Name" prop="middle_name" [width]="100">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Last Name" prop="last_name" [width]="100">
+                    </ngx-datatable-column>
+                    <!-- <ngx-datatable-column name="Cell Phone" prop="cellPhone"></ngx-datatable-column> -->
+                    <ngx-datatable-column name="Address" prop="mail_address.street" [width]="120">
+                        <ng-template let-column="column" ngx-datatable-template>
+                            Address
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            {{row.mail_address?.street?row.mail_address?.street:'' }}
+                            {{'  '+row.mail_address?.apartment?row.mail_address?.apartment:''}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="City" prop="mail_address.city" [width]="100">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="State" prop="mail_address.state" [width]="100">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Zip" prop="mail_address.zip" [width]="100">
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Action" prop="id" sortable="false" [width]="110">
+                        <ng-template let-column="column" ngx-datatable-header-template>
+                            <!-- <mat-checkbox [disabled]="!formEnabled" (change)="$event ? masterToggle($event) : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                            </mat-checkbox> -->
+                            Actions
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" let-rowIndex="rowIndex"
+                            ngx-datatable-cell-template>
+                            <!-- <a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit"  >
+                                            <i class="icon-pencil me-2"></i>
+                                        </a> -->
+                            <!-- <mat-checkbox (click)="$event.stopPropagation()"
+                                (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                            </mat-checkbox> -->
+							<button  *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_medical_treatment_edit)"
+							 type="button" style="background: transparent; border:none;" tooltip="Edit"
+                                (click)="addDoctorModal(addCurrentDoctor, row,rowIndex)" role="button"
+                                [class]="formEnabled ? 'disabled pencil-hov mx-2 p-0': 'pencil-hov mx-2 p-0'"><i
+                                    class="icon-pencil"></i></button>
+                          
+                            <button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_medical_treatment_edit)" type="button" style="background: transparent; border:none;"
+                                (click)="confirmDel(row.type,rowIndex)" tooltip="Delete" role="button"
+                                [class]="formEnabled ? 'disabled delete-hov mx-1 p-0': 'delete-hov mx-1 p-0'"><i
+                                    class="icon-remove"></i></button>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #addCurrentDoctor let-modal style="max-width: 500px;">
+
+    <div class="modal-header">
+        <h5 class="modal-title">{{ProviderTitle}} {{docTitle}} Doctor</h5>
+        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <dynamic-form [fields]="modalFieldConfig" (onReady)="onReady($event)" (submit)="submit($event)">
+		</dynamic-form>
+		
+    </div>
+</ng-template>
+
+

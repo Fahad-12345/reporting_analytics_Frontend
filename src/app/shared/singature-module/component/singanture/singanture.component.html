@@ -1,0 +1,13 @@
+
+<div class="signature-pad">
+  <canvas [width]="width" [height]="height" #canvas></canvas>
+  <div class="buttons">
+    <button
+      type="button"
+      [class]="clearButtonClass"
+      *ngIf="showClearButton"
+      (click)="clearPad()">
+      {{ clearButtonText }}
+    </button>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+
+<div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center"
+    *ngIf="aclService.hasPermission('patient-case-list-insurance-insurance-info-view')">
+	<!-- <h6 
+	*ngIf="aclService.hasPermission('patient-case-list-insurance-insurance-info-edit')"
+		class="pull-left color-blue d-inline-block mb-3"
+		>{{(formEnabled)?"Edit":""}}
+		{{title}}</h6> -->
+		
+		<h6 class="pull-left color-blue d-inline-block mb-3"
+		>{{(formEnabled)?"Edit":""}}
+        {{title}}</h6>
+</div>
+
+<div class="mb-2 pb-0" *ngIf="aclService.hasPermission('patient-case-list-insurance-insurance-info-view')">
+
+    <dynamic-form (onReady)="onReady($event)" [fields]="fieldConfig" (submit)="submit($event)">
+    </dynamic-form>
+</div>

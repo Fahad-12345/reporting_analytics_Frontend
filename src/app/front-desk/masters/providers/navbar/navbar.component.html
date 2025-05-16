@@ -1,0 +1,17 @@
+<nav class="left-nav p-0">
+    <ul class="list-unstyled">
+        <li class="button--wayra" id="specialty-tab" [class.active]="router.url.includes('speciality')"
+            *ngIf="aclService.hasPermission(userPermissions.master_speciality_tab)">
+            <a class="nav-link" routerLink="/front-desk/masters/providers/speciality">Specialty</a>
+        </li>
+        <li class="button--wayra" id="case-type-tab" [class.active]="router.url.includes('case-type')"
+            *ngIf="aclService.hasPermission(userPermissions.master_case_type_tab)">
+            <a class="nav-link" routerLink="/front-desk/masters/providers/case-type">Case Type</a>
+        </li>
+        <li class="button--wayra" id="visit-type-tab" [class.active]="router.url.includes('visit-type')"
+            *ngIf="aclService.hasPermission(userPermissions.master_visit_type_tab)">
+            <a class="nav-link" routerLink="/front-desk/masters/providers/visit-type">Visit
+                Type</a>
+        </li>
+    </ul>
+</nav>

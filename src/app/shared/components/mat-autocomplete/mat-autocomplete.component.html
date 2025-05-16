@@ -1,0 +1,56 @@
+
+<mat-form-field class="example-chip-list mat-cr-ui" appearance="outline">
+<mat-label>{{placeHolder}}</mat-label>
+	<input  matInput #chiplistInput  [formControl]="inputControl"
+	[matChipInputFor]="chipGrid" [matAutocomplete]="auto" (focus)="onFocusInput($event)"
+	[matChipInputSeparatorKeyCodes]="separatorKeysCodes" [disabled]="disabled"  [matChipInputAddOnBlur]="addOnBlur"
+	(matChipInputTokenEnd)="add($event)"/>
+
+	<mat-autocomplete class="mat-cr-ui" #auto="matAutocomplete" (click)="$event.stopPropagation()">
+		<div #divToScroll class="main-panel" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50"
+		(scrolled)="onScroll()" [scrollWindow]="false">
+			<mat-option *ngFor="let option of filteredOptions|async; trackBy:trackByCodeCode " [value]="option">
+				<div *ngIf="!option.description" >
+					<mat-checkbox class="mx-0" [checked]="option.selected" #checks (change)="changeSelection($event,option)" (click)="$event.stopPropagation()">
+						<span *ngIf="toHighlight"
+						[innerHTML]="option.name | highlight: toHighlight : inputControl.value"></span>
+						<span *ngIf="!toHighlight" [innerHTML]="option.name"></span>
+					</mat-checkbox>
+				</div>
+				<div *ngIf="option.description" >
+					<mat-checkbox class="mx-0" [checked]="option.selected" #checks (change)="changeSelection($event,option)"  (click)="$event.stopPropagation()">
+						<span *ngIf="toHighlight"
+						[innerHTML]="option.name+'-'+option.description | highlight: toHighlight : inputControl.value"></span>
+						<span *ngIf="!toHighlight" [innerHTML]="option.name+'-'+option.description "></span>
+					</mat-checkbox>
+				</div>
+			</mat-option>
+		</div>
+	</mat-autocomplete>
+</mat-form-field>
+<div class="chip-list-outer">
+	<mat-chip-grid #chipGrid aria-label="Fruit selection">
+		 <mat-chip-row  *ngFor="let option of selectedOptions" (removed)="remove(option)">
+		 <span *ngIf="option.description">
+		 {{option.name + "-"+option.description}}
+		 </span>
+		 <span *ngIf="!option.description">
+		 {{option.name }}
+		 </span>
+		 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+		 </mat-chip-row>
+	</mat-chip-grid>
+	<!-- <mat-chip 
+		 [class]="option.color?'mat-chip mat-standard-chip unique-color':'mat-chip mat-standard-chip'"
+			[selectable]="selectable" [removable]="removable"
+			 [disabled]="disabled" (removed)="remove(option)">
+			 <span *ngIf="option.description">
+				 {{option.name + "-"+option.description}}
+			 </span>
+		 
+			 <span *ngIf="!option.description">
+				 {{option.name }}
+			 </span>
+			 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+		 </mat-chip> -->
+</div>

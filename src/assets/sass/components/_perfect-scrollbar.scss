@@ -1,0 +1,63 @@
+
+.ps__rail-y {
+	z-index: 9 !important;
+	&:hover:hover>.ps__thumb-y, 
+	&:focus>.ps__thumb-y, 
+	&.ps--clicking .ps__thumb-y{
+		@include px-to-rem(width, 8px, true);
+	}
+	.ps__thumb-y {
+		@include px-to-rem(width, 6px, true);
+		right: 0px !important;
+		border-radius: 6px !important;
+	}
+}
+
+.ps-content {
+	height: calc(100% - 43px);
+	@media (max-width: 769px) {
+		overflow: unset !important;
+	}
+}
+
+.perfect-scrollbar>.ps {
+	@include media('<tablet') {
+		overflow: unset !important;
+	}
+}
+
+.sidebar.left-panel .ps-content {
+    border: 1px solid #b0b1b1;
+    overflow-x: inherit !important;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top: none;
+}
+
+.datatable-body{
+	&::-webkit-scrollbar:hover {
+		background: #00a650 !important;
+	}
+	&::-webkit-scrollbar-track {
+		@include box-shadow(inset 0 0 6px rgba(0, 0, 0, 0.3));
+		background-color: #F5F5F5;
+		@include px-to-rem(height, 6px, true);
+	}
+	&::-webkit-scrollbar {
+		@include px-to-rem(height, 6px, true);
+		background-color: $wild-sand;
+	}
+}
+
+.scroll-x, 
+.custom-scroll-x {
+	overflow-x: auto;
+	overflow-y: hidden;
+}
+
+.custom-scroll-xy{
+	overflow: auto;
+	&::-webkit-scrollbar {
+		height: 6px !important;
+	}
+}

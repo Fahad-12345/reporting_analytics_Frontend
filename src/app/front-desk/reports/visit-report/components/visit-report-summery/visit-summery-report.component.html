@@ -1,0 +1,206 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<app-visit-report-filters [showFilterFields]="showFilterFiled" (onResetClickedEmitter)="resetButtonHandler()" (filterFieldEmitter)="applyFilter($event)"></app-visit-report-filters>
+<div class="row">
+	<div class="col-12 col-sm-12 mb-2">
+		<button type="button"  class="btn btn-success mx-2 mb-2  mb-sm-0 float-right">
+			<i class="fa fa-file-pdf"></i> Export To Summary Report
+		</button>
+	</div>
+</div>
+<div class="nf-reports">
+
+	<ngx-datatable class="bootstrap" [columnMode]='"force"'  [rowHeight]="'auto'" [scrollbarH]="true" #visitReportTable
+		[virtualization]="false" [externalPaging]="false" [footerHeight]="0" [rows]="rowData" [externalPaging]="false">
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Practice-Location"
+			prop="practice_locations" [width]="140" cellClass="action-icon">
+
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Speciality" prop="speciality_name"
+			[width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider "
+			prop="doctor_name" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Unfinalized"
+			prop="visit_status" [width]="80">
+
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Finalized"
+			prop="visit_status" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Initial Evaluation"
+			prop="initial_evaluation" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Follow Up"
+			prop="follow_up" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Re-Evaluation"
+			prop="re_evaluation" [width]="80">
+		</ngx-datatable-column>
+
+	
+
+	</ngx-datatable>
+
+</div> -->
+
+
+
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<app-visit-report-filters [showFilterFields]="showFilterFiled" (onResetClickedEmitter)="resetButtonHandler()" (filterFieldEmitter)="applyFilter($event)"></app-visit-report-filters>
+<div class="row">
+	<div class="col-12 col-sm-12 mb-2">
+		<button type="button"  class="btn btn-success mx-2 mb-2  mb-sm-0 float-right">
+			<i class="fa fa-file-pdf"></i> Export To Summary Report
+		</button>
+	</div>
+</div>
+<div *ngIf="groupby == 1" class="nf-reports">
+	<div class="total-apt-text"> Total Visits: {{totalVisits  ?
+		totalVisits : 0}}</div>
+
+	<ngx-datatable class="bootstrap" [columnMode]='"force"'  [rowHeight]="'auto'" [scrollbarH]="true" #visitReportTable
+		[virtualization]="false" [externalPaging]="false" [footerHeight]="0" [rows]="rowData" [externalPaging]="false">
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Speciality" prop="speciality"
+			[width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider "
+			prop="provider" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Vsits Status"
+			prop="visitstatus" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Initial Evaluation"
+			prop="initial_evaluation" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Follow Up"
+			prop="follow_up" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Re-Evaluation"
+			prop="re_evaluation" [width]="80">
+		</ngx-datatable-column>
+		
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Total Visits"
+			prop="total_visits" [width]="140" cellClass="action-icon">
+
+		</ngx-datatable-column>
+
+	
+
+	</ngx-datatable>
+
+</div>
+
+<div *ngIf="groupby == 2" class="nf-reports">
+
+	<ngx-datatable class="bootstrap" [columnMode]='"force"'  [rowHeight]="'auto'" [scrollbarH]="true" #visitReportTable
+		[virtualization]="false" [externalPaging]="false" [footerHeight]="0" [rows]="rowData" [externalPaging]="false">
+		
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider "
+			prop="provider" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Speciality" prop="speciality"
+			[width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Vsits Status"
+			prop="visitstatus" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Initial Evaluation"
+			prop="initial_evaluation" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Follow Up"
+			prop="follow_up" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Re-Evaluation"
+			prop="re_evaluation" [width]="80">
+		</ngx-datatable-column>
+		
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Total Visits"
+			prop="total_visits" [width]="140" cellClass="action-icon">
+
+		</ngx-datatable-column>
+
+	
+
+	</ngx-datatable>
+
+</div>
+
+<div *ngIf="groupby == 3" class="nf-reports">
+
+	<ngx-datatable class="bootstrap" [columnMode]='"force"'  [rowHeight]="'auto'" [scrollbarH]="true" #visitReportTable
+		[virtualization]="false" [externalPaging]="false" [footerHeight]="0" [rows]="rowData" [externalPaging]="false">
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Vsits Status"
+			prop="visitstatus" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Speciality" prop="speciality"
+			[width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider "
+			prop="provider" [width]="80">
+
+		</ngx-datatable-column>
+
+		
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Initial Evaluation"
+			prop="initial_evaluation" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Follow Up"
+			prop="follow_up" [width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Re-Evaluation"
+			prop="re_evaluation" [width]="80">
+		</ngx-datatable-column>
+		
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Total Visits"
+			prop="total_visits" [width]="140" cellClass="action-icon">
+
+		</ngx-datatable-column>
+
+	
+
+	</ngx-datatable>
+
+</div>

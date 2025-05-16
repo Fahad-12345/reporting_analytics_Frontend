@@ -1,0 +1,191 @@
+<div class="row" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_household_view)">
+    <!-- Attorney Information -->
+    <div class="col-12">
+        <div class="card border-0" style="padding:0px !important;">
+
+            <div class="card-body mb-3">
+                <!-- <div class="edit-block">
+                    <h6 class="color-blue>Household Information" <a class="success float-right"
+                        data-original-title="Edit" title="Edit" routerLink="/front-desk/household/edit">
+                        <i class="icon-pencil"></i>
+                        </a>
+                    </h6>
+                </div> -->
+                <dynamic-form [fields]="radiobtnFieldConfig" (submit)="submitRadioButton($event)">
+                </dynamic-form>
+
+                <div class="" *ngIf="showtable">
+                    <div class="row mb-0">
+                        <div class="col-md-12 text-end">
+                        
+                            <a href="javascript:void(0)" class="btn btn-default round-btn mx-2"
+                                *ngIf="selection.selected.length" (click)="confirmDel()">
+                                <span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+                            </a>
+                            <a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_household_edit)" class="btn btn-primary round-btn w-auto" (click)="savePeopleModal(addHouseHold)"
+                                href="javascript:void(0)">Add More People</a>
+                        </div>
+                        <div class="col-md-12 data-table">
+                            <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="house_hold_information"
+                                [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                                [rowHeight]="'auto'" [limit]="10">
+                                <!-- <ngx-datatable-column name="ID" prop="id" [width]="100">
+                                <ng-template ngx-datatable-header-template>
+                                    ID
+                                </ng-template>
+                                <ng-template let-row="row" let-value ngx-datatable-cell-template>
+                                    <a [routerLink]="['edit', row.id]">
+                                        {{ row.id }}
+                                    </a>
+                                </ng-template>
+                            </ngx-datatable-column> -->
+                                <ngx-datatable-column name="Name" prop="name" [width]="120">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Name
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        {{ row.contact_information.first_name + ' ' + row.contact_information.middle_name + ' ' + row.contact_information.last_name }}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="SSN" prop="ssn" [width]="80">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        SSN
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        {{ row.contact_information.ssn |ssnFormatPipe}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Date of Birth" prop="dob" [width]="90">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Date Of Birth
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <!-- {{row.contact_information.dob | dateFormatMDY| date:'MM-dd-yyyy'}} -->
+                                        {{row.contact_information.dob? (row.contact_information.dob | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : ''}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <!-- <ngx-datatable-column name="Relation" prop="relationship[0].type"></ngx-datatable-column> -->
+                                <ngx-datatable-column name="Own Motor Vehicle" prop="own_motor_vehicle" [width]="120">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Own Motor Vehicle
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        {{ row.own_motor_vehicle == 0 ? 'No' :row.own_motor_vehicle ==1?'Yes': '' }}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <!-- <ngx-datatable-column name="Name" prop="name" [width]="120">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    Related Vehicle Info Name
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <ng-container *ngIf="row.relatedVehicleInfos">
+                                        {{ row.relatedVehicleInfos?.first_name + ' ' + row.relatedVehicleInfos?.middleName + ' ' + row.relatedVehicleInfos?.last_name }}
+                                    </ng-container>
+                                </ng-template>
+                            </ngx-datatable-column> -->
+                                <!-- <ngx-datatable-column name="Cell Phone No." prop="cellPhone"></ngx-datatable-column> -->
+                                <!-- <ngx-datatable-column name="Insurance Company Name" prop="row?.relatedVehicleInfos?.insuranceCompany.companyName"></ngx-datatable-column> -->
+                                <ngx-datatable-column name="Name" prop="name" [width]="160">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Insurance Company Name
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <ng-container>
+                                            {{row.insurance_company?.name}}</ng-container>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <!-- <ngx-datatable-column name="Policy No." prop="row?.relatedVehicleInfos?.policyNo"></ngx-datatable-column> -->
+                                <ngx-datatable-column name="Name" prop="name" [width]="80">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Policy No.
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <ng-container>
+                                            {{row?.policy}}</ng-container>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Name" prop="name" [width]="95">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Phone Number
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <ng-container>
+                                            {{row?.contact_information.cell_phone|phoneFormatPipe}}</ng-container>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Effective Date" prop="row.relatedVehicleInfos?.effective"
+                                    [width]="90">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Effective Date
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <!-- {{row.effective_date| dateFormatMDY|  date:'MM-dd-yyyy'}} -->
+                                        {{row.effective_date? (row.effective_date | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : ''}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Expiry Date" prop="expiry_date" [width]="80">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Expiry Date
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        {{row.expiry_date? (row.expiry_date | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : ''}}
+                                        <!-- {{row.expiry_date | dateFormatMDY|  date:'MM-dd-yyyy'}} -->
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name="Relation to Patient" prop="expiry_date" [width]="120">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Relation to Patient
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        {{row.contact_information.contact_person_relation?.name}}
+                                        {{row.contact_information?.other_relation_description}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column name="Actions" sortable="false" prop="id" [width]="110">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        <!-- <mat-checkbox (change)="$event ? masterToggle($event) : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                    </mat-checkbox> -->
+                                        Actions
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <!-- <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)">
+                                    </mat-checkbox> -->
+                                        <a href="javascripot:void(0)" class="success p-0 edit-hov mx-1" role="button"
+                                            data-original-title="Edit" title="Edit" tooltip="Edit"
+                                            *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_household_edit)"
+                                            (click)="savePeopleModal(addHouseHold,row)">
+                                            <i class="icon-pencil"></i>
+                                        </a>
+                                      
+                                        <a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_household_edit)" href="javascript:void(0)" role="button" (click)="confirmDel(row)"
+                                            class="danger remove-hov p-0 mx-1" data-original-title="Delete"
+                                            title="Delete" tooltip="Delete">
+                                            <i class="icon-remove"></i>
+                                        </a>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #addHouseHold let-modal style="max-width: 500px;">
+    <div class="modal-header">
+        <h5 class="modal-title">{{houseHoldTitle}} Household Information</h5>
+        <button type="button" class="close" (click)="disableForm()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body front-desk-block">
+        <dynamic-form #dymanic2 (onReady)="onReady($event)" [fields]="fieldConfig" (submit)="submit($event)">
+        </dynamic-form>
+    </div>
+</ng-template>

@@ -1,0 +1,245 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div class="tab-pane fade show active">
+	<div>
+		<div class="d-block text-end">
+			<a *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_code_type_add)"
+				class="btn btn-default round-btn" href="javascript:void(0)" data-bs-toggle="modal"
+				(click)="openCodeTypeModal(openModal)"><span class="icon-plus-circle"></span> Add New
+			</a>
+		</div>
+		<form class="form" action="" autocomplete="off" [formGroup]="SearchForm"
+			*ngIf="aclService.hasPermission(userPermissions.master_billing_codes_code_type_filter)">
+			<div class="search-filter search-filter-bg-light filter-grid grid-3" [class.hide-remaining-search-filter]="!isCollapsed">
+				<div class="filter-grid-container">
+					<div class="form-group"
+						[ngClass]="{'focused': SearchForm.get('name').value != '' && SearchForm.get('name').value != null }">
+						<label class="form-label" for="name">Code Type</label>
+						<input type="text" id="name" class="form-control form-input"
+						formControlName="name">
+					</div>
+					<div class="form-group"
+						[ngClass]="{'focused': SearchForm.get('description').value != '' && SearchForm.get('description').value != null }">
+						<label class="form-label" for="description">Description</label>
+						<input type="text" id="description" class="form-control form-input"
+						formControlName="description">
+					</div>
+					<div class="form-group"
+						[ngClass]="{'focused': SearchForm.get('comments').value != '' && SearchForm.get('comments').value != null }">
+						<label class="form-label" for="comments">Comments</label>
+						<input type="text" id="comments" class="form-control form-input"
+						formControlName="comments">
+					</div>
+				</div>
+				<div class="collape-btn">
+					<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+					[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+					[class.btn-success]="isCollapsed" type="button">
+						<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+					</button>
+				</div>
+				<div class="search-filter-btn-group" [class.btn-group-mrgin-top]="isCollapsed">
+					<button class="btn btn-success" (click)="setPage({ offset: 0 });">Filter</button>
+					<button class="btn btn-primary" (click)="resetFilter()" [disabled]="checkInputs()">Reset</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_code_type_view)" class="card data-table p-0 mt-2 border-0">
+		<div class="row">
+			<div class="col-12 col-sm-6 edit-block text-start">
+				<div class="form-group field option-field mb-2 d-inline-block">
+					<ul>
+						<li>Show</li>
+						<li>
+							<select class="custom-select" name="limit" id="limit"
+								(change)="pageLimit($event.target.value)" [(ngModel)]="page.size">
+								<option [value]="10" selected>10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+
+				</div>
+
+
+			</div>
+			<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+				<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+					Customize Columns
+				</button>
+
+				<!-- <lib-task-manager *ngIf="selection.selected.length " selectedProps="{{stringfy(selection.selected)}}"
+					[listCount]="selection.selected.length" type="text" page="CodeType">
+				</lib-task-manager> -->
+				<!-- <a *ngIf="selection.selected.length && aclService.hasPermission(userPermissions.master_billing_codes_cpt_delete)"
+                  class="btn btn-default round-btn" href="javascript:void(0)" (click)="deleteMultipleCptCode()"> <span
+                    class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+                </a> -->
+			</div>
+		</div>
+
+		<ngx-datatable class="bootstrap" #codeTypeList [rows]="CodeListig" [columnMode]='"force"'
+			[headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true"
+			[count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" (page)="setPage($event)"
+			[virtualization]="false" [externalPaging]="true">
+			
+
+			<ngx-datatable-column name="Code Type" [sortable]="false" prop="name" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name}}" container="body">
+						{{row.name}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Description" [sortable]="false" prop="description" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description || 'N/A'}}" container="body">
+						{{row.description || 'N/A'}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+<!-- 
+			<ngx-datatable-column name="Slug" [sortable]="false" prop="slug">
+			</ngx-datatable-column> -->
+
+			<ngx-datatable-column name="Comments" [sortable]="false" prop="comments" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.comments || 'N/A'}}" container="body">
+						{{row.comments || 'N/A'}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+			  
+			<ngx-datatable-column name="Actions" [width]="150" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-header-template name="Actions">
+
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_code_type_edit)"
+						(change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+						[indeterminate]="selection.hasValue() && !isAllSelected()" disabled>
+					</mat-checkbox>
+					Actions
+
+				</ng-template>
+
+				<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_code_type_edit)"
+						(click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+						[checked]="selection.isSelected(row)" disabled>
+					</mat-checkbox>
+					<a href="javascript:void(0)"
+						*ngIf="aclService.hasPermission(userPermissions.master_billing_codes_code_type_edit)"
+						class="edit-hov mx-1" (click)="openCodeTypeModal(openModal ,row,rowIndex)" ngbTooltip="Edit" container="body"
+						role="button" data-bs-toggle="modal" data-target="#openModal">
+						<i class="icon-pencil"></i>
+					</a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="codeTypeHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+
+					<!-- <lib-task-manager selectedProps="{{stringfy([row])}}" type="icon" id="{{row.id}}" page="CodeType">
+					</lib-task-manager> -->
+
+					<!-- <a *ngIf="aclService.hasPermission(userPermissions.'master_billing_codes_cpt_can_delete')" class="remove-hov mx-1"
+                    tooltip="Delete" href="javascript:void(0)" role="button" (click)="deleteOneCptCode(row)"><i
+                      class="icon-remove"></i>
+                  </a> -->
+
+				</ng-template>
+			</ngx-datatable-column>
+
+		</ngx-datatable>
+	</div>
+</div>
+
+<ng-template #openModal let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">{{modelTitle}} Code Type</h5>
+		<button type="button" class="close" (click)="modalClose()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+		<form autocomplete="" [formGroup]="form" (ngSubmit)="onSubmitForm(form.value)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group mb-1">
+					<label class="form-label"> Code Type Name*</label>
+					<input type="text" class="form-control mb-0" formControlName="name" notFirstCharactorSpace>
+					<small class="form-text text-muted danger" *ngIf="form.get('name').errors?.required && 
+                          (form.get('name').dirty || form.get('name').touched)">This field is required</small>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': form.get('description').value != '' && form.get('description').value != null }">
+						<label class="form-label"> Description</label>
+						<textarea class="form-control mb-0" rows="3" formControlName="description" notFirstCharactorSpace></textarea>
+						<!-- <input type="text" class="form-control mb-0" formControlName="description" notFirstCharactorSpace> -->
+						<small class="form-text text-muted danger" *ngIf="form.get('description').errors?.required && 
+				                                (form.get('description').dirty || form.get('description').touched)">Please
+							enter description!</small>
+					</div>
+				</div>
+			</div>
+
+			<!-- <div class="row">
+				<div class="col-md-12">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': form.get('slug').value != '' && form.get('slug').value != null }">
+						<label for="slug" class="form-label">Slug</label>
+						<input type="text" class="form-control mb-0" formControlName="slug">
+						<small class="form-text text-muted danger" *ngIf="form.get('slug').errors?.required && 
+                                (form.get('slug').dirty || form.get('slug').touched)">Please
+							enter slug!</small>
+					</div>
+				</div>
+			</div> -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group mb-1">
+					<label class="form-label"> Comments</label>
+					<textarea class="form-control mb-3" rows="3" formControlName="comments"></textarea>
+				</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12 modal-btn-width text-center">
+					<button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+						(click)="modalClose()">Cancel</button>
+					<button type="submit" class="btn btn-success"
+						[disabled]="form.invalid || loadSpin">{{modelSubmit}}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

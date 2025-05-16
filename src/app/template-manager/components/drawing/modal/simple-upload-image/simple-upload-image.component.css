@@ -1,0 +1,18 @@
+.rounded{
+	height: 100% !important;
+	object-fit: cover;
+	width: 100%;
+  }
+  .close {
+    /* float: right; */
+	text-align: end;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #ff0000;
+    text-shadow: 0 1px 0 #fff;
+    /* opacity: .5; */
+}
+.card{
+	background-color: #fff0;
+}

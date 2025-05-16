@@ -1,0 +1,21 @@
+// Mixin for flex
+@mixin flex($flex, $align-items: null, $justify-content: null, $flex-wrap: null) {
+	display: $flex;
+	align-items: $align-items;
+	justify-content: $justify-content;
+	flex-wrap: $flex-wrap;
+}
+
+// radio button flex material
+@mixin radio-flex(){
+	display: flex;
+	align-items: stretch;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+}
+
+// radio button Grid material
+@mixin radio-grid(){
+	display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}

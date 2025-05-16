@@ -1,0 +1,414 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="section-frame reduce-height-tab border-0 me-1 plan-of-care"
+    style="border: 1px solid #a2a3a2 !important; padding:8px;">
+    <div class="section-frame reduce-height-tab border-0 pb-2">
+        <div class="custom-scrollbar">
+            <div class="header-tools d-flex">
+                <!-- <strong class="sub-title"
+					style="transform: translate(0);">{{visitType =='reEvaluation'? 'RETURN TO WORK:': 'WORK STATUS'}}</strong> -->
+					<strong class="sub-title"
+                    style="transform: translate(0);">WORK STATUS</strong>
+            </div>
+            <div class="inner-frame position-relative bg-white p-2"
+                style="overflow: visible; border-radius: 0px 0px 4px 4px;">
+                <!-- <strong class="section-title position-absolute" style="left: -1px; transform: translate(0);">Plan of
+                    Care</strong> -->
+                <div class="row">
+                    <div class="col-12">
+                        <form class="form additional-class" [formGroup]="form">
+                            <strong class="d-block mb-2"> </strong>
+                            <ul class="list-unstyled m-0">
+                                <!-- <ng-container *ngIf="visitType !== 'reEvaluation'"> -->
+                                    <li class="mb-2">
+										<label for="notReturned" class="d-flex position-relative m-0"  
+										[ngClass]="{'radio-light-pink':checkCarryForward(form,'returnedToWork')}">
+                                            <input id="notReturned" value="outOfWorkSince" type="radio"
+                                                (ngModelChange)="onWorkStatusChange($event)"
+                                                formControlName="returnedToWork" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"
+                                                formGroupName="outOfWorkSince">
+                                                <span class="me-1">Patient has been out of work since</span>
+
+                                                <div class="form-group mb-2 mb-xl-0">
+													<input placeholder="mm/dd/yyyy" (click)="outOfWorkDate.open()"
+													[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSince'),'outOfWorkDate')}"
+                                                        (keydown)="$event.preventDefault()"
+                                                        [matDatepicker]="outOfWorkDate" type="text" id="outOfWorkDate"
+                                                        formControlName="outOfWorkDate"
+                                                        class="form-control form-input form-date" [max]="currentDate">
+                                                    <mat-datepicker-toggle [for]="outOfWorkDate">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #outOfWorkDate></mat-datepicker>
+                                                </div>
+
+
+                                                <!-- 
+                                                <input type="date" class="form-control d-inline text-center p-2"
+                                                    formControlName="outOfWorkDate" style="width: 160px;"> -->
+                                                <span class="ms-1">and has not returned back to work due to
+                                                    {{(gender == "female" || gender == "Female") ? 'her' : 'his'}}
+                                                    recent injury.
+                                                </span>
+                                            </span>
+                                        </label>
+                                    </li>
+                                    <li class="mb-2">
+                                        <label for="returned" class="d-flex position-relative m-0" 
+										[ngClass]="{'radio-light-pink':checkCarryForward(form,'returnedToWork')}">
+                                            <input id="returned" value="outOfWorkSinceAndReturnedSince" type="radio"
+                                                (ngModelChange)="onWorkStatusChange($event)"
+                                                formControlName="returnedToWork" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"
+                                                formGroupName="outOfWorkSinceAndReturnedSince">
+                                                <span class="me-1">Patient has been out of work since</span>
+                                                <!-- <input type="date" class="form-control d-inline text-center p-2"
+                                                    formControlName="outOfWorkDate" style="width: 160px;"> -->
+
+                                                <div class="form-group mb-2 mb-xl-0">
+													<input placeholder="mm/dd/yyyy" (click)="outOfWorkDate1.open()"
+													[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndReturnedSince'),'outOfWorkDate')}"
+                                                        (keydown)="$event.preventDefault()"
+                                                        [matDatepicker]="outOfWorkDate1" type="text" id="outOfWorkDate1"
+                                                        formControlName="outOfWorkDate"
+                                                        class="form-control form-input form-date" [max]="currentDate">
+                                                    <mat-datepicker-toggle [for]="outOfWorkDate1">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #outOfWorkDate1></mat-datepicker>
+                                                </div>
+
+                                                <span class="me-1 ms-1">and has returned back to work on</span>
+                                                <!-- <input type="date" class="form-control d-inline text-center p-2"
+                                                    formControlName="returnedToWorkDate" style="width: 160px;"> -->
+
+                                                <div class="form-group mb-0">
+													<input placeholder="mm/dd/yyyy" (click)="returnedToWorkDate1.open()"
+													[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndReturnedSince'),'returnedToWorkDate')}"
+                                                        (keydown)="$event.preventDefault()"
+                                                        [matDatepicker]="returnedToWorkDate1" type="text"
+                                                        id="returnedToWorkDate1" formControlName="returnedToWorkDate"
+                                                        class="form-control form-input form-date" [max]="currentDate">
+                                                    <mat-datepicker-toggle [for]="returnedToWorkDate1">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #returnedToWorkDate1></mat-datepicker>
+                                                </div>
+
+                                                <span class="me-1 ms-1">with limitations:</span>
+												<input type="text" class="form-control d-inline text-center p-2 mt-2 mt-md-0"
+												[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndReturnedSince'),'limitations')}"
+                                                    formControlName="limitations" style="width: 150px;">
+                                            </span>
+                                        </label>
+                                    </li>
+                                    <li class="mb-2">
+										<label for="notMissed" class="d-flex position-relative m-0"
+										[ngClass]="{'radio-light-pink':checkCarryForward(form,'returnedToWork')}">
+                                            <input id="notMissed" value="notMissedWork" type="radio"
+                                                (ngModelChange)="onWorkStatusChange($event)"
+                                                formControlName="returnedToWork" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"><span>Patient
+                                                    has not missed work
+                                                    due
+                                                    to injury.</span></span>
+                                        </label>
+                                    </li>
+
+
+                                    <li class="mb-2">
+										<label for="canReturnWithLimitation" class="d-flex position-relative m-0" 
+										[ngClass]="{'radio-light-pink':checkCarryForward(form,'returnedToWork')}">
+                                            <input id="canReturnWithLimitation"
+                                                value="outOfWorkSinceAndCanReturnSinceWithLimitations" type="radio"
+                                                (ngModelChange)="onWorkStatusChange($event)"
+                                                formControlName="returnedToWork" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"
+                                                formGroupName="outOfWorkSinceAndCanReturnSinceWithLimitations">
+                                                <span class="me-1">Patient has been out of work since</span>
+                                                <!-- <input type="date" class="form-control d-inline text-center p-2"
+                                                    formControlName="outOfWorkDate" style="width: 160px;"> -->
+
+                                                <div class="form-group mb-2 mb-xl-0">
+                                                    <input placeholder="mm/dd/yyyy" (click)="outOfWorkDate2.open()"
+														(keydown)="$event.preventDefault()"
+														[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndCanReturnSinceWithLimitations'),'outOfWorkDate')}"
+                                                        [matDatepicker]="outOfWorkDate2" type="text" id="outOfWorkDate2"
+                                                        formControlName="outOfWorkDate"
+                                                        class="form-control form-input form-date" [max]="currentDate">
+                                                    <mat-datepicker-toggle [for]="outOfWorkDate2">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #outOfWorkDate2></mat-datepicker>
+                                                </div>
+
+                                                <span class="me-1 ms-1">due to injury and can return back to work
+                                                    on</span>
+
+                                                <div class="form-group mb-0">
+                                                    <input placeholder="mm/dd/yyyy" (click)="returnedToWorkDate2.open()"
+														(keydown)="$event.preventDefault()"
+														[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndCanReturnSinceWithLimitations'),'returnedToWorkDate')}"
+                                                        [matDatepicker]="returnedToWorkDate2" type="text"
+                                                        id="returnedToWorkDate2" formControlName="returnedToWorkDate"
+                                                        class="form-control form-input form-date" [min]="currentDate">
+                                                    <mat-datepicker-toggle [for]="returnedToWorkDate2">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #returnedToWorkDate2></mat-datepicker>
+                                                </div>
+                                                <!-- <input type="date" formControlName="returnedToWorkDate"
+                                                    class="form-control d-inline text-center p-2" style="width: 160px;"> -->
+                                                <span class="me-1 ms-1">with limitations:</span>
+												<input
+												[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndCanReturnSinceWithLimitations'),'limitations')}"
+												type="text" formControlName="limitations" style="width: 150px;"
+                                                    class="form-control d-inline text-center p-2 mt-2 mt-md-0">
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li class="mb-2">
+										<label for="canReturnWithNoRestriction" class="d-flex position-relative m-0"
+										[ngClass]="{'radio-light-pink':checkCarryForward(form,'returnedToWork')}">
+                                            <input id="canReturnWithNoRestriction"
+                                                value="outOfWorkSinceAndCanReturnSinceWithNoLimitations" type="radio"
+                                                (ngModelChange)="onWorkStatusChange($event)"
+                                                formControlName="returnedToWork" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"
+                                                formGroupName="outOfWorkSinceAndCanReturnSinceWithNoLimitations">
+                                                <span class="me-1">Patient has been out of work since</span>
+                                                <!-- <input type="date" class="form-control d-inline text-center p-2"
+                                                    formControlName="outOfWorkDate" style="width: 160px;"> -->
+
+
+                                                <div class="form-group mb-2 mb-xl-0">
+													<input placeholder="mm/dd/yyyy" (click)="outOfWorkDate3.open()"
+													[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndCanReturnSinceWithNoLimitations'),'outOfWorkDate')}"
+                                                        (keydown)="$event.preventDefault()"
+                                                        [matDatepicker]="outOfWorkDate3" type="text" id="outOfWorkDate3"
+                                                        formControlName="outOfWorkDate"
+                                                        class="form-control form-input form-date" [max]="currentDate">
+                                                    <mat-datepicker-toggle [for]="outOfWorkDate3">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #outOfWorkDate3></mat-datepicker>
+                                                </div>
+                                                <span class="me-1 ms-1">due to injury and can return back to work
+                                                    on</span>
+                                                <!-- <input type="date" class="form-control d-inline text-center p-2"
+                                                    formControlName="returnedToWorkDate" style="width: 160px;"> -->
+
+
+                                                <div class="form-group mb-0">
+                                                    <input placeholder="mm/dd/yyyy" (click)="returnedToWorkDate4.open()"
+														(keydown)="$event.preventDefault()"
+														[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndCanReturnSinceWithNoLimitations'),'returnedToWorkDate')}"
+                                                        [matDatepicker]="returnedToWorkDate4" type="text"
+                                                        id="returnedToWorkDate4" formControlName="returnedToWorkDate"
+                                                        class="form-control form-input form-date" [min]="currentDate">
+                                                    <mat-datepicker-toggle [for]="returnedToWorkDate4">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #returnedToWorkDate4></mat-datepicker>
+                                                </div>
+
+                                                <span class="ms-1"> with no restrictions.</span>
+                                            </span>
+                                        </label>
+                                    </li>
+                                    <li class="mb-2">
+										<label for="canNotReturnBack" class="d-flex position-relative m-0"
+										[ngClass]="{'radio-light-pink':checkCarryForward(form,'returnedToWork')}"> <input
+                                                id="canNotReturnBack"
+                                                value="outOfWorkSinceAndNotCantReturnToWorkDueToLimitations"
+                                                type="radio" (ngModelChange)="onWorkStatusChange($event)"
+                                                formControlName="returnedToWork" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"
+                                                formGroupName="outOfWorkSinceAndNotCantReturnToWorkDueToLimitations">
+                                                <span class="me-1">Patient has been out of work since</span>
+
+                                                <div class="form-group mb-2 mb-xl-0">
+													<input placeholder="mm/dd/yyyy" (click)="outOfWorkDate5.open()"
+													[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndNotCantReturnToWorkDueToLimitations'),'outOfWorkDate')}"
+                                                        (keydown)="$event.preventDefault()"
+                                                        [matDatepicker]="outOfWorkDate5" type="text" id="outOfWorkDate5"
+                                                        formControlName="outOfWorkDate"
+                                                        class="form-control form-input form-date" [max]="currentDate">
+                                                    <mat-datepicker-toggle [for]="outOfWorkDate5">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #outOfWorkDate5></mat-datepicker>
+                                                </div>
+                                                <!-- <input type="date" formControlName="outOfWorkDate"
+                                                    class="form-control d-inline text-center p-2" style="width: 160px;"> -->
+                                                <span class="me-1 ms-1">due to injury and cannot currently return back
+                                                    to
+                                                    work due to pain limiting
+                                                    {{(gender == "female" || gender == "Female") ? 'her' : 'his'}}
+                                                    function.</span>
+												<input type="text" formControlName="limitations"
+												[ngClass]="{'bg-light-pink':checkCarryForward(form.get('outOfWorkSinceAndNotCantReturnToWorkDueToLimitations'),'limitations')}"
+												 style="width: 150px;"
+                                                    class="form-control d-inline text-center p-2 mt-2 mt-xl-0">
+                                            </span>
+                                        </label>
+                                    </li>
+                                <!-- </ng-container> -->
+                                <!--<li class="mb-2" *ngIf="visitType =='reEvaluation'">-->
+
+<!-- 
+                                <ng-container *ngIf="visitType === 'reEvaluation'">
+                                    <li class="mb-2">
+                                        <label for="unableToWork" class="d-flex position-relative m-0">
+                                            <input id="unableToWork" value="unableToDoWork" type="radio"
+                                                formControlName="returnedToWork"
+                                                (ngModelChange)="onWorkStatusChange($event)" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap">
+                                                <span class="me-1">Patient is currently not working and is unable to
+                                                    return
+                                                    to work due to persistent pain limiting his/her function.</span>
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li class="mb-2">
+                                        <label for="patientIsWorking" class="d-flex position-relative m-0">
+                                            <input id="patientIsWorking" value="workAsWithRestrictions" type="radio"
+                                                formControlName="returnedToWork"
+                                                (ngModelChange)="onWorkStatusChange($event)" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value"> <span
+                                                class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"
+                                                formGroupName="workAsWithRestrictions">
+                                                <span class="me-1">Patient is currently working as a </span>
+                                                <input formControlName="workAs" type="text"
+                                                    class="form-control d-inline text-center p-2" style="width: 60px;">
+                                                <span class="me-1 ms-1">with restrictions of: </span>
+                                                <input formControlName="limitations" type="text"
+                                                    class="form-control d-inline text-center p-2">
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li class="mb-2">
+                                        <label for="patientIsbackToWork" class="d-flex position-relative m-0">
+                                            <input id="patientIsbackToWork" value="canReturnOnWorkDateWithRestrictions"
+                                                type="radio" (ngModelChange)="onWorkStatusChange($event)"
+                                                formControlName="returnedToWork" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"
+                                                formGroupName="canReturnOnWorkDateWithRestrictions">
+                                                <span class="me-1">Patient can return to work on</span>
+
+                                                <div class="form-group">
+                                                    <input placeholder="mm/dd/yyyy" (click)="returnedToWorkDate6.open()"
+                                                        (keydown)="$event.preventDefault()"
+                                                        [matDatepicker]="returnedToWorkDate6" type="text"
+                                                        id="returnedToWorkDate6" formControlName="returnedToWorkDate"
+                                                        class="form-control form-input form-date" [min]="currentDate">
+                                                    <mat-datepicker-toggle [for]="returnedToWorkDate6">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #returnedToWorkDate6></mat-datepicker>
+                                                </div>
+                                                <span class="me-1 ms-1">with the following restrictions: </span>
+                                                <input formControlName="limitations" type="text"
+                                                    class="form-control d-inline text-center p-2">
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li class="mb-2">
+                                        <label for="patientIsbackToWorkWithOnRestrictions"
+                                            class="d-flex position-relative m-0">
+                                            <input id="patientIsbackToWorkWithOnRestrictions"
+                                                value="canReturnToWorkOnWithNoRestrictionsOn" type="radio"
+                                                formControlName="returnedToWork"
+                                                (ngModelChange)="onWorkStatusChange($event)" appEnhanceRadio
+                                                [oldValue]="form.controls.returnedToWork.value">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label text-dark w-100 flex-wrap flex-xl-nowrap"
+                                                formGroupName="canReturnToWorkOnWithNoRestrictionsOn">
+                                                <span class="me-1">Patient can return to work on</span>
+
+                                                <div class="form-group">
+                                                    <input placeholder="mm/dd/yyyy" (click)="returnedToWorkDate7.open()"
+                                                        (keydown)="$event.preventDefault()"
+                                                        [matDatepicker]="returnedToWorkDate7" type="text"
+                                                        id="returnedToWorkDate7" formControlName="returnedToWorkDate"
+                                                        class="form-control form-input form-date" [min]="currentDate">
+                                                    <mat-datepicker-toggle [for]="returnedToWorkDate7">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #returnedToWorkDate7></mat-datepicker>
+                                                </div>
+                                                <span class="me-1 ms-1">with no restrictions on: </span>
+                                                <input formControlName="limitations" type="text"
+                                                    class="form-control d-inline text-center p-2">
+                                            </span>
+                                        </label>
+                                    </li>
+
+                                    <li class="mb-2">
+                                        <label for="findingDiscussedWithPatient" class="d-flex position-relative m-0">
+                                            <input type="text" placeholder="Findings were discussed with the patient"
+                                                id="findingDiscussedWithPatient"
+                                                formControlName="findingDiscussedWithPatient"
+                                                class="form-control d-inline text-start p-2"> </label>
+                                    </li>
+
+                                </ng-container> -->
+                            </ul>
+                            <!-- <div class="fields-holder" >
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('casualityComments').value != '' && form.get('casualityComments').value != null }">
+                                      <label for="casualityComments" class="form-label">Comments:</label>
+                                      <input type="text" id="casualityComments" class="form-control text-lowercase form-input" formControlName="casualityComments">
+                                      <small class="form-text text-muted danger" *ngIf=" (form.get('casualityComments').errors?.maxlength) && form.get('casualityComments').dirty">Maximum characters should be {{casualityCommentsMaxLength}}!</small>
+                                    </div>
+                                  </div> -->
+                            <p>
+                                <!-- <strong class="d-block">IMPAIRMENT RATING:</strong>
+                    Patient is currently 
+                    <input type="number" min="0" max="100" class="form-control d-inline text-center" style="width: 60px;"  placeholder="0" formControlName="temporarilyImpaired" (input)="onImpairedPercentChange($event.target.value)">
+                      
+                    % temporarily impaired
+                    <input type="text" class="form-control d-inline text-center" style="width: 380px;" formControlName="temporarilyImpairedComment"> -->
+                            </p>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row mb-2" [formGroup]="form">
+                    <div class="col-12">
+                        <div class="message">
+                            <textarea [ngClass]="{'bg-light-pink':checkCarryForward(form,'comments')}"
+							placeholder="Comments" formControlName="comments" class="form-control" cols="30"
+                                rows="10" style="min-height: 72px; max-height: 72px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		
+        <div class="row form-btn mt-2">
+            <div class="col-md-12 text-center">
+                <button href="javascript:void(0)" class="btn btn-primary d-inline-block" (click)="back()">
+                    <span class="icon-left-arrow me-1"></span> Back
+                </button>
+                <a *ngIf="mainService.isenableSaveRecordMedicalDoctor()" app-shared-plan-of-care-cont class="btn btn-info w-100 d-inline-block mx-2"
+                  (click)="saveForLater()"><span class="icon-save-continue me-1"></span> Save For Later</a>
+          
+                <button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" class="btn btn-success d-inline-block" (click)="next()">
+                    <span class="icon-save-continue me-1"></span> Save & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

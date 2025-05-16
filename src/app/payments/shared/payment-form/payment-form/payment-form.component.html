@@ -1,0 +1,14 @@
+<div class="pt-3 bill_modal_hold payment-modal-form">
+  <div class="payment-modal-left">
+    <app-payment-form-split  [removeEvent]="removeEvent" [billIdFromPayment]="billIdFromPayment" [billType]="billType" [bulkBills]="bulkBills" [currentBill]="currentBill"  [type] = "type"  [paymentMediaFile]="false" (billListingRefresh)="refreshBillListing($event)" ></app-payment-form-split>
+  </div>
+  <div class="payment-modal-right pt-3 pt-lg-0" >
+    <app-payment-list-split [billType]="billType"  [selectedBill]="selectedBill" (changePaymentData) = "changePaymentDataSplit($event)" [editForm]="false" [type] = "type"  ></app-payment-list-split>
+    <div class="payment-conditional-alert" *ngIf="(billType!='bulkPayment') && currentBill?.invoice_id && type ==='bill'">
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <span><strong>Note:</strong> The invoice is already generated against the bill, please post payment through the invoice tab.</span>
+        <a (click)="moveToInvoiceTab()">Move to Invoice Tab</a>
+      </div>
+    </div>
+  </div>
+</div>

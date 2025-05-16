@@ -1,0 +1,8 @@
+%text-wrap {
+    max-width: 95%;
+    overflow: hidden;
+    white-space: nowrap !important;
+    text-overflow: ellipsis;
+    display: block;
+}
+

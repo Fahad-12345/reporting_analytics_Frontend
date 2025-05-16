@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h5 class="modal-title">Add Required fields/Controls</h5>
+  <button type="button" class="close" (click)="close()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="card front-desk-block">
+
+  <div class="card-body">
+
+    <div class="row">
+      <form [formGroup]="form">
+        <div class="col-md-12">
+          <div class="form-group">
+            <input type="text" placeholder="Field Name" class="form-control">
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <input type="text" placeholder="Comments" class="form-control">
+          </div>
+        </div>
+
+        <button (click)="submit(form.value)">Continue</button>
+        <button (click)="close()">Cancel</button>
+      </form>
+    </div>
+
+  </div>
+</div>

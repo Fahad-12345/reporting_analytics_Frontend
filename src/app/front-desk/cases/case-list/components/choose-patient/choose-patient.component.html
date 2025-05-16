@@ -1,0 +1,74 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="modal-header">
+	<h5 class="modal-title">Search Patient</h5>
+	<button type="button" class="close" (click)="close()" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body pt-4">
+	<!-- <form (ngSubmit)="submit(form.value)" [formGroup]="form">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group mb-1"><label class="form-label">Chart ID</label>
+					<input formControlName="chartId" class="form-control mb-0" type="text">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group mb-1"><label class="form-label">First/Last Name</label>
+					<input formControlName="name" class="form-control mb-0" type="text">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group mb-1"><label class="form-label">DOB</label>
+					<input formControlName="dob" class="form-control mb-0" type="text">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group mb-1"><label class="form-label">Primary Phone No.</label>
+					<input formControlName="phoneNo" class="form-control mb-0" type="text">
+				</div>
+			</div>
+			<div class="col-md-12 text-center pt-3">
+				<button type="submit" class="btn btn-success me-3">Search</button>
+				<button (click)="close()" class="btn btn-primary">Cancel</button>
+			</div>
+		</div>
+	</form> -->
+
+	<dynamic-form (submit)="submit($event)" [fields]="fieldConfig"></dynamic-form>
+	<div *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_add)" class="row">
+		<div class="col-md-12 text-end">
+			<button class="btn btn-primary round-btn float-right" (click)="addPatient()">Add New Patient</button>
+		</div>
+	</div>
+
+	<ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="patients" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+		[rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true" [externalPaging]="true"
+		[count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" (page)="onPageChange($event)">
+		<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Chart ID" [width]="50" [minWidth]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<a class="underline-hov" href="javascript:void(0)" (click)="choosePatient(row)">{{row.chart_id}}</a>
+			</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Patient Name" [width]="50" [minWidth]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row.first_name}} {{row.middle_name}} {{row.last_name}}">
+					{{row.first_name}} {{row.middle_name}} {{row.last_name}}
+				</span>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Date of Birth" [width]="50" [minWidth]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				{{row.dob  | date:datePipeService.slashDateFormat_MM_dd_yyyy()}}
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Primary Phone" prop="caseId" [width]="50" [minWidth]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				{{row.cell_phone | phoneFormatPipe}}
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+
+
+</div>

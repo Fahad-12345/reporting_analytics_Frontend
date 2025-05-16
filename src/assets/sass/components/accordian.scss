@@ -1,0 +1,75 @@
+#accordion {
+    .head {
+        color: #272b30;
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0 0 8px;
+    }
+    .acc-holder {
+        margin: 0 0 8px;
+        .acc-header {
+            .btn {
+                position: relative;
+                padding-right: 20px !important;
+                &:before{
+                    content: '';
+                    position: absolute;
+                    top: 12px;
+                    right: 8px;
+                    border-style: solid;
+                    border-color: #fff transparent transparent;
+                    border-width: 6px;
+                    transform: rotate(1deg);			
+                }
+                &[aria-expanded="true"] {
+                    border-radius: 0.25rem 0.25rem 0 0;
+                    &:before {
+                        top: 4px;
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+        }
+        .acc-body {
+            border: 1px solid gray;
+            border-top: 0;
+            .title {
+                border-bottom: 1px solid gray;
+                text-align: center;
+                padding: 5px 0;
+                font-weight: 700;
+                background: #f7f7f7;
+            }
+            .acc-body-holder {
+                padding: 10px 0 0;
+                max-height: 160px;
+                overflow-y: auto;
+                .text-holder {
+                    display: grid;
+                    grid-template-columns: 1fr 17px;
+                    align-items: center;
+                    padding: 0 5px;
+                    margin: 0 0 8px;
+                    span {
+                        text-align: center;
+                        background: #34c3ee !important;
+                        color: #fff !important;
+                        font-size: 11px;
+                        padding: 5px;
+                        border-radius: 4px 4px 0 !important;
+                        p {
+                            margin: 0;
+                        }
+                    }
+                    a {
+                        color: #4b4b4b !important;
+                        font-size: 0.75rem !important;
+                        &:hover{
+                            color: #00a650 !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

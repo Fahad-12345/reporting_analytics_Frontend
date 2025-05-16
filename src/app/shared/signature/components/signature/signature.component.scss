@@ -1,0 +1,111 @@
+p {
+	font-family: Lato;
+  }
+
+ ::ng-deep .signature-pad {
+  canvas {
+    // width: 100%;
+    // height: 190px;
+    border: 1px solid #c3c4c3 !important;
+  }
+
+  .buttons{
+    float: none !important;
+  }
+
+  .btn-primary {
+    margin-right: 15px !important;
+    background: #00a650 !important;
+    border:1px solid #00a650 !important;
+    &:hover {
+      background: #039c4d !important;
+    }
+  }
+    .buttons {
+      margin: 10px 0;
+      float: left;
+    }
+
+    .btn  {
+      width: 90px !important;
+      text-transform: capitalize;
+      margin-right: 10px !important;
+      color: #fff !important;
+
+      &:before {
+        content: "\e93c"; 
+        font-family: 'icomoon' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        margin-right: 6px;
+        position: relative;
+        top: 2px;
+      }
+    }
+
+  }
+ 
+  .btn-default {
+    width: 90px !important;
+	margin-right: 10px !important;
+	
+	&:disabled {
+		background: #34c3ee !important;
+		border: 1px solid #34c3ee !important;
+		cursor: context-menu;
+	}
+
+    &:before {
+      content: "\e93c";
+      font-family: 'icomoon' !important;
+      speak: none;
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      text-transform: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      margin-right: 6px;
+      position: relative;
+      top: 2px;
+    }
+
+  } 
+
+  .btn-success {
+    margin: 10px 10px 10px 0;
+	  width: 170px !important;
+
+	&:disabled {
+		pointer-events: none;
+	}
+  }
+
+
+
+  .signature-img {
+    border:1px solid #c3c4c3;
+    padding: 10px;
+    object-fit: contain;
+    width:100%;
+    height: 190px;
+  }
+
+  .sign-loader {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    margin-left: -20px;
+    margin-bottom: 15px;
+    display: none;
+
+    svg {
+      color: #34c3ee;
+      font-size: 30px;
+    }
+  }

@@ -1,0 +1,244 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div  *ngIf="aclService.hasPermission(userPermissions.master_bb_denial_view)">
+	<div class="d-block text-end">
+		<a *ngIf="aclService.hasPermission(userPermissions.master_bb_denial_add)"
+			class="btn btn-default round-btn" href="javascript:void(0)"
+			(click)="openVerificaitionStatusModal(PaymentStatusModel, row , rowIndex)">
+			<span class="icon-plus-circle me-1"></span> Add New 
+		</a>
+	</div>
+	<form class="form" action="" autocomplete="off" [formGroup]="verificationStatusSerarchForm"
+		*ngIf="aclService.hasPermission(userPermissions.master_bb_denial_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-3" [class.hide-remaining-search-filter]="!isCollapsed">
+            <div class="filter-grid-container">
+				<div class="form-group"
+					[ngClass]="{'focused': verificationStatusSerarchForm.get('name').value != '' && verificationStatusSerarchForm.get('name').value != null }">
+					<label class="form-label" for="paymentstatus">Verification Status</label>
+					<input type="text" id="paymentstatus" class="form-control form-input" 
+					formControlName="name">
+				</div>
+				<div class="form-group"
+					[ngClass]="{'focused': verificationStatusSerarchForm.get('description').value != '' && verificationStatusSerarchForm.get('description').value != null }">
+					<label class="form-label" for="description">Description</label>
+					<input type="text" id="description" class="form-control form-input"
+					formControlName="description">
+				</div>
+				<div class="form-group"
+					[ngClass]="{'focused': verificationStatusSerarchForm.get('comments').value != '' && verificationStatusSerarchForm.get('comments').value != null }">
+					<label class="form-label" for="comments">Comments</label>
+					<input type="text" id="comments" class="form-control form-input"
+					formControlName="comments">
+				</div>
+			</div>
+			<div class="collape-btn">
+                <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+                [class.btn-success]="isCollapsed" type="button">
+                    <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+                </button>
+            </div>
+            <div class="search-filter-btn-group" [class.btn-group-mrgin-top]="isCollapsed">
+                <button class="btn btn-success" (click)="verificationStatusSetPage({offset: 0})">Filter</button>
+                <button class="btn btn-primary" (click)="resetverificationStatus()" [disabled]="checkInputs()">Reset</button>
+            </div>
+		</div>							
+	</form>
+</div>
+<div class="card data-table p-0 mt-2 border-0" *ngIf="aclService.hasPermission(userPermissions.master_bb_denial_view)">
+	<div class="row">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+
+						<select class="custom-select" name="limit" id="limit"
+							(change)="verificationStatusPageLimit($event.target.value)" [(ngModel)]="VerificationStatusPage.size">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+
+			</div>
+
+
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+			<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+				Customize Columns
+			</button>
+
+			<!-- <a href="javascript:void(0)" *ngIf="denialSelection.selected.length"
+                                    style="color:#fff; padding: 6px 22px; margin-right: 10px !important;  margin-top: 15px; background: #00a650; border-color:#00a650;">
+                                        <img class="me-2" style="width:16px;" src="assets/images/task.png"> <span style="font-size: 15px;">
+                                          {{denialSelection.selected.length}}  Create Task</span>
+                                    </a> -->
+			<!--  -->
+		
+
+			<!-- <a href="javascript:void(0)" class="btn btn-default round-btn" (click)="deleteMultipleDenialRecord()"
+                  *ngIf="denialSelection.selected.length && aclService.hasPermission(userPermissions.master_bb_denial_delete)">
+                  <span class="icon-remove me-1"></span> Delete [{{denialSelection.selected.length}}]
+                </a> -->
+
+
+		</div>
+	</div>
+
+	<ngx-datatable class="bootstrap" #verificationStatusList [rows]="verificationStatusComingData" [columnMode]='"force"'
+		[footerHeight]="50"  [virtualization]="false" [externalPaging]="true" [scrollbarH]="true"
+		[rowHeight]="'auto'" [count]="VerificationStatusPage.totalElements" [offset]="VerificationStatusPage.pageNumber" [limit]="VerificationStatusPage.size"
+		(page)="verificationStatusSetPage($event)">
+		
+		<ngx-datatable-column name="Verification Status" [sortable]="false" prop="name" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name}}" container="body">
+					{{row.name}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="Description" [sortable]="false" prop="description" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description}}" container="body">
+					{{row.description}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="Comments" [sortable]="false" prop="comments" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.comments}}" container="body">
+					{{row.comments}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		  
+		<ngx-datatable-column name="Actions" [width]="150" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" cellClass="action-icon">
+			<ng-template ngx-datatable-header-template name="Actions">
+				<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_bb_denial_edit)"
+					(change)="$event ? verifcationStatusmasterToggle() : null"
+					[checked]="verificationStatusSelection.hasValue() && isverificationStatusAllSelected()"
+					[indeterminate]="verificationStatusSelection.hasValue() && !isverificationStatusAllSelected()" disabled>
+				</mat-checkbox>
+				Actions
+
+			</ng-template>
+
+			<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+				<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_bb_denial_edit)"
+					(click)="$event.stopPropagation()" (change)="$event ? verificationStatusSelection.toggle(row) : null"
+					[checked]="verificationStatusSelection.isSelected(row)" disabled>
+				</mat-checkbox>
+				<a *ngIf="aclService.hasPermission(userPermissions.master_bb_denial_edit)" class="edit-hov mx-1"
+					ngbTooltip="Edit" container="body" (click)="openVerificaitionStatusModal(PaymentStatusModel, row,rowIndex)" href="javascript:void(0)"
+					role="button"><i class="icon-pencil"></i></a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="verificationStatusHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+
+					<a class="remove-hov mx-1" ngbTooltip="Delete" container="body" (click)="onDeleteVerification(row)">
+						<i class="icon-remove"></i>
+					  </a>
+
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>
+
+
+<ng-template #PaymentStatusModel let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">{{modelTitle}} Verification Status</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+		<form autocomplete="" [formGroup]="verificationStatusform" (ngSubmit)="onSaveVerificationStatusSubmit(verificationStatusform.getRawValue())">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group field mb-1"
+						[ngClass]="{'focused': verificationStatusform.get('name').value != '' && verificationStatusform.get('name').value != null }">
+						<label class="form-label"> Verification Status Name*</label>
+						<input type="text" class="form-control mb-0" formControlName="name" [allowedLength] = "249" 
+						[currentValue] ="verificationStatusform.getRawValue()?.name"
+						specficCharacterLengthDirective appBlockCopyPaste notFirstCharactorSpace>
+						<small class="form-text text-muted danger" *ngIf="verificationStatusform.get('name').errors?.required && 
+                      (verificationStatusform.get('name').dirty || verificationStatusform.get('name').touched)">This field is required</small>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group field mb-1"
+						[ngClass]="{'focused': verificationStatusform.get('description').value != '' && verificationStatusform.get('description').value != null }">
+						<label class="form-label"> Description</label>
+						<textarea class="form-control mb-0" rows="3" formControlName="description"
+						[allowedLength] = "999"
+						[currentValue] ="verificationStatusform.getRawValue()?.description" specficCharacterLengthDirective appBlockCopyPaste
+							 notFirstCharactorSpace></textarea>
+						<small class="form-text text-muted danger" *ngIf="verificationStatusform.get('description').errors?.required && 
+                                (verificationStatusform.get('description').dirty || verificationStatusform.get('description').touched)">Please
+							enter description!</small>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group field mb-1"
+						[ngClass]="{'focused': verificationStatusform.get('comments').value != '' && verificationStatusform.get('comments').value != null }">
+						<label class="form-label">Comments</label>
+						<textarea class="form-control mb-3" rows="3" formControlName="comments"
+						[allowedLength] = "999"
+						[currentValue] ="verificationStatusform.getRawValue()?.comments" specficCharacterLengthDirective appBlockCopyPaste
+						 notFirstCharactorSpace></textarea>
+						<small class="form-text text-muted danger" *ngIf="verificationStatusform.get('comments').errors?.required && 
+                      (verificationStatusform.get('comments').dirty || verificationStatusform.get('comments').touched)">Please enter
+							comments!</small>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12 text-center modal-btn-width mt-1">
+					<button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+						(click)="closeModel()">Cancel</button>
+						<button class="btn btn-success" type="submit"
+						[disabled]="verificationStatusform.invalid || disableBtn">{{ disableBtn == false ? modelSubmit :modelSubmit }}</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

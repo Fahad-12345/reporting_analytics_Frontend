@@ -1,0 +1,16 @@
+::ng-deep.mat-mdc-option {
+  font-size: unset !important;
+  border-top: 1px solid #e9e8e8;
+  line-height: unset !important;
+  ::ng-deep.mat-pseudo-checkbox-checked {
+    background-color: #05a853 !important;
+    color: #fff;
+  }
+
+  ::ng-deepspan {
+    color: #000 !important;
+  }
+  ::ng-deep.mat-mdc-option-text {
+    font-size: 0.75rem !important;
+  }
+}

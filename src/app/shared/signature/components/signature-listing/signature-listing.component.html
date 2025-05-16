@@ -1,0 +1,51 @@
+<div *ngIf="selectable" class="modal-header">
+	<h4 class="modal-title" id="modal-basic-title">Choose Signature</h4>
+	<button type="button" class="close" aria-label="Close" (click)="close()">
+	  <span aria-hidden="true">&times;</span>
+	</button>
+  </div>
+
+
+  <div [class.modal-body]="selectable">
+
+
+
+	<ngx-datatable class="bootstrap" [virtualization]="false" [rows]="signatures"
+	[columnMode]="'force'" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50"
+	[limit]="5">
+	<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+		name="Signature Title" prop="id" sortable="false" [width]="240">
+		<ng-template let-row="row" let-index='index' ngx-datatable-cell-template>
+		  <a class="underline-hov" (click)="view(row)">{{row.file_title?row.file_title:'signature'}}</a>
+		</ng-template>
+	</ngx-datatable-column>
+	<ngx-datatable-column name="Actions" sortable="false" prop="id" [width]="230"
+	>
+	<ng-template let-childrow="row" let-row="row" let-rowIndex="rowIndex" let-value="value"
+		ngx-datatable-cell-template>
+	
+	
+		<!-- <button class="edit-hov" style="width:16px;"><span 
+			(click)="view(row)">
+			<i class="icon-eye"></i>
+		</span>
+	</button> -->
+	<!-- <mat-checkbox *ngIf="selectable" (click)="$event.stopPropagation()" (change)="$event.checked?  onChange(row.id) : onChange(null)"
+	[checked]="selectedId==row.id">
+	</mat-checkbox> -->
+
+
+	<button *ngIf="selectable" (click)="onChange(row?.id, row?.pre_signed_url)" [class.btn-primary]="selectedId != row.id" [class.btn-success]="selectedId == row.id" class="btn btn-sm" >Choose </button>
+	
+		<button *ngIf="deletable" class="remove-hov mx-2" style="width:16px;" ngbTooltip="Delete" container="body"
+			
+			(click)="remove(row)"><i
+				class="icon-remove"></i></button>
+	
+	
+	</ng-template>
+	</ngx-datatable-column>
+	
+	</ngx-datatable>
+	
+  </div>

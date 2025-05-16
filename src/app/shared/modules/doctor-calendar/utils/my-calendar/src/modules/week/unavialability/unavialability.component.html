@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <h4 class="modal-title" style="text-align: center;">Unavailability </h4>
+  <button type="button" class="close" data-dismiss="modal" (click)="activeModal.dismiss('Cross click')">&times;</button>
+</div>
+<form style="height:100%" [formGroup]="myForm" (ngSubmit)="submitFormAndClose()">
+  <div class="modal-body">
+    <br>
+    <div class=" row container">
+      <div class='col-md-3 form-group'>
+        <label for="startdate">Start Date </label>
+        <ejs-datepicker  [(value)]='startDate' placeholder='Enter date' (change)="changeStartDate()"></ejs-datepicker>
+      </div>
+      <div class='col-md-3 form-group'>
+        <label for="enddate">End Date </label>
+        <ejs-datepicker [min]="minDate"  [(value)]='endDate' placeholder='Enter date' (change)="changeEndDate()"></ejs-datepicker>
+      </div>
+      <div class='col-md-3 form-group'>
+        <label for="starttime">Start Time</label>
+        <ejs-timepicker  [step]='interval'  [(value)]='startTime'
+          (change)="changeStartTime()"></ejs-timepicker>
+      </div>
+      <div class='col-md-3 form-group'>
+        <label for="endtime">End Time </label>
+        <ejs-timepicker [min]="minTime"  [step]='interval'  [(value)]='endTime' (change)="changeEndTime()"></ejs-timepicker>
+      </div>
+    </div>
+     <hr>
+    <div class="row container">
+       <label class="col-md-2 form-group"for="subject">Subject</label>
+       <input  style="height: 30px;margin-left: 2%;" type="text"  [ngClass]="{ 'is-invalid': submitted && f.subject.errors }" class="form-control col-md-6 form-group" formControlName="subject">
+       <div *ngIf="submitted && f.subject.errors" class="col-md 4 form-group invalid-feedback">
+        <div class=" form-group" *ngIf="f.subject.errors.minlength">Subject must be at least 4 characters</div>
+      </div>
+    </div>
+    <div class="row container">
+       <label  class="col-md-2 form-group" for="descrpition">Description</label>
+       <div class="col-md-10">
+         <textarea style="height: 80px;" type="textarea"  [ngClass]="{ 'is-invalid': submitted && f.descrpition.errors }" class="form-control  form-group" formControlName="descrpition"></textarea>
+       </div>
+
+      <div *ngIf="submitted && f.descrpition.errors" class="col-md 4 form-group invalid-feedback">
+        <div class=" form-group" *ngIf="f.descrpition.errors.minlength">Descrpition must be at least 20 characters</div>
+        <div class=" form-group" *ngIf="f.descrpition.errors.maxlength">Descrpition not more than 512 characters</div>
+      </div>
+    </div>
+    <br>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-success"  (click)="activeModal.close()" >
+      Cancel
+    </button>
+    <a style="background-color: #00c851 !important;margin-top: 0.7%"class="btn btn-info"  (click)="submitFormAndOpen()" >
+       Save
+    </a>
+  </div>
+</form>
+
+

@@ -1,0 +1,186 @@
+	
+
+<div class="create-bill-modal pt-3">
+	<div class="row">
+		<div class="col-12  edit-block text-start">
+			<div class="form-group field option-field mb-3 d-inline-block">
+				<ul class="text-capitalize">
+					<li>Show</li>
+					<li>
+						<select class="custom-select" id="limit" 	(change)="pageLimit($event.target.value)" name="limit" [(ngModel)]="page.size">
+							<option selected="" value="10">10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+					</li>
+					<li>entries</li>
+				</ul>
+			</div>
+		</div>
+	</div> 
+	
+	<ngx-datatable #verficationSentTable class="bootstrap parent-table "  [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'" 
+[scrollbarH]="true" [virtualization]="false"  [externalPaging]="true"  [rows]="verificationSentData"
+[count]="page.totalElements" [offset]="page.offset"  [limit]="page.size" 
+(page)='onPageChange($event)' [externalPaging]="true">
+	
+	<!-- Row Detail Template -->
+	<ngx-datatable-row-detail 
+	  [rowHeight]="'auto'" 
+	  #myDetailRow 
+	  (toggle)="verificationsentDetail($event)">
+	  <ng-template let-rowIndex="rowIndex" let-row="row" style="width: 100% !important;" let-expanded="expanded"
+	  ngx-datatable-row-detail-template>
+	  <div class="child-table-border" style="width: 100% important;">
+		<ngx-datatable #Table class="bootstrap child-datatable radius-0" [scrollbarH]="true" [columnMode]="'force'"
+		[headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [rows]="row?.verifySentResponse"
+		 [offset]="verficiationSentOffset" [externalPaging]="true" [virtualization]="false"
+		[count]="row?.totalChildRecord" (page)="verificationsentPagination($event,row)" style="width: 100% !important;">
+
+		<!-- <ngx-datatable-column [sortable]="false"  [canAutoResize]="true" [draggable]="false" [width]="180" [resizeable]="false"
+		  name="Verification Received Date">
+		  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			{{row.verification.date  | date: commonService.slashDateFormat_MM_dd_yyyy() }}		 
+		  </ng-template>
+		</ngx-datatable-column> -->
+<!-- 
+		<ngx-datatable-column [sortable]="false"  [canAutoResize]="true" [draggable]="false" [width]="100" [resizeable]="false"
+		  name="Posted Date" prop="posted_date">
+		  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			{{value| date: commonService.slashDateFormat_MM_dd_yyyy() }}		 
+		 </ng-template>
+		</ngx-datatable-column> -->
+
+		<ngx-datatable-column [sortable]="false"  [canAutoResize]="true" [draggable]="false" [width]="130" [resizeable]="false"
+		  name="Verification Sent Date" prop="date">
+		  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			{{value| date: commonService.slashDateFormat_MM_dd_yyyy() }}
+		  </ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [sortable]="false"  [canAutoResize]="true" [width]="70" [draggable]="false" [resizeable]="false"
+		  name="No. of Days" prop="no_of_days">
+		  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			{{value}}
+		  </ng-template>
+		</ngx-datatable-column>
+		<!-- <ngx-datatable-column [sortable]="false"  [canAutoResize]="true" [draggable]="false" [width]="50" [resizeable]="false"
+		  name="File" prop="media">
+		  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<a class="mx-1 view-hov"  ngbTooltip="View" container="body" href="javascript:void(0)" role="button"  (click)="viewDocFile(row)"  [class.not-active]="!row?.media" ><i
+				class="icon-eye"></i>
+			</a>
+		  </ng-template>
+		</ngx-datatable-column> -->
+
+		<ngx-datatable-column [sortable]="false"  [canAutoResize]="true" [width]="220" [draggable]="false" [resizeable]="false"
+		  name="Verification Sent Description" prop="sender_comments">
+		  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.description}}">
+				{{row?.description}}
+			 </div>
+		  </ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [sortable]="false"  [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Actions"
+		  sortable="false" [width]="80">
+		  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<a class="mx-1 view-hov"  ngbTooltip="View File" container="body" href="javascript:void(0)" role="button"  (click)="viewDocFile(row)"  [class.not-active]="!row?.media" ><i
+				class="icon-eye"></i>
+			</a>
+
+			<a class="edit-hov mx-1" ngbTooltip="Edit" container="body"
+			(click)="onVerificationEditSubmit(row)" href="javascript:void(0)" role="button"><i
+					class="icon-pencil"></i></a>
+			<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="verificationSentHistoryStats(row)">
+				<i class="fa fa-history"></i>
+			</a>
+			<a class="remove-hov mx-1" ngbTooltip="Delete" container="body" (click)="onDeleteVerificationSent(row)">
+				<i class="icon-remove"></i>
+			</a>
+			<!-- <a class="success p-0" data-original-title="Delete" title="Delete"
+			  (click)="onDeleteVerificationSent(row)">
+			  <i class="fa fa-trash-o font-medium-3 me-2 font-m bill_icon"></i>
+			</a> -->
+		  </ng-template>
+		</ngx-datatable-column>
+
+	  </ngx-datatable>
+	  </div>
+
+	</ng-template>
+	
+	 
+	</ngx-datatable-row-detail>
+
+	<!-- Column Templates -->
+	<ngx-datatable-column name="Verification Received Date" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="date" [width]="180">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			{{value| date: commonService.slashDateFormat_MM_dd_yyyy()}}
+		  </ng-template>
+	</ngx-datatable-column>
+
+	<ngx-datatable-column name="Posted Date" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="posted_date" [width]="100">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			{{value| date: commonService.slashDateFormat_MM_dd_yyyy()}}
+		  </ng-template>
+	</ngx-datatable-column>
+
+	<ngx-datatable-column name="Verification Received Type" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="verification_type" cellClass="action-icon" [width]="170">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<span *ngFor="let type of value" class="badge bg-info modal-name">{{type?.name}}</span>
+		  </ng-template>
+	</ngx-datatable-column>
+	<ngx-datatable-column name="Verification Status" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="verification_status" cellClass="action-icon" [width]="170">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value?.name}}">
+				{{value?.name}}
+			 </div>
+		  </ng-template>
+	</ngx-datatable-column>
+
+
+	<!-- <ngx-datatable-column name="File" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="" [width]="70">
+		<ng-template ngx-datatable-header-template name="Actions">
+			File
+		</ng-template>
+
+		<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">			
+			<a class="mx-1 view-hov"  ngbTooltip="View" container="body" href="javascript:void(0)" role="button"  (click)="viewDocFile(row)"  [class.not-active]="!row?.media" ><i
+				class="icon-eye"></i>
+			</a>	 
+		</ng-template>
+	</ngx-datatable-column> -->
+
+      <ngx-datatable-column [canAutoResize]="true" [width]="210" [draggable]="false" [resizeable]="false"
+        name="Verification Received Description" prop="description">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		 <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+			{{value}}
+		 </div>
+        </ng-template>
+	  </ngx-datatable-column>
+
+      <ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+        name="Verification Sent Replies" [resizeable]="false" [sortable]="false" [draggable]="false"
+        [canAutoResize]="false" [width]="180">
+	
+		<ng-template let-row="row" let-expanded="expanded" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+			<a class="mx-1 view-hov"  ngbTooltip="View File" container="body" href="javascript:void(0)" role="button"  (click)="viewDocFile(row)"  [class.not-active]="!row?.media" ><i
+				class="icon-eye"></i>
+			</a>	
+			<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="verificationSentHistoryStats(row)">
+				<i class="fa fa-history"></i>
+			</a>
+			<a href="javascript:void(0)" [class.datatable-icon-right]="!expanded" [class.datatable-icon-down]="expanded"
+            title="Expand/Collapse Row" (click)="viewVerificationSent(row,rowIndex,expanded)">
+          </a>
+        </ng-template>
+	  </ngx-datatable-column>
+	  
+  </ngx-datatable>
+</div>
+
+ 

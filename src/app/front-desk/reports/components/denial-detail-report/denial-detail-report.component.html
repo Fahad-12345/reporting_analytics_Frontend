@@ -1,0 +1,86 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+
+
+<div class="back-arrows" (click)="goBack()">
+  <div class="round-button">
+    <span class="arrow-dark"></span>
+    <span class="arrow-line"></span>
+
+    <!-- <span class="arrow-medium"></span> 
+    <span class="arrow-light"></span> -->
+  </div>
+</div>
+
+
+<div class="col-12">
+    <h4 class="my-0 color-green mt-2">Denial Detail Report</h4>
+    <hr class="line-bottom mb-3" />
+  </div>
+
+   <div class="row pom-report">
+     <div class="col-12">
+      <div class="card text-center border-0">
+        <div class="card-body border-pumice border-top-0">
+          <div class="tab-content">
+            <div class="report buttons d-flex justify-content-end mb-3">
+              <div class="export-reports-button">
+                <button
+                  type="button"
+                  (click)="generateExcel()"
+                  class="btn btn-success mx-2 mb-2 mb-sm-0"
+                  [disabled]="rowdata?.length == 0"
+                >
+                  <i class="fa fa-file-excel"></i> Export Report
+                </button>
+              </div>
+            </div>
+  
+            <div class="nf-reports">
+             
+                <ngx-datatable
+                class="bootstrap"
+                [rowHeight]="rowHeight"
+                [rows]="rowdata"
+                [scrollbarH]="true"
+                [scrollbarV]="true"
+                [columns]="columns"
+                [virtualization]="true"
+                [externalPaging]="false"
+                [columnMode]="'force'"
+                >
+                <ngx-datatable-column
+                *ngFor="let column of columns"
+                [name]="column.name"
+                [prop]="column.prop"
+              >
+                <!-- Add currency pipe here for specific columns -->
+                <ng-template ngx-datatable-cell-template let-value="value">
+                  <span *ngIf="column.prop === 'paid_amount' || column.prop === 'write_off_amount' || column.prop === 'billed_amount' || column.prop === 'denied_amount'">
+                    {{ value | currency: 'USD': true }}
+                  </span>
+                  <span *ngIf="column.prop !== 'paid_amount' && column.prop !== 'write_off_amount' && column.prop !== 'billed_amount' && column.prop !== 'denied_amount'">
+                    {{ value  }}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              </ngx-datatable>
+               
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

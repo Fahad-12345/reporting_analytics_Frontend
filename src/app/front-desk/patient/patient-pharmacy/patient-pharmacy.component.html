@@ -1,0 +1,420 @@
+<div class="data-table">
+	<!-- <div class="row mt-2">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2">
+		</div>
+	</div> -->
+	<ngx-datatable class="bootstrap pharmacy-table" [rows]="pharmacy_detail?.pharmacy" [columnMode]='"force"' [footerHeight]="50"
+		[rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+		[count]="pharmacy_detail?.pharmacy?.length">
+		<ngx-datatable-column name="NCPDPID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.ncpdp_id ? row.erx_pharmacy.ncpdp_id : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.ncpdp_id ? row.erx_pharmacy.ncpdp_id : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Store Number" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.store_no ? row.erx_pharmacy.store_no : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.store_no ? row.erx_pharmacy.store_no : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Organization Name" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.organization_name ? row.erx_pharmacy.organization_name : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.organization_name ? row.erx_pharmacy.organization_name : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Address Line1" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.address_line1 ? row.erx_pharmacy.address_line1 : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.address_line1 ? row.erx_pharmacy.address_line1 : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Address Line2" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.address_line2 ? row.erx_pharmacy.address_line2 : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.address_line2 ? row.erx_pharmacy.address_line2 : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="City" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.city ? row.erx_pharmacy.city : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.city ? row.erx_pharmacy.city : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="State Province" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.state_province ? row.erx_pharmacy.state_province : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.state_province ? row.erx_pharmacy.state_province : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Postal Code" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.postal_code ? row.erx_pharmacy.postal_code : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.postal_code ? row.erx_pharmacy.postal_code : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Country Code" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.country_code ? row.erx_pharmacy.country_code : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.country_code ? row.erx_pharmacy.country_code : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Standardized Address Line1" [sortable]="false" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.standardized_address_line1 ? row.erx_pharmacy.standardized_address_line1 : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.standardized_address_line1 ? row.erx_pharmacy.standardized_address_line1 :
+					'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Standardized Address Line2" [sortable]="false" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.standardized_address_line2 ? row.erx_pharmacy.standardized_address_line2 : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.standardized_address_line2 ? row.erx_pharmacy.standardized_address_line2 :
+					'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Standardized City" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.standardized_city ? row.erx_pharmacy.standardized_city : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.standardized_city ? row.erx_pharmacy.standardized_city : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Standardized State Province" [sortable]="false" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.standardized_state_province ? row.erx_pharmacy.standardized_state_province : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.standardized_state_province ? row.erx_pharmacy.standardized_state_province :
+					'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Standardized Postal" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.standardized_postal ? row.erx_pharmacy.standardized_postal : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.standardized_postal ? row.erx_pharmacy.standardized_postal : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Primary Telephone" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.primary_telephone ? (row.erx_pharmacy.primary_telephone  |phoneFormatPipe) : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.primary_telephone ? (row.erx_pharmacy.primary_telephone |phoneFormatPipe) :
+					'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Fax" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.fax ? (row.erx_pharmacy.fax  |phoneFormatPipe) : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.fax ? (row.erx_pharmacy.fax |phoneFormatPipe) : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Electronic Mail" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.electronic_mail ? row.erx_pharmacy.electronic_mail : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.electronic_mail ? row.erx_pharmacy.electronic_mail : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Active Start Time" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row?.erx_pharmacy?.active_start_time ? (row?.erx_pharmacy?.active_start_time  | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}"
+					container="body">
+					{{row?.erx_pharmacy?.active_start_time ? (row?.erx_pharmacy?.active_start_time |
+					date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Active End Time" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="	{{row?.erx_pharmacy?.active_end_time ? (row?.erx_pharmacy?.active_end_time |
+						date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}" container="body">
+					{{row?.erx_pharmacy?.active_end_time ? (row?.erx_pharmacy?.active_end_time |
+					date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Partner Account" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.partner_account ? row.erx_pharmacy.partner_account : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.partner_account ? row.erx_pharmacy.partner_account : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Last Modified Date" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row?.erx_pharmacy?.last_modified_date ? (row?.erx_pharmacy?.last_modified_date  | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM() ) : 'N/A'  | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM() }}"
+					container="body">
+					{{row?.erx_pharmacy?.last_modified_date ? (row?.erx_pharmacy?.last_modified_date |
+					date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM() ) :
+					'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Record Change" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.record_change ? row.erx_pharmacy.record_change : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.record_change ? row.erx_pharmacy.record_change : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Old Service Level" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.old_service_level ? row.erx_pharmacy.old_service_level : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.old_service_level ? row.erx_pharmacy.old_service_level : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Version" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.version ? row.erx_pharmacy.version : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.version ? row.erx_pharmacy.version : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="NPI" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.npi ? row.erx_pharmacy.npi : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.npi ? row.erx_pharmacy.npi : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Replace NCPDPID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.replace_ncpdp_id ? row.erx_pharmacy.replace_ncpdp_id : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.replace_ncpdp_id ? row.erx_pharmacy.replace_ncpdp_id : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="State License Number" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.state_license_number ? row.erx_pharmacy.state_license_number : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.state_license_number ? row.erx_pharmacy.state_license_number : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="UPIN" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.upin ? row.erx_pharmacy.upin : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.upin ? row.erx_pharmacy.upin : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Facility ID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.facility_id ? row.erx_pharmacy.facility_id : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.facility_id ? row.erx_pharmacy.facility_id : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Medicare Number" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.medicare_number ? row.erx_pharmacy.medicare_number : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.medicare_number ? row.erx_pharmacy.medicare_number : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Medicaid Number" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.medicaid_number ? row.erx_pharmacy.medicaid_number : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.medicaid_number ? row.erx_pharmacy.medicaid_number : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Payer ID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.payer_id ? row.erx_pharmacy.payer_id : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.payer_id ? row.erx_pharmacy.payer_id : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="DEA Number" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.dea_number ? row.erx_pharmacy.dea_number : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.dea_number ? row.erx_pharmacy.dea_number : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="HIN" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.hin ? row.erx_pharmacy.hin : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.hin ? row.erx_pharmacy.hin : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Mutually Defined" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.mutually_defined ? row.erx_pharmacy.mutually_defined : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.mutually_defined ? row.erx_pharmacy.mutually_defined : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Direct Address" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.direct_address ? row.erx_pharmacy.direct_address : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.direct_address ? row.erx_pharmacy.direct_address : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Organization Type" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.organization_type ? row.erx_pharmacy.organization_type : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.organization_type ? row.erx_pharmacy.organization_type : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Organization ID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.organization_id ? row.erx_pharmacy.organization_id : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.organization_id ? row.erx_pharmacy.organization_id : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Parent Organization ID" [sortable]="false" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.parent_organization_id ? row.erx_pharmacy.parent_organization_id : 'N/A'}}"
+					container="body">
+					{{row.erx_pharmacy.parent_organization_id ? row.erx_pharmacy.parent_organization_id : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Latitude" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.latitude ? row.erx_pharmacy.latitude : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.latitude ? row.erx_pharmacy.latitude : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Longitude" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.longitude ? row.erx_pharmacy.longitude : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.longitude ? row.erx_pharmacy.longitude : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Precise" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.precise ? row.erx_pharmacy.precise : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.precise ? row.erx_pharmacy.precise : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="UseCase" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_pharmacy" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.erx_pharmacy.use_case ? row.erx_pharmacy.use_case : 'N/A'}}" container="body">
+					{{row.erx_pharmacy.use_case ? row.erx_pharmacy.use_case : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Default" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="default" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.default == 0 ? 'False' : 'True'}}" container="body">
+					{{row.default == 0 ? 'False' : 'True'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>

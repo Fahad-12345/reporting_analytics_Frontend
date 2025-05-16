@@ -1,0 +1,4 @@
+<div [ngClass]="field.configs?.button_classes" [formGroup]="group">
+    <button [disabled]="field.configs?.disabled" [type]="field.type" (click)="field.onSubmit?field.onSubmit():null"
+        [ngClass]="field.classes" class="btn" [name]="field.label"><span [ngClass]="field.configs?.icon"></span>{{field.label}}</button>
+</div>

@@ -1,0 +1,103 @@
+<div class="front-desk-block patient-info nav-tab-block">
+    <ul class="nav nav-tabs mt-1 text-center" id="myTab" role="tablist">
+        <li class="nav-item" (click)="onTabClick('/personal')"
+            *ngIf="aclService.hasPermission(userPermissions.patient_case_list_personal_information_personal_tab)">
+            <a class="nav-link" [class.active]="isActive('personal-information/personal')" id="personal-info-tab"
+                data-bs-toggle="tab" role="tab" aria-controls="personal-info"
+                aria-selected="true">Personal <span *ngIf="_showValidationIconPersonal"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <li class="nav-item" (click)="onTabClick('/basic-contact')"
+            *ngIf="aclService.hasPermission(userPermissions.patient_case_list_personal_information_basic_contact_tab) && _shouldShowBasicContact">
+            <a class="nav-link" [class.active]="isActive('basic-contact')" id="basic-contact-info-tab" data-bs-toggle="tab"
+                role="tab" aria-controls="basic-contact-info" aria-selected="false">Basic
+                Contact <span *ngIf="_showValidationIconBasicContact"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+
+        <li class="nav-item" (click)="onTabClick('/form-filler')"
+            *ngIf="aclService.hasPermission(userPermissions.patient_case_list_personal_information_form_filler_tab) && _shouldShowFormFiller">
+            <a class="nav-link" [class.active]="isActive('form-filler')" id="form-filler-tab" data-bs-toggle="tab"
+                role="tab" aria-controls="form-filler" aria-selected="false">Form 
+                Filler <span *ngIf="_showValidationIconFormFiller"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+
+        <li class="nav-item" (click)="onTabClick('/emergency-contact')"
+            *ngIf="aclService.hasPermission(userPermissions.patient_case_list_personal_information_emergency_contact_tab) && _shouldShowEmergencyContact">
+            <a class="nav-link" [class.active]="isActive('emergency-contact')" id="emergency-contact-info-tab"
+                data-bs-toggle="tab"  role="tab" aria-controls="emergency-contact-info"
+                aria-selected="false">Emergency Contact <span *ngIf="_showValidationIconEmergencyContact"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <li class="nav-item" (click)="onTabClick('/guarantor')"
+            *ngIf="aclService.hasPermission(userPermissions.patient_case_list_personal_information_gurantor_tab) && _shouldShowGuarantor">
+            <a class="nav-link" [class.active]="isActive('guarantor')" id="guardian-info-tab" data-bs-toggle="tab"
+              role="tab" aria-controls="guardian-info" 
+              aria-selected="false">Guarantor <span *ngIf="_showValidationIconGuarantor"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <!-- legal Gaurdian is replaced as gaurantor and guarantor form is disabled -->
+        <!-- <li class="nav-item" *ngIf="aclService.hasPermission('legal_guardian_tab')">
+            <a class="nav-link" id="guarantor-tab" data-bs-toggle="tab" href="#guarantor" role="tab"
+                aria-controls="guarantor" aria-selected="false">Guarantor</a>
+        </li> -->
+        <!-- <li class="nav-item" (click)="onTabClick('/case-info')" *ngIf="aclService.hasPermission('case-info-tab')">
+            <a class="nav-link" id="case-info-tab" data-bs-toggle="tab" href="#case-info" role="tab"
+                aria-controls="case-info" aria-selected="false">Case Info</a>
+        </li> -->
+
+    </ul>
+
+    <!--  -->
+    <!-- below code is commented due to the reason that we have routed following components -->
+    <!-- <div class="tab-content mt-2" id="myTabContent">
+        <div (click)="onTabClick('/personal')" class="tab-pane fade show active" id="personal-info" role="tabpanel"
+            aria-labelledby="personal-info-tab">
+            <app-personal-information-form [patient]="patient" [caseId]="caseId"></app-personal-information-form>
+        </div>
+        <div (click)="onTabClick('/basic-contact')" class="tab-pane fade" id="basic-contact-info" role="tabpanel"
+            aria-labelledby="basic-contact-info-tab">
+            <app-contact-info-form (getCase)="getCase()" [contactInfo]="contactInfo" [caseId]="caseId"
+                [patientId]="patientId"></app-contact-info-form>
+        </div>
+        <div (click)="onTabClick('/emergency-contact')" class="tab-pane fade" id="emergency-contact-info"
+            role="tabpanel" aria-labelledby="emergency-contact-info-tab">
+            <app-contact-people-form (getCase)="getCase()" [formType]="1" [caseId]="caseId" [patientId]="patientId"
+                [patientDetail]="emergencyContact"></app-contact-people-form>
+        </div>
+        <div (click)="onTabClick('/form-filler')" class="tab-pane fade" id="form-filler" role="tabpanel"
+            aria-labelledby="form-filler-tab">
+            <app-contact-people-form (getCase)="getCase()" [formType]="2" [caseId]="caseId" [patientId]="patientId"
+                [patientDetail]="formFiller"></app-contact-people-form>
+        </div>
+        <div (click)="onTabClick('/guardian-info')" class="tab-pane fade" id="guardian-info" role="tabpanel"
+            aria-labelledby="guardian-info-tab">
+            <app-contact-people-form (getCase)="getCase()" [formType]="3" [caseId]="caseId" [patientId]="patientId"
+                [patientDetail]="legalGuardian"></app-contact-people-form>
+        </div>
+        <div (click)="onTabClick('/guarantor')" class="tab-pane fade" id="guarantor" role="tabpanel"
+            aria-labelledby="guarantor-tab">
+            <app-contact-people-form (getCase)="getCase()" [formType]="4" [caseId]="caseId" [patientId]="patientId"
+                [patientDetail]="guarantor"></app-contact-people-form>
+        </div>
+        <div (click)="onTabClick('/case-info')" class="tab-pane fade" id="case-info" role="tabpanel"
+            aria-labelledby="case-info-tab">
+            <app-case-types-form (getCase)="getCase()" [caseId]="caseId" [caseType]="caseType"></app-case-types-form>
+        </div>
+       
+    </div> -->
+    <div class="position-relative">
+        <app-shimmer-loader class="d-block" [ngClass]="{'shimer-control': caseFlowService?.loadSpin}" [loaderSpin]="caseFlowService?.loadSpin">
+        </app-shimmer-loader>
+        <router-outlet></router-outlet>
+    </div>
+</div>
+
+
+
+<!-- <perfect-scrollbar>
+        <app-case-types-form [caseId]="caseId" [caseType]="caseType"></app-case-types-form>
+        
+
+        <ng-template ngFor let-patientDetail [ngForOf]="casePatientDetails">
+            <ng-container *ngIf="patientDetail.contactPerson">
+                <app-contact-people-form [caseId]="caseId" [patientId]="patientId" [patientDetail]="patientDetail"></app-contact-people-form>
+            </ng-container>
+        </ng-template>
+    </perfect-scrollbar> -->

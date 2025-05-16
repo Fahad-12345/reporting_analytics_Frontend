@@ -1,0 +1,410 @@
+<ng-template #defaultTemplate let-day="day" let-openDay="openDay" let-locale="locale" let-tooltipPlacement="tooltipPlacement" let-highlightDay="highlightDay" let-unhighlightDay="unhighlightDay" let-eventClicked="eventClicked" let-tooltipTemplate="tooltipTemplate"
+    let-tooltipAppendToBody="tooltipAppendToBody">
+    <ng-template #Note>
+        <div class="popover-top">
+            {{todayNote}}
+        </div>
+    </ng-template>
+    <div (click)="highlightCell(day.date)" (dblclick)="open(day.date)" 
+    [style.background-color]="disable? 'lightgrey' : doctorCalendarService.currentSelectedDate ==  day.date.toString() ? 'lightblue' : 'white'" 
+    style="height: 100%;">
+        <div *ngIf="eventCount===0" class="cal-cell-top add-assignment" [ngClass]="{'dateMargin': eventCount == 0}">
+            <span [ngClass]="{'selectedCell': day.date.toString() == selectCurrentDate}" [ngStyle]="patient!=='true' && noteShow?
+				{'margin-top': '0px'}:
+				{'margin-top': '77px'}" [style.margin-right]="eventCount==1?
+				{'margin-right': '0'}:
+				{'margin-right': '6px'}" class="cal-day-number col-md-4">
+				{{ day.date | calendarDate:'monthViewDayNumber':locale }}
+			</span>
+            <div *ngIf="noteButton && patient!=='true' && noteShow" class="col-md-8 cell-appointment" style="cursor: pointer;margin-top: 77px;padding-left: 2px;" (click)="addNote(day.date)">Note +</div>
+        </div>
+        <div *ngIf="eventCount>=1 && patient==='false'" style="text-align:left;" [ngClass]="{'bg-none': eventCount == 2}" [style.border]="eventOne.specEventCheck?'1px solid red':'none'">
+            <div class="doc-label ">
+                <div class="doc-label px-1" [ngStyle]="eventOne.approval_status==1 ?
+              {'background-color': 'lightgrey'}:eventOne.approval_status==0?{'background-color': 'lightblue'}:
+              eventOne.note?{'background-color': 'transparent'}:{'background-color':eventOne.color }" style="width:100%;background-color: transparent;cursor: pointer;">
+                    <div *ngIf="eventOne.is_appointment && !eventOne.note" (click)="openAppointments(eventOne)">
+                        <div style="color: white" class="text-truncate">{{eventOne.start_time}} - {{eventOne.end_time}}
+                        </div>
+                    </div>
+                    <div *ngIf="!eventOne.is_appointment && !eventOne.note" style="margin-right: 0;" [ngbPopover]="checkOne" placement="top" data-container="body">
+                        <ng-template #checkOne>
+                            <div class="popover-top custom-popover-style">
+                                <div class="popover-header" [ngStyle]="eventOne.approval_status==0 ?
+              {'background-color': 'lightblue'} : {'background-color': eventOne.color}">
+                                    <span *ngIf = "eventOne.subject.length < 30" [title]= "eventOne.subject" >{{eventOne.subject}}</span>
+                                    <span *ngIf = "eventOne.subject.length > 30" [title]= "eventOne.subject" >{{eventOne.subject.substr(0,27)}}....</span>
+                                    <span class="popover-icon d-inline-flex float-right">
+										<a class="popover-icon-remove" href="javascript:void(0)"
+											*ngIf="deleteUnavailabilityButton"
+											(click)="deleteUnavialability(eventOne)"><i class="icon-remove"></i></a>
+									</span>
+                                    <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                </div>
+                                <div class="popover-desc">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>{{eventOne.real_start|date: datePipeService.slashDateFormat_MM_dd_yyyy()}} {{datePipeService.signBetweenDates()}} {{eventOne.real_end|date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+                                        </li>
+                                        <li>{{eventOne.start_time}} - {{eventOne.end_time}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <div class="text-truncate" style="color: white">{{eventOne.start_time}} - {{eventOne.end_time}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="eventCount>=2 && patient==='false'" style="text-align:left;" [ngClass]="{'bg-none': eventCount == 2}" [style.border]="eventTwo.specEventCheck?'1px solid red':'none'">
+            <div class="doc-label ">
+                <div class="doc-label px-1" [ngStyle]="eventTwo.approval_status==1 ?
+		  {'background-color': 'lightgrey'}:eventTwo.approval_status==0?{'background-color': 'lightblue'}:
+		  eventTwo.note?{'background-color': 'transparent'}:{'background-color':eventTwo.color }" style="width:100%;background-color: transparent;cursor: pointer;">
+                    <div *ngIf="eventTwo.is_appointment && !eventTwo.note" (click)="openAppointments(eventTwo)">
+                        <div style="color: white" class="text-truncate">{{eventTwo.start_time}} - {{eventTwo.end_time}}
+                        </div>
+                    </div>
+                    <div *ngIf="!eventTwo.is_appointment && !eventTwo.note" [ngbPopover]="checkTwo" placement="top" data-container="body">
+                        <ng-template #checkTwo>
+                            <div class="popover-top custom-popover-style">
+                                <div class="popover-header" [ngStyle]="eventTwo.approval_status==0 ?
+		  {'background-color': 'lightblue'} : {'background-color': eventTwo.color}">
+          <span *ngIf = "eventTwo.subject.length < 30" [title]= "eventTwo.subject" >{{eventTwo.subject}}</span>
+          <span *ngIf = "eventTwo.subject.length > 30" [title]= "eventTwo.subject" >{{eventTwo.subject.substr(0,27)}}....</span>
+                                    <span class="popover-icon d-inline-flex float-right">
+										<a class="popover-icon-remove" href="javascript:void(0)"
+											*ngIf="deleteUnavailabilityButton"
+											(click)="deleteUnavialability(eventTwo)"><i class="icon-remove"></i></a>
+									</span>
+                                    <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                </div>
+                                <div class="popover-desc">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>{{eventTwo.real_start|date: datePipeService.slashDateFormat_MM_dd_yyyy()}} {{datePipeService.signBetweenDates()}} {{eventTwo.real_end|date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+                                        </li>
+                                        <li>{{eventTwo.start_time}} - {{eventTwo.end_time}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ng-template>
+                        <div class=" text-truncate" style="color: white">{{eventTwo.start_time}} - {{eventTwo.end_time}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="eventCount>2 && patient==='false'" class=" row" style="text-align:left; margin-left:0; margin-right: 0;" [ngClass]="{'bg-none': eventCount == 2}">
+            <div>
+                <ng-template #popContent>
+                    <h5 class="row" style="margin: 0;">
+                        <div class="col-md-10">Assignments</div>
+                        <span class="col-md-2" style="text-align: right;" (click)="popmore.close()"><i
+								class="fa fa-times"></i></span>
+                    </h5>
+                    <div style="overflow-y:scroll; width: 94%;height: 17vh;padding-bottom: 20px;">
+                        <div *ngFor="let event of CurrDateApp;let i = index; trackBy:trackByEventId;" style="margin-left: 25px; margin-top: 5px;">
+                            <div *ngIf="event.is_appointment" (click)="openAppointments(event)" class="doc-label " [style.border]="event.specEventCheck?'1px solid red':'none'" [style.backgroundColor]="event.color" style="width:100%;cursor: pointer;">
+                                <span style="color: white; font-size : 12px">
+									{{event.start_time}} - {{event.end_time}}
+								</span>
+                            </div>
+                            <div *ngIf="!event.is_appointment" [ngStyle]="{'background-color': 'lightblue'}" style="width:100%;background-color: transparent;cursor: pointer;font-size : 12px" [ngbPopover]="check" placement="top" data-container="body">
+                                <ng-template #check>
+                                    <!-- [ngStyle]="event.approvalStatus==0 ?
+				{'background-color': 'lightblue'}:{'background-color':event.color+';font-size : 12px'}" -->
+                                    <!-- <div class="popover-top custom-popover-style">
+                                        <div class="popover-header" [ngStyle]="event.approvalStatus==0 ?
+					{'background-color': 'lightblue'} : {'background-color': event.color+';font-size : 12px'}">
+                                            <span></span>
+                                            <span class="popover-icon d-inline-flex float-right">
+												<a class="popover-icon-remove" href="javascript:void(0)"
+													*ngIf="deleteUnavailabilityButton"
+													(click)="deleteUnavialability(event)"><i
+														class="icon-remove"></i></a>
+											</span>
+                                            <a class="float-right" href="javascript:void(0)"><i
+													class="fa fa-times"></i></a>
+                                        </div> -->
+
+                                        <div class="popover-top custom-popover-style">
+                                            <div class="popover-header" [ngStyle]="{'background-color': 'lightblue'} ">
+                                                <span *ngIf = "event.subject.length < 30" [title]= "event.subject" >{{event.subject}}</span>
+                                                <span *ngIf = "event.subject.length > 30" [title]= "event.subject" >{{event.subject.substr(0,27)}}....</span>
+                                                <span class="popover-icon d-inline-flex float-right">
+                                                    <a class="popover-icon-remove" href="javascript:void(0)"
+                                                        *ngIf="deleteUnavailabilityButton"
+                                                        (click)="deleteUnavialability(event)"><i class="icon-remove"></i></a>
+                                                </span>
+                                                <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                            </div>
+                                            <div class="popover-desc">
+                                                <ul class="list-unstyled mb-0">
+                                                    <li>{{event.real_start|date: datePipeService.slashDateFormat_MM_dd_yyyy()}} {{datePipeService.signBetweenDates()}} {{event.real_end|date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+                                                    </li>
+                                                    <li>{{event.start_time}} - {{event.end_time}}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- <div class="popover-desc">
+                                            <ul class="list-unstyled mb-0">
+                                                <li *ngIf = "event.subject.length < 30" [title]= "event.subject"><span class="font-bold" ><em>Subject:</em></span>{{event.subject}}</li>
+                                                <li *ngIf = "event.subject.length > 30" data-bs-toggle="tooltip" data-placement="right" [title]= "event.subject" ><span class="font-bold">Subject:</span><em>{{event.subject.substr(0,27)}}....</em></li>
+                                                <li>{{event.realStart|date: 'MM/dd/yyyy'}} - {{event.realEnd|date: 'MM/dd/yyyy'}}</li>
+                                                <li>
+                                                    {{event.startTime}} - {{event.endTime}}
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div> -->
+
+                                </ng-template>
+                                <div class=" text-truncate" style="color: white">{{event.start_time}} - {{event.end_time}}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </ng-template>
+                <div [autoClose]="false" [ngbPopover]="popContent" #popmore="ngbPopover" lass="waves-light" style="height:100%;background-color: transparent;margin-top: -3px;" [placement]="eventOne.placement" (click)="openPop(popmore)">
+                    {{eventCount - 2}} more
+                </div>
+            </div>
+        </div>
+
+
+        <ng-template #openPatientOne>
+            <div class="popover-top custom-popover-style">
+                <div class="popover-header" [style.background-color]="eventOne.color">
+                    <span>{{eventOne.title }}</span>
+                    <span class="popover-icon d-inline-flex float-right">
+						<a class="popover-icon-edit" href="javascript:void(0)" *ngIf="eventOne.updateApp && eventOne.appointment_status_slug!='completed' && eventOne.appointment_status_slug!='no_show'"
+							(click)="edit(eventOne)">
+							<i class="icon-pencil"></i>
+						</a>
+						<a class="popover-icon-remove" href="javascript:void(0)" *ngIf="eventOne.deleteApp && eventOne.appointment_status_slug!='completed' && eventOne.appointment_status_slug!='no_show'"
+							(click)="deleteAppointment(eventOne)"><i class="icon-remove"></i></a>
+					</span>
+                    <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                </div>
+                <div class="popover-desc">
+                    <ul class="list-unstyled mb-0">
+                        <li>{{eventOne.start_time}} - {{eventOne.end_time}}
+                        </li>
+                        <li *ngIf="eventOne.available_doctor">
+                            <span class="font-bold">Provider:</span> {{eventOne.available_doctor.doctor.userBasicInfo.first_name}}{{(eventOne.available_doctor.doctor.userBasicInfo.middle_name)?' '+eventOne.available_doctor.doctor.userBasicInfo.middle_name:''}}{{' '+eventOne.available_doctor.doctor.userBasicInfo.last_name}}
+                        </li>
+                        <li *ngIf="eventOne.available_speciality && !eventOne.available_doctor">
+                            <span class="font-bold">Provider:</span> Not Assigned
+                        </li>
+                        <li *ngIf="eventOne.available_doctor">
+                            <span class="font-bold">Practice-Location:</span> {{eventOne.available_doctor.facilityLocations.facility.name}}-{{eventOne.available_doctor.facilityLocations.name}}
+                        </li>
+                        <li *ngIf="eventOne.available_speciality && !eventOne.available_doctor">
+                            <span class="font-bold">Practice-Location:</span> {{eventOne.available_speciality.facilityLocation.facility.name}}-{{eventOne.available_speciality.facilityLocation.name}}
+                        </li>
+                        <!-- <li *ngIf="eventOne.roomName">
+							<span class="font-bold">Room:</span> {{eventOne.roomName}}
+						</li>
+						<li *ngIf="!eventOne.roomName">
+							<span class="font-bold">Room:</span> {{eventOne.room.name}}
+						</li> -->
+						<!-- abdullah asked me to hide the start evaluation button on patient calender -->
+                        <!-- <li *ngIf="eventOne.startEval && (!eventOne.has_app || eventOne.speciality_key === 'medical_doctor')" class="text-end">
+                            <button [disabled]="eventOne.appointment_status_slug==='no_show' " class="btn btn-success" (click)="startEvualtionFlagShow.emit(eventOne) ;startEvaluation.emit(eventOne)">
+								Start</button>
+                        </li>    -->
+                    </ul>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template #openPatientTwo>
+            <div class="popover-top custom-popover-style">
+                <div class="popover-header" [style.background-color]="eventTwo.color">
+                    <span>{{eventTwo.title }}</span>
+                    <span class="popover-icon d-inline-flex float-right">
+						<a class="popover-icon-edit" href="javascript:void(0)" *ngIf="eventTwo.updateApp && eventOne.appointment_status_slug!='completed' && eventOne.appointment_status_slug!='no_show'"
+							(click)="edit(eventTwo)"> <i class="icon-pencil"></i>
+						</a>
+						<a class="popover-icon-remove" href="javascript:void(0)" *ngIf="eventTwo.deleteApp && eventOne.appointment_status_slug!='completed' && eventOne.appointment_status_slug!='no_show'"
+							(click)="deleteAppointment(eventTwo)"><i class="icon-remove"></i></a>
+					</span>
+                    <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                </div>
+                <div class="popover-desc">
+                    <ul class="list-unstyled mb-0">
+                        <li>{{eventTwo.start_time}} - {{eventTwo.end_time}}
+                        </li>
+                        <li *ngIf="eventTwo.available_doctor">
+                            <span class="font-bold">Provider:</span> {{eventTwo.available_doctor.doctor.userBasicInfo.first_name}}{{(eventTwo.available_doctor.doctor.userBasicInfo.middle_name)?' '+eventTwo.available_doctor.doctor.userBasicInfo.middle_name:''}}{{' '+eventTwo.available_doctor.doctor.userBasicInfo.last_name}}
+                        </li>
+                        <li *ngIf="eventTwo.available_speciality && !eventOne.available_doctor">
+                            <span class="font-bold">Provider:</span> Not Assigned
+                        </li>
+                        <li *ngIf="eventTwo.available_doctor">
+                            <span class="font-bold">Practice-Location:</span> {{eventTwo.available_doctor.facilityLocations.facility.name}}-{{eventTwo.available_doctor.facilityLocations.name}}
+                        </li>
+                        <li *ngIf="eventTwo.available_speciality && !eventOne.available_doctor">
+                            <span class="font-bold">Practice-Location:</span> {{eventTwo.available_speciality.facilityLocation.facility.name}}-{{eventTwo.available_speciality.facilityLocation.name}}
+                        </li>
+                        <!-- <li *ngIf="eventTwo.roomName">
+							<span class="font-bold">Room:</span> {{eventTwo.roomName}}
+						</li>
+						<li *ngIf="!eventTwo.roomName">
+							<span class="font-bold">Room:</span> {{eventTwo.room.name}}
+						</li> -->
+						<!-- abdullah asked me to hide the start evaluation button on patient calender -->
+                        <!-- <li *ngIf="eventTwo.startEval && (!eventTwo.has_app ||  eventTwo.speciality_key === 'medical_doctor')" class="text-end">
+                            <button [disabled]="eventTwo.appointment_status_slug==='no_show' " class="btn btn-success" (click)="startEvualtionFlagShow.emit(eventTwo) ;startEvaluation.emit(eventTwo)">
+								Start</button>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </ng-template>
+        <div *ngIf="eventCount>=1 && patient==='true'" style="text-align:left;" [ngClass]="{'bg-none': eventCount == 2}">
+            <div class="doc-label ">
+                <div class="doc-label px-1" (click)="openPatientProfile(eventOne)" [ngStyle]="eventOne.showUpStatus?
+				{'background-color': 'white'}:{'background-color':eventOne.color }" style="width:100%;background-color: transparent;cursor: pointer;">
+                    <div [ngbPopover]="openPatientOne" placement="top" data-container="body">
+                        <div style="color: white">
+							<!-- {{eventOne.start_time}} l- {{eventOne.end_time}} -->
+							{{eventOne.start_time}} - {{eventOne.end_time}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="eventCount>=2 && patient==='true'" style="text-align:left; " [ngClass]="{'bg-none': eventCount == 2}">
+            <div class="doc-label ">
+                <div class="doc-label px-1" (click)="openPatientProfile(eventTwo)" [ngStyle]="eventTwo.showUpStatus?
+				{'background-color': 'white'}:{'background-color':eventTwo.color }" style="width:100%;background-color: transparent;cursor: pointer;">
+                    <div [ngbPopover]="openPatientTwo" placement="top" data-container="body">
+                        <div style="color: white">
+							<!-- {{eventTwo.start_time}} - {{eventTwo.end_time}} -->
+							{{eventTwo.start_time}} - {{eventTwo.end_time}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="eventCount>2 && patient==='true'" class=" row" style="text-align:left; margin-left:0; margin-right: 0;" [ngClass]="{'bg-none': eventCount == 2}">
+            <div>
+
+                <ng-template #popContent>
+                    <h5 class="row" style="margin: 0;">
+                        <div class="col-md-10">Assignments</div>
+                        <span class="col-md-2" style="text-align: right;" (click)="popmore.close()"><i
+								class="fa fa-times"></i></span>
+                    </h5>
+                    <div style="overflow-y:scroll; width: 94%;height: 17vh;padding-bottom: 20px;">
+                        <div *ngFor="let events of CurrDateApp;let i = index; trackBy:trackByEventId;" style="margin-left: 25px; margin-top: 5px;">
+                            <div class="doc-label col-md-11" (click)="openPatientProfile(events)" [ngStyle]="events.showUpStatus?
+				{'background-color': 'white'}:{'background-color':events.color }" style="width:100%;background-color: transparent;cursor: pointer;">
+                                <div style="margin-right: 0;" [ngbPopover]="openPatientmore" placement="top" data-container="body">
+                                    <div class=" text-truncate" style="color: white;">
+									<!-- {{events.start_time}} - {{events.end_time}}  -->
+									{{events.start_time}} - {{events.end_time}}
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-template #openPatientmore>
+                                <div class="popover-top custom-popover-style">
+                                    <div class="popover-header" [style.background-color]="events.color">
+                                        <span>{{events.title }}</span>
+                                        <span class="popover-icon d-inline-flex float-right">
+											<a class="popover-icon-edit" href="javascript:void(0)"
+												*ngIf="events.updateApp && events.appointment_status_slug!='completed' && events.appointment_status_slug!='no_show'" (click)="edit(events)">
+												<i class="icon-pencil"></i>
+											</a>
+											<a class="popover-icon-remove" href="javascript:void(0)"
+												*ngIf="events.deleteApp && events.appointment_status_slug!='completed' && events.appointment_status_slug!='no_show'" (click)="deleteAppointment(events)"><i
+													class="icon-remove"></i></a>
+										</span>
+                                        <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                    </div>
+                                    <div class="popover-desc">
+                                        <ul class="list-unstyled mb-0">
+                                            <li>{{events.start_time}} - {{events.end_time}}
+                                            </li>
+                                            <li *ngIf="events.available_doctor">
+                                                <span class="font-bold">Provider:</span> {{events.available_doctor.doctor.userBasicInfo.first_name}}{{(events.available_doctor.doctor.userBasicInfo.middle_name)?' '+events.available_doctor.doctor.userBasicInfo.middle_name:''}}{{' '+events.available_doctor.doctor.userBasicInfo.last_name}}
+                                            </li>
+                                            <li *ngIf="events.available_speciality && !eventOne.available_doctor">
+                                                <span class="font-bold">Provider:</span> Not Assigned
+                                            </li>
+                                            <li *ngIf="events.available_doctor">
+                                                <span class="font-bold">Practice-Location:</span> {{events.available_doctor.facilityLocations.facility.name}}-{{events.available_doctor.facilityLocations.name}}
+                                            </li>
+                                            <li *ngIf="events.available_speciality && !eventOne.available_doctor">
+                                                <span class="font-bold">Practice-Location:</span> {{events.available_speciality.facilityLocation.facility.name}}-{{events.available_speciality.facilityLocation.name}}
+                                            </li>
+                                            <!-- <li *ngIf="events.roomName">
+												<span class="font-bold">Room:</span> {{events.roomName}}
+											</li>
+											<li *ngIf="!events.roomName">
+												<span class="font-bold">Room:</span> {{events.room.name}}
+											</li> -->
+											<!-- abdullah asked me to hide the start evaluation button on patient calender -->
+                                            <!-- <li *ngIf="events.startEval && (!events.has_app || events.speciality_key === 'medical_doctor')" class="text-end">
+                                                <button [disabled]="events.appointment_status_slug==='no_show' " class="btn btn-success" (click)="startEvualtionFlagShow.emit(events) ;startEvaluation.emit(events)">
+													Start</button>
+                                            </li> -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ng-template>
+
+                        </div>
+                    </div>
+
+                    <div style="width: 100%; height: 5px;"></div>
+
+                </ng-template>
+                <div [autoClose]="false" [ngbPopover]="popContent" #popmore="ngbPopover" class="waves-light" style="height:100%;background-color: transparent;margin-top: -3px;" [placement]="eventOne.placement">
+                    {{eventCount - 2}} more
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row cal-cell-top" *ngIf="eventCount >= 2" [ngClass]="{'dateMargin': eventCount == 0}">
+            <div *ngIf="noteButton && patient!=='true' && noteShow" class="col-md-8" [style.margin-top]="eventCount >2 ? '12px' : '42px' " style="cursor: pointer" (click)="addNote(day.date)">
+                Note +</div>
+            <div *ngIf="patient==='true' || !noteShow" class="col-md-8"></div>
+            <span [ngClass]="{'selectedCell': day.date.toString() == selectCurrentDate}" style="margin-top: 75px; " class="col-md-4 cal-day-number" [style.margin-top]="eventCount >2 ? '23px' : '40px' " [style.margin-left]="eventCount >2 && patient!='true' ? '4px' :
+				eventCount <=2 && patient!='true'? '4px' :
+				eventCount >2 && patient=='true' ? '0px' :
+				eventCount <=2 && patient=='true'? '2px' : '4px'">
+
+				{{ day.date |
+      calendarDate:'monthViewDayNumber':locale }}</span>
+        </div>
+        <div class="row cal-cell-top" *ngIf="CurrDateApp.length === 1" [ngClass]="{'dateMargin': day.events.length == 0}">
+
+            <div *ngIf="noteButton && patient!=='true' && noteShow" class="col-md-8 cell-appointment" style="cursor: pointer;margin-top: 59px" (click)="addNote(day.date)">Note +</div>
+            <div *ngIf="patient==='true' || !noteShow" class="col-md-8"></div>
+
+            <span [ngClass]="{'selectedCell': day.date.toString() == selectCurrentDate}" class="col-md-4 cal-day-number" style="margin-top: 56px;" [style.margin-left]="patient=='true' ? '2px':'4px'">
+				{{
+      day.date |
+      calendarDate:'monthViewDayNumber':locale }}</span>
+        </div>
+    </div>
+
+</ng-template>
+
+<ng-template [ngTemplateOutlet]="customTemplate || defaultTemplate" [ngTemplateOutletContext]="{
+          day: day,
+          openDay: openDay,
+          locale: locale,
+          tooltipPlacement: tooltipPlacement,
+          highlightDay: highlightDay,
+          unhighlightDay: unhighlightDay,
+          eventClicked: eventClicked,
+          tooltipTemplate: tooltipTemplate,
+          tooltipAppendToBody: tooltipAppendToBody
+        }"></ng-template>

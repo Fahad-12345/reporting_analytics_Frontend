@@ -1,0 +1,13 @@
+ <div class="row pt-3 bill_modal_hold">
+	<div class="col-lg-3">
+		 <app-eor-form-split [currentBill] ="currentBill" [eorMediaFile]="false" ></app-eor-form-split>
+  
+	</div>
+	<div class="col-lg-9 pt-3 pt-lg-0">
+	  <div class="row pt-1">
+		<div class="col-12">
+			<app-eor-list-split (onEditEor) ="onEditEor($event)"  (getChangePageData) = "getChangePageData($event)"  [eorFormSplit]="false" #eOrListingComponent> </app-eor-list-split>
+		</div>
+	  </div>
+	</div>
+  </div> 

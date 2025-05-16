@@ -1,0 +1,254 @@
+<div *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_delete)">
+    <div class="modal-header">
+        <h4 class="modal-title">Delete Assignment</h4>
+        <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+    </div>
+    
+    <div class="modal-body assignment-modal">
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <label class="title" for="speciality">Provider*</label>
+                    <input style="background-color:#e9ecef!important;" name="class_type" value="{{ speciality}}" disabled class=" input-lg t form-control" type="text" id="Speciality" />
+                </div>
+    
+                <div class="col-md-6">
+                    <label class="title" for="clinicname">Practice-location</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="clinicName">
+    
+                    <input style="background-color:#e9ecef!important;" name="class_type" value="{{ clinicNameQualifier }}" disabled class=" input-lg t form-control" type="text" id="cname" />
+               </span>
+                </div>
+            </div>
+            <div class="row radio-button-sch">
+                <div class='col-md-4 assig-tab form'>
+                    <label class="fake-label-frame chkbox position-relative m-0" for="Drname">
+                        <input name="radio" checked (click)="thisAssignment()" id="Drname" type="radio">
+                        <span class="fake-input position-absolute"></span>
+                        <span class="fake-label d-block font-weight-normal">This Assignment</span>
+                    </label>
+                    <!-- <input style="float: left;padding: 0 !important;margin-top: 7px !important;height: 15px !important;max-width: 7%" type="radio" checked name="radio" (click)="thisAssignment()" class="tt form-control " id="Drname" /> &nbsp;
+                    <label class="title" for="dName">This Assignment</label> -->
+    
+                </div>
+            </div>
+            <div class="row subseq-assig-tab">
+                <div class='col-md-4 form'>
+                    <label class="fake-label-frame chkbox position-relative m-0" for="clinicName">
+                        <input name="radio" [disabled]="recId" (click)="allSubSequentAssignments($event)" id="clinicName" type="radio">
+                        <span class="fake-input position-absolute"></span>
+                        <span class="fake-label d-block font-weight-normal">All Subsequent Assignment</span>
+                    </label>
+                    <!-- 
+                    <input style="float: left;padding: 0 !important;margin-top: 7px !important;height: 15px !important;max-width: 7%" 
+                    name="radio" [disabled]="recId" (click)="allSubSequentAssignments($event)" type="radio" class="tt f
+                    orm-control" id="clinicName" />                &nbsp;
+                    <label class="title" for="cName">All subsequent assignment</label> -->
+                </div>
+            </div>
+            <hr>
+    
+            <div class="row justify-content-center">
+                <div class="edit-block col-md-12" style="padding-right: 10px !important;padding-left: 10px !important ">
+                    <div class="form-group field option-field mb-2 d-inline-block">
+                        <ul class="title">
+                            <li>Show</li>
+                            <li>
+                                <select class="custom-select" [ngModelOptions]="{standalone: true}" style="height:28px !important" [(ngModel)]="counter" (change)="changeNoOfEntries(counter)">
+                                    <option value="10" selected>10</option>
+                                    <option value="20">20</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </li>
+                            <li>Entries</li>
+                        </ul>
+                    </div>
+                    <a [hidden]="true" href="javascript:void(0)" style="color:#fff;  padding: 7px 22px; margin-top: 9px; background: #34c3ee; border-color:#34c3ee;">
+                        <span class="icon-remove me-1" style="font-size: 14px;"></span> <span style="font-size: 15px;">
+                            Create Task ( {{numSelected}} )</span>
+                    </a>
+                </div>
+                <div class="col-md-12 col-lg-12 col-sm-12">
+                    <ngx-datatable class="bootstrap scroll-hide" (page)="changePage($event)" [rows]="data" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="counter" [offset]="pageNumber-1">
+                        <ngx-datatable-column [canAutoResize]="true" name="Date" prop="id" [width]="70">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Date
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+    
+                                {{row.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+    
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Time" prop="id" [width]="90">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Time
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.scheduled_date_time| date: datePipeService.hourMinAmPmTimeFormat()}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Chart ID" prop="id" [width]="70">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Chart ID
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.patient_id}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Case No." prop="id" [width]="50">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Case No.
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.case_id}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Patient" prop="id" [width]="90">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Patient
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <ul class="custom-btn-tooltip list-unstyled ms-0">
+                                    <a class="text-truncate d-block" style="max-width: 110px !important; color: black !important;" href="javascript:void(0)">{{row.patient_info?.first_name}}&nbsp;{{row.patient_info?.middle_name}}&nbsp;{{row.patient_info?.last_name}}</a>
+                                    <li class="btn-tooltip-top" style="top: -7px;">
+                                        <span *ngIf="row.patient_info">{{row.patient_info.first_name}}&nbsp;{{row.patient_info.middle_name}}&nbsp;{{row.patient_info.last_name}}</span>
+                                        <i></i>
+                                    </li>
+                                </ul>
+                            </ng-template>
+    
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Provider" prop="id" [width]="70">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                Provider
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <ul *ngIf="row.doctor_info" class="custom-btn-tooltip list-unstyled ms-0">
+                                    <a class="text-truncate d-block" style="max-width: 110px !important; color: black !important;" href="javascript:void(0)">{{row.doctor_info.first_name}} {{row.doctor_info.middle_name}} {{row.doctor_info.last_name}}</a>
+                                    <li class="btn-tooltip-top" style="top: -7px;">
+                                        <span>{{row.doctor_info.first_name}} {{row.doctor_info.middle_name}} {{row.doctor_info.last_name}}</span>
+                                        <i></i>
+                                    </li>
+                                </ul>
+                                <div *ngIf="!row.doctor_info" class="text-truncate">
+                                    N/A
+                                </div>
+    
+                            </ng-template>
+    
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Actions" prop="id" [width]="70">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                <mat-checkbox (change)="allSelected($event)" [(ngModel)]="allChecked" [ngModelOptions]="{standalone: true}">
+                                </mat-checkbox>
+                                Actions
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <mat-checkbox *ngIf = "!row.visit_session" (change)="particularSelected($event,row)" [(ngModel)]="row.isChecked" [ngModelOptions]="{standalone: true}">
+                                </mat-checkbox>
+                            </ng-template>
+    
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+            <div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="title">Comments </label>
+                    </div>
+                </div>
+    
+                <div class="row radiooptions subseq-assig-tab radio-button-sch" style="margin-bottom: 0.5rem;">
+                    <div class='col-md-2 text-truncate form'>
+                        <label class="fake-label-frame chkbox position-relative m-0" for="defaultCommentOption">
+                            <input name="data" (click)="commentDefaultOption($event)" checked="checked" id="defaultCommentOption" type="radio">
+                            <span class="fake-input position-absolute"></span>
+                            <span class="fake-label d-block font-weight-normal">Default</span>
+                        </label>
+    
+                        <!-- <input style="float: left;padding: 0 !important;margin-top: 7px !im
+                        portant;height: 15px !important;max-width: inherit" type="radio" name="data" class="form-control col-md-1" id="defaultCommentOption" (click)="commentDefaultOption($event)" checked="checked">                    &nbsp;
+                        <label class="title" for="defaultCommentOption">Default</label> -->
+                    </div>
+                    <div class="col-md-8 pe-4" [hidden]="!isOtherChecked">
+                        <select class="form-select select" style="height:30px !important" formControlName="defaultComments" (change)="getSelectionchage($event)">
+                            <option *ngFor="let com of defaultComments; let i=index" value={{com.name}}>{{com.name}}
+                            </option>
+                        </select>
+                    </div>
+                    <!-- <div class='col-md-2 optionassigndoc-tab-automatic automatic-assign-large text-truncate ps-4 form'>
+                        <label class="fake-label-frame chkbox position-relative m-0" for="otherCommentOption">
+                            <input name="data" (click)="commentOtherOption($event)"  id="otherCommentOption" type="radio">
+                            <span class="fake-input position-absolute"></span>
+                            <span class="fake-label d-block font-weight-normal">Other</span>
+                        </label>
+    
+                    </div>
+                     -->
+                </div>
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div *ngIf="isSelectedOtherReason" class="col-md-8 pe-4" >
+                        <textarea type="textarea" placeholder="Enter Reason" class=" form-control  mb-0 mt-2" formControlName="otherComments" ></textarea>
+                        <span *ngIf="myForm.get('otherComments').errors?.required && (myForm.get('otherComments').dirty || myForm.get('otherComments').touched)" style="color: red;font-size: 12px;">
+                        *Reason is required
+                        </span>
+                        </div>
+                </div>
+            </div>
+            <div class="row" *ngIf="data.length != 0">
+                <div class="col-md-4">
+                    <label class="title">Actions </label>
+                </div>
+            </div>
+            <div class="row" *ngIf="data.length != 0">
+                <div class=" col-lg-4 col-md-4 col-lg-offset-2 col-md-offset-2" style="padding-left: 10px;padding-right: 10px">
+                    <select style="height:30px !important" class="form-select select" (change)="changeAppointmentsAction()" [(ngModel)]="action" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let options of actions" [ngValue]="options.id">
+                            {{options.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-4" style="display: inline" [hidden]="isForwardToFrontDesk">
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" ngbTooltip="{{selectedClinic?.facility?.name}}-{{selectedClinic?.name}}">
+    
+                    <select style="height:30px !important" class="form-select select" (change)="changeOriginClinic()" [(ngModel)]="targetClinicName" [ngModelOptions]="{standalone: true}">
+                        <option *ngFor="let clinicNames of clinicArray" [ngValue]="clinicNames.id
+                            ">
+                            <!-- {{clinicNames.name}} -->
+                            {{clinicNames.facility?.qualifier}}-{{clinicNames.qualifier}}
+                        </option>
+                    </select>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-4" style="display: inline" [hidden]="isAutoResolve">
+                    <select style="height:30px !important" class="form-select select"[(ngModel)]='autoResOnClinic' [ngModelOptions]="{standalone: true}" >
+                        <option *ngFor="let data of autoResolveList" [value]="data.value">
+                            {{data.name}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-lg-4 col-md-4 ">
+                    <button style="margin-bottom: 5px;padding: 6px 15px 9px !important;width: 150px;border-radius: 5px;" class="btn bg-green w-100" [disabled]="data.length == 0 || myForm.invalid" (click)="applyAppointmentAction()">Apply
+                        Changes</button>
+                </div>
+    
+            </div>
+            <div class="row d-flex justify-content-center mt-3">
+                <div class="col-md-2">
+                    <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button" (click)="cancelForm()">Cancel</button>
+                </div>
+                <div class="col-md-2">
+                    <!-- <button class="btn btn-success w-100" type="submit" [disabled]="deleteButtonStatus" (click)="submitForm()">Delete</button>  hide delete assignment button on the instruction of Muhammad Ali-->
+                </div>
+    
+            </div>
+    
+        </form>
+    </div>
+</div>

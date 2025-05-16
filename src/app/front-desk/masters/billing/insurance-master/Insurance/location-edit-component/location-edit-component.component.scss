@@ -1,0 +1,35 @@
+@import './../../../../../../../assets/sass/components/custom-radio-btn';
+
+.payer-selected-option {
+    width: 100%;
+
+    .payer-radio {
+        display: flex;
+        align-items: center;
+        margin-right: .7rem;
+        margin-bottom: .7rem !important;
+        padding: 6px 0px;
+        font: 500 0.8125rem/0.9375rem "Poppins", Arial, Helvetica, sans-serif;
+        .fake-radio-label {
+            margin-left: 23px;
+        }
+
+        .payer-radio-disabled{
+            border: 1px solid grey;
+        }
+        .fake-radio-label-disbaled {
+            @extend .fake-radio-label;
+            color: grey;
+        }
+    }
+}
+
+::ng-deep.payer-info-action {
+    .mat-mdc-radio-button {
+        .mdc-radio {
+            padding: 0;
+        }
+
+    }
+
+}

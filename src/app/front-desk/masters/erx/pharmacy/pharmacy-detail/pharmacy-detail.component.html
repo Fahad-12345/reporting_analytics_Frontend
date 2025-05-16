@@ -1,0 +1,339 @@
+<!-- <div class="modal-body"> -->
+<form [formGroup]="pharmacy_detailForm">
+	<div class="row">
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="ncpdpid">NCPDPID</label>
+				<input type="text" class="form-control form-input" id="ncpdpid" formControlName="ncpdp_id">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="store_number">Store Number</label>
+				<input type="text" class="form-control form-input" id="erx_store_number" formControlName="store_no">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="organizationr">Organization</label>
+				<input type="text" class="form-control form-input" id="erx_organizationr"
+					formControlName="organization_name">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group field mb-lg-0">
+				<label class="form-label" for="Pharmacy_Type">Pharmacy Type</label>
+				<ng-select #MyNgSelect bindLabel="name" placeholder="Select item"
+					[items]="pharmacy_detailForm.controls.erx_organization_types.value" multiple="true"
+					[searchable]="true" [clearable]="true" [closeOnSelect]="false"
+					formControlName="erx_organization_types">
+				</ng-select>
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group field mb-lg-0">
+				<label class="form-label" for="Service_Level">Service Level</label>
+				<ng-select #MyNgSelect bindLabel="name" placeholder="Select item"
+					[items]="pharmacy_detailForm.controls.erx_service_levels.value" multiple="true" [searchable]="true"
+					[clearable]="true" [closeOnSelect]="false" formControlName="erx_service_levels">
+				</ng-select>
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group field mb-lg-0">
+				<label class="form-label" for="Phone_number">Alternate Phone Numbers
+				</label>
+				<ng-select #MyNgSelect bindLabel="phone_number" placeholder="Select item"
+					[items]="pharmacy_detailForm.controls.alternate_phones.value" multiple="true" [searchable]="true"
+					[clearable]="true" [closeOnSelect]="false" formControlName="alternate_phones">
+				</ng-select>
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="address_line1">Address Line1</label>
+				<input type="text" class="form-control form-input" id="address_line1" formControlName="address_line1">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="address_line2">Address Line2</label>
+				<input type="text" class="form-control form-input" id="address_line2" formControlName="address_line2">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="city">City</label>
+				<input type="text" class="form-control form-input" id="city" formControlName="city">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="state_province">State Province</label>
+				<input type="text" class="form-control form-input" id="state_province" formControlName="state_province">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="postal_code">Postal Code</label>
+				<input type="text" class="form-control form-input" id="postal_code" formControlName="postal_code">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="country_code">Country Code</label>
+				<input type="text" class="form-control form-input" id="country_code" formControlName="country_code">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="standardized_address_line1">Standardized Address
+					Line1</label>
+				<input type="text" class="form-control form-input" id="standardized_address_line1"
+					formControlName="standardized_address_line1">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="standardized_address_line2">Standardized Address
+					Line2</label>
+				<input type="text" class="form-control form-input" id="standardized_address_line2"
+					formControlName="standardized_address_line2">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="standardized_city">Standardized City</label>
+				<input type="text" class="form-control form-input" id="standardized_city"
+					formControlName="standardized_city">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="standardized_state_province">Standardized State
+					Province</label>
+				<input type="text" class="form-control form-input" id="standardized_state_province"
+					formControlName="standardized_state_province">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="standardized_postal">Standardized Postal</label>
+				<input type="text" class="form-control form-input" id="standardized_postal"
+					formControlName="standardized_postal">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="primary_telephone">Primary Telephone</label>
+				<input type="text" class="form-control form-input" id="primary_telephone"
+					formControlName="primary_telephone">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="fax">Fax</label>
+				<input type="text" class="form-control form-input" id="fax" formControlName="fax">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="electronic_email">Electronic Mail</label>
+				<input type="text" class="form-control form-input" id="electronic_email"
+					formControlName="electronic_mail">
+			</div>
+		</div>
+		<!-- <div class="col-sm-6 col-md-4">
+				<div class="form-group mb-0">
+					<label class="form-label" for="alternate_phone_no">Alternate Phone Numbers</label>
+					<input type="text" class="form-control form-input" id="alternate_phone_no"
+						formControlName="store_no">
+				</div>
+			</div> -->
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="active_start_time">Active Start Time</label>
+				<input type="text" class="form-control form-input" id="active_start_time"
+					formControlName="active_start_time">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="active_end_time">Active End Time</label>
+				<input type="text" class="form-control form-input" id="active_end_time"
+					formControlName="active_end_time">
+			</div>
+		</div>
+		<!-- <div class="col-sm-6 col-md-4">
+				<div class="form-group mb-0">
+					<label class="form-label" for="service_level">Service Level</label>
+					<input type="text" class="form-control form-input" id="service_level" formControlName="store_no">
+				</div>
+			</div> -->
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="partner_account">Partner Account</label>
+				<input type="text" class="form-control form-input" id="partner_account"
+					formControlName="partner_account">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="last_modified_date">Last Modified Date</label>
+				<input type="text" class="form-control form-input" id="last_modified_date"
+					formControlName="last_modified_date">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="record_change">Record Change</label>
+				<input type="text" class="form-control form-input" id="record_change" formControlName="record_change">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="old_service_level">Old Service Level</label>
+				<input type="text" class="form-control form-input" id="old_service_level"
+					formControlName="old_service_level">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="version">Version</label>
+				<input type="text" class="form-control form-input" id="version" formControlName="version">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="npi">NPI</label>
+				<input type="text" class="form-control form-input" id="npi" formControlName="npi">
+			</div>
+		</div>
+		<!-- <div class="col-sm-6 col-md-4">
+				<div class="form-group mb-0">
+					<label class="form-label" for="directory_specialty_name">Directory Specialty
+						Name</label>
+					<input type="text" class="form-control form-input" id="directory_specialty_name"
+						formControlName="store_no">
+				</div>
+			</div> -->
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="replace_ncpdpid">Replace NCPDPID</label>
+				<input type="text" class="form-control form-input" id="replace_ncpdpid"
+					formControlName="replace_ncpdp_id">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="state_license_no">State License Number</label>
+				<input type="text" class="form-control form-input" id="state_license_no"
+					formControlName="state_license_number">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="upin">UPIN</label>
+				<input type="text" class="form-control form-input" id="upin" formControlName="upin">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="facility_id">Facility ID</label>
+				<input type="text" class="form-control form-input" id="facility_id" formControlName="facility_id">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="medicare_number">Medicare Number</label>
+				<input type="text" class="form-control form-input" id="medicare_number"
+					formControlName="medicare_number">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="medicaid_number">Medicaid Number</label>
+				<input type="text" class="form-control form-input" id="medicaid_number"
+					formControlName="medicaid_number">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="payer_id">Payer ID</label>
+				<input type="text" class="form-control form-input" id="payer_id" formControlName="payer_id">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="dea_no">DEA Number</label>
+				<input type="text" class="form-control form-input" id="dea_no" formControlName="dea_number">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="hin">HIN</label>
+				<input type="text" class="form-control form-input" id="hin" formControlName="hin">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="mutually_defined">Mutually Defined</label>
+				<input type="text" class="form-control form-input" id="mutually_defined"
+					formControlName="mutually_defined">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="direct_address">Direct Address</label>
+				<input type="text" class="form-control form-input" id="direct_address" formControlName="direct_address">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="organization_type">Organization Type</label>
+				<input type="text" class="form-control form-input" id="organization_type"
+					formControlName="organization_type">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="organization_id">Organization ID</label>
+				<input type="text" class="form-control form-input" id="organization_id"
+					formControlName="organization_id">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="parent_organization_id">Parent Organization ID</label>
+				<input type="text" class="form-control form-input" id="parent_organization_id"
+					formControlName="parent_organization_id">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="latitude">Latitude</label>
+				<input type="text" class="form-control form-input" id="latitude" formControlName="latitude">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="longitude">Longitude</label>
+				<input type="text" class="form-control form-input" id="longitude" formControlName="longitude">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="precise">Precise</label>
+				<input type="text" class="form-control form-input" id="precise" formControlName="precise">
+			</div>
+		</div>
+		<div class="col-sm-6 col-md-4">
+			<div class="form-group mb-0">
+				<label class="form-label" for="usecase">UseCase</label>
+				<input type="text" class="form-control form-input" id="usecase" formControlName="use_case">
+			</div>
+		</div>
+
+	</div>
+</form>
+<!-- </div> -->

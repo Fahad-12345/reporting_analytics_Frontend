@@ -1,0 +1,1421 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+
+<!-- <div class="row mb-2">
+		<div class="col-12">
+			<a [routerLink]="['/front-desk/patients/edit-all']" class="btn btn-sm btn-default float-right"><i class="icon-pencil me-2"></i> Edit All</a>
+		</div>
+	</div> -->
+
+<!-- New Design Patient Summary -->
+<div class="front-desk-block patient-summary"
+	*ngIf="aclService.hasPermission(userPermissions.patient_case_list_patient_summary)" #patientsummary>
+	<!-- <div class="pull-right edit-block">
+					<a class="" href="javascript:void(0)" style="font-size: 14px;"><i class="fa fa-fax"></i></a>
+				  <a href="javascript:void(0)" class="email-icon" style="margin-right:5px !important; "><i class="fa fa-print"></i></a>
+			  </div>
+			<div class="card w-100">
+					<div class="pull-right edit-block"> <h6 class="color-blue d-block-inline" style="margin-left:15px;">Personal Information</h6></div>
+			
+				 <div class="card-body">
+					<ul>
+						<li>First Name: </li>
+						<li><span>john</span></li>
+						<li>Middle Name :</li>
+						<li><span>Smith</span></li>
+						<li>Last Name :</li>
+						<li><span>Smith</span></li>
+						<li>Marital Status :</li>
+						<li><span>Single</span></li>
+					</ul>
+		
+					<ul>
+						<li>Age :</li>
+						<li><span>28 Years</span></li>
+						<li>D.O.B :</li>
+						<li><span>03-12-1989</span></li>
+						<li>Gender  :</li>
+						<li><span>Male</span></li>
+						<li>SSN  :</li>
+						<li><span>123-42-3412</span></li>
+					</ul>
+		
+					<ul>
+						<li>Home No : </li>
+						<li><span>587-862-3654</span></li>
+						<li>Work No : </li>
+						<li><span>587-862-3654</span></li>
+						<li>Extension :</li>
+						<li><span>587-862-3654</span></li>
+						<li>Cell No :</li>
+						<li><span>587-862-3654</span></li>
+					</ul>
+		
+					<ul>
+							<li>Street Address  :</li>
+							<li><span>2637 Broadway</span></li>
+							<li>Suite / Floor : </li>
+							<li><span>Fifth Floor</span></li>
+							<li>Need A Translator : </li>
+							<li><span>Yes</span></li>
+							<li>What Language :</li>
+							<li><span>English</span></li>
+							
+						</ul>
+		
+						<ul>
+								<li>City :</li>
+								<li><span>New York</span></li>
+								<li>State :</li>
+								<li><span>Alabama</span></li>
+								<li>Zip :</li>
+								<li><span>1136</span></li>
+								<li>Email :</li>
+								<li><span>john416@gmail.com</span></li>
+							
+							</ul>
+		
+							<ul>
+									<li> Injured Body Parts :</li>
+									<li><span>Neck, Head</span></li>
+									<li>Speciality : </li>
+									<li><span>Medical</span></li>
+									<li>Purpose Of Visit :</li>
+									<li><span> Injury</span></li>
+									<li> Case Type : </li>
+									<li><span>Worker Compensation </span></li>
+							</ul>
+				 </div>
+		
+				 <h6 class="color-blue mt-2" style="margin-left:15px;">Attorney Information</h6>
+				 <div class="card-body">
+					<ul>
+						<li>Firm Name : </li>
+						  <li><span>Purdy LLC</span></li>
+						<li>First Name : </li>
+						<li><span>john</span></li>
+						<li>Middle Name :</li>
+						<li><span>Smith</span></li>
+						<li>Last Name :</li>
+						<li><span>Smith</span></li>
+					</ul>
+		
+					<ul>
+						<li>Street Address :</li>
+						<li><span>2637 Broadway</span></li>
+						<li>Suite / Floor : </li>
+						<li><span>Fifth Floor</span></li>
+						<li>Work No : </li>
+							<li><span>587-862-3654</span></li>
+							<li>Extension No : </li>
+							<li><span>587-862-3654 </span></li>
+					
+					</ul>
+		
+					<ul>
+							<li>City :</li>
+						<li><span>New York</span></li>
+						<li>State :</li>
+						<li><span>Alabama	</span></li>
+							<li>Zip :</li>
+							<li><span>1136</span></li>
+							<li>Email : </li>
+							<li><span>john416@gmail.com </span></li>
+						</ul>
+		
+						<h6 class="color-green mb-1 mt-1" style="font-size:14px; float: left;">Contact Person Information</h6>
+		
+						<ul>
+								<li>First Name : </li>
+								<li><span> John</span></li>
+								<li>Middle Name : </li>
+								<li><span>Smith </span></li>
+								<li>Last Name : </li>
+								<li><span>Smith </span></li>
+								<li> Email :</li>
+									<li><span>john416@gmail.com </span></li>
+							
+							</ul>
+		
+							<ul>
+									<li>Work No : </li>
+									<li><span>587-862-3654</span></li>
+									<li>Extension No : </li>
+									<li><span>587-862-3654 </span></li>
+									<li>Fax : </li>
+									<li><span> +44 161 999 8888</span></li>
+								</ul>
+		
+				 </div>
+		
+				 <h6 class="color-blue mt-2" style="margin-left:15px;">Primary Insurance</h6>
+				 <div class="card-body">
+						<h6 class="color-green mb-0 mt-0" style="font-size:14px; float: left;">Policy Holder Information</h6>
+						<ul>
+								<li>Insurance Name :</li>
+								<li><span>jubilee</span></li>
+								<li>Claim# :</li>
+								<li><span>12154</span></li>
+								<li>Policy# :</li>
+								<li><span>12454</span></li>
+								<li>WCB# :</li>
+								<li><span>45254</span></li>
+							</ul>
+		
+							<ul>
+									<li>First Name :</li>
+									<li><span>John</span></li>
+									<li>Middle Name :</li>
+									<li><span>Smith</span></li>
+									<li>Last Name :</li>
+									<li><span>John</span></li>
+							</ul>
+		
+							<h6 class="color-green mb-1 mt-1" style="font-size:14px; float: left;">Adjuster Information</h6>
+							<ul>
+									<li>First Name :</li>
+									<li ><span>John</span></li>
+									<li>Middle Name :</li>
+									<li><span>Smith</span></li>
+									<li>Last Name :</li>
+									<li><span>Smith</span></li>
+									<li>Extension :</li>
+									<li><span>567</span></li>
+							</ul>
+		
+							<ul>
+									<li>Email :</li>
+									<li><span>john416@gmail.com</span></li>
+									<li>Fax :</li>
+									<li><span>+44 161 999 8888</span></li>
+							</ul>
+		
+				 </div>
+		
+		
+				 <h6 class="color-blue mt-2" style="margin-left:15px;">Employer</h6>
+				 <div class="card-body">
+					
+							 <ul>
+								<li>Employer Name :</li>
+								<li><span>John</span></li>
+								<li>Patient Occupation :</li>
+								<li><span>Worker</span></li>
+								<li>Work No :</li>
+								<li><span>587-862-3654</span></li>
+								<li>Extension No :</li>
+								<li><span>567</span></li>
+							 </ul>
+							 <ul>
+									<li>Street Address :</li>
+									<li><span>2637 Broadway</span></li>
+									<li>Suite / Floor :</li>
+									<li><span>Fifth Floor</span></li>
+									<li>Email :</li>
+									<li><span>john416@gmail.com</span></li>
+								
+							 </ul>
+						
+									<ul>
+											<li>City :</li>
+										<li><span>New York</span></li>
+										<li>State : </li>
+										<li><span>Alabama</span></li>
+												<li>Zip :</li>
+											<li><span>1136</span></li>
+									</ul>
+		
+		
+					<h6 class="color-green mb-1 mt-1" style="font-size:14px; float: left;">Supervisor Information</h6>
+					
+								<ul>
+									<li>First Name  :</li>
+									<li><span>John</span></li>
+									<li>Middle Name :</li>
+									<li><span>Smith</span></li>
+									<li>Last Name :</li>
+									<li><span>John</span></li>
+							
+							</ul>
+							
+				 </div>
+		
+			  </div> -->
+
+
+	<div class="row" style="height: calc(100% - 29px);">
+
+		<div class="col-12 h-100">
+			<div class="row" *ngIf="accident">
+				<!-- <div class="col-xl-6 text-start">
+						<a href="javascript: history.go(-1)" class="btn btn-primary">Back</a>
+					</div> -->
+				<div class="col-xl-12 text-end">
+					<!-- Accident Date: {{ accident?.accidentDate | date:'MM-dd-yyyy' }} -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xl-12">
+					<!-- <ng-marquee duration="30">
+							<mark>
+								<strong>Patient:</strong> {{ patient?.firstName + ' ' + patient?.middleName + ' ' + patient?.lastName }}   <strong>Age:</strong> {{ patient?.age }} Years <strong>DOB: </strong> {{ patient?.dob | date: 'MM-dd-yyyy'}}
+							</mark>
+						</ng-marquee> -->
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="pull-right edit-block custom-tooltip-hov">
+						<!-- <a href="javascript:void(0)" class="fax-icon-hov" (click)="openModal(faxModal)"
+							*ngIf="aclService.hasPermission(userPermissions.patient_case_list_patient_summary_fax)"
+							data-original-title="Fax" tooltip="Fax" style="font-size: 14px;"><i
+								class="icon-fax"></i></a> -->
+						<!-- <a href="javascript:void(0)" class="mail-icon-hov" (click)="openModal(emailModal)"
+							data-original-title="Email" tooltip="Email"
+							*ngIf="aclService.hasPermission(userPermissions.patient_case_list_patient_summary_email)"
+							style="font-size: 14px; margin-right: 5px !important;"><span
+								class="icon-envelope"></span></a> -->
+						<a href="javascript:void(0)" class="pdf-icon-hov" data-original-title="Export to PDF"
+							*ngIf="aclService.hasPermission(userPermissions.patient_case_list_patient_summary_export)"
+							(click)="exportToPDF()" tooltip="Export to PDF" style="font-size: 0.875rem;"><i
+								class="icon-pdf"></i></a>
+					</div>
+					<div class="card w-100">
+						<!-- Personal Infromation -->
+						<h6 class="color-blue d-block-inline" style="margin-left:0.9375rem;">Personal Information</h6>
+						<!-- <div class="card-header text-center">
+								<h1 class="card-title text-white m-0">Personal Information
+									<a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit" [routerLink]="" (click)="goTo('personal-information')">
+										<i class="icon-pencil me-2"></i>
+									</a>
+								</h1>
+							</div> -->
+						<div class="card-body">
+							<ul>
+								<li>First Name</li>
+								<li>
+									<span class="tooltip-outer firstName" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{patient?.first_name}}">{{patient?.first_name}}</span>
+									<!-- <span>
+										<ul class="custom-btn-tooltip list-unstyled">
+											<span>{{patient &&  patient?.first_name  &&  patient?.first_name.length > 10 ?  patient?.first_name.substring(0, 10)+'...' :  patient?.first_name}}</span>
+											<li *ngIf="patient &&  patient?.first_name  &&  patient?.first_name.length > 10"
+												class="btn-tooltip-top">
+												<span>{{patient?.first_name}}</span>
+												<i></i>
+											</li>
+										</ul>
+									</span> -->
+								</li>
+								<li>Middle Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{patient?.middle_name}}">
+										<!-- <ul class="custom-btn-tooltip list-unstyled">
+											<span>{{patient &&  patient?.middle_name  &&  patient?.middle_name.length > 10 ?  patient?.middle_name.substring(0, 10)+'...' :  patient?.middle_name}}</span>
+											<li *ngIf="patient &&  patient?.middle_name  &&  patient?.middle_name.length > 10"
+												class="btn-tooltip-top">
+												<span>{{patient?.middle_name}}</span>
+												<i></i>
+											</li>
+										</ul> -->
+										{{patient?.middle_name}}
+									</span>
+								</li>
+								<li>Last Name</li>
+
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{patient?.last_name}}">
+										{{patient?.last_name}}
+										<!-- <ul class="custom-btn-tooltip list-unstyled">
+											<span>{{patient &&  patient?.last_name  &&  patient?.last_name.length > 10 ?  patient?.last_name.substring(0, 10)+'...' :  patient?.last_name}}</span>
+											<li *ngIf="patient &&  patient?.last_name  &&  patient?.last_name.length > 10"
+												class="btn-tooltip-top">
+												<span>{{patient?.last_name}}</span>
+												<i></i>
+											</li>
+										</ul> -->
+									</span>
+								</li>
+								<li>Marital Status</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patient?.meritial_status | titlecase }}">{{
+										patient?.meritial_status | titlecase }}</span>
+								</li>
+							</ul>
+							<ul>
+
+								<li>Age</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patient?.dob | calculateAge }}">{{ patient?.dob | calculateAge
+										}}</span>
+								</li>
+								<li>D.O.B</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{patient?.dob }}">{{patient?.dob }}</span>
+								</li>
+								<li>Gender</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patient?.gender | titlecase }}">
+										{{ patient?.gender | titlecase }}</span>
+								</li>
+								<li>SSN</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patient?.ssn | ssnFormatPipe}}">{{ patient?.ssn |
+										ssnFormatPipe}}</span>
+								</li>
+							</ul>
+							<ul>
+
+								<li>Home No</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patientContact?.home_phone | phoneFormatPipe }}">{{
+										patientContact?.home_phone | phoneFormatPipe }}</span>
+								</li>
+								<li>Work No</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patientContact?.work_phone | phoneFormatPipe}}">
+										{{ patientContact?.work_phone | phoneFormatPipe}}</span>
+								</li>
+								<li>Extension</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patientContact?.ext }}"> {{ patientContact?.ext }}</span>
+								</li>
+								<li>Cell No</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patientContact?.cell_phone | phoneFormatPipe}}">
+										{{ patientContact?.cell_phone | phoneFormatPipe}}</span>
+								</li>
+								<!-- <li>Weight (in lbs) :</li>
+									<li>
+										<span>{{ patient?.weight != '' ? patient?.weight  : '' }}</span>
+									</li>
+									<li>Height (Ft & Inches)</li>
+									<li>
+										<span>{{ patient?.height != '' ? patient?.height + "'" : '' }} {{ patient?.heightInches != '' ? patient?.heightInches  + '"' : ''}}</span> 
+									</li> -->
+							</ul>
+							<ul>
+								<!-- <li>Cell Phone No.</li>
+										<li>
+											<span>{{ patientContact?.cellPhone }}</span>
+										</li> -->
+								<li>Street Address</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{patientContact?.mail_address?.street}}">{{patientContact?.mail_address?.street}}</span>
+									<!-- <ul class="custom-btn-tooltip list-unstyled">
+										<span>{{patientContact &&  patientContact?.mail_address?.street  &&  patientContact?.mail_address?.street.length > 10 ?  patientContact?.mail_address?.street?.substring(0, 10)+'...' :  patientContact?.mail_address?.street}}</span>
+										<li *ngIf="patientContact &&  patientContact?.mailingStreet  &&  patientContact?.mailingStreet.length > 10"
+											class="btn-tooltip-top">
+											<span>{{patientContact?.mail_address?.street}}</span>
+											<i></i>
+										</li>
+									</ul> -->
+								</li>
+								<li>Suite / Floor</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{patientContact?.mail_address?.apartment}}">{{patientContact?.mail_address?.apartment}}</span>
+									<!-- <ul class="custom-btn-tooltip list-unstyled">
+										<span>{{patientContact &&  patientContact?.mail_address?.apartment  &&  patientContact?.mail_address?.apartment.length > 10 ?  patientContact?.mail_address?.apartment.substring(0, 10)+'...' :  patientContact?.mail_address?.apartment}}</span>
+										<li *ngIf="patientContact &&  patientContact?.mailingApartment  &&  patientContact?.mailingApartment.length > 10"
+											class="btn-tooltip-top">
+											<span>{{patientContact?.mail_address?.apartment}}</span>
+											<i></i>
+										</li>
+									</ul> -->
+
+								</li>
+								<li>Need A Translator?</li>
+								<li>
+									<span>
+										{{(patient?.need_translator)?"Yes":"No"}}
+
+									</span>
+								</li>
+								<li>What Language?</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patient?.language }}">{{ patient?.language }}</span>
+								</li>
+								<!-- <li>Email</li>
+									<li>
+										<span>{{ patientContact?.email1 }}</span> 
+									</li> -->
+								<!-- <div class="col-lg-4">
+										<strong class="title"><span class="d-block">City</span> {{ patientContact.mailingCity }}</strong>
+									</div>
+									<div class="col-lg-4">
+										<strong class="title"><span class="d-block">State</span>{{ patientContact.mailingState }}</strong>
+									</div> -->
+							</ul>
+							<ul>
+								<!-- <div class="col-lg-4">
+										<strong class="title"><span class="d-block">Zip</span> {{ patientContact.mailingZip }}</strong>
+									</div> -->
+
+								<li>City</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patientContact?.mail_address?.city }}">
+										{{ patientContact?.mail_address?.city }}
+										<!-- {{ patientContact?.mailingApartment != null ?  ", " + patientContact?.mailingApartment : '' }}
+											<ng-container *ngIf="patientContact?.mailingStreet != null && patientContact?.mailingStreet != ''">
+												{{ ", " + patientContact?.mailingCity + ', ' + patientContact?.mailingState + ', ' + patientContact?.mailingZip}}
+											</ng-container> -->
+									</span>
+								</li>
+								<li>State</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patientContact?.mail_address?.state }}">
+										{{ patientContact?.mail_address?.state }}
+										<!-- {{ patientContact?.mailingApartment != null ?  ", " + patientContact?.mailingApartment : '' }}
+											<ng-container *ngIf="patientContact?.mailingStreet != null && patientContact?.mailingStreet != ''">
+												{{ ", " + patientContact?.mailingCity + ', ' + patientContact?.mailingState + ', ' + patientContact?.mailingZip}}
+											</ng-container> -->
+									</span>
+								</li>
+								<li>Zip</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patientContact?.mail_address?.zip }}">
+										{{ patientContact?.mail_address?.zip }}
+										<!-- {{ patientContact?.mailingApartment != null ?  ", " + patientContact?.mailingApartment : '' }}
+											<ng-container *ngIf="patientContact?.mailingStreet != null && patientContact?.mailingStreet != ''">
+												{{ ", " + patientContact?.mailingCity + ', ' + patientContact?.mailingState + ', ' + patientContact?.mailingZip}}
+											</ng-container> -->
+									</span>
+								</li>
+								<li>Email</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ patientContact?.email }}">
+										{{ patientContact?.email }}
+										<!-- {{ patientContact?.mailingApartment != null ?  ", " + patientContact?.mailingApartment : '' }}
+											<ng-container *ngIf="patientContact?.mailingStreet != null && patientContact?.mailingStreet != ''">
+												{{ ", " + patientContact?.mailingCity + ', ' + patientContact?.mailingState + ', ' + patientContact?.mailingZip}}
+											</ng-container> -->
+									</span>
+								</li>
+								<!-- <li>Fax</li>
+									<li>
+										<span>{{ patientContact?.fax }}</span>
+									</li>
+									<li>Taxi or Limo Driver?</li>
+									<li>
+										<span>{{ accident?.limoDriver }}</span> 
+									</li>
+									<li>An Independent Medical Examination (IME)?</li>
+									<li>
+										<span>Yes</span> 
+									</li>
+									<li>Need A Translator?</li>
+									<li>
+										<span>Yes</span>  
+									</li> -->
+
+							</ul>
+							<ul>
+								<li>Category</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ case_info?.case_category?.name }}">{{
+										case_info?.case_category?.name }}</span>
+								</li>
+								<li>Purpose Of Visit </li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ case_info?.purpose_of_visit?.name }}">{{
+										case_info?.purpose_of_visit?.name }}</span>
+								</li>
+								<li>Case Type</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ case_info?.case_type?.name }}">{{ case_info?.case_type?.name
+										}}</span>
+								</li>
+								<!-- <li *ngIf="patient?.gender == 'female'">
+										Pregnant? <span>{{ accident?.pregnancyCondition == true ? 'Yes' : 'No' }}</span>
+									</li> -->
+								<li>Practice location</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										*ngFor="let p of case_info && case_info.practice_locations && case_info.practice_locations"
+										ngbTooltip="{{ p?.practiceLocation?.facility.name }} - {{ p?.practiceLocation?.name }}">{{
+										p?.practiceLocation?.facility.qualifier }} - {{ p?.practiceLocation?.qualifier
+										}} <br /></span>
+								</li>
+							</ul>
+							<ul class="mb-0">
+								<li>Injured Body Parts</li>
+								<li>
+									<ng-template #tipContent><span *ngFor="let parts of bodyParts;let x = index">
+											{{parts.name}}<span *ngIf='x < bodyParts.length - 1'>,</span></span>
+									</ng-template> 
+
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										*ngFor="let parts of bodyParts;let x = index" [ngbTooltip]="tipContent">
+										{{parts.name}}<span *ngIf='x < bodyParts.length - 1'>,</span> </span>
+
+
+									<!-- 
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ case_info?.case_category?.name }}">{{ case_info?.case_category?.name }}</span> -->
+
+									<!-- <ul class="custom-btn-tooltip list-unstyled"><span>{{ bodyPartsString | slice:0:18}}
+											{{bodyPartsString?.length>18?'...':''}}</span>
+										<li *ngIf="patientContact &&  patientContact?.mailingApartment  &&  patientContact?.mailingApartment.length > 10"
+											class="btn-tooltip-top">
+											<span>{{bodyPartsString}}</span>
+											<i></i>
+										</li>
+									</ul> -->
+
+								<li>Patient Type</li>
+								<li>
+									<span class="tooltip-outer text-capitalize"
+										*ngIf="case_info && case_info?.accident_information && case_info?.accident_information?.patient_at_time_of_accident != 'other'"
+										tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ case_info && case_info?.accident_information && case_info?.accident_information?.patient_at_time_of_accident  }}">{{case_info
+										&& case_info?.accident_information &&
+										case_info?.accident_information?.patient_at_time_of_accident }}</span>
+									<span class="tooltip-outer text-capitalize"
+										*ngIf="case_info && case_info?.accident_information && case_info?.accident_information?.patient_at_time_of_accident === 'other'"
+										tooltipClass="table-custom-tooltip"
+										ngbTooltip="Other, {{ case_info && case_info?.accident_information && case_info?.accident_information?.at_time_of_accident_other_description  }}">Other,
+										{{case_info && case_info?.accident_information &&
+										case_info?.accident_information?.at_time_of_accident_other_description }}</span>
+
+								</li>
+							</ul>
+						</div>
+
+						<!-- Attorney Information -->
+						<!-- <div class="card-header text-center">
+									<h1 class="card-title text-white m-0">Attorney Information
+										<a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit" (click)="goToOuterRoutes('attorney/edit')">
+											<i class="icon-pencil me-2"></i>
+										</a>
+									</h1>
+								</div> -->
+						<h6 class="color-blue mt-2" style="margin-left:15px;">Firm & Attorney Information</h6>
+
+						<div class="card-body">
+							<h6 class="color-green mb-1 mt-1">Firm Information</h6>
+							<ul>
+								<li>Firm Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.firm?.name}}">{{attorney?.firm?.name}}</span>
+									<!-- <ul class="custom-btn-tooltip list-unstyled">
+										<span>{{ attorney && attorney?.firm?.name | slice:0:10}}
+											{{attorney?.firm?.name?.length>10?'...':''}}</span>
+										<li *ngIf="attorney &&  attorney?.firm_name &&  attorney?.firm_name?.length > 10"
+											class="btn-tooltip-top">
+											<span>{{attorney?.firm?.name}}</span>
+											<i></i>
+										</li>
+									</ul> -->
+								</li>
+
+								<li>Location Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.firm_location?.location_name }}">{{
+										attorney?.firm_location?.location_name }}</span>
+								</li>
+
+								<li>Email</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.firm_location?.email}}">
+										{{ attorney?.firm_location?.email}}</span>
+								</li>
+
+								<li>Fax</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.firm_location?.fax}}">
+										{{ attorney?.firm_location?.fax | phoneFormatPipe}}</span>
+								</li>
+
+
+
+								<!-- <li>First Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.attorney?.first_name}}">{{attorney?.attorney?.first_name}}</span>
+								</li> -->
+								<!-- <li>Middle Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.attorney?.middle_name}}">{{attorney?.attorney?.middle_name}}</span>
+								</li> -->
+								<!-- <li>Last Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.attorney?.last_name}}">{{attorney?.attorney?.last_name}}</span>
+								</li> -->
+							</ul>
+
+							<ul>
+								<li>Street Address</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.firm_location?.street_address }}">
+										{{ attorney?.firm_location?.street_address }}
+									</span>
+								</li>
+								<li>Suite / Floor</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney && attorney?.firm_location?.apartment_suite}}">{{attorney
+										&& attorney?.firm_location?.apartment_suite}}</span>
+									<!-- <ul class="custom-btn-tooltip list-unstyled">
+										<span>{{ attorney && attorney?.firm_location?.apartment_suite | slice:0:10}}
+											{{attorney?.firm_location?.apartment_suite?.length>10?'...':''}}</span>
+										<li *ngIf="attorney &&   attorney && attorney?.firm_location?.apartment_suite?.length > 10"
+											class="btn-tooltip-top">
+											<span>{{attorney && attorney?.firm_location?.apartment_suite}}</span>
+											<i></i>
+										</li>
+									</ul> -->
+
+								</li>
+
+								<li>Phone No</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.firm_location?.phone | phoneFormatPipe }}"> {{
+										attorney?.firm_location?.phone | phoneFormatPipe }} </span>
+								</li>
+								<li>Extension</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.firm_location?.ext }}"> {{ attorney?.firm_location?.ext
+										}}
+									</span>
+								</li>
+
+
+								<!-- <li>Work No</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.attorney?.phone_no | phoneFormatPipe }}">
+										{{ attorney?.attorney?.phone_no | phoneFormatPipe }} </span>
+								</li> -->
+								<!-- <li>Extension</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.attorney?.ext }}"> {{ attorney?.attorney?.ext }}
+									</span>
+								</li> -->
+							</ul>
+
+							<ul>
+								<li>City</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.attorney?.city }}">
+										{{ attorney?.firm_location?.city }}
+									</span>
+								</li>
+								<li>State</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.attorney?.state }}">
+										{{ attorney?.firm_location?.state }}
+									</span>
+								</li>
+								<li>Zip</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ attorney?.attorney?.zip }}">
+										{{ attorney?.firm_location?.zip }}
+									</span>
+								</li>
+							</ul>
+
+							<h6 class="color-green mb-1 mt-1">Attorney Information</h6>
+							<ul>
+								<li>Attorney Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.attorney ? attorney?.attorney?.first_name + ' ' + ( attorney?.attorney?.middle_name ? attorney?.attorney?.middle_name : '') + ' ' + attorney?.attorney?.last_name : null}}">
+
+										{{attorney?.attorney ? attorney?.attorney?.first_name + ' ' + ( attorney?.attorney?.middle_name ? attorney?.attorney?.middle_name : '') + ' ' + attorney?.attorney?.last_name : null}}
+									</span>
+								</li>
+								<li>Email</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.attorney?.email}}">
+										{{attorney?.attorney?.email}}
+									</span>
+								</li>
+
+								<li>Phone No</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.attorney?.phone_no	| phoneFormatPipe}}">
+										{{attorney?.attorney?.phone_no | phoneFormatPipe }} </span>
+								</li>
+								<li>Extension</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{attorney?.attorney?.ext}}">
+									{{attorney?.attorney?.ext}}
+								</span>
+								</li>
+							</ul>
+
+							<h6 class="color-green mb-1 mt-1">Third Party Firm Information</h6>
+							<ul>
+								<li>First Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm?.name}}">
+										{{attorney?.third_party_firm?.name}}
+									</span>
+								</li>
+								<li>Location Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm_location?.location_name}}">
+										{{attorney?.third_party_firm_location?.location_name}}
+									</span>
+								</li>
+								<li>Email</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm_location?.email}}">
+										{{attorney?.third_party_firm_location?.email}} </span>
+								</li>
+								<li>Fax</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{attorney?.third_party_firm_location?.fax}}">
+									{{attorney?.third_party_firm_location?.fax}}
+								</span>
+								</li>
+							</ul>
+							<ul>
+								<li>Street Address</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm_location?.street_address}}">
+										{{attorney?.third_party_firm_location?.street_address}}
+									</span>
+								</li>
+								<li>Suite / Floor</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm_location?.apartment_suite}}">
+										{{attorney?.third_party_firm_location?.apartment_suite}}
+									</span>
+								</li>
+								<li>Phone No</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm_location?.phone | phoneFormatPipe}}">
+										{{attorney?.third_party_firm_location?.phone | phoneFormatPipe }} </span>
+								</li>
+								<li>Extension</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{attorney?.third_party_firm_location?.ext}}">
+									{{attorney?.third_party_firm_location?.ext}}
+								</span>
+								</li>
+							</ul>
+							<ul>
+								<li>City</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm_location?.city}}">
+										{{attorney?.third_party_firm_location?.city}}
+									</span>
+								</li>
+								<li>State</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm_location?.state}}">
+										{{attorney?.third_party_firm_location?.state}}
+									</span>
+								</li>
+								<li>Zip</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{attorney?.third_party_firm_location?.zip}}">
+										{{attorney?.third_party_firm_location?.zip}}
+									</span>
+								</li>
+							</ul>
+						</div>
+
+						<h6 class="color-blue mt-2" style="margin-left:15px;">Primary Insurance</h6>
+						<div class="card-body">
+							<h6 class="color-green mb-1 mt-1">Insurance's Information</h6>
+							<ul>
+								<li>Insurance Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{primaryInsurance?.insurance_company?.name }}">
+										{{primaryInsurance?.insurance_company?.name}}
+									</span>
+								</li>
+								<li>Phone No.</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ primaryInsurance?.insurance_company?.phone_no | phoneFormatPipe }}">{{
+										primaryInsurance?.insurance_company?.phone_no | phoneFormatPipe }}
+									</span>
+								</li>
+
+								<li>Extension</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ primaryInsurance?.insurance_company?.ext }}">{{
+										primaryInsurance?.insurance_company?.ext }}
+									</span>
+								</li>
+								<li>Email</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ primaryInsurance?.insurance_company?.email }}">{{
+										primaryInsurance?.insurance_company?.email }}</span>
+								</li>
+							</ul>
+							<ul>
+								<li>Fax</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ primaryInsurance?.insurance_company?.fax | phoneFormatPipe }}">{{
+										primaryInsurance?.insurance_company?.fax | phoneFormatPipe }}</span>
+								</li>
+								<li>Street Address</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.street_address ? primaryInsurance?.insurance_company?.insurance_locations?.street_address  : ' ') : null}}">
+									
+									{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.street_address ? primaryInsurance?.insurance_company?.insurance_locations?.street_address  : ' ') : null}}
+								   </span>
+								</li>
+								<li>Suite/Floor</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.apartment_suite ? primaryInsurance?.insurance_company?.insurance_locations?.apartment_suite : ' ') : null}}">
+									
+									{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.apartment_suite ? primaryInsurance?.insurance_company?.insurance_locations?.apartment_suite : ' ') : null}}
+								   </span>
+								</li>
+								<li>City</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.city ? primaryInsurance?.insurance_company?.insurance_locations?.city : ' ') : null}}">
+									
+									{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.city ? primaryInsurance?.insurance_company?.insurance_locations?.city : ' ') : null}}
+								   </span>
+								</li>
+							</ul>
+							<ul>
+								<li>State</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.state ? primaryInsurance?.insurance_company?.insurance_locations?.state : ' ') : null}}">
+									
+									{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.state ? primaryInsurance?.insurance_company?.insurance_locations?.state : ' ') : null}}
+								   </span>
+								</li>
+								<li>Zip</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.zip ? primaryInsurance?.insurance_company?.insurance_locations?.zip : ' ') : null}}">
+									
+									{{primaryInsurance?.insurance_company?.insurance_locations ? (primaryInsurance?.insurance_company?.insurance_locations?.zip ? primaryInsurance?.insurance_company?.insurance_locations?.zip : ' ') : null}}
+								   </span>
+								</li>
+							</ul>
+							
+							<h6 class="color-green mb-1 mt-1">Policy Holder's Information</h6>
+							<ul>
+
+								<li>First Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ primaryInsurance?.first_name }}">{{ primaryInsurance?.first_name
+										}}
+									</span>
+								</li>
+								<li>Middle Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="primaryInsurance?.middle_name }}"> {{
+										primaryInsurance?.middle_name }} </span>
+								</li>
+								<li>Last Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{primaryInsurance?.last_name }}"> {{ primaryInsurance?.last_name }}
+									</span>
+								</li>
+
+								<li>Claim#</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ primaryInsurance?.claim_no }}">{{ primaryInsurance?.claim_no }}
+									</span>
+								</li>
+							</ul>
+							<ul>
+								<li>Policy#</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ primaryInsurance?.policy_no }}">
+										{{ primaryInsurance?.policy_no }} </span>
+								</li>
+								<li>WCB#</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ primaryInsurance?.wcb_no }}"> {{ primaryInsurance?.wcb_no }}
+									</span>
+								</li>
+							</ul>
+							<h6 class="color-green mb-1 mt-1">Adjuster's Information</h6>
+							<ul>
+								<li>Adjuster Name</li>
+								<li>
+
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{primaryInsurance ? primaryInsurance?.adjustor?.first_name + (primaryInsurance?.adjustor?.middle_name ? ' ' + primaryInsurance?.adjustor?.middle_name : '') + ' ' + primaryInsurance?.adjustor?.last_name : null }}">
+									{{primaryInsurance?.adjustor ? primaryInsurance?.adjustor?.first_name + (primaryInsurance?.adjustor?.middle_name ? ' ' + primaryInsurance?.adjustor?.middle_name : '') + ' ' + primaryInsurance?.adjustor?.last_name : null }}
+								</span>
+								</li>
+								<li>Email</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{primaryInsurance?.adjustor?.email}}">
+										{{primaryInsurance?.adjustor?.email}}
+									</span>
+								</li>
+
+								<li>Phone No</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{primaryInsurance?.adjustor?.phone_no	| phoneFormatPipe}}">
+										{{primaryInsurance?.adjustor?.phone_no | phoneFormatPipe }} </span>
+								</li>
+								<li>Extension</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+									ngbTooltip="{{primaryInsurance?.adjustor?.ext}}">
+									{{primaryInsurance?.adjustor?.ext}}
+								</span>
+								</li>
+							</ul>
+						</div>
+
+						<!-- Employer Information -->
+						<!-- <div class="col-lg-12 mb-3">
+							<div class="card">
+								<div class="card-header text-center">
+									<h1 class="card-title text-white m-0">Employer Information
+										<a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit"  [routerLink]="" (click)="goToOuterRoutes('employer/edit/' + employer?.id)">
+											<i class="icon-pencil me-2"></i>
+										</a>
+									</h1>
+								</div>
+								
+							</div>
+						</div> -->
+						<h6 class="color-blue mt-2" style="margin-left:15px;">Employer's Information</h6>
+
+						<div class="card-body">
+							<ul>
+								<li>Employer's Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{employer?.employer_name}}">{{employer?.employer_name}}</span>
+								</li>
+								<li>Patient's Occupation</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.occupation }}">{{ employer?.occupation }}</span>
+								</li>
+								<!-- <li>Email :</li>
+													<li>
+														<span>{{ employer?.email}}</span> 
+													</li> -->
+								<li>Phone No.</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.phone_no | phoneFormatPipe}}">
+										{{ employer?.phone_no | phoneFormatPipe}}</span>
+								</li>
+								<li>Extension</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.ext }}"> {{ employer?.ext }}</span>
+								</li>
+							</ul>
+
+							<ul>
+								<li>Street Address</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{employer?.street_address}}">{{employer?.street_address}}</span>
+									<!-- <span>
+										<ul class="custom-btn-tooltip list-unstyled">
+											<span>{{employer &&  employer?.street_address  &&  employer?.street_address.length > 10 ?  employer?.street_address.substring(0, 10)+'...' :  employer?.street_address}}</span>
+											<li *ngIf="employer &&  employer?.street_address  &&  employer?.street_address.length > 10"
+												class="btn-tooltip-top">
+												<span>{{employer?.street_address}}</span>
+												<i></i>
+											</li>
+										</ul>
+									</span> -->
+								</li>
+								<li>Suite / Floor</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.apartment_suite }}"> {{ employer?.apartment_suite }}
+									</span>
+								</li>
+								<li>Email</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.email }}"> {{ employer?.email }} </span>
+								</li>
+							</ul>
+							<ul>
+								<li>City</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.city }}"> {{ employer?.city }} </span>
+								</li>
+								<li>State</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.state }}"> {{ employer?.state }} </span>
+								</li>
+								<li>Zip</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.zip }}"> {{ employer?.zip }} </span>
+								</li>
+							</ul>
+
+							<h6 class="color-green mb-1 mt-1"> Supervisor's Information</h6>
+
+							<ul class="mb-0">
+								<li>First Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.contact_information?.first_name }}">{{
+										employer?.contact_information?.first_name }}</span>
+								</li>
+								<li>Middle Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.contact_information?.middle_name }}">
+										{{ employer?.contact_information?.middle_name }}</span>
+								</li>
+								<li>Last Name</li>
+								<li>
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ employer?.contact_information?.last_name }}">
+										{{ employer?.contact_information?.last_name }}</span>
+
+								</li>
+							</ul>
+						</div>
+
+
+					</div>
+				</div>
+
+
+
+				<!-- Referring Physician's Information -->
+				<!-- <ng-container *ngIf="referring.length > 0">
+						<div class="col-xl-6 col-lg-12 mb-3">
+							<div class="card">
+								<div class="card-header text-center">
+									<h1 class="card-title text-white m-0">Physician's Information
+										<a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit" [routerLink]="" (click)="goToOuterRoutes('referring/edit/' + referring[0].id)">
+											<i class="icon-pencil me-2"></i>
+										</a>
+									</h1>
+								</div>
+								<div class="card-body">
+									<ng-template  ngFor let-refer [ngForOf]="referring">
+											<h4>{{ refer.type == 'Referring' ? 'Referring': 'Primary Care' }} Physician's Information </h4>
+											<div class="row mb-3">
+												<div class="col-lg-4">
+													<strong class="title"><span class="d-block">First Name</span> {{ refer?.firstName}}</strong>
+												</div>
+												<div class="col-lg-4">
+													<strong class="title"><span class="d-block">Last Name</span> {{ refer?.lastName}}</strong>
+												</div>
+												<div class="col-lg-4">
+													<strong class="title"><span class="d-block">Phone No.</span> {{
+														refer?.referringDoctorAddressInfos?.cellPhone }}</strong>
+												</div>
+			
+											</div>
+											<div class="row mb-3">
+												<div class="col-lg-4">
+													<strong class="title"><span class="d-block">Clinic Name</span> {{ refer?.clinicName }}</strong>
+												</div>
+											</div>
+									</ng-template>
+								</div>
+							</div>
+						</div>
+					</ng-container> -->
+
+
+
+
+				<!-- Injury Information -->
+				<!-- <div class="col-xl-6 col-lg-12 mb-3">
+						<div class="card">
+							<div class="card-header text-center">
+								<h1 class="card-title text-white m-0">Injury Information
+									<a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit"  [routerLink]="" (click)="goToOuterRoutes('injury/injury-info/edit')">
+										<i class="icon-pencil me-2"></i>
+									</a>
+								</h1>
+							</div>
+							<div class="card-body">
+								<div class="row mb-3">
+									<div class="col-lg-4">
+										<strong class="title"><span class="d-block">Date Of Injury</span> {{ accident?.accidentDate |
+											date:'MM-dd-yyyy'
+											}}</strong>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div> -->
+
+				<!-- Body Parts Information -->
+				<!-- <div class="col-12" *ngIf="bodyParts">
+						<div class="card">
+							<div class="card-header text-center">
+								<h1 class="card-title text-white m-0">BodyParts Information
+									<a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit"   [routerLink]=""   (click)="goToOuterRoutes('bodyparts/edit')">
+										<i class="icon-pencil me-2"></i>
+									</a>
+								</h1>
+							</div>
+							<div class="card-body">
+								<div class="row mb-3">
+									<div class="col-xl-12">
+										<table class="table table-striped table-bordered w-100">
+											<thead class="thead-dark">
+												<th scope="col">BodyParts</th>
+												<th scope="col">Sensations</th>
+												<th scope="col">Level</th>
+											</thead>
+											<tbody>
+												<tr *ngFor="let bodypart of bodyParts">
+													<td>{{ bodypart.bodyPartName }}</td>
+													<td>
+														<span *ngFor="let sensation of bodypart.sensations; let idx = index" >
+															{{idx > 0 ? ', ' + sensation.sensationName : sensation.sensationName}}
+														</span>
+													</td>
+													<td>{{ bodypart.level }}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+					</div> -->
+			</div>
+		</div>
+
+	</div>
+
+	<!-- <div class="col-xl-3 col-lg-4 mb-3">
+		<div class="card">
+			<div class="card-header text-center">
+				<h1 class="card-title text-white m-0">Additional Insurance Information</h1>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<h5><strong class="danger">Fields to be shared by VLAD</strong></h5>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
+</div>
+
+<!-- Email Modal -->
+<ng-template #emailModal let-modal>
+
+	<div class="modal-header">
+		<h5 class="modal-title">Send as Email</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" data-dismiss="modal"
+			aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="emailForm" (ngSubmit)="onSubmitEmailForm(emailForm.value)">
+			<div class="form-group row">
+				<label for="to" class="col-sm-3 col-form-label">To :</label>
+				<div class="col-sm-9">
+					<input id="to" type="text" class="form-control w-100" formControlName="to" placeholder="">
+					<small class="form-text text-muted danger"
+						*ngIf="emailForm.get('to').errors?.required && (emailForm.get('to').dirty || emailForm.get('to').touched)">Please
+						enter recipient email!</small>
+					<small class="form-text text-muted danger"
+						*ngIf="emailForm.controls.to.errors && !emailForm.controls.to.errors.required"> Invalid
+						Email!</small>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="message" class="col-sm-3 col-form-label my-auto">Email Message :</label>
+				<div class="col-sm-9">
+					<textarea id="message" class="form-control mb-0" formControlName="message"
+						style="height:60px !important;"></textarea>
+					<small class="form-text text-muted danger"
+						*ngIf="emailForm.get('message').errors?.required && (emailForm.get('message').dirty || emailForm.get('message').touched)">
+						This field is required</small>
+				</div>
+			</div>
+
+			<div class="form-group row mb-0">
+				<div class="col-sm-9 offset-sm-3">
+					<div class="row">
+						<div class="col-4">
+							<button type="button" (click)="modal.dismiss('Cross click')"
+								class="btn btn-outline-secondary w-100">Close</button>
+						</div>
+						<div class="col-8">
+							<button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+									class="icon-save-continue me-2"></span>
+								{{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+</ng-template>
+
+
+<!-- Email Modal -->
+<ng-template #faxModal let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">Send as Fax</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" data-dismiss="modal"
+			aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="faxForm" (ngSubmit)="onSubmitFaxForm(faxForm.value)">
+			<div class="form-group row">
+				<label for="to" class="col-sm-3 col-form-label">Phone :</label>
+				<div class="col-sm-9">
+					<input id="to" type="text" class="form-control w-100 form-input" formControlName="to" placeholder=""
+						[dropSpecialCharacters]="false" [clearIfNotMatch]="true" mask="000-000-0000">
+					<small class="form-text text-muted danger"
+						*ngIf="faxForm.get('to').errors?.required && (faxForm.get('to').dirty || faxForm.get('to').touched)">Please
+						enter recipient phone!</small>
+					<small class="form-text text-muted danger"
+						*ngIf="faxForm.controls.to.errors && !faxForm.controls.to.errors.required"> Invalid
+						phone!</small>
+				</div>
+			</div>
+			<div class="form-group row ">
+				<label for="message" class="col-sm-3 col-form-label m-auto">Fax Message :</label>
+				<div class="col-sm-9">
+					<textarea id="message" class="form-control mb-0" formControlName="message"
+						style="height:60px !important;"></textarea>
+					<small class="form-text text-muted danger"
+						*ngIf="faxForm.get('message').errors?.required && (faxForm.get('message').dirty || faxForm.get('message').touched)">Please
+						Please enter message!</small>
+				</div>
+			</div>
+
+			<div class="form-group col-12 mb-0 p-0">
+				<div class="col-sm-9 offset-sm-3">
+					<div class="row">
+						<div class="col-4 pe-0">
+							<button type="button" (click)="modal.dismiss('Cross click')"
+								class="btn btn-outline-secondary w-100">Close</button>
+						</div>
+						<div class="col-8">
+							<button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+									class="icon-save-continue me-2"></span>
+								{{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+</ng-template>
+
+
+<ng-template #PdfSelectionDialog let-modal>
+	<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+	<div class="modal-header">
+		<h4 id="dialog-static-name" class="modal-title text-capitalize">Select Practice</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss(true)">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body text-center p-2">
+		<div class="form-group radio-block in-stop-work in-md-radio user-md-radio mb-3">
+			<div class="row">
+				<div class="col-12 padding-col" style="padding-left: 2.25rem; padding-right: 2.25rem;">
+					Please select Practice(s) from the list below to generate Patient Summary. <div
+						class="radio-block custom-radio" *ngFor="let uniqueLocation of praticeLocationList;index as i">
+						<div class="form-check link-color" style="padding-left: 2.25rem;">
+							<input class="form-check-input mt-2" type="checkbox" name="location"
+								(change)="praticeLocationSeletionChange(uniqueLocation.slug)" />
+
+							<label class="form-check-label" [for]="i">
+									{{uniqueLocation?.name | titlecase}}
+							</label>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12 modal-btn-width text-center pb-3">
+		<button class="btn btn-primary me-3" type="button" (click)="modal.dismiss(true)">Cancel</button>
+		<button class="btn btn-success" type="submit" (click)="modal.dismiss(false)"
+			[disabled]="praticeLocationSeleted.length == 0"> Download </button>
+	</div>
+</ng-template>

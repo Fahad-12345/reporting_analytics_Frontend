@@ -1,0 +1,490 @@
+<!--Paging dataTable starts-->
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<section id="paging" class="mb-3 master-user" [class.d-none]="!aclService.hasPermission(userPermissions.master_user_list_view)">
+	<div class="d-block text-end">
+		<a *ngIf="aclService.hasPermission(userPermissions.master_user_list_add)"
+		routerLink="/front-desk/masters/users/creation/add" class="btn btn-default round-btn">
+			<span class="icon-plus-circle"></span> Add New 
+		</a>
+	</div>
+	<form class="form" [formGroup]="filterForm" (ngSubmit)="getFilteredUsers({'offset':0})" autocomplete="off" novalidate *ngIf="aclService.hasPermission(userPermissions.master_user_list_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-3" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': filterForm.get('role_id').value != '' && filterForm.get('role_id').value != null }">
+					<label for="role" class="form-label">Roles</label>
+					<select id="role" formControlName="role_id" class="form-control text-truncate"
+						[ngbTooltip]="selectedRole" container="body"
+						tooltipClass="table-custom-tooltip" #role (change)="roleChange(role)">
+						<option [ngValue]="null"></option>
+						<ng-container *ngFor="let role of roles">
+							<option [ngValue]="role.id">{{role.name | slice:0:44}}</option>
+						</ng-container>
+					</select>
+				</div>
+				<div class="form-group" [ngClass]="{'focused': filterForm.get('email').value != '' && filterForm.get('email').value != null }">
+					<label for="email" class="form-label">Email</label>
+					<input id="email" type="email" class="form-control form-input" formControlName="email" placeholder="">
+					<!-- EMAIL VALIDATION -->
+					<small class="form-text text-muted danger" *ngIf="!filterForm.get('email').valid && (filterForm.get('email').dirty && filterForm.get('email').touched)">
+						Please enter valid email!
+					</small>
+				</div>
+				<div class="form-group" [ngClass]="{'focused': filterForm.get('name').value != '' && filterForm.get('name').value != null }">
+					<label for="name" class="form-label">Name</label>
+					<input id="name" type="text" class="form-control form-input" formControlName="name" placeholder="">
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success">Filter</button>
+				<button class="btn btn-primary"(click)="onResetFilters()" [disabled]="checkInputs()">Reset</button>
+			</div>
+		</div>
+   </form>
+	<!-- <div class="search-filter mb-2">
+		<div class="d-block">
+			<a *ngIf="aclService.hasPermission(userPermissions.master_user_list_add)"
+				routerLink="/front-desk/masters/users/creation/add" class="btn btn-default round-btn float-right">
+				<span class="icon-plus-circle"></span> Add New </a>
+		</div>
+		<form class="form" *ngIf="aclService.hasPermission(userPermissions.master_user_list_filter)"
+			[formGroup]="filterForm" (ngSubmit)="getFilteredUsers({'offset':0})" autocomplete="off" novalidate>
+			<div class="form">
+				<div class="search-filter-body">
+					<div class="row">
+						<div class="col-xl-10">
+							<div class="row">
+								<div class="col-md-4 roles-field">
+									<div class="form-group field"
+										[ngClass]="{'focused': filterForm.get('role_id').value != '' && filterForm.get('role_id').value != null }">
+										<label for="role" class="form-label">Roles</label>
+										<select id="role" formControlName="role_id" class="form-control text-truncate"
+											[ngbTooltip]="selectedRole" container="body"
+											tooltipClass="table-custom-tooltip" #role (change)="roleChange(role)">
+											<option [ngValue]="0"></option>
+											<ng-container *ngFor="let role of roles">
+												<option [ngValue]="role.id">{{role.name | slice:0:44}}</option>
+											</ng-container>
+										</select>
+									</div>
+
+
+								</div>
+								<div class="col-md-4">
+									<div class="form-group field"
+										[ngClass]="{'focused': filterForm.get('email').value != '' && filterForm.get('email').value != null }">
+										<label for="email" class="form-label">Email</label>
+										<input id="email" type="email" class="form-control form-input"
+											formControlName="email" placeholder="">
+										<small class="form-text text-muted danger"
+											*ngIf="!filterForm.get('email').valid && (filterForm.get('email').dirty && filterForm.get('email').touched)">Please
+											enter valid email!</small>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="form-group field"
+										[ngClass]="{'focused': filterForm.get('name').value != '' && filterForm.get('name').value != null }">
+										<label for="name" class="form-label">Name</label>
+										<input id="name" type="text" class="form-control form-input"
+											formControlName="name" placeholder="">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-xl-2">
+							<div class="row justify-content-center mb-3 mb-xl-0">
+								<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+									<button type="submit" class="btn btn-success w-100">Filter</button>
+								</div>
+								<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+									<button type="button" class="btn btn-primary w-100" (click)="onResetFilters()"
+										[disabled]="checkInputs()">Reset</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+
+	</div> -->
+
+
+	<div class="data-table">
+		<div class="row">
+			<div class="col-12 col-sm-6 edit-block">
+				<div class="form-group field option-field mb-2 d-inline-block">
+					<ul>
+						<li>Show</li>
+						<li>
+							<!-- <select class="custom-select" name="limit" id="limit" > -->
+							<select class="custom-select" name="limit" [(ngModel)]="page.size" id="limit"
+								(change)="pageLimit($event.target.value)">
+								<!-- <option [value]="20">Items per page</option> -->
+								<option [value]="10">10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+				<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+					Customize Columns
+				</button>
+				<!-- <a href="javascript:void(0)" class="btn btn-success round-btn me-2" *ngIf="selection.selected.length">
+                            <span class="icon-create-task me-1"></span>  Create Task ({{selection.selected.length}})
+                        </a> -->
+				<!-- <lib-task-manager selectedProps="{{stringify(selection.selected)}}" type="text" page="Patient"
+					listCount="{{selection.selected.length}}">
+					({{selection.selected.length}})
+				</lib-task-manager> -->
+
+				<!-- <a href="javascript:void(0)" (click)="confirmDel()" class="btn btn-default round-btn"
+				*ngIf="selection.selected.length && aclService.hasPermission(userPermissions.master_user_list_delete)">
+				<span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+			</a> -->
+			</div>
+		</div>
+
+
+		<!-- <ngx-datatable class="bootstrap  scroll-hide custom-scroll-x" [rows]="rows" [count]="count"
+				[scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+				[limit]="limitPerPage" [scrollbarH]="true"> -->
+		<ngx-datatable style="width: 100%;" class="bootstrap" #usersList [rows]="users" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+			[rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true" [externalPaging]="true"
+			[count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+			(page)="getFilteredUsers($event)">
+			<!-- <ngx-datatable-column name="ID" prop="id" [width]="50">
+					<ng-template let-column="column" ngx-datatable-header-template> ID</ng-template>
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<a routerLink="/front-desk/users/edit/{{row.id}}">{{value}}</a>
+					</ng-template>
+				</ngx-datatable-column> -->
+
+			<ngx-datatable-column name="Name" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					Name
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row.first_name }} {{row.middle_name }} {{row.last_name }}{{row?.billing_title|AddBillingTitle}}" container="body">
+						{{row.first_name }} {{row.middle_name }} {{row.last_name }}{{row?.billing_title|AddBillingTitle}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+
+			<ngx-datatable-column name="DOB" prop="date_of_birth" [width]="100" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					DOB
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{value ? ( (value) | dateFormat:'noTimeZone')  : '' }}" container="body">
+						{{value ? ( (value) | dateFormat:'noTimeZone')  : '' }}
+						</div>
+			
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Email" prop="email"  [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" [sortable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.email ||'N/A'}}"
+						container="body">
+						{{row.email ||'N/A'}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+
+
+			<ngx-datatable-column name="Role" prop="role_name " [width]="100" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					Role
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<!--{{value.split(',')[0]}}-->
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row.role_name ||'N/A'}}" container="body">
+						{{row.role_name ||'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+
+
+			<ngx-datatable-column name="Status" prop="status" [width]="80" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" [sortable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<ng-container *ngIf="value == 1">
+						<a *ngIf="aclService.hasPermission(userPermissions.master_user_list_edit_status) ; else disable_Status_active"
+							href="javascript:void(0)" tooltipClass="table-custom-tooltip"
+							ngbTooltip="Click here to InActive" class="text-success"
+							(click)="changeUserStatus(row)">Active</a>
+						<ng-template #disable_Status_active>
+							Active
+						</ng-template>
+					</ng-container>
+					<ng-container *ngIf="value == 0">
+						<a *ngIf="aclService.hasPermission(userPermissions.master_user_list_edit_status) ; else disable_Status_Inactive"
+							href="javascript:void(0)" tooltipClass="table-custom-tooltip" container="body"
+							ngbTooltip="Click here to Active" container="body" (click)="changeUserStatus(row)"
+							class="text-danger">Inactive</a>
+						<ng-template #disable_Status_Inactive>
+							Inactive
+						</ng-template>
+					</ng-container>
+				</ng-template>
+			</ngx-datatable-column>
+			<!-- Epcs Status Component -->
+			<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Epcs Status" prop="epcs_status_id">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					Epcs Status 
+				</ng-template>
+				<ng-template let-row="row"  let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+					<ng-select class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{epcsTooltipData}}"
+					container="body"
+					(mouseover)="onEpcsHover(row)"
+					[appendTo]="'body'"
+					[items]="epcsStatusData[getRowIndex(row)]" 
+					[(ngModel)]="users[getRowIndex(row)]"
+					bindLabel="epcs_status" 
+					[clearable]="false"
+					[closeOnSelect]="true"
+					(change)="changeEpcsStatus($event,row)"
+					[disabled]="disbableEpcs(row)"
+					>
+				 </ng-select>
+				</ng-template>
+			</ngx-datatable-column>
+			  <ngx-datatable-column name="Status (Active/Inactive)" prop="status" [width]="150" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" [sortable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<mat-slide-toggle [ngModel]="row.status" ngbTooltip="Click here to Change Status" container="body"  [labelPosition]="'before'" (change)="changeUserStatuses($event,row)"></mat-slide-toggle>
+					<!-- <ng-container *ngIf="value == 1">
+						<a *ngIf="aclService.hasPermission(userPermissions.master_user_list_edit_status) ; else disable_Status_active"
+							href="javascript:void(0)" tooltipClass="table-custom-tooltip"
+							ngbTooltip="Click here to InActive" class="text-success"
+							(click)="changeUserStatus(row)">Active</a>
+						<ng-template #disable_Status_active>
+							Active
+						</ng-template>
+					</ng-container> -->
+					<!-- <ng-container *ngIf="value == 0">
+						<a *ngIf="aclService.hasPermission(userPermissions.master_user_list_edit_status) ; else disable_Status_Inactive"
+							href="javascript:void(0)" tooltipClass="table-custom-tooltip" container="body"
+							ngbTooltip="Click here to Active" container="body" (click)="changeUserStatus(row)"
+							class="text-danger">Inactive</a>
+						<ng-template #disable_Status_Inactive>
+							Inactive
+						</ng-template>
+					</ng-container> -->
+				</ng-template>
+			</ngx-datatable-column>
+			  <ngx-datatable-column [sortable]='false' [resizeable]="false" [width]="100" name="Last Login" prop="last_login">
+				<ng-template let-column="column" ngx-dattable-header-template>
+					Last Login
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+				  ngbTooltip="{{value}}" container="body">
+				  {{value}}
+				  <!-- ngbTooltip="{{value | date: datePipeService.DATE_FORMAT_WITHTIME()}}"	container="body">
+				  {{value | date: datePipeService.DATE_FORMAT_WITHTIME()}} -->
+				  </div>
+				</ng-template>
+			  </ngx-datatable-column>
+			<!-- *ngIf="capabilities.role_id==1"  -->
+			<ngx-datatable-column name="Actions" [width]="100" sortable="false" prop="id" cellClass="action-icon"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_user_list_edit)"
+						(change)="$event ? masterToggle($event) : null"
+						[checked]="selection.hasValue() && isAllSelected()"
+						[indeterminate]="selection.hasValue() && !isAllSelected()" disabled>
+					</mat-checkbox>
+					Actions
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_user_list_edit)"
+						(click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+						[checked]="selection.isSelected(row)" disabled>
+					</mat-checkbox>
+					<!-- <a class="info p-0" data-original-title="View" title="View" (click)="onSelectCase(row)">
+							<i class="ft-user font-medium-3 me-2"></i>
+						</a> -->
+					<a *ngIf="aclService.hasPermission(userPermissions.master_user_list_edit)" class="edit-hov mx-1"
+						ngbTooltip="Edit" container="body" (click)="edit(row)"
+						routerLink="/front-desk/masters/users/creation/edit/{{row.id}}">
+						<i class="icon-pencil"></i>
+					</a>
+					<a class="edit-hov mx-1"
+						ngbTooltip="Spi Info" container="body"
+						(click)="openModal(row.id)">
+						<i class="fa fa-info-circle info-circle-size" aria-hidden="true"></i>
+					</a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="userHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+					<!-- <lib-task-manager selectedProps="{{stringify([row])}}" type="icon" id="{{row.id}}" page="Patient">
+					</lib-task-manager> -->
+					<!-- 
+						<a href="javascript:void(0)" *ngIf="aclService.hasPermission(userPermissions.master_user_list_delete)"
+							class="remove-hov mx-1" tooltip="Delete" (click)="confirmDel(row)">
+							<i class="icon-remove"></i>
+						</a> -->
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+	</div>
+
+	<ng-template #contentSpi let-modal>
+		<div class="modal-header">
+            <h4 class="modal-title">Spi Info</h4>
+            <button type="button" class="close" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+			<div class="modal-body">
+		<section id="paging" class="mb-3 master-user">
+			<div class="data-table">
+				<div class="row">
+					<div class="col-12 col-sm-6 edit-block">
+						<div class="form-group field option-field mb-2 d-inline-block">
+							<ul>
+								<li>Show</li>
+								<li>
+									<select class="custom-select" name="limit" [(ngModel)]="page.size" id="limit"
+										(change)="historyPageLimit($event.target.value)">
+										<option [value]="10">10</option>
+										<option [value]="20">20</option>
+										<option [value]="30">30</option>
+										<option [value]="40">40</option>
+										<option [value]="50">50</option>
+										<option [value]="100">100</option>
+									</select>
+								</li>
+								<li>Entries</li>
+							</ul>
+						</div>
+					</div>
+					<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2">
+						
+					</div>
+				</div>
+		
+			<ngx-datatable class="bootstrap" [rows]="spiHistory" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+					[rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true" [externalPaging]="true"
+					[count]="hpage.totalElements" [offset]="hpage.pageNumber" [limit]="hpage.size"
+			  (page)="getFilteredHistory($event)"
+			  >
+		
+			  <ngx-datatable-column name="Facility Location" prop="spi.facility_location" [width]="150" [canAutoResize]="true" [draggable]="false"
+						[resizeable]="false" [sortable]="false">
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.facility_full_name ||'N/A'}}"
+								container="body">
+								{{value.facility_full_name ||'N/A'}}</div>
+						</ng-template>
+					</ngx-datatable-column>
+			  <ngx-datatable-column name="Spi Number" prop="spi" [width]="150" [canAutoResize]="true" [draggable]="false"
+						[resizeable]="false" [sortable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.spi ||'N/A'}}"
+								container="body">
+								{{value.spi ||'N/A'}}</div>
+						</ng-template>
+					</ngx-datatable-column>
+			  <ngx-datatable-column name="Action" prop="action" [width]="150" [canAutoResize]="true" [draggable]="false"
+						[resizeable]="false">
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.action ||'N/A'}}"
+								container="body">
+								{{row.action ||'N/A'}}</div>
+						</ng-template>
+					</ngx-datatable-column>
+			  <ngx-datatable-column name="Description" prop="description" [width]="150" [canAutoResize]="true" [draggable]="false"
+						[resizeable]="false" [sortable]="false">
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description ||'N/A'}}"
+								container="body">
+								{{row.description ||'N/A'}}</div>
+						</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Time Stamp" prop="created_at" [width]="150" [canAutoResize]="true" [draggable]="false"
+						[resizeable]="false" [sortable]="false">
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.created_at ||'N/A'}}"
+								container="body">
+								{{row.created_at ||'N/A'}}</div>
+						</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Action By" prop="created_by.basic_info" [width]="150" [canAutoResize]="true" [draggable]="false"
+						[resizeable]="false" [sortable]="false">
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.first_name| titlecase}} {{value.middle_name| titlecase}} {{value.last_name| titlecase}}"
+								container="body">
+								<span *ngIf="!value.first_name && !value.middle_name && !value.last_name">
+									N/A
+								</span>
+								<span *ngIf="value.first_name">
+									{{value.first_name| titlecase}}
+								</span>
+								<span *ngIf="value.middle_name">
+									{{value.middle_name| titlecase}}
+								</span>
+								<span *ngIf="value.last_name">
+									{{value.last_name| titlecase}}
+								</span>
+							</div>
+						</ng-template>
+				</ngx-datatable-column>	
+		
+			
+				</ngx-datatable>
+				
+			</div>
+		</section>
+			</div>
+	</ng-template>
+</section>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Paging dataTable starts-->
+

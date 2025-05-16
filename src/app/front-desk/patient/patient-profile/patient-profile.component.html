@@ -1,0 +1,648 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="front-desk-block">
+	<div class="row user-info pt-2">
+		<div class="col-12">
+			<h4 class="my-0 color-green">Patient Profile</h4>
+		</div>
+	</div>
+	<hr class="line-bottom">
+	<div class="row pt-2">
+		<div class="col-12">
+			<div class="profile-block">
+				<figure class="profile-image-box d-block">
+					<figcaption class="image-hold">
+						<img *ngIf="patient.URI" src="{{patient.URI}}" alt="patient-profile">
+						<img *ngIf="patient.URI == undefined" src="assets/images/user.png" alt="patient-profile">
+					</figcaption>
+				</figure>
+				<!-- {{patient|json}} -->
+				<!-- {{patient?.ssn ? ssn : 'N/A'}} -->
+				<div class="text-hold">
+					<div class="d-flex flex-wrap align-items-center justify-content-between">
+						<h2 class="mt-0 mb-2 mb-lg-0">
+							{{(patient?.first_name ? patient?.first_name:'N/A')| titlecase}}
+							{{patient?.middle_name| titlecase}}
+							{{patient?.last_name| titlecase}}
+							<small><span>(</span>
+								<!-- {{patient?.dob |calculateAge}} -->
+								{{(patient?.dob ? patient?.dob : 'N/A') |calculateAge}} <span
+									class="line-space">|</span>
+								{{patient.dob? (patient.dob | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+								<span class="line-space">|</span>
+								{{(patient?.gender ?patient?.gender:'N/A') | titlecase }} <span>)</span>
+							</small>
+						</h2>
+						<h3 class="mt-0 mb-0 text-lg-end">{{patient.chart_id}}</h3>
+					</div>
+					<div class="row mt-3 mt-lg-2 padd-lr">
+						<div class="col-12 patient-info-box px-0">
+							<ul class="list-unstyled">
+								<li>
+									<label class="mb-0">Street Address:</label>
+									<span>{{patientAddress?.street ? patientAddress?.street : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Suite / Floor:</label>
+									<span>{{patientAddress?.apartment ? patientAddress?.apartment : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">SSN:</label>
+									<span>
+										{{(patient?.ssn ? patient.ssn : 'N/A')|ssnFormatPipe }}
+									</span>
+								</li>
+								<li>
+									<label class="mb-0">Home Phone No:</label>
+									<span>{{(patient?.home_phone ? patient?.home_phone : 'N/A')|phoneFormatPipe}}</span>
+								</li>
+								<li>
+									<label class="mb-0">City:</label>
+									<span>{{patientAddress?.city ? patientAddress?.city : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">State:</label>
+									<span>{{patientAddress?.state ? patientAddress?.state : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Zip Code:</label>
+									<span>{{patientAddress?.zip ? patientAddress?.zip : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Cell No:</label>
+									<span>{{(patient?.cell_phone ? patient?.cell_phone : 'N/A')|phoneFormatPipe}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Work No:</label>
+									<span>{{(patient?.work_phone ? patient?.work_phone : 'N/A')|phoneFormatPipe}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Extension:</label>
+									<span>{{patient?.self?.ext ? patient?.self?.ext : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Email:</label>
+									<span>{{patient?.self?.email ? patient?.self?.email : 'N/A'}}</span>
+								</li>
+								<li><label class="mb-0"></label><span></span></li>
+								<!-- <li>
+                                    <label class="mb-0">Age:</label>
+                                    <span>{{patient?.age ? patient?.age : 'N/A'}}</span>
+                                </li> -->
+                                <li>
+                                    <label class="mb-0">Weight:</label>
+                                    <span>{{patient?.weight_lbs ? patient?.weight_lbs : 'N/A'}}</span>
+                                </li>
+                                <li>
+                                    <label class="mb-0">Height in ft:</label>
+                                    <span>{{patient?.height_ft ? patient?.height_ft : 'N/A'}}</span>
+                                </li>
+                                <li>
+                                    <label class="mb-0">Height in Inches:</label>
+                                    <span>{{patient?.height_in ? patient?.height_in : 'N/A'}}</span>
+                                </li>
+								<!-- <li>
+                                    <label class="mb-0"></label>
+                                    <span></span>
+                                </li> -->
+								<li>
+									<label class="mb-0">Emergency Contact Name:</label>
+									<span *ngIf="contactPerson">
+										{{contactPerson?.first_name ? contactPerson?.first_name : 'N/A'}}
+										{{contactPerson?.middle_name}}
+										{{contactPerson?.last_name}}
+									</span><span *ngIf="!contactPerson">N/A</span>
+								</li>
+								<li>
+									<label class="mb-0">Relationship:</label>
+									<span>{{relationship?relationship:'N/A'}} <span
+											*ngIf="patient?.emergency?.contact_person_relation?.id == 8">-
+											{{ patient?.emergency?.other_relation_description}}</span></span>
+								</li>
+
+								<!-- <li *ngIf="patient.emergency.contact_person_relation.id == 8">
+                                    <label class="mb-0">Other: Please specify:</label>
+                                    <span>{{ patient?.emergency?.contact_person_relation?.other_relation_description || 'N/A'}}</span>
+                                </li> -->
+								<li>
+									<label class="mb-0">Emergency Contact No:</label>
+									<span>{{(contactPerson?.cell_phone ? contactPerson?.cell_phone :
+										'N/A')|phoneFormatPipe}}</span>
+								</li>
+
+								<li>
+									<button class="mb-0 btn btn-success border-btn" (click)="viewPatientAllergies()"> Allergy Info</button>
+									<span></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<form autocomplete="off" (submit)="submitNote()" class="form mb-0" [formGroup]="formNote">
+						<div class="form-group field position-relative mb-0">
+							<input type="hidden" id="id" formControlName="id" class="form-control form-input"
+								placeholder="Notes...">
+							<input type="text" [value]="patient.notes || ''" id="note" formControlName="note"
+								class="form-control form-input" placeholder="Notes...">
+							<div class="alert-icon"><span class="icon-alert"></span></div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12" style="padding-top:14px;">
+			<tabset #tabset class="card border-0 p-0 m-0">
+				<tab heading="Case List" id="tab0">
+					<div class="row">
+						<div class="col-12">
+							<div class="mt-2 search-filter border-0 p-0">
+								<div class="d-block">
+									<a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_add)"
+										(click)="addSoftCase()" href="javascript:void(0)"
+										class="btn btn-default round-btn float-right ms-2">
+										<span>Add Soft Case </span> <span class="icon-plus-circle ms-2"></span>
+									</a>
+									<a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_add)"
+										(click)="addNewCase()" href="javascript:void(0)"
+										class="btn btn-success round-btn float-right">
+										<span>Add Case </span> <span class="icon-plus-circle ms-2"></span>
+									</a>
+								</div>
+								<div *ngIf="aclService.hasPermission(userPermissions.patient_case_list_filter)"
+									class="search-filter-body">
+									<dynamic-form (submit)="setPage({ offset: 0 })" (onReady)="onReady($event)"
+										[fields]="fieldConfig" (onValueChange)="onValueChanges($event)">
+									</dynamic-form>
+								</div>
+							</div>
+							<div *ngIf="aclService.hasPermission(userPermissions.patient_case_list_listing)"
+								class="card data-table mb-0 p-0 mt-2" style="border:none;">
+								<div class="row">
+									<div class="col-md-6 edit-block">
+										<div class="form-group field option-field mb-2 d-inline-block">
+											<ul>
+												<li>Show</li>
+												<li>
+
+													<select class="custom-select" name="limit" id="limit"
+														(change)="pageLimit($event.target.value)">
+														<option [value]="10" selected>10</option>
+														<option [value]="20">20</option>
+														<option [value]="30">30</option>
+														<option [value]="40">40</option>
+														<option [value]="50">50</option>
+														<option [value]="100">100</option>
+													</select>
+												</li>
+												<li>entries</li>
+											</ul>
+										</div>
+									</div>
+									<div class="col-md-6 text-end mt-2">
+										<!-- <a href="javascript:void(0)"  class="btn btn-success round-btn me-2" *ngIf="selection.selected.length">
+																			<span class="icon-create-task me-2"></span> Create Task [{{selection.selected.length}}]
+																	</a> -->
+										<!--  <a href="javascript:void(0)" class="btn btn-default round-btn ms-2"
+											*ngIf="selection.selected.length && aclService.hasPermission('can_delete_patient')"
+											(click)="confirmDel()">
+				
+											<span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+										</a> -->
+										<a href="javascript:void(0)" class="btn btn-default round-btn ms-2" *ngIf="selection.selected.length"
+										(click)="confirmDel()">
+										<span class="icon-remove me-1" style="font-size: 14px;"></span> <span> Delete
+										  [{{selection.selected.length}}] </span>
+									  </a>
+									</div>
+								</div>
+								<ngx-datatable class="bootstrap scroll-hide custom-scroll-x header-text-wrap" [rows]="cases"
+									[columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+									[virtualization]="false" [scrollbarH]="true" [externalPaging]="true"
+									[count]="page.totalElements" [offset]="page.pageNumber - 1" [limit]="page.size"
+									(page)="onPageChange($event.offset)">
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Case No."
+										prop="caseId" [width]="50">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Case No
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<a class="underline-hov" 
+											[routerLink]="['/front-desk/cases/edit/'+row.id+'/patient/patient_summary']"
+												(click)="goToCaseDetail(row.id,row)"
+												*ngIf="aclService.hasPermission(userPermissions.patient_case_list_edit_case);else disableCaseNo">{{
+												row.id }}</a>
+											<ng-template #disableCaseNo>
+												{{ row.id }}
+											</ng-template>
+											<!-- {{ row.id}} -->
+										</ng-template>
+									</ngx-datatable-column>
+									<!-- <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Chart ID" prop="chart_id"
+										[width]="80">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Chart ID
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<a class="underline-hov" [routerLink]="['/front-desk/patients/profile/', row.patient_id]">
+												{{ value | ssnFormatPipe}}
+											</a>
+										</ng-template>
+									</ngx-datatable-column> -->
+									<!-- <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Patient Name" prop="patient"
+										[width]="100">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Patient Name
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+										   
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.patient_firstname+ ' ' +row.patient_lastname}}">
+												{{row.patient_firstname+ ' ' +row.patient_lastname}}</div>
+										</ng-template>
+									</ngx-datatable-column> -->
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Accident Date"
+										prop="date_of_accident" [width]="70">
+
+										<ng-template let-column="column" ngx-datatable-header-template>
+											DOA
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											{{value? (value | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : ''}}
+											<!-- {{value |date:'mediumDate'}} -->
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Case Type" prop="case_type" [width]="100">
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+												{{value}}
+											</span>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name=" Attorney Name" prop="attorney_name"
+									[width]="100">
+									<ng-template let-column="column" ngx-dattable-header-template>
+									  Attorney Name
+									</ng-template>
+									<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+									<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{row?.attorney_name}}">
+											{{row?.attorney_name}}</div>
+									</ng-template>
+								  </ngx-datatable-column>
+
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Firm Name"
+										prop="firm_name" [width]="65">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Firm Name
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.firm_name}}" container="body">
+												{{row?.firm_name}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name=" Employer Name" prop="employer_name"
+									[width]="100">
+									<ng-template let-column="column" ngx-dattable-header-template>
+									  Employer Name
+									</ng-template>
+									<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+									<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{row?.employer_name || 'N/A'}}">
+											{{row?.employer_name || 'N/A'}}</div>
+									</ng-template>
+								  </ngx-datatable-column>
+
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Insurance"
+										prop="insurance_name" [width]="80">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Insurance
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<!-- <ul class="custom-btn-tooltip list-unstyled ms-0">
+									  <span>{{row &&  row.companyName  &&  row.companyName.length > 10 ?  row.companyName.substring(0, 10)+'...' :  row.companyName}}</span>
+									  <li *ngIf="row && row.companyName && row.companyName.length > 10" class="btn-tooltip-top">
+										<span>{{row.companyName}}</span>
+										<i></i>
+									  </li>
+									</ul> -->
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.insurance_name}}" container="body">
+												{{row.insurance_name}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Claim No."
+										prop="claim" [width]="70">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Claim No
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<!-- <ul class="custom-btn-tooltip list-unstyled ms-0">
+									  <span>{{row &&  row.claim  &&  row.claim.length > 10 ?  row.claim.substring(0, 10)+'...' :  row.claim}}</span>
+									  <li *ngIf="row && row.claim && row.claim.length > 10" class="btn-tooltip-top">
+										<span>{{row.claim}}</span>
+										<i></i>
+									  </li>
+									</ul> -->
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.claim}}" container="body">
+												{{row.claim_no}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Policy No."
+										prop="policy" [width]="70">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Policy No
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<!-- <ul class="custom-btn-tooltip list-unstyled ms-0">
+									  <span>{{row &&  row.policy  &&  row.policy.length > 9 ?  row.policy.substring(0, 9)+'...' :  row.policy}}</span>
+									  <li *ngIf="row && row.policy && row.policy.length > 10" class="btn-tooltip-top">
+										<span>{{row.policy}}</span>
+										<i></i>
+									  </li>
+									</ul> -->
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.policy}}" container="body">
+												{{row.policy_no}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="WCB No."
+										prop="wcb" [width]="60">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											WCB No
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<!-- <ul class="custom-btn-tooltip list-unstyled ms-0">
+											<span>{{row &&  row.wcb  &&  row.wcb.length > 10 ?  row.wcb.substring(0, 10)+'...' :  row.wcb}}</span>
+											<li *ngIf="row && row.wcb && row.wcb.length > 10" class="btn-tooltip-top">
+											  <span>{{row.policy}}</span>
+											  <i></i>
+											</li>
+										  </ul> -->
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.policy}}" container="body">
+												{{row.wcb_no}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Body Parts"
+										prop="body_parts" [width]="110">
+										<ng-template let-column="column" ngx-datatable-header-template>
+											Injured Body Parts
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{value}}" container="body">
+												{{value}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Date of Admission" prop="date_of_admission"
+									[width]="100">
+						  
+									<ng-template let-column="column" ngx-datatable-header-template>
+									  Date of Admission
+									</ng-template>
+									<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+									  {{value? (value | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+									</ng-template>
+								  </ngx-datatable-column>
+						  
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Last Apt."
+										prop="lastAppointment" [width]="70">
+
+										<ng-template let-column="column" ngx-datatable-header-template>
+											Last Apt.
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											N/A
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Next Apt."
+										prop="nextAppointment" [width]="70">
+										<ng-template let-column="column" ngx-datatable-header-template>
+											Next Apt.
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											N/A
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Case Status"
+										prop="status" [width]="70">
+										<ng-template let-column="column" ngx-datatable-header-template>
+											Case Status
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+											  {{value}}
+											</div>
+										  </ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Actions"
+										prop="id" [width]="130" cellClass="action-icon">
+										<ng-template let-column="column" ngx-datatable-header-template>
+											<mat-checkbox (change)="$event ? masterToggle($event) : null"
+												[checked]="selection.hasValue() && isAllSelected()"
+												[indeterminate]="selection.hasValue() && !isAllSelected()">
+											</mat-checkbox>
+											Actions
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<mat-checkbox (click)="$event.stopPropagation()"
+												(change)="$event ? selection.toggle(row) : null"
+												[checked]="selection.isSelected(row)">
+											</mat-checkbox>
+											<a     class="edit-hov mx-1" ngbTooltip="Edit Case Status" container="body" role="button"
+               								 (click)="editCaseStatus(caseStatusModal,row)"><i class="fa fa-file"></i></a>
+											
+												<a class="remove-hov mx-1" (click)="confirmDel(row?.id)" ngbTooltip="Delete" container="body" href="javascript:void(0)"
+												role="button"><i class="icon-remove"></i></a>
+												
+												<!-- <span *ngIf="row && row.is_active">
+													<i  class="fas fa-check-circle text-success"></i>
+												</span>
+												<span   *ngIf="row && !row.is_active ">
+	
+													<i  class="fa fa-exclamation-triangle text-danger"></i>
+												</span>		 -->
+			
+
+										</ng-template>
+									</ngx-datatable-column>
+								</ngx-datatable>
+								
+							</div>
+						</div>
+					</div>
+				</tab>
+				<tab heading="Pharmacy" id="tab1">
+					<!-- DISPLAY PHARMACTY WHEN CLICK ON PHARMACY PILL -->
+					<div class="mt-2">
+						<app-patient-pharmacy [pharmacy_detail]="patientPharmacyDetail"></app-patient-pharmacy>
+					</div>
+				</tab>
+				<tab heading="ERX - Task List" id="erx" >
+					<!-- DISPLAY PHARMACTY WHEN CLICK ON PHARMACY PILL -->
+					<div class="mt-2">
+						<app-home-erx [patientIn]="patientId" [refresh]="refresh.asObservable()" (patientEmit)="patientEmit($event)"  ></app-home-erx>
+					</div>
+				</tab>
+				<tab heading="ERX - Prescribe" id="prescribe">
+					<!-- DISPLAY PHARMACTY WHEN CLICK ON PHARMACY PILL -->
+					<div class="mt-2">
+						<app-prescribe [patientIn]="patientId" [refresh]="refresh.asObservable()" (patientEmit)="patientEmit($event)" ></app-prescribe>
+					</div>
+				</tab>
+			</tabset>
+		</div>
+	</div>
+</div>
+
+
+<ng-template #caseStatusModal let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left">Case Status Update</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body scroll-control">
+
+		<div class="row">
+			<div class="col-12">
+				<div class="light-list-striped width-auto">
+					<ul class="list-unstyled">
+					<li><label> Case Id: </label>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"ngbTooltip="{{currentCase?.id}}">
+						{{currentCase?.id}} </span>
+					</li>
+	  				<li><label>Current Case Status:</label>
+		        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"ngbTooltip="{{currentCase?.status}}">
+				{{currentCase?.status}}</span></li>
+			</ul>
+		</div>
+	</div>
+</div> 
+	<form class = "form pt-3" [formGroup]= "caseUpdateForm">
+		<app-ng-select-shareable  [filterFieldName]="'status_id'"
+		 [mainApiPath]="requestServerpath.fd_api_url"
+		 [lableName]="'Case Status'" [bindlable]="'name'" 
+		 [bindId]="'id'" [apiPath]="CaseStatusUrlsEnum.CaseStatus_list_GET"  
+		 (valueChange)="selectionOnValueChange($event)" [ngSelectShow]="true"
+		 [multiple]="false"></app-ng-select-shareable>  
+
+	<div class="search-filter-block mb-3">
+		<div class="d-flex justify-content-center">
+			<button class="btn btn-primary mx-2" type="button" (click)="modal.dismiss('Cross click')"
+				>Cancel</button>
+			<button class="btn btn-success mx-2"
+				(click)="updateCaseStatus()" [disabled] = "caseStatusUpdateBoolean" >Update</button>
+		</div>
+	</div>
+	</form>
+ </div>
+</ng-template>
+
+<ng-template #allergiesModal let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title">Allergy Information</h4>
+		<button type="button" class="close" aria-label="Close"
+			(click)="close()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+		<div class="modal-body">
+	<section id="paging" class="mb-3 master-user">
+
+
+
+		<div class="data-table">
+			<!-- <div class="row">
+				<div class="col-12 col-sm-6 edit-block">
+					<div class="form-group field option-field mb-2 d-inline-block">
+						<ul>
+							<li>Show</li>
+							<li>
+								<select class="custom-select" name="limit" [(ngModel)]="allPage.size" id="limit"
+									(change)="allPageLimit($event.target.value)"
+									>
+									<option [value]="5">5</option>
+									<option [value]="10">10</option>
+									<option [value]="20">20</option>
+									<option [value]="30">30</option>
+									<option [value]="40">40</option>
+									<option [value]="50">50</option>
+									<option [value]="100">100</option>
+								</select>
+							</li>
+							<li>Entries</li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2">
+					
+				</div>
+			</div> -->
+			
+		<ngx-datatable class="bootstrap" [rows]="patAllergies" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+				[rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true" [externalPaging]="true"
+				[count]="alltotal" [offset]="allPage.pageNumber" [limit]="allPage.size"
+					(page)="getPatientAllergies($event)"	
+		  >
+	
+		  >
+		  
+				<ngx-datatable-column name="Allergy Type" prop="patient_allergy_type" [width]="150" [canAutoResize]="true" [draggable]="false"
+					[resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.allergy_type.name
+							||'N/A'}}"
+							container="body">
+							{{value.allergy_type.name ||'N/A'}}</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Allergy" prop="allergy" [width]="150" [canAutoResize]="true" [draggable]="false"
+					[resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name ||'N/A'}}"
+							container="body">
+							{{value.name ||'N/A'}}</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Reaction" prop="reactions" [width]="200" [canAutoResize]="true" [draggable]="false"
+					[resizeable]="true">
+					
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value||'N/A'}}"
+							container="body">
+							
+							{{value.length?value : 'N/A'}}</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Severity" prop="severity" [width]="150" [canAutoResize]="true" [draggable]="false"
+					[resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name||'N/A'}}"
+							container="body">
+							{{value.name||'N/A'}}</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Status" prop="status" [width]="150" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name ||'N/A'}}"
+						container="body">
+						{{value.name||'N/A'}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+		  	
+	
+		
+			</ngx-datatable>
+			
+		</div>
+	</section>
+		</div>
+</ng-template>
+
+
+<app-error-message #errorMessageComponent></app-error-message>

@@ -1,0 +1,106 @@
+<ng-container [formGroup]="form">
+
+  <small>Note: {{showTimeZoneComment()}}</small>
+  <div class="row form-group mb-1">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+      <label class="form-group field mb-0">Select Days* </label>
+      <div class="d-block">
+        <button class="col-md-1 btn btn-select-date"  type="button" *ngFor="let day of weekday;let i=index"
+          (click)="selectDays(day)" [disabled]="!hasDays(day.id) || disableForm"
+          [ngStyle]="selectedDays.has(day.id) ?{'background-color': '#A9A9A9','color':'white'} : {'background-color': 'white','color':'black'}">
+          {{day.name}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card-body data-table add-location-table table-responsive border-0 px-0 pt-2">
+    <table class="table table-bordered table-striped text-center mb-0" *ngIf="selectedDays.size">
+      <thead>
+        <tr>
+          <th class="border-right">Days </th>
+          <th class="border-right">Office Hours Start</th>
+          <th>Office Hours End</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container>
+          <ng-container formArrayName="timing">
+            <ng-container *ngFor="let time of form.controls['timing']['controls']; let timingIndex = index">
+              <ng-container *ngIf="selectedDays.has(time.controls['day_id'].value)" [formGroupName]="timingIndex">
+                <tr>
+                  <td>{{time.get('name').value}}
+                    <ng-container *ngIf="childValues.timeRange">
+                      <br>
+                      <span class="color-green" style="font-weight: 600;">(
+                        {{ timeRange[timingIndex]?.start_time |toTwelveHours }} -
+                        {{timeRange[timingIndex]?.end_time |toTwelveHours }} )</span>
+                    </ng-container>
+                  </td>
+                  <td class="px-2">
+                    <input type="time" class="form-control mb-0" formControlName="start_time"
+                      (change)="formChange(time)">  
+                    <!-- <label *ngIf="time.get('start_time').errors?.startingDateError">start date errror</label>
+                    <label *ngIf="time.get('start_time').errors?.required">aslkndklsand</label>
+                    <label *ngIf="time.get('start_time').errors?.newerr">434234</label> -->
+                  </td>
+                  <td class="px-2">
+                    <input type="time" class="form-control mb-0" formControlName="end_time" (change)="formChange(time)">
+                  </td>
+                  <td class="px-2">
+                    <!-- <select class="form-select mb-0" formControlName="replicate"
+                      (change)="replicate($event.target.value, timingIndex)">
+                      <option value="">(Replicate)</option>
+                      <option *ngIf="index!=0" value="all">All</option>
+                      <option value="below">Below</option>
+                      <option *ngIf="index!=form.get('timing')['controls'].length-1" value="above">Above</option>
+                    </select>  -->
+                    <div class="nav-item dropdown">
+                      <button [disabled]="time.controls['replicate'].disabled"
+                        class="btn btn-outline-secondary bg-white" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Replicate
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a *ngIf="!isFirst(time.get('day_id').value);" class="dropdown-item" href="javascript:void(0);"
+                          (click)="replicate('above', timingIndex)">Above</a>
+                        <a class="dropdown-item" href="javascript:void(0);"
+                          (click)="replicate('all', timingIndex)">All</a>
+                        <a *ngIf="!isLast(time.get('day_id').value);" class="dropdown-item" href="javascript:void(0);"
+                          (click)="replicate('below', timingIndex)">Below</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr
+                  *ngIf="(time.get('start_time').value && time.get('end_time').value) && time.get('start_time').value===time.get('end_time').value">
+                  <td colspan="4">
+                    <span class="form-text text-muted danger">
+                      Start time and End time should be different.</span>
+                  </td>
+                </tr>
+                <tr *ngIf="time.errors?.InvalidBoundries">
+                  <td colspan="4">
+                    <span class="form-text text-muted danger">
+                      Start time and End time should be in boundries.</span>
+                  </td>
+                </tr>
+
+              </ng-container>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+
+	<ng-container *ngIf="showReplicateAllButton">
+		<div  class="d-block w-fit-div mt-2"> 
+			<button [disabled]="this.form.invalid || (this.childValues.selectedTimings && this.childValues.selectedTimings.length==0)" class="btn btn-default round-btn float-right" (click)="openModel()" href="javascript:void(0)">
+				<i  class="fa fa-bars all_Scroll me-1" aria-hidden="true"></i><span >Replicate</span>
+				
+			</button>
+		</div>
+	</ng-container> 
+
+  </div>
+</ng-container>

@@ -1,0 +1,122 @@
+ng5-slider .ng5-slider .ng5-slider-pointer {
+    width: 26px ;
+    height: 26px;
+    top: -12px;
+}
+ng5-slider .ng5-slider .ng5-slider-pointer:after {
+    top: 9px;
+    left: 9px;
+}
+ng5-slider .ng5-slider-pointer {
+    width: 20px !important;
+    height: 20px !important;
+    top: -9px !important;
+}
+.ng5-slider .ng5-slider-pointer {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    top: -9px;
+    background-color: #0db9f0;
+    z-index: 3;
+    border-radius: 20px;
+}
+
+.required-increment {
+    border: 1px solid red;
+	background-color: #dd9da3;
+
+}
+
+
+
+
+/* 
+.range-slider{
+    margin-bottom: 0px;
+}
+.range-slider input {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: none;
+    cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    height: 100%;
+    min-height: 28px;
+    overflow: hidden;
+    width: 100%;
+}
+.range-slider input:focus {
+    box-shadow: none;
+    outline: none;
+}
+.range-slider input::-webkit-slider-runnable-track {
+    background: #F7CAC9;
+    content: '';
+    height: 2px;
+    pointer-events: none;
+}
+.range-slider input::-webkit-slider-thumb {
+    height: 15px;
+    width: 15px;
+    -webkit-appearance: none;
+    appearance: none;
+    background:#D26537;
+    border-radius: 30px;
+    box-shadow: 5px 0 0 -8px #c7c7c7;
+    margin-top: -7px;
+    border: 1px solid #D26537;
+}
+.range-slider input::-moz-range-track {
+    width: 240px;
+    height: 2px;
+}
+.range-slider input::-moz-range-thumb {
+    height: 28px;
+    width: 28px;
+    background: #fff;
+    border-radius: 100%;
+    border: 1px solid #777;
+    position: relative;
+}
+.range-slider input::-moz-range-progress {
+    height: 2px;
+    background: #3399aa;
+    border: 0;
+    margin-top: 0;
+}
+.range-slider input::-ms-track {
+    background: transparent;
+    border: 0;
+    border-color: transparent;
+    border-radius: 0;
+    border-width: 0;
+    color: transparent;
+    height: 2px;
+    margin-top: 10px;
+    width: 240px;
+}
+.range-slider input::-ms-thumb {
+    height: 18px;
+    width: 28px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #777;
+}
+.range-slider input::-ms-fill-lower {
+    background: #e33d44;
+    border-radius: 0;
+}
+.range-slider input::-ms-fill-upper {
+    background: #c7c7c7;
+    border-radius: 0;
+}
+.range-slider input::-ms-tooltip {
+    display: none;
+} */

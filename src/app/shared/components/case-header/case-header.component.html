@@ -1,0 +1,226 @@
+<div class="media user-info pt-2">
+  <img class="user-img" src="{{patient?.URI||'assets/images/user.png'}}" alt="patient-profile">
+  <div class="media-body">
+    <div class="row">
+      <div class="col-12 d-flex align-items-center justify-content-between flex-wrap">
+        <h5 class="user-detail my-0 ms-2"><span>{{patient?.first_name | titlecase}} {{patient?.middle_name | titlecase}}
+            {{patient?.last_name | titlecase}} </span><small class="ml-0"><span>
+				<span *ngIf="case?.is_transferring_case!=0"><i  class="fa fa-exchange-alt" style="color:#00a650" title="Transferred Case"></i></span>
+				(</span> {{patient?.dob |calculateAge}}
+            <span class="line-space">|</span> {{patient?.dob | date:datePipeService.slashDateFormat_MM_dd_yyyy()}} <span class="line-space">|</span>
+            {{patient?.gender|titlecase}} <span>)</span></small><small> Case Type:
+            {{getCaseTypeName(case?.case_type?.slug)}}</small>
+            <button class="mb-0 ms-2 btn btn-success border-btn" (click)="viewPatientAllergies()"> Allergy Info</button>
+          </h5>
+            
+            <ul class="nav justify-content-start justify-content-md-end align-items-baseline patient-id ms-1 ms-md-2">
+              <li>
+                <div (click)="goToProfile()" class="btn custom-tooltip"> {{idToChartId(patient?.id) | ssnFormatPipe}}
+                  <div class="custom-tooltip-bottom">
+    
+                    <!-- <hr> -->
+                    <span> {{patient?.first_name | titlecase}} {{patient?.middle_name | titlecase}}
+                      {{patient?.last_name | titlecase}} </span>
+                    <hr>
+                    <i></i>
+                    <span> {{patient?.insurance_name}}</span>
+                  </div>
+                </div>
+              </li>
+              <li><span class="line">/</span></li>
+              <li>
+                <div class="btn">{{patient?.patient_cases_count}}</div>
+              </li>
+              <li><span class="line">/</span></li>
+              <li>
+                <div class="btn"> {{case?'' + case.id: 'Case Id: N/A'}} </div>
+              </li>
+            </ul>
+      </div>
+      <div class="col-md-12 custom-width">
+      <ul>
+        <li>
+            <i class="icon-phone ms-1" style="font-size:0.875rem;"></i>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+            ngbTooltip=" {{(case?.basic_information?.cell_phone | phoneFormatPipe) || 'N/A'}}">
+            {{(case?.basic_information?.cell_phone | phoneFormatPipe) || 'N/A'}}
+          </span>
+        </li>
+
+        <li> 
+          <i class="icon-envelope" style="font-size: 0.9375rem; top: 0.125rem; position: relative;"></i>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+            ngbTooltip="  {{case?.basic_information?.email || 'N/A'}}">
+              {{case?.basic_information?.email || 'N/A'}}
+          </span>
+        </li>
+
+        <li>
+          <span class="font-600">Weight :</span>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{patient?.weight_lbs || 'N/A'}}
+          {{patient?.weight_lbs? 'lbs' : ''}}">
+          {{patient?.weight_lbs || 'N/A'}}
+          {{patient?.weight_lbs? 'lbs' : ''}}
+        </span>
+        </li>
+
+        <li>
+          <span class="font-600">Height :</span>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{patient?.height_ft && patient?.height_in? patient?.height_ft +' Ft ' + patient?.height_in + ' In' :
+            'N/A'}}">
+            {{patient?.height_ft && patient?.height_in? patient?.height_ft +' Ft ' + patient?.height_in + ' In' :
+            'N/A'}}
+          </span>
+        </li>
+
+        <li>
+          <span class="font-600" *ngIf="nf2Status?.status">NF2 :</span> 
+          <span [ngClass]="nf2Status?.status=='Yes' ? 'text-success' :nf2Status?.status=='No'?'text-danger':''">
+            {{nf2Status?.status }} 
+          </span> 
+          <span *ngIf="nf2Status?.status=='Yes'">Date:</span> 
+          <span>{{nf2Status?.date | date: datePipeService.slashDateFormat_MM_dd_yyyy() || 'N/A' }} </span>
+        </li>
+
+        <li>
+          <span class="font-600">DOA :</span>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                ngbTooltip="  {{case?.accident?.accident_information?.accident_date ? (case?.accident?.accident_information?.accident_date |
+                  date:datePipeService.slashDateFormat_MM_dd_yyyy()) : case?.accident_information?.accident_date ?
+                  (case?.accident_information?.accident_date | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}">
+                  
+                  {{case?.accident?.accident_information?.accident_date ? (case?.accident?.accident_information?.accident_date |
+                    date:datePipeService.slashDateFormat_MM_dd_yyyy()) : case?.accident_information?.accident_date ?
+                    (case?.accident_information?.accident_date | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+          </span>
+        </li>
+        <li>
+          <span class="font-600">DOAdm :</span>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          ngbTooltip=" {{(case?.date_of_admission | date:datePipeService.slashDateFormat_MM_dd_yyyy()) || 'N/A'}}">
+          {{(case?.date_of_admission | date:datePipeService.slashDateFormat_MM_dd_yyyy()) || 'N/A'}}
+        </span>
+        </li>
+       
+      </ul>
+      <ul>
+        <li class="case-header">
+          <i class="fa fa-gavel"></i>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                  ngbTooltip="{{case?.caseAttorney?.firm?.name ? case?.caseAttorney?.firm?.name : 'N/A' }}">
+                  {{case?.caseAttorney?.firm?.name ? case?.caseAttorney?.firm?.name : 'N/A'}}
+          </span>
+        </li>
+        <li class="case-header">
+          <span class="ms-0"><i class="fa fa-umbrella"></i></span>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{primary_insur ? primary_insur : 'N/A'}}">
+            {{primary_insur ? primary_insur : 'N/A'}}
+          </span>
+        </li>
+        <li class="case-header">
+         <span class="font-600">Claim :</span>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+              ngbTooltip="{{claim_no ? claim_no : 'N/A'}}">
+              {{claim_no ? claim_no : 'N/A'}}
+          </span>
+        </li>
+          <li class="appt-date">
+          <span><i class="fa fa-address-card" aria-hidden="true"></i></span>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{case?.basic_information?((case?.basic_information?.mail_address?.street  ? case?.basic_information?.mail_address?.street + ', ' : ' ') + (case?.basic_information?.mail_address?.apartment  ? case?.basic_information?.mail_address?.apartment + ' ' : ' ') + (case?.basic_information?.mail_address?.city ? case?.basic_information?.mail_address?.city + ', ' : '') + (case?.basic_information?.mail_address?.state ? case?.basic_information?.mail_address?.state : '') + ' ' + (case?.basic_information?.mail_address?.zip ? case?.basic_information?.mail_address?.zip : '')):'N/A'}}">
+          
+          {{case?.basic_information?((case?.basic_information?.mail_address?.street  ? case?.basic_information?.mail_address?.street + ', ' : ' ') + (case?.basic_information?.mail_address?.apartment  ? case?.basic_information?.mail_address?.apartment + ' ' : ' ') + (case?.basic_information?.mail_address?.city ? case?.basic_information?.mail_address?.city + ', ' : '') + (case?.basic_information?.mail_address?.state ? case?.basic_information?.mail_address?.state : '') + ' ' + (case?.basic_information?.mail_address?.zip ? case?.basic_information?.mail_address?.zip : '')):'N/A'}}
+         </span>
+        </li>
+        <li class="appt-date">
+          <span class="font-600">Last Apt :</span>
+          <span class="tooltip-outer ms-0" tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{lastAppt?.scheduled_date_time ? (lastAppt?.scheduled_date_time | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}">
+            {{lastAppt?.scheduled_date_time ? (lastAppt?.scheduled_date_time | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+          </span>
+        </li>
+        <li class="appt-date">
+          <span class="font-600">Next Apt :</span>
+          <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+              ngbTooltip="{{nextAppt?.scheduled_date_time ? (nextAppt?.scheduled_date_time | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}">
+              {{nextAppt?.scheduled_date_time ? (nextAppt?.scheduled_date_time | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+            </span>
+        </li>
+      </ul>
+    </div>
+    </div>
+  </div>
+  <ng-template #allergiesModal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Allergy Information</h4>
+      <button type="button" class="close" aria-label="Close"
+      (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+      <div class="modal-body">
+    <section id="paging" class="mb-3 master-user">
+  
+  
+  
+      <div class="data-table">
+      <ngx-datatable class="bootstrap" [rows]="patAllergies" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+          [rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true" [externalPaging]="true"
+          [count]="alltotal" [offset]="allPage.pageNumber" [limit]="allPage.size" 
+            (page)="getPatientAllergies($event)"	
+        >
+    
+        >
+        
+          <ngx-datatable-column name="Allergy Type" prop="patient_allergy_type" [width]="150" [canAutoResize]="true" [draggable]="false"
+            [resizeable]="false">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.allergy_type.name
+                ||'N/A'}}"
+                container="body">
+                {{value.allergy_type.name ||'N/A'}}</div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Allergy" prop="allergy" [width]="150" [canAutoResize]="true" [draggable]="false"
+            [resizeable]="false">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name ||'N/A'}}"
+                container="body">
+                {{value.name ||'N/A'}}</div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Reaction" prop="reactions" [width]="200" [canAutoResize]="true" [draggable]="false"
+            [resizeable]="true">
+            
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value||'N/A'}}"
+                container="body">
+                
+                {{value.length?value : 'N/A'}}</div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Severity" prop="severity" [width]="150" [canAutoResize]="true" [draggable]="false"
+            [resizeable]="false">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name||'N/A'}}"
+                container="body">
+                {{value.name||'N/A'}}</div>
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column name="Status" prop="status" [width]="150" [canAutoResize]="true" [draggable]="false"
+          [resizeable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name ||'N/A'}}"
+              container="body">
+              {{value.name||'N/A'}}</div>
+          </ng-template>
+        </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+    </section>
+      </div>
+  </ng-template>
+</div>

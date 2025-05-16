@@ -1,0 +1,92 @@
+<ng-container *ngIf="links && links.length>0">
+	<div class="col-12 bg-white px-3 pt-2">
+		<div class="media user-info">
+			<img class="user-img" src="{{imagePath||'assets/images/user.png'}}" alt="user">
+			<div class="media-body">
+				<div class="row">
+					<div class="col-md-12">
+						<h5 class="mt-3"> {{data.firstName}} {{data.middleName}} {{data.lastName}}
+							<span class="icon-info color-green tooltip-outer" tooltipClass="table-custom-tooltip"
+								ngbTooltip="Chief Complaints: {{data.chiefComplaints}}"><img class="info-icon"
+									style="width: 15px; height: 15px; border: none; margin-right: 0;"
+									src="{{imagePath||'assets/images/info-icon.png'}}" alt="user"></span>
+							<small><span>(</span> {{data.dob |calculateAge}} <span class="line-space">|</span>
+								{{data.dob|date:'MMM d, y'}} <span class="line-space">|</span>
+								{{data?.gender|titlecase}}
+
+								<!-- 5ft 8in/185 lbs --> <span>)</span>
+							</small>
+							<small style="color:#4b4b4b;">
+								Height:
+								<ng-container *ngIf="data?.height">
+									<span class="font-weight-normal">{{data?.height }}</span>
+								</ng-container>
+
+								<ng-container *ngIf="!(data?.height)">
+									<span class="font-weight-normal">N/A</span>
+								</ng-container>
+							</small>
+
+							<small style="color:#4b4b4b;">
+								Weight:
+								<ng-container *ngIf="data?.weight">
+									<span class="font-weight-normal">{{ data?.weight}}</span>
+								</ng-container>
+
+								<ng-container *ngIf="!(data?.weight)">
+									<span class="font-weight-normal">N/A</span>
+								</ng-container>
+							</small>
+
+							<small style="color:#4b4b4b;">
+								DOA:
+								<ng-container *ngIf="data?.accidentDate && data?.accidentDate.length>0">
+									<span class="font-weight-normal">{{data?.accidentDate|date:'MMM d, y'}}</span>
+								</ng-container>
+								<ng-container *ngIf="!(data?.accidentDate) || (data?.accidentDate.length==0)">
+									<span class="font-weight-normal">N/A</span>
+								</ng-container>
+							</small>
+						</h5>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<hr class="line-bottom">
+		<aside class="sidebar md-btn-list position-relative">
+			<button class="opener left-opener position-absolute p-0" type="button"><span
+					class="icon-arrow-left"></span></button>
+			<div class="sidebar-frame h-100">
+				<nav class="left-nav text-center">
+					<ul class="list-unstyled">
+						<li *ngFor="let link of links" class="button--wayra"
+							[class.show]="findInLink(link, router.url.substr(1))"
+							[class.dropdown]="link && link.subLinks && link.subLinks.length>0"
+							[class.active]="isActive(link)">
+							<a *ngIf="link && link.subLinks && link.subLinks.length>0" class="d-block"
+								href="javascript:void(0)" (click)="toggleDrop(link)"><span [class]="link.icon"></span>
+								{{link.name}} </a>
+							<a *ngIf="!(link && link.subLinks && link.subLinks.length>0)" [routerLink]="[link.link]"
+								class="d-block" (click)="resetLink(link)" href="javascript:void(0)"><span
+									[class]="link.icon"></span> {{link.name}} <button
+									*ngIf="(visitType=='reEvaluation' || visitType=='followUp') && link.hasCarryForwardButton && isActive(link) &&mainService.isenableSaveRecordMedicalDoctor() "
+									class="btn btn-light carry-farword" (click)="toggleCarryForward(link)"><span
+										class="icon-carry"></span></button>
+							</a>
+							<!-- <ul class="dropdown-menu p-0 m-0 w-100"
+								[class.show]="findInLink(link, router.url.substr(1))"
+								*ngIf="link && link.subLinks && link.subLinks.length>0 && (findInLink(link, router.url.substr(1))||link.drop)">
+								<li *ngFor="let subLinks of link.subLinks"
+									[class.active]="subLinks.link==router.url.substr(1)">
+									<a class="d-block" [routerLink]="[link.link + '/' + subLinks.link]"><span
+											[class]="subLinks.icon"></span> {{subLinks.name}}</a>
+								</li>
+							</ul> -->
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</aside>
+	</div>
+</ng-container>

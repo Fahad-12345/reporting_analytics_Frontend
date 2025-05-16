@@ -1,0 +1,225 @@
+<ng-template #defaultTemplate let-day="day" let-openDay="openDay" let-locale="locale"
+	let-tooltipPlacement="tooltipPlacement" let-highlightDay="highlightDay" let-unhighlightDay="unhighlightDay"
+	let-eventClicked="eventClicked" let-tooltipTemplate="tooltipTemplate" let-tooltipAppendToBody="tooltipAppendToBody">
+	  
+	<div *ngIf="eventCount===0"
+	 [style.background-color]="disable? 'lightgrey' : subject.currentSelectedDate ==  day.date.toString() ? 'lightblue' : 'white'"
+	(click)="highlightCell(extraTempDate)" (dblclick)="open(extraTempDate)" class="cal-cell-top add-assignment" [ngClass]="{'dateMargin': eventCount == 0}"
+		style="min-height: 100px !important;">
+		<div class="row"
+			style=" height: 20px; margin-top: 75px; margin-left: 0 !important; margin-right: 0 !important;">
+			<div class="col-md-9 col-lg-9"></div>
+			<span class="col-md-3 cal-day-number"
+                 				
+				style=" cursor: pointer;margin-top: 0 !important; margin-right:0 !important; padding-left: 0 !important; text-align: right;">
+				
+				{{ day.date | calendarDate:'monthViewDayNumber':locale }}
+			</span>
+		</div>
+	</div>
+	<ng-template #popTemplateOne>
+		<div class="popover-top custom-popover-style">
+			<div class="popover-header" [style.background-color]="colorApp">
+				<span tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinicID.facility_name?clinicID.facility_name+'-':'' }}{{clinicID.name }}"> {{clinicID?.facility?.qualifier }}-{{clinicID.qualifier }}</span>
+				<span class="popover-icon d-inline-flex float-right">
+					<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_edit)"
+					 class="popover-icon-edit" href="javascript:void(0)"
+						(click)="updateFunction(eventOne,extraTempDate)">
+						<i class="icon-pencil"></i>
+					</a>
+					<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_delete)"
+					 class="popover-icon-remove" href="javascript:void(0)"
+						(click)="deleteModalFunction(eventOne,allEvent,extraTempDate)">
+						<i class="icon-remove"></i>
+					</a>
+				</span>
+				<a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+			</div>
+			<div class="popover-desc">
+				<ul class="list-unstyled mb-0">
+					<li>{{eventOne.current_dateList_event.startTime }} - {{eventOne.current_dateList_event.endTime }}
+					</li>
+					<li><span class="font-bold">No of Providers:</span> {{eventOne.current_dateList_event.no_of_doctors}}</li>
+					<li *ngIf="eventOne.availableDoctors &&eventOne.availableDoctors.length>0 ">Assigned Providers</li>
+					<li class="py-0">
+						<span *ngFor="let doc of eventOne.availableDoctors; let i=index"
+							style="font-size: 14px; float: left;margin-bottom: 2px;">
+							{{doc.doctor.userBasicInfo.first_name}} {{doc.doctor.userBasicInfo.middle_name}} {{doc.doctor.userBasicInfo.last_name}}<span *ngIf="i != (eventOne.availableDoctors.length - 1)">, &nbsp;</span>
+						</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</ng-template>
+
+
+	<ng-template #popTemplateTwo>
+		<div class="popover-top custom-popover-style">
+			<div class="popover-header" [style.background-color]="colorApp">
+				<span tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinicID.facility_name?clinicID.facility_name+'-':'' }}{{clinicID.name }}"> {{clinicID?.facility?.qualifier }}-{{clinicID.qualifier }}</span>
+				<span class="popover-icon d-inline-flex float-right">
+					<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_edit)"
+					 class="popover-icon-edit" href="javascript:void(0)"
+						(click)="updateFunction(eventTwo,extraTempDate)">
+						<i class="icon-pencil"></i>
+					</a>
+					<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_delete)"
+					 class="popover-icon-remove" href="javascript:void(0)"
+						(click)="deleteModalFunction(eventTwo,allEvent,extraTempDate)">
+						<i class="icon-remove"></i>
+					</a>
+				</span>
+				<a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+			</div>
+			<div class="popover-desc">
+				<ul class="list-unstyled mb-0">
+					<li>{{eventTwo.current_dateList_event.startTime }} - {{eventTwo.current_dateList_event.endTime }}
+					</li>
+					<li><span class="font-bold">No of Providers:</span> {{eventTwo.current_dateList_event.no_of_doctors}}</li>
+					<li *ngIf="eventTwo.availableDoctors && eventTwo.availableDoctors.length>0">Assigned Providers</li>
+					<li class="py-0">
+						<span *ngFor="let doc of eventTwo.availableDoctors; let i=index">
+							{{doc.doctor.userBasicInfo.first_name}} {{doc.doctor.userBasicInfo.middle_name}} {{doc.doctor.userBasicInfo.last_name}}<span *ngIf="i != (eventTwo.availableDoctors.length - 1)">, &nbsp;</span>
+						</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</ng-template>
+
+
+	<div *ngIf="eventCount>=1 && eventOne.current_dateList_event " [(style.background-color)]="disable? 'lightgrey' : cellBackColor"
+		(click)="highlightCell(extraTempDate)" (dblclick)="open(extraTempDate)" class=" row" style="text-align:left;margin-left:0; margin-right: 0;"
+		[ngClass]="{'bg-none': eventCount == 2, 'cell-margin': eventCount == 1}">
+		<div class="doc-label col-md-12">
+
+			<div class="doc-label col-md-12" [style.background-color]="colorApp" [ngbPopover]="popTemplateOne"
+				[placement]="eventOne.placement" container="body" style="width:100%;background-color: transparent; color: white">
+				<div class="row" style="margin:0%; padding-right: 3px; flex-wrap:nowrap;">
+					<div class="col-md-11 text-truncate"
+						style="font-size: 12px !important;padding-left:2px !important; letter-spacing: -0.2px;">
+						{{eventOne.current_dateList_event.startTime }} - {{eventOne.current_dateList_event.endTime }} </div>
+					<span class="col-md-1 dot" [style.background-color]="colorApp=='#ff0000' ? 'black' :'#ff0000' " style="padding:0;margin-top:4px;"
+						*ngIf="eventOne.availableDoctors.length < eventOne.no_of_doctors"></span>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div *ngIf="eventCount>=2  && eventTwo.current_dateList_event" [(style.background-color)]="disable? 'lightgrey' : cellBackColor"
+		(click)="highlightCell(extraTempDate)" (dblclick)="open(extraTempDate)" class=" row" style="text-align:left;margin-left:0; margin-right: 0;"
+		[ngClass]="{'bg-none': i == 2, 'cell-margin': eventCount == 1}">
+		<div class="doc-label col-md-12">
+			<div class="doc-label col-md-12" [style.background-color]="colorApp" [ngbPopover]="popTemplateTwo"
+				[placement]="eventTwo.placement" container="body" style="width:100%;background-color: transparent; color: white">
+				<div class="row" style="margin:0%">
+					<div class="col-md-11 text-truncate"
+						style="font-size: 12px !important;padding-left:2px !important;">
+						{{eventTwo.current_dateList_event.startTime }} - {{eventTwo.current_dateList_event.endTime}}</div>
+					<span class="col-md-1 dot" [style.background-color]="colorApp=='#ff0000' ? 'black' :'#ff0000' " style="padding:0;margin-top:4px;"
+						*ngIf="eventTwo.availableDoctors.length < eventTwo.no_of_doctors"></span>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div *ngIf="eventCount>=3  " [(style.background-color)]="disable? 'lightgrey' : cellBackColor"
+		(click)="highlightCell(extraTempDate)" (dblclick)="open(extraTempDate)" class=" row assignment-popover" style="text-align:left;margin-left:0; margin-right: 0;"
+		[ngClass]="{'bg-none': i == 2, 'cell-margin': eventCount == 1}">
+		<ng-template #popContent>
+			<h5 class="assign-popper-haeder" [style.background-color]="colorApp">
+				<span>Assignments</span>
+				<span (click)="popHide.close()">
+					<i class="fa fa-times"></i>
+				</span>
+			</h5>
+			<div class="assign-popper-body py-2">
+				<div class="assign-popper-body-hold">
+					<div *ngFor="let event of CurrDateApp;let i = index; trackBy:trackByEventId;">
+						<div *ngIf="event.current_dateList_event" class="event d-flex" [style.background-color]="colorApp"
+							style="background-color: transparent;text-align: left; width: 91% !important; margin: 0 20px 0 10px; height: auto;"
+							[ngbPopover]="popTemplatemore" [placement]="event.placement" container="body">
+							<div  class="col-md-11 text_truncate" style="color:white;">
+								{{event.current_dateList_event.startTime }} - {{event.current_dateList_event.endTime}}
+							</div>
+							<span style="padding:0;  margin-top: 5px" *ngIf="event.availableDoctors.length < event.no_of_doctors" class="dot" [style.background-color]="colorApp=='#ff0000' ? 'black' :'#ff0000' ">
+	
+							</span>
+						</div>
+						<ng-template #popTemplatemore>
+							<div class="popover-top custom-popover-style">
+								<div class="popover-header" [style.background-color]="colorApp">
+									<span tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinicID.facility_name?clinicID.facility_name+'-':'' }}{{clinicID.name }}"> {{clinicID?.facility?.qualifier }}-{{clinicID.qualifier }}</span>
+									<span class="popover-icon d-inline-flex float-right">
+										<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_edit)"
+										 class="popover-icon-edit" href="javascript:void(0)"
+											(click)="updateFunction(event,extraTempDate)">
+											<i class="icon-pencil"></i>
+										</a>
+										<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_delete)"
+										 class="popover-icon-remove" href="javascript:void(0)"
+											(click)="deleteModalFunction(event,allEvent,extraTempDate)">
+											<i class="icon-remove"></i>
+										</a>
+									</span>
+									<a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+								</div>
+								<div class="popover-desc">
+									<ul class="list-unstyled mb-0">
+										<li *ngIf="event.current_dateList_event">{{event.current_dateList_event.startTime }} - {{event.current_dateList_event.endTime}}</li>
+										<li><span class="font-bold">No of Providers:</span> {{event.current_dateList_event.no_of_doctors}}</li>
+										<li *ngIf=" event.availableDoctors && event.availableDoctors.length>0">Assigned Providers</li>
+										<li class="py-0">
+											<span *ngFor="let doc of event.availableDoctors; let i=index">
+												{{doc.doctor.userBasicInfo.first_name }} {{doc.doctor.userBasicInfo.middle_name}} {{doc.doctor.userBasicInfo.last_name}} <span *ngIf="i != (event.availableDoctors.length - 1)">, &nbsp;</span>
+											</span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</ng-template>
+					</div>
+				</div>
+			</div>
+			<div style="width: 100%; "></div>
+		</ng-template>
+
+		<div class="waves-light" style="height:100%;background-color: transparent;margin-top: -3px;" [autoClose]="false"
+			(click)="openPop(popHide)" [ngbPopover]="popContent" #popHide="ngbPopover"
+			[placement]="eventOne.placement">
+			{{eventCount - 2}} more
+		</div>
+	</div>
+	<div (click)="highlightCell(extraTempDate)" (dblclick)="open(extraTempDate)" [(style.background-color)]="disable? 'lightgrey' : cellBackColor" class="cal-cell-top"
+		*ngIf="eventCount >= 2" [ngClass]="{'dateMargin': eventCount == 0}">
+
+		<span style="margin-top: 75px;margin-right:8px !important;" class="cal-day-number"
+			[style.margin-top]="eventCount >2 ? '4px' : '23px' ">
+
+			{{ day.date |
+			calendarDate:'monthViewDayNumber':locale }}</span>
+	</div>
+	<div (click)="highlightCell(extraTempDate)" (dblclick)="open(extraTempDate)" [style.background-color]="disable? 'lightgrey' : cellBackColor" class="cal-cell-top"
+		*ngIf="eventCount === 1" [ngClass]="{'dateMargin': eventCount == 0}">
+
+		<span class="cal-day-number" style="margin-top: 0px !important;margin-right:8px !important; ">
+			{{
+			day.date |
+			calendarDate:'monthViewDayNumber':locale }}</span>
+	</div>
+
+
+
+</ng-template>
+
+<ng-template [ngTemplateOutlet]="customTemplate || defaultTemplate" [ngTemplateOutletContext]="{
+          day: day,
+          openDay: openDay,
+          locale: locale,
+          tooltipPlacement: tooltipPlacement,
+          highlightDay: highlightDay,
+          unhighlightDay: unhighlightDay,
+          eventClicked: eventClicked,
+          tooltipTemplate: tooltipTemplate,
+          tooltipAppendToBody: tooltipAppendToBody
+        }"></ng-template>

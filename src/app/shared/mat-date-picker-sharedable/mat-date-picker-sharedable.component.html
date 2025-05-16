@@ -1,0 +1,19 @@
+<form [formGroup]="dateForm" >
+<div  class= {{classes}}
+[ngClass]="{'focused': dateForm.get('dateControl').value != '' && dateForm.get('dateControl').value != null || (dateForm.get('dateControl').errors?.invalid_date) || ( dateForm.get('dateControl').errors?.invalid_date  && dateForm.get('dateControl').errors?.invalid_date?.text != DateFormat) }">
+<label *ngIf="lableName" class="form-label" for="schedule_date">{{lableName}}</label>
+<input  appInputDateMask
+[appMaskDate]="dateForm.get('dateControl').value"
+[matDatepicker]="date_picker" [placeholder]="placeholder"
+formControlName="dateControl"    [disabled]="disabled" (click)="onClickControl($event)"
+  class="form-control form-input" [max]="max" [min]="min" (dateChange)="changeDate()">
+<span *ngIf=" dateForm.get('dateControl').value"
+  (click)="onClose()" class="icon-plus date-cross-icon"></span>
+<mat-datepicker-toggle [for]="date_picker"></mat-datepicker-toggle>
+<mat-datepicker #date_picker></mat-datepicker>
+<small class="form-text text-muted danger"
+  *ngIf="dateForm.get('dateControl').errors?.invalid_date || dateForm.get('dateControl').errors?.invalid_date  && dateForm.get('dateControl').errors?.invalid_date?.text != DateFormat">
+  Date format should be accurate
+  </small>
+</div>
+</form>

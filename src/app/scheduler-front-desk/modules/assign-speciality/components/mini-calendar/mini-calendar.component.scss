@@ -1,0 +1,155 @@
+$dayBase: 30px;
+$cloud:'#ccc';
+$base:5px;
+$concrete:'#fff';
+$seafoam:'blue';
+$white:'#fff';
+$teal:'black';
+$light-blue-grey:'#888';s
+.calendar {
+  display: block;
+  // width: $dayBase * 7;
+  border: 1px solid #e1e1e1;
+  margin: 0 auto;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .calendar-navs {
+    background-color: $cloud;
+  }
+
+  .month-nav {
+    padding: $base;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .year-nav {
+    padding: $base;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: 'Montserrat';
+  }
+
+  .month-grid {
+    .day-names {
+      display: flex;
+      flex-direction: row;
+      background: $concrete;
+      border-bottom-right-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+    .weeks {
+      display: flex;
+      flex-direction: column;
+    }
+    .week {
+      display: flex;
+      flex-direction: row;
+    }
+    .week-date,
+    .day-name {
+      text-align: center;
+      padding: $base;
+      display: block;
+      width: $dayBase;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .week-date {
+      height: $dayBase;
+      position: relative;
+
+      .date-text {
+        z-index: 10;
+        font-size: 10px;
+        font-family: 'Montserrat', sans-serif;
+      }
+
+      &::after {
+        content: '';
+        height: $dayBase * 0.9;
+        width: $dayBase * 0.9;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        transition: background-color 150ms linear, color 150ms linear;
+        z-index: 1;
+      }
+
+      &.enabled {
+        cursor: pointer;
+        &:hover {
+          &:after {
+            background-color: $seafoam;
+          }
+        }
+      }
+      &.selected {
+        color: $white;
+        &:after {
+          background-color: $teal;
+        }
+        &:hover {
+          &:after {
+            background-color: $teal;
+          }
+        }
+      }
+
+      &.disabled {
+        color: $light-blue-grey;
+      }
+    }
+
+    .today {
+      font-weight: bold;
+    }
+  }
+} 
+.selected,
+.selected .date-text{
+  background-color: #006228;
+  color: #fff
+}
+
+@media (min-width: 768px) {
+  .seven-cols .col-md-1,
+  .seven-cols .col-sm-1,
+  .seven-cols .col-lg-1  {
+    flex: 0 0 14.285714285714285714285714285714%;
+    max-width: 14.285714285714285714285714285714%;
+  }
+}
+
+@media (min-width: 992px) {
+  .seven-cols .col-md-1,
+  .seven-cols .col-sm-1,
+  .seven-cols .col-lg-1 {
+    flex: 0 0 14.285714285714285714285714285714%;
+    max-width: 14.285714285714285714285714285714%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .seven-cols .col-md-1,
+  .seven-cols .col-sm-1,
+  .seven-cols .col-lg-1 {
+    flex: 0 0 14.285714285714285714285714285714%;
+    max-width: 14.285714285714285714285714285714%;
+  }
+}
+.date-hover:hover{
+  border: 1px solid #ccc;
+}
+.day-color{
+  color: #006228
+}

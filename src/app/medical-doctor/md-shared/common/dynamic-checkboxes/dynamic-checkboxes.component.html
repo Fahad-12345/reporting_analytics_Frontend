@@ -1,0 +1,32 @@
+<!--<li class="list-inline-item text-start" style="min-width: inherit;">
+  <label for="check-4" class="d-block chkbox position-relative m-0">
+    <input id="check-4" checked="checked" type="checkbox">
+    <span class="fake-input position-absolute"></span>
+    <span class="fake-label d-block">2</span>
+  </label>
+</li>
+<li class="list-inline-item text-start" style="min-width: inherit;">
+  <label for="check-5" class="d-block chkbox position-relative m-0">
+    <input id="check-5" type="checkbox">
+    <span class="fake-input position-absolute"></span>
+    <span class="fake-label d-block">3</span>
+  </label>
+</li>
+<li class="list-inline-item text-start" style="min-width: inherit;">
+  <label for="check-6" class="d-block chkbox position-relative m-0">
+    <input id="check-6" type="checkbox">
+    <span class="fake-input position-absolute"></span>
+    <span class="fake-label d-block">4</span>
+  </label>
+</li>-->
+
+<div [formGroup]="checkboxGroup" style="display: inline-block">
+<li *ngFor="let checkbox of checkboxGroup.controls['checkboxes']['controls']; let i = index" formArrayName="checkboxes"
+    class="list-inline-item text-start" style="min-width: inherit;">
+  <label for="{{fieldName}}-{{checkBoxesData[i].id}}" class="d-block chkbox position-relative m-0" [formGroupName]="i">
+    <input id="{{fieldName}}-{{checkBoxesData[i].id}}" [name]="checked" type="checkbox" formControlName="checked" >
+    <span class="fake-input position-absolute"></span>
+    <span class="fake-label d-block">{{checkbox.value.name}}</span>
+  </label>
+</li>
+</div>

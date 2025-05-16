@@ -1,0 +1,111 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="col-12 user-info px-0">
+	<h4 class="my-0 color-green">Erx Override Reason</h4>
+</div>
+<hr class="line-bottom">
+<div class="search-filter">
+	<!-- CURRENTLY NOT REQUIRED -->
+	<div class="d-block">
+		<button class="btn btn-default round-btn float-right" (click)="getErxOverrideReasonByID(viewReactionModal,action.ADD)">
+			<span class="icon-plus-circle"></span> Add New
+		</button>
+	</div>
+	<app-erx-override-reason-filter (onFilterErxOverrideReasonList)="get_filtered_data($event)">
+	</app-erx-override-reason-filter>
+</div>
+<div class="data-table">
+	<div class="row mt-2">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit"
+							(change)="setReactionPageSize($event.target.value)"
+							[(ngModel)]="erxOverrideReasonPage.size">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+			<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+				Customize Columns
+			</button>
+		</div>
+	</div>
+	<ngx-datatable class="bootstrap" #erxOverrideReasonList [rows]="erxOverrideReasonList?.result?.data" [columnMode]='"force"'
+		[footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+		[count]="erxOverrideReasonList?.result?.total" (page)="setErxOverrideReasonPageNumber($event)"
+		[offset]="erxOverrideReasonOffSet" [limit]="erxOverrideReasonPage.size">
+		<ngx-datatable-column name="Reason" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="reason" [width]="400">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Actions" sortable="false" prop="id" cellClass="action-icon" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<!-- VIEW BUTTON -->
+				<a class="mx-1 view-hov" ngbTooltip="View" container="body" href="javascript:void(0)" role="button"
+					(click)="getErxOverrideReasonByID(viewReactionModal,action.VIEW,row)"><i class="icon-eye"></i></a>
+				<!-- EDIT BUTTON CURRENTLY NOT REQUIRED -->
+				<a class="mx-1 edit-hov" ngbTooltip="Edit" container="body" href="javascript:void(0)" role="button"
+					(click)="getErxOverrideReasonByID(viewReactionModal,action.EDIT,row)"><i class="icon-pencil"></i></a>
+				<!-----------History Feature--------->
+				<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="erxHistoryStats(row)">
+					<i class="fa fa-history"></i>
+				</a>
+				<!-- DELETE BUTTON CURRENTLY NOT REQUIRED -->
+				<a class="mx-1 remove-hov me-1" ngbTooltip="Delete" container="body" href="javascript:void(0)"
+					role="button" (click)="getErxOverrideReasonByID(viewReactionModal,action.DELETE,row)"><i
+						class="icon-remove"></i></a>
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>
+<!-- MODAL -->
+<ng-template #viewReactionModal let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-static-name" class="modal-title text-capitalize">{{erxOverrideReasonDetail.action}}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<app-erx-override-reason-view [erxOverrideReasonDetail]="erxOverrideReasonDetail" (erxActionStatus)="func()">
+		</app-erx-override-reason-view>
+	</div>
+</ng-template>
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

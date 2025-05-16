@@ -1,0 +1,54 @@
+<!-- <nav class="left-nav py-3 link-style">
+    <ul class="list-unstyled">
+        <li class="button--wayra" [class.active]="router.url.includes('inventory')"
+        *ngIf="aclService.hasPermission(userPermissions.master_inventory_fields_tab)">
+            <a class="d-block" routerLink="inventory">Inventory</a>
+        </li>
+        <li class="button--wayra" [class.active]="router.url.includes('shipping')"
+        *ngIf="aclService.hasPermission(userPermissions.master_shipping_fields_tab)"> 
+            <a class="d-block" routerLink="shipping">Shipping</a>
+        </li>
+        <li  class="button--wayra" [class.active]="router.url.includes('tax')"
+        *ngIf="aclService.hasPermission(userPermissions.master_tax_fields_tab)">
+            <a class="d-block" routerLink="tax">Tax</a>
+        </li>
+        <li  class="button--wayra" [class.active]="router.url.includes('invoice-format')"
+        *ngIf="aclService.hasPermission(userPermissions.master_invoice_fields_tab)">
+            <a class="d-block" routerLink="invoice-format">Invoice</a>
+        </li>
+     
+    </ul>
+</nav>
+<router-outlet></router-outlet> -->
+
+<div class="front-desk-block document-manager billing-info add-user master-tabs">
+	<div class="card text-center">
+	  <div class="card-header border-0">
+		<ul class="nav nav-tabs card-header-tabs">
+		  <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_tab)">
+            <a routerLinkActive="active" class="nav-link" 
+			routerLink="inventory"
+			>Inventory</a>
+		  </li>
+		  <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_tab)">
+			<a routerLinkActive="active" class="nav-link"  routerLink="shipping">Shipping</a>
+
+		  </li>
+		  <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_tab)">
+            <a routerLinkActive="active" class="nav-link"  routerLink="tax">Tax</a>
+		  </li>
+		  <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_tab)">
+            <a  routerLinkActive="active" class="nav-link"  routerLink="invoice-format">Invoice</a>
+		  </li>
+		</ul>
+	  </div>
+  
+	  <div class="card-body bill-border border-top-0">
+		<div class="tab-content" id="myTabContent">
+		  <div class="tab-pane fade show active" id="firm" role="tabpanel" aria-labelledby="firm-tab">
+			<router-outlet></router-outlet>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>

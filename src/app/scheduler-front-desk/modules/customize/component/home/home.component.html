@@ -1,0 +1,378 @@
+<div class="row user-info pt-2">
+    <div class='col-md-12'>
+        <h4 class="my-0 color-green">Customize</h4>
+    </div>
+</div>
+<hr class="line-bottom">
+<div class="row">
+    <div class="col-md-12">
+        <nav class="left-nav p-0 mt-2 mb-2">
+            <ul class="list-unstyled">
+                <li class="button--wayra " *ngIf="facilityColorEdit" [class.active]="isSpeciallityChecked">
+                    <a class="d-block " (click)="selectPractice($event)">Location</a>
+                </li>
+                <li class="button--wayra" *ngIf="specEdit" [class.active]="isClinicChecked">
+                    <a class="d-block" (click)="selectSpeciallity($event)">Specialty</a>
+                </li>
+                <li class="button--wayra" [class.active]="isPreferencesChecked" *ngIf="pref">
+                    <a class="d-block" (click)="selectPreferences($event)">Preferences</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<div class="row" *ngIf="isSpeciallityChecked  && facilityColorEdit">
+    <div class="col-md-12" *ngIf="aclService.hasPermission(userPermissions.scheduler_customize_facility_color_view)">
+        <div class="card search-filter-block border-0" *ngIf = "aclService.hasPermission(userPermissions.customize_facility_color_filter)">
+            <form [formGroup]="myForm" class="form">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-xl-10">
+                            <div class="row">
+                                <div class="col-md-6" [ngClass]="{'focused': specSelectedMultiple != '' && specSelectedMultiple != null }">
+                                    <label class="form-label" for="location" style="margin-left: 10px;">Practice Location</label>
+                                    <ng-select id="location" [items]="filterClinicData" bindValue="id" bindLabel="name" [placeholder]="''" [multiple]="true"
+                                     [closeOnSelect]="false" [(ngModel)]="specSelectedMultiple" [ngModelOptions]="{standalone: true}">
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                                                <span class="ng-value-label">{{item.name}}</span>
+                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            </div>
+                                            <div class="ng-value" *ngIf="items.length > 1">
+                                                <span class="ng-value-label">{{items.length - 1}} more...</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <!-- <div class="col-md-6">
+                                    <select class="form-select select" formControlName="clinicName" id="clinicName">
+										<option *ngFor="let clinic of filterClinicData" value={{clinic.id}}>
+											{{clinic.name}}</option>
+									</select>
+                                </div> -->
+                                <div class="col-md-6">
+									<div class="form-group field" [ngClass]="{'focused': myForm.get('address').value != '' && myForm.get('address').value != null }"
+									>
+									<label class="form-label" for="address">Address</label>
+                                    <input formControlName="address" class="input_slot form-control form-input" id="address">
+								</div>
+								</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-2 text-center">
+                            <div class="row justify-content-center mb-0">
+                                <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                                    <button class="btn btn-success w-100 mt-0" type="submit" (click)="applyClinicFilter()" [disabled] = "!aclService.hasPermission(userPermissions.customize_facility_color_filter)" >
+										Filter </button>
+                                </div>
+                                <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                                    <button class="btn btn-primary w-100 mt-0" type="button" (click)="resetClinic()">
+										Reset</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row" *ngIf="!aclService.hasPermission(userPermissions.scheduler_customize_facility_color_view)">
+        <div class="col-md-12">
+            <h6 class="my-0 color-red">No Access Permission</h6>
+        </div>
+    </div>
+</div>
+<div class="row" *ngIf="isClinicChecked && specEdit">
+    <div class="col-md-12" *ngIf="aclService.hasPermission(userPermissions.scheduler_customize_speciality_color_view)">
+        <div class="card search-filter-block border-0" *ngIf = "aclService.hasPermission(userPermissions.customize_speciality_filter)">
+            <form [formGroup]="myForm" (ngSubmit)="submitFormAndClose()" class="form">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 col-xl-10">
+                            <div class="row">
+                                <div class="col-md-4" [ngClass]="{'focused': specSelectedMultiple1 != '' && specSelectedMultiple1 != null }">
+                                    <label class="form-label" for="speciality" style="margin-left: 10px;">Speciality</label>
+                                    <ng-select id="speciality" [items]="filterSpecialityData" bindValue="id" bindLabel="name" [placeholder]="''" [multiple]="true"
+                                     [closeOnSelect]="false" [(ngModel)]="specSelectedMultiple1" [ngModelOptions]="{standalone: true}">
+                                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                            <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                                                <span class="ng-value-label">{{item.name}}</span>
+                                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                            </div>
+                                            <div class="ng-value" *ngIf="items.length > 1">
+                                                <span class="ng-value-label">{{items.length - 1}} more...</span>
+                                            </div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <!-- <div class="col-md-4 form-group">
+                                    <select class="form-select select" formControlName="specialityName">
+										<option *ngFor="let spec of filterSpecialityData" value={{spec.id}}>
+											{{spec.name}}</option>
+									</select>
+                                </div> -->
+                                <div class="col-md-4">
+									<div class="form-group field" [ngClass]="{'focused': myForm.get('timeslotName').value != '' && myForm.get('timeslotName').value != null }"
+									>
+									<label class="form-label" for="timeslotName">Time Slot</label>
+                                    <input formControlName="timeslotName" id="timeslotName" class="input_slot form-control form-input">
+								</div>
+								</div>
+								
+                                <div class="col-md-4">
+									<div class="form-group field" [ngClass]="{'focused': myForm.get('overBookingName').value != '' && myForm.get('overBookingName').value != null }"
+									>
+									<label class="form-label" for="overBookingName">Over Booking No.</label>
+                                    <input formControlName="overBookingName" class="input_slot form-control form-input" id="overBookingName">
+								</div>
+								</div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-xl-2 text-center">
+                            <div class="row justify-content-center mb-0">
+                                <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                                    <button class="btn btn-success w-100 mt-0" type="submit" (click)="applySpecFilter()" [disabled] = '!aclService.hasPermission(userPermissions.customize_speciality_filter)'>
+										Filter </button>
+                                </div>
+                                <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                                    <button class="btn btn-primary w-100 mt-0" type="button" (click)="resetSpec()">
+										Reset</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row" *ngIf="!aclService.hasPermission(userPermissions.scheduler_customize_speciality_color_view)">
+        <div class="col-md-12">
+            <h6 class="my-0 color-red">No Access Permission</h6>
+        </div>
+    </div>
+</div>
+<div *ngIf="isSpeciallityChecked && facilityColorEdit">
+    <div class="row mt-2" *ngIf="aclService.hasPermission(userPermissions.scheduler_customize_facility_color_view)">
+        <div class="edit-block col-md-6">
+            <div class="form-group field option-field mb-2 d-inline-block">
+                <ul>
+                    <li>Show</li>
+                    <li>
+                        <select class="custom-select" [(ngModel)]="counterClinic" (change)="changeNoOfEntriesForClinics(counterClinic)">
+							<option value="10" selected>10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+                    </li>
+                    <li>entries</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 text-end mt-2">
+            <!-- <a [hidden]="true" class="btn btn-success round-btn me-2" href="javascript:void(0)">
+                <span class="icon-create-task me-1"></span> Create Task [{{numClinicSelected}}]
+            </a> -->
+            <a [hidden]="isEnableClinicButtons" (click)="deleteAllClinics()" class="btn btn-default round-btn" href="javascript:void(0)">
+                <span class="icon-remove me-1"></span> Delete [{{numClinicSelected}}]
+            </a>
+        </div>
+    </div>
+    <div class="card data-table p-0 mt-0 mb-0 data-table-btn border-0" *ngIf="aclService.hasPermission(userPermissions.scheduler_customize_facility_color_view)">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <ngx-datatable class="bootstrap scroll-hide" [rows]="allClinics" (page)="changeClinicPage($event)" [offset]="clinicPageNumber-1" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="counterClinic" [scrollbarH]="true">
+                    <ngx-datatable-column [attr.canAutoResize]="true" name="Name" prop="id" [attr.width]="100">
+                        <ng-template let-column="column" ngx-dattable-header-template>
+                            Name
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div> {{row.name}} </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [attr.canAutoResize]="true" name="Address" prop="id" [attr.width]="100">
+                        <ng-template let-column="column" ngx-dattable-header-template>
+                            Address
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.address}}">
+                                {{row.address}}
+                            </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [attr.canAutoResize]="true" name="Color" prop="firstName" [attr.width]="100">
+                        <ng-template let-column="column" ngx-dattable-header-template>
+                            Color
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <input class="customize-screen" disabled type="color" (change)="updateSpecColor(idx, $event)" value="{{row.color}}">
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [attr.canAutoResize]="true" name="Actions" prop="id" [attr.width]="100" cellClass="action-icon">
+                        <ng-template let-row="row" let-value="value" let-column="column" ngx-datatable-header-template>
+                            <mat-checkbox (change)="allClinicSelected($event)" [(ngModel)]="allClinicChecked">
+                            </mat-checkbox>
+                            Action
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <mat-checkbox (change)="particularClinicSelected(row,$event)" [(ngModel)]="row.isChecked">
+                            </mat-checkbox>
+                            <button (click)="customizationDetails(row,'clinic')" class="edit-hov mx-1" role="button" tooltip="Edit">
+								<i class="icon-pencil"></i>
+							</button>
+                            <button (click)="deleteClinic(row)" class="mx-1 remove-hov" role="button" tooltip="Delete">
+								<i class="icon-remove"></i>
+							</button>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="!aclService.hasPermission(userPermissions.scheduler_customize_facility_color_view)">
+        <div class="col-md-12">
+            <h6 class="my-0 color-red">No Access Permission</h6>
+        </div>
+    </div>
+</div>
+<div *ngIf="isClinicChecked  && specEdit">
+    <div class="row mt-2" *ngIf="aclService.hasPermission(userPermissions.scheduler_customize_speciality_color_view)">
+        <div class="col-md-6 edit-block">
+            <div class="form-group field option-field mb-2 d-inline-block">
+                <ul>
+                    <li>Show</li>
+                    <li>
+                        <select class="custom-select" [(ngModel)]="counterSpec" (change)="changeNoOfEntriesForSpeciality(counterSpec)">
+							<option value="10" selected>10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+                    </li>
+                    <li>entries</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 text-end mt-2">
+            <!-- <a [hidden]="true" class="btn btn-success round-btn me-2" href="javascript:void(0)">
+                <span class="icon-create-task me-1"></span> Create Task [{{numSpecSelected}}]
+            </a> -->
+            <a [hidden]="isEnableSpecButtons" (click)="deleteAllSpeciality()" class="btn btn-default round-btn" href="javascript:void(0)">
+                <span class="icon-remove me-1"></span> Delete [{{numSpecSelected}}]
+            </a>
+        </div>
+    </div>
+    <div class="card data-table p-0 mb-0 data-table-btn border-0" *ngIf="aclService.hasPermission(userPermissions.scheduler_customize_speciality_color_view)">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <ngx-datatable class="bootstrap scroll-hide" [offset]="specPageNumber-1" [rows]="allSpeciallity" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="counterSpec" [scrollbarH]="true" (page)="changeSpecailityPage($event)">
+                    <ngx-datatable-column [attr.canAutoResize]="true" name="Name" prop="id" [attr.width]="100">
+                        <ng-template let-column="column" ngx-dattable-header-template>
+                            Name
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div> {{row.name}} </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [attr.canAutoResize]="true" name="Timeslot" prop="id" [attr.width]="100">
+                        <ng-template let-column="column" ngx-dattable-header-template>
+                            Timeslot
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div>{{row.timeSlot}}</div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="OverBooking" prop="lastName" [attr.width]="100">
+                        <ng-template let-column="column" ngx-dattable-header-template>
+                            OverBooking
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div> {{row.overBooking}} </div>
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [attr.canAutoResize]="true" name="Color" prop="firstName" [attr.width]="100">
+                        <ng-template let-column="column" ngx-dattable-header-template>
+                            Color
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <input class="customize-two" disabled type="color" value="{{row.color}}">
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [attr.canAutoResize]="true" name="Actions" prop="id" [attr.width]="100" cellClass="action-icon">
+                        <ng-template let-row="row" let-column="column" ngx-datatable-header-template>
+                            <mat-checkbox (change)="allSpecSelected($event)" [(ngModel)]="allSpecChecked">
+                            </mat-checkbox>
+                            Action
+                        </ng-template>
+                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <mat-checkbox (change)="particularSpecSelected(row,$event)" [(ngModel)]="row.isChecked">
+                            </mat-checkbox>
+
+                            <button (click)="customizationDetails(row,'spec')" class="mx-1 edit-hov" role="button" tooltip="Edit">
+								<i class="icon-pencil"></i>
+							</button>
+                            <button (click)="deleteSpec(row)" class="mx-1 remove-hov" role="button" tooltip="Delete">
+								<i class="icon-remove"></i>
+							</button>
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="!aclService.hasPermission(userPermissions.scheduler_customize_speciality_color_view)">
+        <div class="col-md-12">
+            <h6 class="my-0 color-red">No Access Permission</h6>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isPreferencesChecked && pref" class="card search-filter-block border-0 mt-1">
+    <div class="card-body" *ngIf="aclService.hasPermission(userPermissions.scheduler_customize_preference_view)">
+        <form [formGroup]="myForm" (ngSubmit)="submitFormAndClose()">
+            <div class="row d-flex justify-content-center mb-3">
+                <div class="col-md-2 text-truncate">
+                    <label class="title">Default Notification Approval</label>
+                </div>
+                <div class="col-md-3">
+                    <select [disabled]="editPrefrence" class="form-control" (change)="changeAppointmentsAction()" [(ngModel)]="action" [ngModelOptions]="{standalone: true}">
+						<option *ngFor="let options of actions" [ngValue]="options.id">
+							{{options.name}}
+						</option>
+					</select>
+                </div>
+                <div class="col-md-3" [hidden]="isForwardToFrontDesk">
+                    <select [disabled]="editPrefrence" class="form-control" [(ngModel)]="targetClinicName" [ngModelOptions]="{standalone: true}">
+						<option *ngFor="let clinicNames of allClinics" [ngValue]="clinicNames.id">
+							{{clinicNames.name}}
+						</option>
+					</select>
+                </div>
+                <div class="col-md-3" [hidden]="isAutoReslove">
+                    <select [disabled]="editPrefrence" class="form-control" [(ngModel)]="autoReolveAppointment" [ngModelOptions]="{standalone: true}">
+						<option *ngFor="let data of autoResolveList" value={{data.id}}>
+							{{data.name}}
+						</option>
+					</select>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success mt-0" [disabled]="editPrefrence" (click)="applyPrefenceAction()">
+						<span>Apply</span>
+					</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row" *ngIf="!aclService.hasPermission(userPermissions.scheduler_customize_preference_view)">
+        <div class="col-md-12">
+            <h6 class="my-0 color-red">No Access Permission</h6>
+        </div>
+    </div>
+</div>

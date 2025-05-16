@@ -1,0 +1,557 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<!-- <div class="row">
+  <div class="col-md-6 mb-3 show-entries d-flex align-items-center">
+    <p>Show</p>
+    <ng-select [items]="[10,20,30,40,50,100]" [clearable]="false" [closeOnSelect]="true" [ngModel]="10"
+    (change)="changeDocumentPageSize(folder,$event)" [closeOnSelect]="false">
+    </ng-select>
+    <p>entries</p>
+  </div>
+  <div class="col-md-6"> 
+    <app-shared-document-actions [selectedFilesList] ="selectedFilesList" [folder]="folder" (viewFile)="viewDocFile($event)" (setFolderId)="setFolderId($event)"
+      [folderList]='folderList' [foldersData]='foldersData' [folder] = "folder" [finalCount]='finalCount' [parentSelection]="parentSelection"
+      [selectedFiles]='selectedFiles'>
+    </app-shared-document-actions>
+  </div>
+</div> -->
+
+<app-shared-document-actions
+  [selectedFilesList]="selectedFilesList"
+  [folder]="folder"
+  (viewFile)="viewDocFile($event)"
+  (setFolderId)="setFolderId($event)"
+  [folderList]="folderList"
+  [foldersData]="foldersData"
+  [folder]="folder"
+  [finalCount]="finalCount"
+  [parentSelection]="parentSelection"
+  [selectedFiles]="selectedFiles"
+  [folders]="folders"
+  (refreshContent)="refreshContent($event)"
+>
+</app-shared-document-actions>
+<div class="data-table mb-0">
+  <div *ngIf="folder && folder.files && showFolders">
+    <ngx-datatable
+      class="bootstrap table documentmanagerclass"
+      [rows]="folder.files"
+      [columnMode]="'force'"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [scrollbarH]="true"
+      [limit]="page.size"
+      [count]="page.totalElements"
+      (page)="changeDocumentPageNumber(folder, $event.offset)"
+      [offset]="page.pageNumber - 1"
+      [virtualization]="false"
+      [externalPaging]="false"
+      [rowClass]="getRowClass"
+    >
+      <ngx-datatable-column
+        [sortable]="false"
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        [width]="120"
+        [minWidth]="120"
+        name="Document Name"
+      >
+        <ng-template ngx-datatable-cell-template let-row="row" class="asdfasdf">
+          <div
+            *ngIf="
+              aclService.hasPermission(
+                userPermissions.patient_case_list_docs_view
+              )
+            "
+            class="tooltip-outer"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ row?.file_title}}"
+          >
+            <a
+              class="underline-hov"
+              (click)="openInWindow(row)"
+              target="_blank"
+              >{{ row?.file_title}}</a
+            >
+          </div>
+          <div
+            *ngIf="
+              !aclService.hasPermission(
+                userPermissions.patient_case_list_docs_view
+              )
+            "
+            class="tooltip-outer"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ row?.file_title}}"
+          >
+            <span>{{ row?.file_title }}</span>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="false"
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        [width]="100"
+        [minWidth]="100"
+        name="Created At"
+      >
+        <ng-template ngx-datatable-cell-template let-row="row">
+          <span>{{
+            row.created_at
+              | utcTime
+              | date : datePipeServie.slashDateFormat_MM_dd_yyyy()
+          }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="false"
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        [width]="60"
+        [minWidth]="60"
+        name="Tags"
+      >
+        <ng-template
+          style="color: black"
+          ngx-datatable-cell-template
+          let-row="row"
+        >
+          <button
+            *ngIf="
+              aclService.hasPermission(
+                userPermissions.patient_case_list_docs_update_tags
+              )
+            "
+            (click)="addTagModal(row, addTag)"
+            class="btn btn-success add-tag-btn custom-btn-tooltip list-unstyled"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ row.tags }}"
+          >
+            <i class="fa fa-plus"></i>
+          </button>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        *ngIf="folder?.folder_name == 'KIOSK'"
+        [sortable]="false"
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        [width]="100"
+        [minWidth]="100"
+        name="Reason"
+      >
+        <ng-template ngx-datatable-cell-template let-row="row">
+          <span>{{ row?.reason_for_not_signed || "N/A" }}</span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column
+        [sortable]="false"
+        [width]="140"
+        [minWidth]="140"
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Actions"
+      >
+        <ng-template ngx-datatable-header-template name="Actions">
+          <mat-checkbox
+            type="checkbox"
+            [checked]="
+              (folder.selection.selected.length > 0 &&
+                folder.selection.selected.length == folder.files.length &&
+                folder.files.length > 0) ||
+              folder.isFolderSelected
+            "
+            (change)="
+              $event
+                ? onActionChange(folder.selection, folder.files, $event)
+                : null
+            "
+            [disabled]="folder.isFolderSelected"
+          >
+          </mat-checkbox>
+          Actions
+
+          <ng-select
+            [items]="[10, 20, 30, 40, 50, 100]"
+            appendTo="body"
+            [clearable]="false"
+            [ngModel]="10"
+            (change)="changeDocumentPageSize(folder, $event)"
+            [closeOnSelect]="false"
+          >
+          </ng-select>
+        </ng-template>
+
+        <ng-template
+          style="color: black"
+          ngx-datatable-cell-template
+          let-row="row"
+        >
+          <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="toggleRows(row)"
+            [disabled]="folder.isFolderSelected"
+            [checked]="
+              folder.selection.isSelected(row) || folder.isFolderSelected
+            "
+          >
+          </mat-checkbox>
+          <a
+            class="mx-1 view-hov"
+            *ngIf="
+              aclService.hasPermission(
+                userPermissions.patient_case_list_docs_view
+              )
+            "
+            ngbTooltip="View"
+            container="body"
+            href="javascript:void(0)"
+            role="button"
+            (click)="viewDocFile(row)"
+            ><i class="icon-eye"></i
+          ></a>
+          <a
+            class="mx-1 edit-hov"
+            *ngIf="
+              aclService.hasPermission(
+                userPermissions.patient_case_list_docs_edit
+              )
+            "
+            ngbTooltip="Edit"
+            container="body"
+            href="javascript:void(0)"
+            role="button"
+            (click)="editDocModal(row, editContent)"
+            ><i class="icon-pencil"></i
+          ></a>
+          <a
+            class="mx-1 printer-hov"
+            *ngIf="
+              aclService.hasPermission(
+                userPermissions.patient_case_list_docs_print
+              )
+            "
+            ngbTooltip="Print"
+            container="body"
+            (click)="print(getLinkwithAuthToken(row.pre_signed_url))"
+            target="_blank"
+            role="button"
+            ><i class="icon-printer"></i
+          ></a>
+          <a
+            class="mx-1 remove-hov me-1"
+            *ngIf="
+              aclService.hasPermission(
+                userPermissions.patient_case_list_docs_delete
+              ) && folder.folder_type_id != 13
+            "
+            ngbTooltip="Delete"
+            container="body"
+            href="javascript:void(0)"
+            role="button"
+            (click)="confirmDel(row)"
+            ><i class="icon-remove"></i
+          ></a>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<ng-template #editContent let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Edit Document</h5>
+    <button
+      type="button"
+      class="close"
+      data-dismiss="modal"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editForm">
+      <input type="hidden" formControlName="id" />
+      <div
+        class="form-group fields-holder row mb-3"
+        [ngClass]="{ focused: editForm.get('fileTitle').value != '' }"
+      >
+        <label for="fileTitle" class="col-sm-3 pt-1 col-form-label"
+          >Rename file *</label
+        >
+        <div class="col-sm-9">
+          <input
+            type="text"
+            id="fileTitle"
+            class="form-control form-input mb-0"
+            formControlName="fileTitle"
+            placeholder="Enter Document Name"
+          />
+          <small
+            class="form-text text-muted danger"
+            *ngIf="
+              editForm.get('fileTitle').errors?.required &&
+              (editForm.get('fileTitle').dirty ||
+                editForm.get('fileTitle').touched)
+            "
+          >
+            This field is required</small
+          >
+          <small
+            class="form-text text-muted danger"
+            *ngIf="
+              editForm.get('fileTitle').errors?.maxLength?.requiredLength == 100
+            "
+            >Maximum characters should be 100!</small
+          >
+        </div>
+      </div>
+      <div class="form-group align-items-center row mb-3">
+        <label class="col-sm-3 col-form-label">Tags :</label>
+        <div class="col-sm-9">
+          <tag-input
+            formControlName="tags"
+            [addOnBlur]="true"
+            [addOnPaste]="true"
+            [blinkIfDupe]="true"
+            (onBlur)="onTextChange($event)"
+            theme="bootstrap3-info"
+            [separatorKeyCodes]="[32]"
+          >
+          </tag-input>
+          <!-- <textarea class="form-control w-100" formControlName="tags" rows="5" style="height:60px !important;"></textarea> -->
+          <small
+            class="form-text text-muted danger"
+            *ngIf="
+              editForm.get('tags').errors?.required &&
+              (editForm.get('tags').dirty || editForm.get('tags').touched)
+            "
+          >
+            This field is required</small
+          >
+          <small
+            class="form-text text-muted danger"
+            *ngIf="
+              editForm.get('tags').errors?.maxLength?.requiredLength == 100
+            "
+            >Maximum characters should be 100!</small
+          >
+        </div>
+      </div>
+      <div
+        class="form-group fields-holder row mb-3"
+        [ngClass]="{ focused: editForm.get('description').value != '' }"
+      >
+        <label for="description" class="col-sm-3 pt-1 col-form-label"
+          >Description</label
+        >
+        <div class="col-sm-9">
+          <input
+            type="text"
+            id="description"
+            class="form-control form-input mb-0"
+            placeholder="Enter Description"
+            formControlName="description"
+          />
+        </div>
+      </div>
+
+      <ng-container>
+        <div class="col-12 edit-doc-align mb-1">
+          <div class="row align-items-center">
+            <label for="parentId" class="col-sm-3 form-label"
+              >Select Folder *</label
+            >
+            <div class="col-sm-9 edit-doc-field">
+              <ng-select
+                formControlName="parentId"
+                [closeOnSelect]="false"
+                [items]="lstFolder"
+                bindValue="id"
+                bindLabel="folder_name"
+              >
+              </ng-select>
+            </div>
+            <small
+              class="form-text text-muted danger offset-md-4 ps-2"
+              *ngIf="
+                editForm.get('parentId').errors?.required &&
+                (editForm.get('parentId').dirty ||
+                  editForm.get('parentId').touched)
+              "
+            >
+              This field is required</small
+            >
+          </div>
+        </div>
+        <div
+          formArrayName="sfolderId"
+          class="col-12 mb-2 edit-doc-align"
+          *ngFor="
+            let subfolder of editForm['controls'].sfolderId['controls'];
+            let i = index
+          "
+        >
+          <div [formGroupName]="i" class="row align-items-center mt-3">
+            <label for="sfolderId" class="col-sm-3 form-label"
+              >Subfolders
+            </label>
+            <div class="col-sm-9 edit-doc-field">
+              <ng-select
+                [items]="lstSubFolders[i]"
+                [closeOnSelect]="false"
+                formControlName="id"
+                bindLabel="folder_name"
+                bindValue="id"
+              >
+              </ng-select>
+            </div>
+            <small
+              class="form-text text-muted danger offset-md-4 ps-2"
+              *ngIf="
+                editForm.get('sfolderId').errors?.required &&
+                (editForm.get('sfolderId').dirty ||
+                  editForm.get('sfolderId').touched)
+              "
+            >
+              This field is required</small
+            >
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="form-group row mb-0">
+        <div class="col-sm-9 offset-sm-3 mt-1">
+          <div class="row">
+            <div class="col-6">
+              <button
+                type="button"
+                class="btn btn-primary w-100 w-100"
+                *ngIf="
+                  aclService.hasPermission(
+                    userPermissions.patient_case_list_docs_move
+                  )
+                "
+                [disabled]="disableBtn || disableMoveBtn || disableCopyBtn"
+                (click)="onMoveDocument()"
+              >
+                <span class="icon-save-continue me-2"></span
+                >{{ disableMoveBtn == false ? "Move" : "Please Wait..." }}
+              </button>
+            </div>
+            <div class="col-6">
+              <button
+                type="button"
+                class="btn btn-default w-100 w-100"
+                *ngIf="
+                  aclService.hasPermission(
+                    userPermissions.patient_case_list_docs_copy
+                  )
+                "
+                [disabled]="disableBtn || disableMoveBtn || disableCopyBtn"
+                (click)="onCopyDocument()"
+              >
+                <span class="icon-save-continue me-2"></span
+                >{{ disableCopyBtn == false ? "Copy" : "Please Wait..." }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row mb-0">
+        <div class="col-sm-9 offset-sm-3 mt-2">
+          <div class="row">
+            <div class="col-6">
+              <button
+                type="button"
+                (click)="modal.dismiss('Cross click')"
+                class="btn btn-outline-secondary w-100 w-100"
+              >
+                Cancel
+              </button>
+            </div>
+            <div class="col-6">
+              <button
+                class="btn btn-success w-100 w-100"
+                type="button"
+                [disabled]="disableBtn || disableMoveBtn || disableCopyBtn"
+                (click)="onSubmitDocument()"
+              >
+                <span class="icon-save-continue me-2"></span>
+                {{ disableBtn == false ? "Submit" : "Please Wait..." }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #addTag let-modal style="max-width: 500px">
+  <div class="modal-header">
+    <h5 class="modal-title">Add Tags</h5>
+    <button
+      type="button"
+      class="close"
+      (click)="modal.dismiss('Cross click')"
+      aria-label="Close"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form
+      [formGroup]="addTagForm"
+      (ngSubmit)="onSubmitAddTag(addTagForm.value)"
+    >
+      <div class="form-group row">
+        {{ addtags }}
+        <label class="col-sm-12 col-form-label pt-0"
+          >Please type tags and press enter to add them.</label
+        >
+        <div class="col-sm-12">
+          <tag-input
+            formControlName="tags"
+            (ngModel)="(addtags)"
+            [addOnBlur]="true"
+            [addOnPaste]="true"
+            theme="bootstrap3-info"
+            [separatorKeyCodes]="[32]"
+            [ripple]="false"
+            (onBlur)="onTextChange($event)"
+          >
+          </tag-input>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-md-12 modal-btn-width text-center">
+          <button
+            type="button"
+            (click)="modal.dismiss('Cross click')"
+            class="btn btn-primary btn-inline-block me-3"
+          >
+            Cancel
+          </button>
+
+          <button
+            class="btn btn-success btn-inline-block"
+            type="submit"
+            [disabled]="disableBtn"
+          >
+            <span class="icon-save-continue me-1"></span>
+            {{ disableBtn == false ? "Submit" : "Please Wait..." }}
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>

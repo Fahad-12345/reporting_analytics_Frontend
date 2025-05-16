@@ -1,0 +1,267 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{title}} Location</h5>
+  <button type="button" class="close" aria-label="Close" (click)="dismissModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body modal-pt-15">
+  <form [formGroup]="locationForm" (ngSubmit)="onUpdateLocation()">
+    <input formControlName="lat" type="hidden" class="form-control mb-1" placeholder="">
+    <input formControlName="long" type="hidden" class="form-control mb-1" placeholder="">
+    <div class="form-group row mb-1">
+      <div class="col-sm-6">
+        <label class="mb-0">Location Name*</label>
+        <input formControlName="name" type="text" class="form-control mb-0" placeholder="" [allowedLength] = "199" 
+		[currentValue] ="locationForm.getRawValue()?.name" appBlockCopyPaste
+		specficCharacterLengthDirective  notFirstCharactorSpace>
+        <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('name').errors?.required && (locationForm.get('name').dirty || locationForm.get('name').touched)">
+          This field is required</small>
+          <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('name').value && locationForm.get('name').value.length > 0 && locationForm.get('name').value.length > 70 ">
+          This field cannot contains more than 70 characters
+        </small>
+          
+      </div>
+	  <div class="col-sm-6">
+        <label class="mb-0">Short Name*</label>
+        <input formControlName="qualifier" type="text" class="form-control mb-0" placeholder="" [allowedLength] = "14" 
+		[currentValue] ="locationForm.getRawValue()?.qualifier" appBlockCopyPaste
+		specficCharacterLengthDirective  notFirstCharactorSpace>
+        <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('qualifier').errors?.required && (locationForm.get('qualifier').dirty || locationForm.get('qualifier').touched)">
+          This field is required</small>
+      </div>
+    </div>
+
+    <div class="form-group row mb-0">
+      <div class="col-sm-4">
+        <label class="mb-0">Phone No</label>
+        <input formControlName="phone" type="text" class="form-control mb-1" placeholder="" mask='000-000-0000'
+          [dropSpecialCharacters]="true">
+        <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('phone').value && locationForm.get('phone').value.length > 0 && locationForm.get('phone').value.length < 10 ">
+          Invalid Format: 000-000-0000
+        </small>
+      </div>
+      <div class="col-sm-4">
+        <label class="mb-0">Fax</label>
+        <input formControlName="fax" type="text" class="form-control mb-1" placeholder="" mask='000-000-0000'
+          [dropSpecialCharacters]="true">
+        <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('fax').value && locationForm.get('fax').value.length > 0 && locationForm.get('fax').value.length < 10 ">
+          Invalid Format: 000-000-0000
+        </small>
+      </div>
+      <div class="col-sm-4">
+        <label class="mb-0">Email</label>
+        <input formControlName="email" type="text" class="form-control mb-1" placeholder="">
+        <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('email').errors && (locationForm.get('email').dirty || locationForm.get('email').touched)">
+          Invalid email address.</small>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="form-group field mb-0" [ngClass]="{'focused': locationForm.get('address').value != ''}">
+          <label class="form-label" for="Street">Street Address</label>
+          <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+          <input ngx-google-places-autocomplete [options]="{
+        types: [],
+        componentRestrictions: { country: 'US' }
+        }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event)"
+            formControlName="address" type="text" id="address" class="form-control form-input mb-1">
+            <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('address').value && locationForm.get('address').value.length > 0 && locationForm.get('address').value.length > 40 ">
+         This field cannot contains more than 40 characters
+        </small>
+        </div>
+      </div>
+
+      <div class="col-sm-6">
+        <label class="mb-0">Suite / Floor</label>
+        <input type="text" class="form-control mb-1" placeholder="" formControlName="floor">
+        <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('floor').value && locationForm.get('floor').value.length > 0 && locationForm.get('floor').value.length > 40 ">
+         This field cannot contains more than 40 characters
+        </small>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-4">
+        <label class="mb-0">City</label>
+        <input formControlName="city" type="text" class="form-control mb-1" placeholder="">
+        <small class="form-text text-muted danger"
+        *ngIf="locationForm.get('city').value && locationForm.get('city').value.length > 0 && locationForm.get('city').value.length > 35 ">
+       This field cannot contains more than 35 characters
+      </small>
+      </div>
+      <div class="col-sm-4">
+        <label class="mb-0">State</label>
+        <ng-select [items]="states" formControlName="state" [closeOnSelect]="false" (change)="stateChange($event)"></ng-select>
+
+       
+        
+      </div>
+     
+	 
+      <div class="col-sm-4">
+        <label class="mb-0">Zip</label>
+        <input formControlName="zip" type="text"  class="form-control mb-1" placeholder="">
+        <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('zip').value && locationForm.get('zip').errors?.pattern ">
+          {{zipFormatMessage.format_usa}}
+        </small>
+      </div>
+
+      <div class="col-sm-4">
+        <label class="mb-0">
+          Institutional DEA Number (xx0000000)</label>
+        <input formControlName="dean" type="text" appNadeanDirective class="form-control mb-1" placeholder="" maxlength="9">
+        <small class="form-text text-muted danger"
+          *ngIf="(locationForm.get('dean').errors?.minlength && (locationForm.get('dean').dirty && locationForm.get('dean').touched))">
+          Invalid Institutional DEA Number
+				</small>
+        <!-- <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('dean').value && locationForm.get('dean').errors?.pattern ">
+          {{zipFormatMessage.format_usa}}
+        </small> -->
+      <!-- </div> -->
+
+    </div>
+    </div>
+
+    <div class="row">
+      <!-- <div class="col-sm-12">
+            <div class="form-group field" [ngClass]="{'focused': locationForm.get('region').value != ''}">
+              <label class="form-label" for="Street">Region</label>
+              <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+              <input ngx-google-places-autocomplete [options]="{
+          types: [],
+          componentRestrictions: { country: 'US' }
+          }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'region')"
+                formControlName="region" type="text" id="region" class="form-control form-input">
+            </div>
+      </div> -->
+      <div class="col-sm-12">
+        <label>Select Region*</label>
+        <div class="form-group field mb-0">
+		  <select class="form-select text-truncate mb-0" formControlName="region_id" 
+		  [ngbTooltip]="selectedRegion" container="body" tooltipClass="table-custom-tooltip" #region (change)= "regionChange(region)">
+            <option value="" selected >Select Region</option>
+            <option *ngFor="let region of dropDownRegion" value={{region.id}}> {{region.name | slice:0:90}}</option>
+          </select>
+		  <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('region_id').errors?.required && (locationForm.get('region_id').dirty || locationForm.get('region_id').touched)">
+          This field is required</small>
+        </div>
+
+      </div>
+
+      <div class="col-sm-12 search-label">
+		<app-ng-select-shareable #selectedDropDown  [filterFieldName]="'place_of_service_id'" [showSelectFieldList]="placeOfServicesList ?   [placeOfServicesList]: []"
+		[showSelectFieldOnRefresh]="locationForm ? locationForm.get('place_of_service_id').value : null"
+		[lableName]="'Place of Service*'" [forceApiHitonOpen]="hitDefaultAPIPOS" [disableField]="disableForm"
+	   [bindId]="'id'" [bindlable]="'place_of_service_name'" [apiPath]="EnumApiPath.scheduleFeePlaceSeriveApiPath"
+	   (valueChange)="selectionOnValueChange($event,'placeService')"
+	   (touched)="touchedNgSelect('placeService')" [ngSelectShow]="true"
+	   [multiple]="false"></app-ng-select-shareable>  
+	   <span class="text-muted danger absolute-error-0" *ngIf="(locationForm.get('place_of_service_id').errors?.required && locationForm.get('place_of_service_id').value == '' || locationForm.get('place_of_service_id').value == null) && (locationForm.get('place_of_service_id').dirty || locationForm.get('place_of_service_id').touched)">This field is
+		required</span>
+      </div>
+
+    </div>
+    <div class="form-group row mb-1">
+	<div class="col-sm-6">
+        <label class="mb-0">Latitude</label>
+        <input formControlName="lat" type="text" class="form-control mb-1" placeholder="" [allowedDecimal]="false"  [allowedNegativeSign]="true" appOnlyNumeric>
+      </div>
+      <div class="col-sm-6">
+        <label class="mb-0">Longitude</label>
+        <!-- <input formControlName="state" type="text" class="form-control mb-1" placeholder=""> -->
+        <input formControlName="long" type="text" class="form-control mb-1" placeholder=""  [allowedDecimal]="false"  [allowedNegativeSign]="true"  appOnlyNumeric>
+		  </div>
+	  </div>
+    <div class="form-group row mb-1">
+      <!-- <div class="col-sm-12">
+        <label class="mb-0">Lat,Long</label>
+        <input formControlName="lat_and_long" type="text" class="form-control mb-0" placeholder="" >
+        <small class="form-text text-muted danger"
+          *ngIf="locationForm.get('lat_and_long').errors?.required && (locationForm.get('lat_and_long').dirty || locationForm.get('lat_and_long').touched)">
+          Name is required field.</small>
+      </div> -->
+    </div>
+    <!-- {{(locationData?.id)?"You are viewing this schedule according to /"PST/" timezone. On update your schedule will be according to XYZ timezone.":""}} -->
+    <app-time-plan [update]="(locationData?.id)?true:false" [disableForm]="disableForm" [childValues]="childValues"></app-time-plan>
+    <!-- <div class="row form-group mb-1">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <label class="form-group field mb-0">Select Days*</label>
+          <div class="d-block">
+            <button class="col-md-1 btn " type="button" *ngFor="let day of weekday;let i=index" (click)="selectDays(day)"
+              style="border: 1px solid #c6c4c4; margin-right:6px; border-radius:5px;text-align: center;padding: 6px; max-width: 13.48% !important; flex: 0 0 13.3% !important;"
+              [ngStyle]="selectedDays.has(day) ?{'background-color': '#A9A9A9','color':'white'} : {'background-color': 'white','color':'black'}">
+              {{day.name}}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body data-table add-location-table">
+        <table class="table table-bordered table-striped text-center mb-4" *ngIf="selectedDays.size">
+          <thead>
+            <tr>
+              <th class="border-right">Days</th>
+              <th class="border-right">Office Hours Start</th>
+              <th>Office Hours End</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container formArrayName="timing">
+              <ng-container *ngFor="let time of locationForm.get('timing')['controls']; let timingIndex = index">
+                <ng-container *ngIf="time.get('checked').value" [formGroupName]="timingIndex">
+                  <tr>
+                    <td>{{time.get('name').value}}</td>
+                    <td class="px-3">
+                      <input type="time" class="form-control mb-0" formControlName="start_time"
+                        (change)="formChange(time)">
+                    </td>
+                    <td class="px-3">
+                      <input type="time" class="form-control mb-0" formControlName="end_time" (change)="formChange(time)">
+                    </td>
+                    <td class="px-3">
+                      <select class="form-select" formControlName="replicate" (change)="replicate($event, timingIndex)">
+                        <option value="">(Replicate)</option>
+                        <option value="all">All</option>
+                        <option value="below">Below</option>
+                        <option value="above">Above</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr
+                    *ngIf="(time.get('start_time').touched && time.get('end_time').touched) && time.get('start_time').value===time.get('end_time').value">
+                    <td colspan="4">
+                      <span class="form-text text-muted danger">
+                        Start and End time should be different.</span>
+                    </td>
+                  </tr>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div> -->
+
+    <div class="row">
+      <div class="col-12 modal-btn-width text-center mt-2">
+        <button type="button" class="btn btn-primary me-3" (click)="dismissModal()">Cancel</button>
+        <button *ngIf="locationData?.ActionType != 'View'" [disabled]="locationForm.invalid || !childValues.isValid ||!childValues.selectedTimings.length"
+          type="submit" class="btn btn-success mt-0">
+          {{title_button}}
+        </button>
+      </div>
+    </div>
+
+  </form>
+</div>

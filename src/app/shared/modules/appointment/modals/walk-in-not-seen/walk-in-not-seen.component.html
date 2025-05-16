@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <h4 class="modal-title">Walk In Not Seen</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+
+<div class="modal-body not-seen-modal">
+    <form [formGroup]="myForm">
+        <div class="row">
+
+            <div class="col-md-4">
+                <label class="title">Speciality</label>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" ngbTooltip="{{selectedSpecialty?.name}}">
+
+                <select class="form-select" formControlName="spHName" >
+                    <option *ngFor="let spec of speciality"  value={{spec.id}} [title]="spec?.name">
+                        {{spec.qualifier}}</option>
+                </select>
+				</span>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Provider</label>
+                <select class="form-select" formControlName="docName">
+                    <option *ngFor="let doc of doctors" value={{doc.user_id}}>{{doc.doctor.info.first_name}} {{doc.doctor.info.middle_name}} {{doc.doctor.info.last_name}}</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Date</label>
+                <ejs-datepicker placeholder='Date' [(value)]='date'>
+                </ejs-datepicker>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-md-12">
+                <label class="title">Notes</label>
+                <textarea class="form-control" formControlName="note" placeholder="No Notes Yet" [(ngModel)]="notes"></textarea>
+            </div>
+        </div>
+        <div class="col-12 px-0 mt-3 d-flex align-items-center justify-content-center">
+            <button class="btn btn-outline-secondary me-3" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+            <button [disabled]="doctorCalendarService.walkinNotSeen.patient_not_seen_reason" class="btn btn-success" type="submit" (click)="addWalkInNotSeen()">Add</button>
+          </div>
+        <!-- <div class="row d-flex justify-content-center mt-3">
+            <div class="col-md-2">
+                <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+            </div>
+            <div class="col-md-2">
+                <button [disabled]="doctorCalendarService.walkinNotSeen.patient_not_seen_reason" class="btn btn-success w-100" type="submit" (click)="addWalkInNotSeen()">Add</button>
+            </div>
+
+        </div> -->
+    </form>
+</div>

@@ -1,0 +1,287 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_view)">
+  <div class="d-block text-end">
+    <a *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_add)" class="btn btn-default round-btn"
+      href="javascript:void(0)" (click)="paidOpenModal(editPaid, row, rowIndex)"><span class="icon-plus-circle"></span> Add New
+      
+    </a>
+  </div>
+  <form class="form" action="" autocomplete="off" [formGroup]="paidSearchForm" *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_filter)">
+      <div class="search-filter search-filter-bg-light filter-grid grid-3" [class.hide-remaining-search-filter]="!isCollapsed">
+          <div class="filter-grid-container">
+            <div class="form-group"
+              [ngClass]="{'focused': paidSearchForm.get('name').value != '' && paidSearchForm.get('name').value != null }">
+              <label class="form-label" for="PaidBy">Paid By</label>
+              <input type="text" id="PaidBy" class="form-control form-input" formControlName="name">
+            </div>
+            <div class="form-group"
+                  [ngClass]="{'focused': paidSearchForm.get('description').value != '' && paidSearchForm.get('description').value != null }">
+                  <label class="form-label" for="description">Description</label>
+                  <input type="text" id="description" class="form-control form-input"
+                  formControlName="description">
+            </div>
+            <div class="form-group"
+                [ngClass]="{'focused': paidSearchForm.get('comments').value != '' && paidSearchForm.get('comments').value != null }">
+                <label class="form-label" for="comments">Comments</label>
+                <input type="text" id="comments" class="form-control form-input"
+                  formControlName="comments">
+              </div>
+          </div>
+          <div class="collape-btn">
+            <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+            [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+            [class.btn-success]="isCollapsed" type="button">
+                <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+            </button>
+        </div>
+        <div class="search-filter-btn-group" [class.btn-group-mrgin-top]="isCollapsed">
+            <button class="btn btn-success" (click)="paidSetPage({offset: 0})">Filter</button>
+            <button class="btn btn-primary" (click)="resetPaid()" [disabled]="checkInputs()">Reset</button>
+        </div>
+      </div>        
+  </form>
+  <!--old code-->
+  <!-- <form action="" autocomplete="off" [formGroup]="paidSearchForm"
+    *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_filter)">
+    <div class="form">
+      <div class="search-filter-body">
+        <div class="row">
+          <div class="col-xl-10">
+            <div class="row">
+              <div class="col-sm-6 col-md-4">
+                <div class="form-group field"
+                  [ngClass]="{'focused': paidSearchForm.get('name').value != '' && paidSearchForm.get('name').value != null }">
+                  <label class="form-label" for="PaidBy">Paid By</label>
+                  <input type="text" id="PaidBy" class="form-control form-input" formControlName="name">
+                </div>
+              </div>
+
+              <div class="col-sm-6 col-md-4">
+                <div class="form-group field"
+                  [ngClass]="{'focused': paidSearchForm.get('description').value != '' && paidSearchForm.get('description').value != null }">
+                  <label class="form-label" for="description">Description</label>
+                  <input type="text" id="description" class="form-control form-input"
+                    formControlName="description">
+                </div>
+              </div>
+              <div class="col-sm-6 col-md-4">
+                <div class="form-group field"
+                  [ngClass]="{'focused': paidSearchForm.get('comments').value != '' && paidSearchForm.get('comments').value != null }">
+                  <label class="form-label" for="comments">Comments</label>
+                  <input type="text" id="comments" class="form-control form-input"
+                    formControlName="comments">
+                </div>
+              </div>
+
+            </div>
+          </div>
+         
+          <div class="col-xl-2">
+            <div class="row justify-content-center mb-3 mb-xl-0">
+              <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                <button class="btn btn-success w-100 me-3" (click)="paidSetPage({offset: 0})"> Filter
+                </button>
+              </div>
+              <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                <button class="btn btn-primary w-100" (click)="resetPaid()" [disabled]="checkInputs()">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </form> -->
+</div>
+<div class="card data-table p-0 mt-2 border-0" *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_view)">
+  <div class="row">
+    <div class="col-12 col-sm-6 edit-block text-start">
+      <div class="form-group field option-field mb-2 d-inline-block">
+        <ul>
+          <li>Show</li>
+          <li>
+            <select class="custom-select" name="limit" id="limit" (change)="paidPageLimit($event.target.value)" [(ngModel)]="paidPage.size">
+              <option [value]="10" selected>10</option>
+              <option [value]="20">20</option>
+              <option [value]="30">30</option>
+              <option [value]="40">40</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+            </select>
+          </li>
+          <li>Entries</li>
+        </ul>
+
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+      <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+				Customize Columns
+			</button>
+
+      <!-- <a href="javascript:void(0)" class="btn btn-default round-btn" (click)="deleteMultiplePaidRecord()"
+                  *ngIf="paidSelection.selected.length && aclService.hasPermission(userPermissions.master_bb_pb_delete)">
+                  <span class="icon-remove me-1"></span> Delete [{{paidSelection.selected.length}}]
+                </a> -->
+    </div>
+  </div>
+  <!--data table starts from here -->
+  <ngx-datatable class="bootstrap" #paidByList [rows]="paidComingData" [columnMode]='"force"'
+    [virtualization]="false" [externalPaging]="true" [scrollbarH]="true" [count]="paidPage.totalElements"
+    [offset]="paidPage.pageNumber" [limit]="paidPage.size" (page)="paidSetPage($event)" [footerHeight]="50"
+    [rowHeight]="'auto'"[scrollbarH]="true">
+
+    <ngx-datatable-column name="Paid By" [sortable]="false" prop="name" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <!-- <ng-template ngx-datatable-cell-template let-row="row" *ngFor="let row of paidComingData">
+                  {{row.name}}
+                </ng-template> -->
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name}}" container="body">
+          {{row.name}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Description" [sortable]="false" prop="description" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description}}" container="body">
+          {{row.description}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Comments" [sortable]="false" prop="comments" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.comments}}" container="body">
+          {{row.comments}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+	  
+    <ngx-datatable-column name="Actions" [width]="150" [sortable]="false" cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template ngx-datatable-header-template name="Actions">
+        <!-- <label>
+                                   <input id="intake4" name="" value="" type="checkbox">
+                                   <span class="fake-input position-absolute"></span>
+                                 </label> -->
+
+        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_edit)"
+          (change)="$event ? PaidmasterToggle() : null" [checked]="paidSelection .hasValue() && isPaidAllSelected()"
+          [indeterminate]="paidSelection .hasValue() && !isPaidAllSelected()" disabled>
+        </mat-checkbox>
+        Actions
+
+      </ng-template>
+
+      <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+
+        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_edit)"
+          (click)="$event.stopPropagation()" (change)="$event ? paidSelection .toggle(row) : null"
+          [checked]="paidSelection .isSelected(row)" disabled>
+        </mat-checkbox>
+        <!-- <label for="intake4" class="chkbox position-relative mt-1">
+                                   <input id="intake4" name="" value="" type="checkbox">
+                                   <span class="fake-input position-absolute"></span>
+                                 </label> -->
+        <!-- <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i class="fa fa-tasks"></i></a> -->
+        <a *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_edit)" class="edit-hov mx-1"
+          (click)="paidOpenModal(editPaid, row, rowIndex)" ngbTooltip="Edit" container="body" href="javascript:void(0)" role="button"><i
+            class="icon-pencil"></i></a>
+            <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="paidByHistoryStats(row)">
+              <i class="fa fa-history"></i>
+            </a>
+       
+
+        <!-- <a *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_delete)" class="remove-hov mx-1"
+                    (click)="onePaidRecordDeleted(row)" tooltip="Delete" href="javascript:void(0)" role="button">
+                    <span class="icon-remove"></span></a> -->
+
+      </ng-template>
+    </ngx-datatable-column>
+
+  </ngx-datatable>
+</div>
+
+<ng-template #editPaid let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{modelTitle}} Paid By</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form autocomplete="" [formGroup]="paidForm" (ngSubmit)="onPaidSubmit(paidForm.getRawValue())">
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': paidForm.get('name').value != '' && paidForm.get('name').value != null }">
+            <label class="form-label"> Paid By*</label>
+            <input type="text" class="form-control mb-0" formControlName="name" notFirstCharactorSpace>
+            <small class="form-text text-muted danger" *ngIf="paidForm.get('name').errors?.required && 
+                    (paidForm.get('name').dirty || paidForm.get('name').touched)">This field is required</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': paidForm.get('description').value != '' && paidForm.get('description').value != null }">
+			<label class="form-label"> Description</label>
+			<textarea class="form-control mb-0" rows="3" formControlName="description"
+			notFirstCharactorSpace></textarea>
+            <!-- <input type="text" class="form-control mb-0" formControlName="description" notFirstCharactorSpace> -->
+            <small class="form-text text-muted danger" *ngIf="paidForm.get('description').errors?.required && 
+                                (paidForm.get('description').dirty || paidForm.get('description').touched)">Please
+              enter description!</small>
+          </div>
+        </div>
+	  </div>
+	  
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': paidForm.get('comments').value != '' && paidForm.get('comments').value != null }">
+            <label class="form-label">Comments</label>
+            <textarea class="form-control mb-3" rows="3" formControlName="comments"
+               notFirstCharactorSpace></textarea>
+            <small class="form-text text-muted danger" *ngIf="paidForm.get('comments').errors?.required && 
+                        (paidForm.get('comments').dirty || paidForm.get('comments').touched)">Please enter
+              comments!</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 text-center modal-btn-width mt-1">
+          <button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+            (click)="closeModel()">Cancel</button>
+          <button type="submit" [disabled]="paidForm.invalid || loadSpin" class="btn btn-success">{{modelSubmit}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

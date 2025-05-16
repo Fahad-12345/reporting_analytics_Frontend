@@ -1,0 +1,114 @@
+<div class="row">
+	<div class="col-md-12">
+		<div class="search-filter my-3">
+			<form autocomplete="off" [formGroup]="searchForm" class="form">
+				<div class="search-filter-body pb-lg-3">
+					<div class="row px-2">
+						<div class="field-block">
+							<div class="row">
+								<div class="col-sm-6 col-lg-3">
+									<div class="form-group mb-lg-0">
+										<label class="form-label" for="bill_id">Bill ID</label>
+										<input type="text" id="bill_id" class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3">
+									<div class="form-group field mb-lg-0">
+										<label class="form-label" for="bill_date">Bill Date</label>
+										<input type="text" id="bill_date" class="form-control form-input mb-0" [max]="2099-01-01">
+										<span class="icon-plus date-cross-icon"></span>
+										<mat-datepicker-toggle [for]="bill_date"></mat-datepicker-toggle>
+										<mat-datepicker #bill_date></mat-datepicker>
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3">
+									<div class="form-group mb-lg-0">
+										<label class="form-label" for="speciality_id">Specialty</label>
+										<input type="text" id="speciality_id" class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3">
+									<div class="form-group mb-lg-0">
+										<label class="form-label" for="provider_id">Provider</label>
+										<input type="text" id="provider_id" class="form-control form-input">
+									</div>
+								</div>
+							</div>
+							<div class="collapse-basic pt-lg-3" id="collapseBasic" [collapse]="!isCollapsed" [isAnimated]="true">
+								<div class="row">
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-label" for="practice_location">Practice-Location</label>
+											<input type="text" id="practice_location" class="form-control form-input">
+										</div>
+									</div>
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-label" for="denial_reason">Denial Reason</label>
+											<input type="text" id="denial_reason" class="form-control form-input">
+										</div>
+									</div>
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group field">
+											<label class="form-label" for="denial_date">Denial Date</label>
+											<input type="text" id="denial_date" class="form-control form-input mb-0" [max]="2099-01-01">
+											<span class="icon-plus date-cross-icon"></span>
+											<mat-datepicker-toggle [for]="denial_date"></mat-datepicker-toggle>
+											<mat-datepicker #denial_date></mat-datepicker>
+										</div>
+									</div>
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group field">
+											<label class="form-label" for="posted_date">Posted Date</label>
+											<input type="text" id="posted_date" class="form-control form-input mb-0" [max]="2099-01-01">
+											<span class="icon-plus date-cross-icon"></span>
+											<mat-datepicker-toggle [for]="posted_date"></mat-datepicker-toggle>
+											<mat-datepicker #posted_date></mat-datepicker>
+										</div>
+									</div>
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-label" for="denial_comment">Denial Comments</label>
+											<input type="text" id="denial_comment" class="form-control form-input">
+										</div>
+									</div>
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-label" for="denial_type">Denial Type</label>
+											<select id="denial_type" class="form-control">
+												<option selected></option>
+												<option>Denial Type</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-label" for="created_by">Created By</label>
+											<input type="text" id="created_by" class="form-control form-input">
+										</div>
+									</div>
+									<div class="col-sm-6 col-lg-3">
+										<div class="form-group">
+											<label class="form-label" for="updated_by">Updated By</label>
+											<input type="text" id="updated_by" class="form-control form-input">
+										</div>
+									</div>
+									<div class="col-md-12 text-center search-filter-btn float-left mb-lg-1">
+										<button class="btn btn-success mt-0 me-3"> Filter </button>
+										<button class="btn btn-primary mt-0" (click)="resetCase()" [disabled]="checkInputs()"> Reset</button>
+									</div>
+								</div>
+							</div>	
+						</div>
+						<div class="colps-btn-block">
+							<button class="btn plus-btn position-relative float-right mt-0" style="right: 0;" (click)="isCollapsed = !isCollapsed"
+							[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+							[class.btn-success]="isCollapsed" type="button"><span class="" [class.icon-plus]="!isCollapsed"
+								[class.icon-minus]="isCollapsed"></span></button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

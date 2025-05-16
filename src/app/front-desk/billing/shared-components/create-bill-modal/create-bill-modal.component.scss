@@ -1,0 +1,403 @@
+@import './../../../../../assets/sass/themes/child-datatable-theme';
+.create-bill-modal{
+    .ngx-datatable{
+        // parent and child datatable start
+        // parent datatable start
+        ::ng-deep &.parent-table{
+            // parent datatable header start
+            .datatable-header{
+                .datatable-header-inner{
+                    .datatable-header-cell{
+                        padding: 0.3rem;    
+                        &:first-child{
+                            border-top-left-radius: 6px;
+                        }
+                        &:last-child{
+                            border-top-right-radius: 6px;
+                        }
+                    }
+                }
+            }
+            // parent datatable body start
+            .datatable-body{
+                .datatable-scroll{
+                    .datatable-row-wrapper{
+                        width: fit-content !important;
+                        .datatable-body-row{
+                            &.datatable-row-even, 
+                            &.datatable-row-odd{
+                                .datatable-row-center{
+                                    .datatable-body-cell{
+                                        background: $create-bill-modal-datatable-body-bg-color !important;
+                                    }
+                                }
+                            }
+                            .datatable-row-center{
+                                .datatable-body-cell{
+                                    background: $parent-datatable-body-bg-color !important;
+                                    border-color: $parent-datatable-body-border-color;
+                                    .datatable-body-cell-label{
+                                        a{
+                                            &.datatable-icon-down, 
+                                            &.datatable-icon-right{
+                                                color: $parent-datatable-body-icon-left-down-arrow-color;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .datatable-row-detail{
+                            border-right: 1px solid $parent-datatable-body-border-right-color;
+                            // Child datatable start
+                            .child-table-border{
+                                overflow: hidden;
+                                padding: 8px 5px 8px 6px;
+                                border-left: 1px solid $child-datatable-main-border-left-color;
+                                border-right: 1px solid $child-datatable-main-border-right-color;
+                                border-bottom: 3px solid $child-datatable-main-border-bottom-color !important;
+                                .child-datatable{
+                                    // Child datatable header start
+                                    .datatable-header{
+                                        .datatable-header-inner{
+                                            .datatable-row-center{
+                                                .datatable-header-cell{
+                                                    border-top: 1px solid $child-datatable-header-border-top-color;
+                                                    border-right: 1px solid $child-datatable-header-border-right-color !important;
+                                                    color: $child-datatable-header-text-color !important;
+                                                    background: $child-datatable-header-bg-color !important;
+                                                    &:first-child{
+                                                        border-top-left-radius: 6px;
+                                                        border-left: 1px solid $child-datatable-header-first-left-border-color !important;
+                                                    }
+                                                    &:last-child{
+                                                        border-top-right-radius: 6px;
+                                                        border-right: 1px solid $child-datatable-header-last-right-border-color !important;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // Child datatable body start
+                                    &.radius-0{
+                                        .datatable-body{
+                                            .datatable-row-wrapper{
+                                                &:last-child{
+                                                    .datatable-body-cell{
+                                                        &:first-child{
+                                                            border-bottom-left-radius: 0;
+                                                        }
+                                                        &:last-child{
+                                                            border-bottom-right-radius: 0;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .datatable-body{
+                                        .datatable-scroll{
+                                            .datatable-row-wrapper{
+                                                .datatable-row-even, 
+                                                .datatable-row-odd{
+                                                    .datatable-row-center{
+                                                        .datatable-body-cell{
+                                                            background: $child-datatable-body-bg-color !important;
+                                                            border-color: $child-datatable-body-border-color;
+                                                        }
+                                                    }
+                                                }
+                                                &:first-child{
+                                                    .datatable-body-row{
+                                                        .datatable-row-center{
+                                                            .datatable-body-cell{
+                                                                border-top: 1px solid $child-datatable-body-border-top-color;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // Child datatable footer start
+                                    .datatable-footer{
+                                        .datatable-footer-inner{
+                                            background: $child-datatable-footer-bg-color !important;
+                                            .page-count{
+                                                color: $child-datatable-footer-text-color !important;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        &:last-child{
+                            .child-table-border{
+                                border-bottom: transparent !important;
+                            }
+                        }
+                    }
+                }
+            }
+            .datatable-footer{
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        }
+    }
+}
+.grid-main{
+    align-items: center;
+    .inner-grid{
+        display: grid;
+        grid-template-columns: 33.33% 1fr;
+        align-items: center;
+        .form-group{
+            margin-bottom: 0 !important;
+        }
+    }
+}
+.grid-3{
+    .inner-grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-column-gap: 10px;
+    }
+}
+.tags-btn {
+    border: 1px solid #34c3ee;
+    border-radius: 30px;
+    padding: 5px 12px;
+    background: #34c3ee;
+    margin: 5px 5px 5px 0;
+    color: #fff;
+    .fa-times {
+        cursor: pointer;
+        margin-left: 5px;
+        background: #fdfdfd;
+        font-size: 15px;
+        width: 13px;
+        color: #e42c2c;
+        padding: 2px;
+        height: 13px;
+        border-radius: 50%;
+        &:hover {
+            background: #e42c2c;
+            color: #fff;
+        }
+    } 
+    .fa-times.disabled {
+        cursor: context-menu  !important;
+        &:hover {
+            background: #fff !important;
+            color: #e42c2c;
+        }
+    }
+}
+.text-success{font-weight: 600;}
+.fake-label{background: transparent;}
+[type="checkbox"]:checked ~ .fake-label {
+    background: transparent;
+    color: #4b4b4b;
+}
+[type="checkbox"] + .fake-input:before{border-color: #00a650 !important;}
+.bill-formate {
+    margin-left: -6px;
+    li  {
+        float: left;
+        width: 20%;
+    }
+    input[type=checkbox] {
+        position: relative;
+        top: 2px;    
+    }
+}
+.add-tag-btn {
+    padding: 2px 5px 3px !important;
+    .fa-plus {
+        font-size: 12px;
+    }
+}
+.modal-btn .btn{width: 130px !important;}
+.tags-block {
+    float: left;
+    display: contents !important;
+    -webkit-box-pack: center;
+    justify-content: center;
+    .tags-btn {
+        padding: 3px 10px 4px;
+         margin: 3px 3px 3px 0;
+        font-size: 11px !important;
+        .fa-times {
+            font-size: 13px;
+            width: 12px;
+            padding: 2px;
+            height: 12px;
+        }
+    }
+}
+.dropdown-btn{background: #faf8f9;}
+.date-cross-icon {
+    top: 10px;
+    right: 35px;
+}
+.card-header {background: transparent;}
+::ng-deep .selected-item {
+    line-height: 16px;
+    max-height: 21px;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    a {
+        padding-top: 0px !important;
+    }
+}
+.child-datatable {
+    ::ng-deep .datatable-body-cell-label:nth-child(5) {
+        white-space: inherit !important;
+        input {
+            height: 25px;
+        }
+    }
+}
+.angle-left {
+    transform: rotate(-90deg);
+    position: relative;
+    color: #34c3ee !important;
+    font-size: 0.85rem !important;
+    display: inline-block;
+}
+.angle-right {
+    font-size: 0.85rem !important;
+    color: #00a650 !important;
+}
+.modal-body.create-bill {padding: 20px 30px 25px !important;}
+.btn:disabled {cursor: context-menu;}
+.edit-hov.disabled, .view-hov.disabled {
+    cursor: context-menu;
+    color: #8b8787;
+    i {
+        &:hover {
+            color: #4b4b4b !important;    
+        }
+    }
+}
+.view-hov.disabled span:hover {color: #4b4b4b !important; }
+::ng-deep .nav-tabs {
+    margin-bottom: 10px  !important;
+    .nav-link {
+        b {
+            font-weight: normal !important;
+        }
+    }
+}
+::ng-deep .empty-row {text-align: center;}
+.font-bold {font-weight: 500;}
+::ng-deep .expanded-row{border-top:3px solid #34c3ee !important;}
+
+.alert-warning {
+    font-size: 13px;
+    padding: 6px 12px;
+}
+.add-pm{width: 80px;}
+.fa-level-down {font-size: 17px;}
+::ng-deep .datatable-body-cell-label {
+    white-space: nowrap;
+    width: 95%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    .tooltip-outer {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+}
+.font-14 {font-size: 13px;}
+.fa-exclamation-circle {
+    font-size: 16px !important; 
+    position: relative;
+    top: -2px;
+}
+.mat-icon-button {top: -5px;}
+
+::ng-deep .multiselect-dropdown-hold {
+    .multiselect-dropdown {
+        .dropdown-btn {
+            & > span {
+                &:last-child {
+                    position: unset;
+                }
+            }
+        }
+    }
+    &.arrow-absolute {
+        .multiselect-dropdown {
+            .dropdown-btn {
+                & > span {
+                    &:last-child {
+                        position: absolute;
+                    }
+                }
+            }
+        }
+    }
+}
+.payment-selected-option {
+  width: 100%;
+  .payment-radio {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    .fake-radio-label {
+      margin-left: 23px;
+    }
+    .fake-radio-button-disabled{
+        width: 0.875rem;
+        height: 0.875rem;
+        border: 1px solid #78676a;
+        border-radius: 100%;
+        position: absolute;
+        margin-top: -1px;
+        cursor: not-allowed;
+    }
+    .fake-radio-label-disbaled {
+        @extend .fake-radio-label;
+        color: #78676a;
+    }
+  }
+}
+.inner-grid {
+    font-family: "Roboto", sans-serif !important;
+    .radio-btn {
+    display: flex;
+    align-items: center;
+    padding: 0 10px 5px 0;
+    margin: 0;
+    .fake-radio-label {
+        font-size: 14px;
+        
+        margin-left: 20px;
+        margin-bottom: 2px;
+    }
+    }
+    .CH-name {
+    width: 100%;
+    font-size: clamp(12px, calc(0.87vw + 2px), 14px);
+    font-weight: 400;
+    margin-bottom: 3px;
+    }
+    .pairID {
+    width: 100%;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 3px;
+    }
+    .format-map {
+    label {
+        font-size: 11px;
+    }
+    .form-control {
+        height: 22px;
+    }
+    }
+}
+

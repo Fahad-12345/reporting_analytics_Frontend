@@ -1,0 +1,156 @@
+<div class="row">
+	<div class="col-md-6 edit-block">
+		<div class="form-group field option-field mb-2 d-inline-block">
+			<ul>
+				<li>Show</li>
+				<li>
+					<select class="custom-select" name="limit" [(ngModel)]="pageSize" id="limit"
+						(change)="pageLimit($event.target.value)">
+						<option [value]="10" selected>10</option>
+						<option [value]="20">20</option>
+						<option [value]="30">30</option>
+						<option [value]="40">40</option>
+						<option [value]="50">50</option>
+						<option [value]="100">100</option>
+					</select>
+				</li>
+				<li>Entries</li>
+			</ul>
+		</div>
+	</div>
+	<div class="col-md-6 text-end mt-2 mb-2">
+		<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+			Customize Columns
+		 </button>
+		<button class="btn btn-danger me-1 ms-2" (click)="confirmDel()"
+			*ngIf="aclService.hasPermission(userPermissions.patient_patient_list_delete) && selection.selected.length">
+			<span class="icon-remove me-1" style="font-size: 14px;"></span> 
+			<span> Delete [{{selection.selected.length}}] </span>
+		</button>
+	</div>
+</div>
+<div class="row justify-content-center">
+	<div class="col-md-12">
+		<ngx-datatable class="bootstrap" #patientList [rows]="patientRows" [columnMode]="'force'"
+			[headerHeight]="50" [footerHeight]="50" [scrollbarH]="true" [externalPaging]="true"
+			[virtualization]="false" [count]="totalRows" [offset]="pageNumber" [limit]="pageSize"
+			(page)="nextPage($event)">
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Chart ID" prop="id" [width]="80">
+				<ng-template let-column="column" ngx-dattable-header-template>
+					Chart ID
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<a class="underline-hov" [routerLink]="['/front-desk/patients/profile', row.id]"
+						*ngIf="aclService.hasPermission(userPermissions.patient_patient_list_profile); else disableChartId">{{
+						row.chart_id }}</a>
+					<ng-template #disableChartId>{{ row.chart_id }}</ng-template>
+					<!-- {{!aclService.hasPermission(userPermissions.id) ?  row.displaId:'' }} -->
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Patient Name" prop="first_name"
+				[width]="150">
+				<ng-template let-column="column" ngx-dattable-header-template>
+					Patient Name
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row.first_name}} {{row.middle_name}} {{row.last_name}}" container="body">{{row.first_name}} {{row.middle_name}} {{row.last_name}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<!-- <ngx-datatable-column [sortable]='false' name="Last Name" prop="last_name" [width]="150">
+				<ng-template let-column="column" ngx-dattable-header-template>
+					Last Name
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.last_name}}">
+						{{row.last_name}}</div>
+				</ng-template>
+			</ngx-datatable-column> -->
+			<ngx-datatable-column [sortable]='false' name="Date Of Birth" prop="dob" [maxWidth]="140">
+				<ng-template let-column="column" ngx-dattable-header-template>
+					Date Of Birth
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<!-- {{value |dateFormatMDY | date:short}} -->
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value? (value | dateFormatMDY | date:short) : ''}}" container="body">{{value? (value | dateFormatMDY | date:short) : ''}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' name="Primary Phone" prop="cell_phone" [width]="150">
+				<ng-template let-column="column" ngx-dattable-header-template>
+					Primary Phone
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<!-- {{value |dateFormatMDY | date:short}} -->
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.cell_phone|phoneFormatPipe}}" container="body">{{row.cell_phone|phoneFormatPipe}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [canAutoResize]="true" name="Actions" prop="id" [width]="80" cellClass="action-icon">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					<mat-checkbox
+						*ngIf="aclService.hasPermission(userPermissions.patient_patient_list_edit) || aclService.hasPermission(userPermissions.patient_patient_list_delete)"
+						(change)="$event ? masterToggle($event) : null"
+						[checked]="selection.hasValue() && isAllSelected()"
+						[indeterminate]="selection.hasValue() && !isAllSelected()">
+					</mat-checkbox>
+					Actions
+				</ng-template>
+				<ng-template let-row="row" let-value="value" class="form" ngx-datatable-cell-template>
+					<mat-checkbox (click)="$event.stopPropagation()"
+						(change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"
+						*ngIf="aclService.hasPermission(userPermissions.patient_patient_list_edit) || aclService.hasPermission(userPermissions.patient_patient_list_delete)">
+					</mat-checkbox>
+					<a class="edit-hov mx-1" id="pharmacydetail" ngbTooltip="Pharmacy" container="body" role="button"
+						(click)="pharmacy_detail_open_modal(row,content)">
+						<i class="fa fa-medkit"></i>
+					</a>
+					<a *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_edit)" class="edit-hov mx-1" title="edit-{{row.id}}"
+						[routerLink]="['/front-desk/patients/patient-edit', row.id]" ngbTooltip="Edit" container="body" role="button">
+						<i class="icon-pencil"></i>
+					</a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="patientHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+					<a class="remove-hov mx-1" (click)="confirmDel(row?.id)" ngbTooltip="Delete" container="body" 
+						href="javascript:void(0)" role="button">
+						<i class="icon-remove"></i>
+					</a>
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+	</div>
+</div>
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-static-name" class="modal-title text-capitalize">Patient Pharmacy List</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body scroll-control">
+		<app-patient-pharmacy [pharmacy_detail]="patientPharmacies"></app-patient-pharmacy>
+	</div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

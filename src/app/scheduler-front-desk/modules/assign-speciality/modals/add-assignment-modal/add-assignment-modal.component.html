@@ -1,0 +1,410 @@
+<div *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_add_new)">
+    <div class="modal-header">
+        <h4 class="modal-title">Create Specialty Assignment</h4>
+        <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+    </div>
+    
+    <div class="modal-body assignment-modal">
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="title" for="clinicname">Practice-Location*</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                        <select class="form-select" formControlName="clinicname" (change)="changeClinic()">
+                            <option *ngFor="let clinic of assignClinics; let i=index" value={{clinic.id}} title="{{clinic.facility_name}}-{{clinic.name}}" >
+                               <span tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinic.facility_name}}-{{clinic.name}}">{{clinic?.facility?.qualifier}}-{{clinic.qualifier}}</span>
+                            </option>
+                        </select>
+                    </span>
+                    <small class="text-muted danger" *ngIf="btnSubmit && myForm.get('clinicname').errors?.required">
+                        This field is required
+                    </small>
+                </div>
+                <div class="col-md-4">
+                    <label class="title" for="speciality">Specialty*</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left">
+                        <select class="form-select" formControlName="speciality" (ngModelChange)="changeSpec()">
+                            <option *ngFor="let spec of speciality" value={{spec.id}} title="{{spec.name}}"><span tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{spec.name}}">{{spec.qualifier}}</span></option>
+                        </select>
+                    </span>
+                    <small class="text-muted danger" *ngIf="btnSubmit && myForm.get('speciality').errors?.required">
+                        This field is required
+                    </small>
+                </div>
+                <div class="col-md-4">
+                    <label class="title" for="noOfDoctors">Number of Providers*</label>
+                    <input type="number"  min=1 max=999 oninput="validity.valid || (value='')" (change)="changeNoDoctors()" class="form-control" formControlName="noOfDoctors" required style="margin-bottom: 0 !important;" />
+                    <!-- <span [hidden]="noOfDocIsLess">
+                        <span class="error1 title"> Please increase no of Providers</span>
+                    </span> -->
+                    <!-- <span [hidden]="noOfDocZero">
+                        <span class="error1 title"> Number of Providers field is required</span>
+                    </span> -->
+                    <small class="text-muted danger" *ngIf="myForm.get('noOfDoctors').errors?.required" [hidden]="noOfDocZero">
+                        This field is required
+                    </small>
+                    <!-- <span [hidden]="noOfDocSelectedMore">
+                        <span class="error1 title"> Please increase no of Providers</span>
+                    </span> -->
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class='col-md-4'>
+                    <!-- <label class="title" for="startdate">Start Date* </label> -->
+                    <!-- <ejs-datepicker  placeholder='Enter date' formControlName="start_date" (change)="changeStartDate($event)">
+                    </ejs-datepicker> -->
+                    <app-mat-date-picker-sharedable [classesName]="['form-group','date-field', 'vertical-label-cross']" [lableName]="'Start Date*'" (valueChange)="onChangeStartDate($event)" [defaultDate]="start_date_Control.value"  [placeholder]="'Enter date'" ></app-mat-date-picker-sharedable>
+                    <!-- <label class="required-color" *ngIf="startDateRequired"> -->
+    
+                        <small class="text-muted danger" *ngIf=" start_date_Control.errors?.required">
+                            This field is required
+                        </small>
+                </div>
+                <!-- <div class='col-md-3'>
+                    <label class="title" for="enddate">*End Date </label>
+                    <ejs-datepicker [(value)]='endDate' placeholder='Enter date' (change)="changeEndDate()">
+                    </ejs-datepicker>
+                    <span class="required-color" *ngIf="endDateRequired">
+                        *End date is required
+                    </span>
+                </div> -->
+                <div class='col-md-4'>
+                    <label class="title" for="starttime">Start Time*</label>
+                    <ejs-timepicker [min]="minStartTime" [max]="maxEndTime" strictMode=true [step]='interval' formControlName="start_time" (change)="changeStartTime($event.value)"></ejs-timepicker>
+                          <small class="text-muted danger" *ngIf="start_time_Control.errors?.required">
+                            This field is required
+                          </small>
+                </div>
+                <div class='col-md-4'>
+                    <label class="title" for="endtime">End Time* </label>
+                    <ejs-timepicker [min]="minStartTime" [max]="maxEndTime" strictMode=true [step]='interval' formControlName="end_time" (change)="changeEndTime($event.value)">
+                    </ejs-timepicker>
+                        <small class="text-muted danger" *ngIf="end_time_Control.errors?.required">
+                            This field is required
+                        </small>
+                        <small class="text-muted danger" *ngIf="endTimewrtStart">
+                            Pick end time with respect to start
+                        </small>
+                </div>
+            </div>
+    
+            <div class="row mt-3">
+                <div class='col-md-3 form ps-0'>
+                    <label class="d-inline-block chkbox position-relative m-0">
+                        <!-- <input id="assignDoc" type="checkbox" name="data" formControlName="assign_provider"  (click)="selectAssignDoctorTypes($event)" checked> -->
+                        <input id="assign_provider" type="checkbox" name="data" value='true' formControlName="assign_provider"  (change)="selectAssignDoctorTypes($event)" >
+    
+                        <span class="fake-input position-absolute"></span>
+                        <label class="fake-label d-block" for="assignDoc">
+                             Assign Provider*
+                        </label>
+                    </label>
+                    <!-- <label class="required-color" *ngIf="assignDocError"> -->
+                        <small class="text-muted danger ms-2" *ngIf="assign_provider_Control.errors?.required">
+                            This field is required
+                        </small>
+                </div>
+    
+                <!-- <div [hidden]="isAssignDocClick" class="col-md-9 radiooptions radio-button-sch"> -->
+                    <div [hidden]="assign_provider_Control.errors?.required" class="col-md-9 radiooptions radio-button-sch">
+                    <ul class="list-unstyled d-flex justify-content-between form mb-0">
+                        <li class="" *ngFor="let providerOption of assignProviderTypes ">
+                            <label class="fake-label-frame chkbox position-relative m-0" for="{{providerOption.slug}}">
+                                <!-- <input name="data" (click)="doNotAssignDoc()" id="donotassign" type="radio"> -->
+                                <input  [value]="providerOption.slug" formControlName="doctor_method_slug" [id]='providerOption.slug'  (change)="selectAssignDoctorTypes()"  type="radio">
+                                <span class="fake-input position-absolute"></span>
+                                <!-- <span class="fake-label d-block font-weight-normal">Do not assign</span> -->
+                                <span class="fake-label d-block font-weight-normal">{{providerOption.name}}</span>
+                            </label>
+    
+                        </li>
+                    </ul>
+                    
+                    <!-- <label class="required-color d-block text-center" *ngIf="!isAssignDocClick &&oneOptionforAssignproviderError"> -->
+                        <small class="text-muted danger text-center" *ngIf="btnSubmit && doctor_method_slug_Control.errors?.required">
+                            This field is required
+                        </small>
+                </div>
+    
+            </div>
+    
+            <!-- manual doctor assign heading start -->
+    
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4 ps-0" [hidden]="isDocHeader">
+                        <label class="title">Provider</label>
+                    </div>
+                    <div class="col-md-4 selectdoc-list ps-1" [hidden]="isShowSelectedlist">
+                        <label class="title">Selected Provider</label>
+                    </div>
+                    <div class="col-md-4 doc-list-conflict" [hidden]="isSHowAssignedDocDetails">
+                        <label class="title">Conflict</label>
+                    </div>
+                    <div class="col-md-4" [hidden]="isShowUnavailabiltySelectedDoc">
+                        <label class="title">Unavailability</label>
+                    </div>
+                    <div class="col-md-4" [hidden]="isShowUnavailabiltyConflictDoc">
+                        <label class="title">Unavailability</label>
+                    </div>
+                </div>
+            </div>
+            <!-- manual doctor assign heading ends -->
+            <div class="row">
+                <!-- list of doctors -->
+                <div class="col-md-4 DocList">
+                    <div class="row">
+                        <div [hidden]="searchBar" class="col-md-12 search-tab pe-0">
+                            <input type="search" class="form-control mb-2" formControlName="search" placeholder="Search" (keypress)="searchDocByName($event)" (input)="searchDocByName($event)" (keydown)="searchDocByName($event)" />
+                        </div>
+                    </div>
+                    <div class="row secondpart">
+                        
+                        <div class="col-md-12 scrollbar scrollbar-primary docItem doc-tab">
+                            <button [hidden]="searchList" *ngFor="let doc of searchDocList; let i = index" type="button" [ngStyle]="doc.isAssigned===true && ( doc.unavailability==='none' || doc.unavailability==='partial') ? {'color':'red'}:doc.unavailability==='full' && (doc.isAssigned===false || doc.isAssigned===true) ?{'color':'grey'}: doc.unavailability==='partial' && doc.isAssigned===false? {'color':'red'}: {'color':'black'}"
+                                  
+                            
+                            class="list-group-item list-group-item-action d-flex align-items-center" (click)="selectDoc($event,doc)">
+                                <span
+                                    class="col-md-12 doc-name">{{doc.user_info.first_name}}&nbsp;{{doc.user_info.middle_name}}&nbsp;{{doc.user_info.last_name}}{{doc.provide_title | AddBillingTitle}}</span>
+                            </button>
+    
+                            <div *ngIf="!isShowlist">
+                                <button *ngFor="let doc of ManualListDoctors; let i = index" type="button" [ngStyle]="doc.isAssigned==true && ( doc.unavailability==='none' || doc.unavailability==='partial') ? {'color':'red'}:doc.unavailability==='full' && (doc.isAssigned==false || doc.isAssigned==true) ?{'color':'grey'}: doc.unavailability=='partial' && doc.isAssigned==false? {'color':'red'}: {'color':'black'}"
+                                    class="list-group-item list-group-item-action d-flex align-items-center" (click)="selectDoc($event,doc)">
+                                    <span
+                                        class="col-md-12 text-truncate doc-name doc-float">{{doc.user_info.first_name}}&nbsp;{{doc.user_info.middle_name}}&nbsp;{{doc.user_info.last_name}}{{doc.provide_title | AddBillingTitle}}</span>
+                                </button>
+                            </div>
+                             
+                        </div>
+                    </div>
+                </div>
+                <!-- selected doctors -->
+                <div [hidden]="isShowSelectedlist" class="col-md-6 selectedDoc">
+                    <div class="row">
+                        <div class="col-md-10 scrollbar-primary docSelectedItem select-margin-tab padding-none">
+                            <li *ngFor="let selectdoc of AvailableListDoctors; let i = index" class="row selecteddoc list-group-item doc-name-tab d-flex align-items-center ms-2 select-first-name">
+                                <span class="d-inline-block text-truncate col-md-10 title">{{selectdoc.user_info.first_name}}&nbsp;{{selectdoc.user_info.middle_name}}&nbsp;{{selectdoc.user_info.last_name}}
+                                </span>
+                                <span class="col-md-2">
+                                    <a class="delete-icon" href="javascript:void(0)"
+                                        (click)="removeSelectedDoc($event,selectdoc)">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </span>
+                            </li>
+                        </div>
+                    </div>
+                </div>
+                <!-- unavailable doctors -->
+                <div [hidden]="isShowUnavailabiltySelectedDoc" class="col-md-4 show-unavailable">
+                    <div class="row">
+                        <div class="Conflict scrollbar-primary col-md-12 unavailable-scrol">
+                            <div class="row " *ngFor="let conflictdoc of unavaliabiltyList[0]; let i = index">
+                                <span class="col-md-5 col-lg-3">
+                                    <label class="title">{{unavailabilityStartTime[i]+'-'}}</label>
+                                </span>
+                                <span class="col-md-5 col-lg-3">
+                                    <label class="title">{{unavailabilityEndTime[i]}}</label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=row></div>
+                    <div [hidden]="isShowUnavailabiltySelectedDoc" class="row">
+                        <div class="col-md-6 padding-none">
+                            <button class="btn bg-green w-100 assign-top" (click)="isAssignedAnyway()">Assign</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- assigned doctors -->
+                <div [hidden]="isSHowAssignedDocDetails" class="col-md-8 conflict-box">
+                    <div class="row ps-2" *ngFor="let conflictdoc of docDetails; let i = index">
+                        <div class="Conflict scrollbar-primary col-md-9 padding-none">
+                            <div class="row sm-pad-confi d-flext align-items-center" >
+                                <span class="col-md-1 sideColor" [ngStyle]="{'background-color':conflictdoc.facility_color}"></span>
+                                <span class="col-md-11 col-lg-5 cli-name-tab text-truncate title doc-name pe-0" title="{{conflictdoc.facility_name}}">
+                                    {{conflictdoc.facility_name}}
+                                </span>
+                                <span class="col-md-4 col-lg-3 date-con-tab padding-none">
+                                    <label class="title">{{tempStartDate[i]+'-'}}</label>
+                                </span>
+                                <span class="col-md-4 col-lg-3 date-con-tab">
+                                    <label class="title">{{tempEndDate[i]}}</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-3 pe-0">
+                            <button class="btn btn-success w-100" (click)="replace(conflictdoc)">Replace</button>
+                        </div>
+                    </div>
+                    <div class=row></div>
+                    <!-- <div [hidden]="isSHowAssignedDocDetails" class="row mt-2">
+                        <div class="col-md-12 col-lg-8 automatic-tab form ps-0">
+                            <label class="d-inline-block chkbox position-relative m-0">
+                                <input id="automaticSys" type="checkbox" name="automaticSys">
+                                <span class="fake-input position-absolute"></span>
+                                <label class="fake-label d-block py-0 mb-0" for="automaticSys">
+                                    Automatic
+                                </label>
+                            </label>
+                        </div>
+                        <div class="col-md-12 col-lg-4 pe-0">
+                            <button class="btn btn-success w-100" (click)="replace()">Replace</button>
+                        </div>
+                    </div> -->
+                </div>
+                <!-- unavailable conflict of doctors -->
+                <div [hidden]="isShowUnavailabiltyConflictDoc" class="col-md-4">
+                    <div class="row">
+                        <div class="Conflict scrollbar-primary col-md-12 start-time">
+                            <div class="row " *ngFor="let conflictdoc of unavaliabiltyList[0]; let i = index">
+                                <span class="col-md-3">
+                                    <label class="title">{{unavailabilityStartTime[i]}}</label>
+                                </span>
+                                <span class="col-md-3">
+                                    <label class="title">{{unavailabilityEndTime[i]}}</label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=row></div>
+                    <div [hidden]="isShowUnavailabiltyConflictDoc" class="row">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <button class="btn bg-green w-100" (click)="isAssignedAnyway()">Assign</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class='col-md-4 recurrence-tab form ps-0' [hidden]="this.doctor_method_slug_Control.errors?.required || this.doctor_method_slug_Control.value==assignproviderMethodSlugEnum.manual_assign">
+                    <label class="d-inline-block chkbox position-relative my-3">
+                        <input [disabled]="assign_provider_Control.errors?.required || doctor_method_slug_Control.errors?.required " id="recurrence" type="checkbox" name="recurrence" value="true" formControlName='recurrence'
+                            (change)="selectRecurrence($event)">
+                        <span class="fake-input position-absolute"></span>
+                        <label class="fake-label d-block py-0 mb-0" for="recurrence">
+                            Recurrence
+                        </label>
+                    </label>
+                </div>
+            </div>
+            <div class="row d-flex align-items-center mb-3">
+                <!-- <div class="col-md-4" [hidden]="isShowRecuurenceBefore"> -->
+                     <div class="col-md-5" [hidden]="!recurrence_control.value">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label> Repeat every </label>
+                        </div>
+                        <div class="col-md-6 ps-0">
+                            <select class="form-select mb-0" formControlName="dailyMontlyWeeklyOpt" (ngModelChange)="changeRepeatEvery()">
+                                <option *ngFor="let opt of option" value={{opt.id}}>
+                                    {{opt.value}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 ps-1">
+                            <label class="title">on</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div [hidden]="!recurrence_control.value" class="row">
+                        <div [hidden]="isDisableOption" class="col-md-12 px-0">
+                            <ul class="list-unstyled form d-flex justify-content-around mb-0">
+                                <!-- <li class="d-inline-block height-line" *ngFor="let days of weekDayList;let i=index" (click)="selectWeekDays($event,days[0])"> -->
+    
+                                <li class="d-inline-block height-line" *ngFor="let days of weekDayList;let i=index" >
+                                    <label class="d-inline-block chkbox position-relative m-0">
+                                        <input id="Mon" type="checkbox" (click)="selectWeekDays($event,days[0])" [(checked)]="days[0].isChecked" name="week">
+                                        <span class="fake-input position-absolute"></span>
+                                        <label class="fake-label d-block font-weight-normal py-0 mb-0" (click)="selectWeekDays($event,days[0])">
+                                            {{days[0].name}}
+                                        </label>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" [hidden]="isDisableOption">
+                <label [hidden]="isWeekError" class="error1 col-md-7 title required-color">
+                    Choose atleast one day*
+                </label>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-4 recurrence-tab form ps-0" [hidden]="!recurrence_control.value">
+                    <label class="d-inline-block chkbox position-relative m-0">
+                        <input id="range_recurrance" type="checkbox" name="range_recurrance" value="true" formControlName='range_recurrance'
+                            (change)="rangeRecuurence($event)">
+                        <span class="fake-input position-absolute"></span>
+                        <label class="fake-label d-block" for="range_recurrance">
+                            Range of Recurrence*
+                        </label>
+                    </label>
+                    
+                    <!-- <p [hidden]="hiderangeRecurrenceError" class="error1 col-md-12 required-color mt-2"> -->
+                        <small *ngIf="btnSubmit && range_recurrance_control.errors?.required" class="text-muted danger ms-2">
+                        Kindly select range of recurrence
+                        </small>
+                </div>
+                <div class=" col-md-8 radio-button-sch mb-3 radio-button-sch mb-3" [hidden]="!recurrence_control.value" [ngStyle]="{'color':!recurrence_control.value ? 'grey' : 'black'}">
+                    <ul class="list-unstyled form d-flex justify-content-between mb-0">
+                        <li class="d-inline-block">
+                            <label class="fake-label-frame chkbox position-relative m-0" for="range_recurrance_option_endafter">
+                                <input  
+                                    (click)="endAfterClickChange()" id="range_recurrance_option_endafter" [value]='rangeRecurrenceOptions.EndAfter' formControlName="range_recurrance_option" type="radio">
+                                <span class="fake-input position-absolute"></span>
+                                <span class="fake-label d-block font-weight-normal">{{rangeRecurrenceOptions.EndAfter}}</span>
+                            </label>
+                        </li>
+    
+                        <li class="d-inline-block col-md-2 px-2 ">
+                            <input  formControlName="noOfOccurence" (click)="endAfterClickChange()" class="form-control mb-0" type="number" min=1 oninput="validity.valid||(value='')">
+                        </li>
+                        <!-- <li class="d-inline-block">
+                            <label>Occurrence</label>
+                        </li> -->
+    
+                        <li class="d-inline-block">
+                            <label class="fake-label-frame chkbox position-relative m-0" for="range_recurrance_option_endby">
+                                <input   type="radio"
+                                    (click)="endOccChanged($event)" [value]='rangeRecurrenceOptions.EndBy' formControlName="range_recurrance_option" id="range_recurrance_option_endby">
+                                <span class="fake-input position-absolute"></span>
+                                <span class="fake-label d-block font-weight-normal">{{rangeRecurrenceOptions.EndBy}}</span>
+                            </label>
+                        </li>
+    
+                        <li class="d-inline-block col-md-4 px-0 top-y-50">
+                            <!-- <ejs-datepicker (click)="endOccChanged($event)" [(value)]='endOccurenceEndDate' [min]='endDate' [enabled]="endOccurenceByDate" name="rangeRecOption" placeholder='Enter Date'></ejs-datepicker> -->
+                            <app-mat-date-picker-sharedable [classesName]="['form-group','field','horizontal-label']" [lableName]="''" [min]='minDate' (valueChange)="onChangeEndByDate($event)" (click)="endOccChanged($event)" [defaultDate]="endOccurenceEndDate"  [placeholder]="'Enter date'" [disabled]="!endOccurenceByDate"></app-mat-date-picker-sharedable>
+    
+                        </li>
+                    </ul>
+                    <!-- <label [hidden]="isError" class="error1 col-md-12 required-color">
+                        Kindly choose automatic assign or do not assign
+                    </label> -->
+                    
+                    <small *ngIf="btnSubmit && range_recurrance_option_control.errors?.required" class="text-muted danger ms-2">
+                        Kindly choose one option from range of recurrence
+                    </small>
+                </div>
+            </div>
+    
+            <div class="row d-flex justify-content-center mt-2">
+                <div class="col-md-3 col-lg-2">
+                    <button class="btn btn-secondary  w-100" data-dismiss="modal" type="button" (click)="Cancel()">Cancel</button>
+                </div>
+                <div class="col-md-3 col-lg-2">
+                    <button class="btn btn-success w-100" [disabled]="isDisableSaveBtn || myForm.invalid && btnSubmit || assignDocError" type="submit" (click)="submitFormAndOpen()">Save</button>
+                </div>
+    
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,128 @@
+@import '../../../assets/sass/abstracts/variables/colors';
+.pointer {
+  cursor: pointer;
+}
+$nth_child: (
+  1199.98: 3,
+  991.98: 2,
+  575.98: 1,
+);
+@mixin nth_child_dynamic {
+  @each $nth_child, $value in $nth_child {
+    @media (max-width: #{$nth_child}px) {
+      &:not(:nth-child(-n + #{$value})) {
+        display: none;
+      }
+    }
+  }
+}
+.billing-info {
+  .card {
+    .card-header {
+      margin-bottom: 0 !important;
+      .nav-tabs {
+        border-top: none !important;
+        border-right: none !important;
+        border-left: none !important;
+        .nav-item {
+          .nav-link {
+            &.active {
+              border-radius: 0.3125rem 0.3125rem 0 0;
+              border-color: #c3c4c3 #c3c4c3 #fff !important;
+              border: 1px solid transparent;
+              background: #fff !important;
+            }
+          }
+        }
+      }
+    }
+    .card-body {
+      .field-block {
+        .dynamic-collapse {
+          div {
+            @include nth_child_dynamic();
+          }
+        }
+      }
+    }
+  }
+}
+.light-list-striped {
+  ul {
+    @media (max-width: 767.98px) {
+      padding: 0;
+    }
+    li {
+      @media (min-width: 768px) {
+        width: 50%;
+      }
+      @media (min-width: 992px) {
+        width: 33.3%;
+      }
+      @media (max-width: 991.98px) {
+        padding: 0.3125rem 0.5rem 0;
+      }
+      &:not(:last-child) {
+        @media (max-width: 991.98px) {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+.file-upload-txt{
+  span{
+    &.text-muted{
+      font-size: 0.85rem !important;
+      &.danger{
+          color: #e26470 !important;
+      }
+    }
+  }
+}
+  
+.tableIcon-condition {
+  button {
+    &[disabled] {
+      cursor: default;
+      opacity: 0.55;
+    }
+  }
+}
+
+::ng-deep .ngx-file-drop__content {
+  p {
+    margin-bottom: 0;
+  }
+  button {
+    all: unset;
+    &[disabled] {
+      & > * {
+        pointer-events: none;
+        opacity: 0.7;
+      }
+      
+    }
+    .upload-btn {
+      i {
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+.by-default-danger {
+  position: relative;
+  ::ng-deep .ng-select {
+    &.ng-select-multiple {
+      .ng-select-container {
+        border: 1px solid $wild-watermelon !important;
+      }
+    }
+  }
+  & > .validation-msg {
+    position: absolute;
+    bottom: 3px;
+  }
+}
+

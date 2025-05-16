@@ -1,0 +1,125 @@
+::ng-deep .payers-form {
+    .light-list-striped {
+        padding: 1.5rem 0.75rem;
+        background: #faf9f9 !important;
+        border-radius: 5px;
+
+        .payers-form-info {
+            display: flex;
+            justify-content: space-between;
+
+            .form-group {
+                margin-bottom: 0;
+                width: 10%;
+
+                &+.form-group {
+                    margin-top: 0;
+                }
+
+                .form-control {
+                    margin-bottom: 0;
+                }
+
+                .ng-select {
+                    &.ng-select-multiple {
+                        .ng-select-container {
+                            .ng-value-container {
+                                .ng-value {
+                                    .ng-value-label {
+                                        -webkit-line-clamp: 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                select {
+                    &.form-select {
+                        padding-top: 0.175rem;
+                    }
+
+                    &+span {
+                        &.text-muted {
+                            position: unset;
+                        }
+                    }
+
+                }
+
+                .multiselect-dropdown {
+                    .dropdown-btn {
+                        padding-bottom: 0 0.625rem !important;
+
+                        .selected-item-container {
+                            height: 19.8px;
+                            font-size: 0.65rem;
+
+                            .selected-item {
+                                margin-bottom: 0 !important;
+                            }
+                        }
+
+                        .dropdown-multiselect__caret {
+                            top: inherit;
+                        }
+
+                        &>span {
+                            &:last-child {
+                                transform: none !important;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        .dropdown-list {
+            height: 12rem;
+
+            .item1 {
+                border: 0;
+
+                .multiselect-item-checkbox {
+                    width: 100%;
+
+                }
+
+                .filter-textbox {
+                    border-bottom: none;
+                    width: 100%;
+
+                    input {
+                        padding-left: 0 !important;
+                    }
+                }
+            }
+
+            .item2 {
+                display: block;
+            }
+        }
+
+        ul {
+            li {
+                width: 100%;
+            }
+        }
+    }
+}
+
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items {
+    max-height: 190px;
+}
+@mixin move {
+    float: right;
+}
+.moveEditmode{
+    @include move();
+    margin-right: 6%
+}
+.moveNotEditmode{
+    @include move();
+    margin-right: 9%
+}

@@ -1,0 +1,106 @@
+@import './../../../../../../assets/sass/components/collapse-sidebar';
+@import './../../../../../../assets/sass/components/accordian.scss';
+.autocomplete-container {
+	box-shadow: none !important;
+}
+
+.center {
+	flex: 0 0 31.333333% !important;
+	max-width: 31.333333% !important;
+
+}
+
+input,
+select {
+	height: 30px !important;
+}
+.incomplete
+{
+	border : 2px solid red;
+}
+.required
+{
+	color : red;
+	font-size : 12px
+}
+
+// .title {
+// 	color: #272b30;
+// 	font-size: 18px;
+// 	font-weight: 600;
+// 	margin: 8px 0 0 10px;
+
+// }
+
+.btn-outline-secondary {
+	background-color: white !important;
+	color: #6d6969;
+	border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+	background-color: #34c3ee !important;
+	border-color: #34c3ee;
+	color: white;
+}
+
+.btn-outline-secondary:active {
+	background-color: #34c3ee !important;
+}
+
+select,
+input,
+textarea {
+	font-size: 13px;
+	font-weight: 500;
+	border-radius: .26rem;
+	padding: 4px 10px;
+	border: 1px solid #c6c4c4;
+	color: #525252;
+	background-color: #faf8f9;
+
+}
+
+.modal-header .close {
+	padding: 0rem !important;
+	margin: 0rem 0rem 0rem auto !important;
+	font-size: 18px;
+	padding: 8px 15px;
+}
+
+.form-control {
+	margin-bottom: 5px !important;
+}
+
+.requ-date{
+	color: red;
+	font-size: 13px;
+}
+//visit history css
+.create-app{
+	display: flex;
+}
+
+
+::ng-deep.create-app-form{
+	form{
+		.form-group {
+			&.field {
+				margin-bottom: 0.25rem !important;
+			}
+		}
+		
+	}
+	
+}
+
+::ng-deep.create-app-form{
+	.btn{
+		min-width: 120px;
+	}
+}
+::ng-deep.model-trans{
+	.modal-dialog{
+		max-width: 1024px;
+	}
+}

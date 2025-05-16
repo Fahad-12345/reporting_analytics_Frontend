@@ -1,0 +1,59 @@
+<div class="calendar container">
+  <div class="calendar-navs row">
+    <div class="month-nav col-md-4">
+      <div class="row">
+        <span class="col-md-4" (click)="prevMonth()">&lt;</span>
+        <span class="col-md-4" class="p4">{{ currentDate.format('MMMM').substring(0,3) }}</span>
+        <span class="col-md-4" (click)="nextMonth()">&gt;</span>
+      </div>
+    </div>
+    <div class="col-md-4"></div>
+    <div class="year-nav col-md-4">
+      <div class="row">
+        <span class="col-md-4" (click)="prevYear()">&lt;</span>
+        <span class="col-md-4">{{ currentDate.format('YYYY') }}</span>
+        <span class="col-md-4" (click)="nextYear()">&gt;</span>
+      </div>
+    </div>
+  </div>
+  <div class="month-grid row">
+    <div class="col-md-12">
+      <div class="day-names row seven-cols">
+        <div *ngFor="let name of dayNames" class="col-md-1 day-name p9">
+          <strong>{{ name }}</strong>
+        </div>
+      </div>
+      <div class="weeks row">
+        <div class="col-md-12">
+          <div *ngFor="let week of weeks" class="row week seven-cols">
+            <div class="col-md-1" *ngFor="let day of week">
+              <div class="week-date disabled" *ngIf="!isSelectedMonth(day.mDate)">
+                <span class="date-text day-color">{{ day.mDate.date() }}</span>
+              </div>
+              <div class="week-date enabled date-hover" *ngIf="isSelectedMonth(day.mDate)" (click)="selectDate(day)"
+                [ngClass]="{ 'selected': day.selected }">
+                <span class="date-text">{{ day.mDate.date() }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- <div class="weeks">
+      <div *ngFor="let week of weeks" class="week">
+        <ng-container *ngFor="let day of week">
+          <div class="week-date disabled" *ngIf="!isSelectedMonth(day.mDate)">
+            <span class="date-text">{{ day.mDate.date() }}</span>
+          </div>
+          <div class="week-date enabled"
+               *ngIf="isSelectedMonth(day.mDate)"
+               (click)="selectDate(day)"
+               [ngClass]="{ 'selected': day.selected }">
+            <span class="date-text">{{ day.mDate.date() }}</span>
+          </div>
+        </ng-container>
+      </div>
+    </div> -->
+  </div>
+</div>

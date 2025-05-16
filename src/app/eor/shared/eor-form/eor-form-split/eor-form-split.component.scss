@@ -1,0 +1,32 @@
+
+.fa-dollar-sign {
+	position: absolute;
+    top: 31px;
+    left: 10px;
+    font-size: 14px;
+    color: #5e5b5b;
+}
+
+.currency {
+	padding-left: 22px !important;
+}
+.date-field{
+	background-color: white !important;
+}
+::ng-deep .ng-select-ellipsis{
+    &.pe-25{
+        .multiselect-dropdown{
+            span{
+                &.dropdown-btn{
+                    padding-right: 25px!important;
+                }
+            }
+        }
+    }
+}
+
+.pdf-view {
+	position: absolute;
+    right: 10px;
+    top: 28px;
+}

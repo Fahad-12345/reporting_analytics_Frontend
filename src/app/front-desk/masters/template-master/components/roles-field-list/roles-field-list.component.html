@@ -1,0 +1,282 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="front-desk-block document-manager billing-info add-user">
+  <div class="row">
+    <div class="col-12 py-3">
+      <div class="text-end overflow-hidden">
+        <a class="btn btn-default round-btn float-right" routerLink="/front-desk/masters/template/template/roles-field/add"
+          href="javascript:void(0)"><span class="icon-plus-circle"></span> Add New
+          </a>
+      </div>
+
+      <form class="form" [formGroup]="filterForm" (keydown.enter)="setPage({offset: 0})"
+        (ngSubmit)="setPage({offset: 0})" autocomplete="off">
+        <div class="card search-filter-block form">
+          <div class="card-body mb-sm-20">
+            <div class="row">
+              <div class="col-xl-10">
+                <div class="row">
+                  <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field mb-xl-0">
+                      <label class="form-label">Practice</label>
+                      <input type="text" formControlName="location_name" class="form-control form-input">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field ">
+                      <label class="form-label">Specialty</label>
+                      <input type="text" formControlName="specialty_name" class="form-control form-input">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field ">
+                      <label class="form-label">Visit Type</label>
+                      <input type="text" formControlName="field_control_name" class="form-control form-input">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field ">
+                      <label class="form-label">Required Fields</label>
+                      <input type="text" formControlName="location_name" class="form-control form-input">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field">
+                      <label class="form-label">Created By</label>
+                      <input type="text" formControlName="created_by_name" class="form-control form-input">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field ">
+                      <label class="form-label">Updated By</label>
+                      <input type="text" formControlName="updated_by_name" class="form-control form-input">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field"
+                      [ngClass]="{'focused': (filterForm.get('created_at').value != '' && filterForm.get('created_at').value != null) || filterForm.get('created_at').errors?.invalid_date  || filterForm.get('created_at').errors?.invalid_date }">
+                      <label class="form-label" for="dateOfAccidentFrom">Created At</label>
+                      <input [matDatepicker]="created_at" appInputDateMask [min]="minDate"
+                      [appMaskDate]="filterForm.get('created_at').value"
+                      class="form-control form-input" id="dueDate"
+                        formControlName="created_at">
+                      <mat-datepicker-toggle matSuffix [for]="created_at"></mat-datepicker-toggle>
+                      <mat-datepicker #created_at></mat-datepicker>
+                      <small class="form-text text-muted danger"
+                        *ngIf="filterForm.get('created_at').errors?.invalid_date && filterForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT  ">Date
+                        format should be accurate</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field"
+                      [ngClass]="{'focused': (filterForm.get('updated_at').value != '' && filterForm.get('updated_at').value != null) || filterForm.get('updated_at').errors?.invalid_date  || filterForm.get('updated_at').errors?.invalid_date }">
+                      <label class="form-label" for="dateOfAccidentFrom">Updated At</label>
+                      <input [matDatepicker]="updated_at" appInputDateMask  [min]="minDate" [appMaskDate]="filterForm.get('updated_at').value" class="form-control form-input" id="dueDate"
+                        formControlName="updated_at">
+                      <mat-datepicker-toggle matSuffix [for]="updated_at"></mat-datepicker-toggle>
+                      <mat-datepicker #updated_at></mat-datepicker>
+                      <small class="form-text text-muted danger"
+                        *ngIf="filterForm.get('updated_at').errors?.invalid_date && filterForm.get('updated_at').errors?.invalid_date?.text != DATEFORMAT  ">Date
+                        format should be accurate</small>
+                    </div>
+                </div>
+                </div>
+              </div>
+              <div class="col-xl-2">
+                <div class="row justify-content-center mb-0">
+                  <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                    <button type="submit" class="btn btn-success w-100 me-3"> Filter
+                    </button>
+                  </div>
+                  <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                    <button (click)="filterForm.reset();setPage({offset:0})" class="btn btn-primary w-100" [disabled]="checkInputs()">
+                      Reset</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <div class="col-7 col-sm-5 col-md-6 col-lg-8 edit-block text-start">
+    <div class="form-group field option-field d-inline-block mb-2">
+      <ul>
+        <li>Show</li>
+        <li>
+          <select [(ngModel)]="this.page.size" (change)="pageLimit($event.target.value)" class="custom-select" name="limit">
+            <option  [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="30">30</option>
+            <option [value]="40">40</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </li>
+        <li class="text-capitalize">entries</li>
+      </ul>
+
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header color-white" style="background: #34c3ee !important; padding: 5px 5px 5px 10px !important;">
+      Practice Name
+    </div>
+    <div class="card-body p-3 pb-0 border-top-0">
+      <div *ngFor="let facility of lstFacility" class="card mb-3">
+        <div class="card-header" style="padding: 0px 15px !important; background: #f7f7f7 !important;">
+          <div class="row align-items-center">
+            <div class="col-10 pe-0 form text-start">
+              <ul class="d-inline-block custom-btn-tooltip list-unstyled ms-0"
+                style="font-size: 14px; font-weight: 500;">
+                {{facility.name}} </ul>
+            </div>
+            <div class="col-2 text-end">
+
+              <button class="btn btn-outline-secondary" (click)="edit(facility)" type="button"><span
+                  class="icon-pencil"></span>
+                Edit </button>
+              <button (click)="toggleOpen(facility)" class="btn slide-btn" [class.btn-primary]="!facility.is_open"
+                [class.btn-success]="facility.is_open" type="button"><i style="background: none;" class="ml-0 p-0"
+                  [class.icon-plus]="!facility.is_open" [class.icon-minus]="facility.is_open"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="facility.is_open" class="card-body p-3 border-top-0">
+          <!-- <p class="text-center mb-0">Datatable Code Here</p> -->
+
+          <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="facility._specialities" [scrollbarH]="true"
+            [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'">
+            <!-- <ngx-datatable-column name="Name" prop="name" [width]="200"></ngx-datatable-column> -->
+
+            <ngx-datatable-column name="Name" sortable="false" prop="Name">
+              <ng-template let-column="column" ngx-datatable-header-template>
+                Name
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name}}">
+                  {{row.name}}</div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Visit Type" sortable="false" prop="id">
+              <ng-template let-column="column" ngx-datatable-header-template>
+
+                Visit Type
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                  ngbTooltip="{{row.visit_types &&row.visit_types.length>0 ? row.visit_types[0].name : ''}}">
+                  {{row.visit_types &&row.visit_types.length>0 ? row.visit_types[0].name : ''}}</div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Required Fields" sortable="false" prop="id">
+              <ng-template let-column="column" ngx-datatable-header-template>
+                Required Fields
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div class="tags-outer"
+                  *ngIf="row.visit_types &&row.visit_types[0] && row.visit_types[0].fields_controls && row.visit_types[0].fields_controls.length>0">
+                  <!-- <div class="d-inline-block" > -->
+                  <span *ngFor="let field of row.visit_types[0].fields_controls"
+                    class="badge badge-success mx-1">{{field | requiredFieldsMapper}}</span>
+                  <!-- </div> -->
+                </div>
+
+                <ng-template #tipContent>
+                  <div
+                    *ngIf="row.visit_types &&row.visit_types[0] && row.visit_types[0].fields_controls && row.visit_types[0].fields_controls.length>0">
+                    <!-- <div class="d-inline-block" > -->
+                    <span *ngFor="let field of row.visit_types[0].fields_controls" class="badge badge-success m-1"
+                      ngbTooltip=" {{field | requiredFieldsMapper}}">{{field | requiredFieldsMapper}}</span>
+                    <!-- </div> -->
+                  </div>
+                </ng-template>
+                <span class="badge badge-success btn-primary plus-tag tooltip-outer float-right"
+                  tooltipClass="table-custom-tooltip" [ngbTooltip]="tipContent" (click)="editVisitType(row,facility)">
+                  <i class="icon-plus"></i>
+                </span>
+
+                <!-- {{ ? }} -->
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Actions" sortable="false" prop="id">
+              <ng-template let-column="column" ngx-datatable-header-template>
+
+                Actions
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <a href="javascript:void(0)" class="edit-hov" data-original-title="Edit" title="Edit"
+                  (click)="editVisitType(row,facility)">
+                  <i class="icon-pencil"></i>
+                </a>
+                <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="requireFieldHistoryStats(row)">
+                  <i class="fa fa-history"></i>
+                </a>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <!-- <ngx-datatable-column name="Visit Type" prop="name" [width]="200"></ngx-datatable-column> -->
+            <!-- <ngx-datatable-column name="Required Fields" prop="name" [width]="200"></ngx-datatable-column> -->
+            <!-- <ngx-datatable-column name="Name" prop="name" [width]="200"></ngx-datatable-column> -->
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="custom-pagination text-capitalize" *ngIf="lstFacility?.length > 0">
+    <span>{{page.totalElements}} total</span>
+    <ng-container *ngIf="lstFacility?.length &&( page.totalElements>page.size)">
+      <pagination [boundaryLinks]=" true" [totalItems]="page.totalElements" previousText="" nextText=""
+        [itemsPerPage]="page.size" firstText="" lastText="" (pageChanged)="setPage({offset:$event.page - 1})">
+      </pagination>
+    </ng-container>
+  </div>
+  <!-- <div class="card mb-3">
+    <div class="card-header" style="padding: 0px 15px !important; background: #f7f7f7 !important;">
+      <div class="row align-items-center">
+        <div class="col-10 pe-0 form text-start">
+          Supervisor
+        </div>
+        <div class="col-2 text-end">
+
+          <button class="btn btn-outline-secondary" type="button"><span class="icon-pencil"></span> Edit </button>
+          <button class="btn slide-btn btn-primary" type="button"><i style="background: none;"
+              class="ml-0 p-0 icon-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body p-0 border-top-0">
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div class="card-header" style="padding: 0px 15px !important; background: #f7f7f7 !important;">
+      <div class="row align-items-center">
+        <div class="col-10 pe-0 form text-start">
+          Assistant
+        </div>
+        <div class="col-2 text-end">
+
+          <button class="btn btn-outline-secondary" type="button"><span class="icon-pencil"></span> Edit </button>
+          <button class="btn slide-btn btn-primary" type="button"><i style="background: none;"
+              class="ml-0 p-0 icon-plus"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body p-0 border-top-0">
+    </div>
+  </div> -->
+
+</div>
+

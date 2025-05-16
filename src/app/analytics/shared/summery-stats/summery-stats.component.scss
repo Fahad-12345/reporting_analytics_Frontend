@@ -1,0 +1,187 @@
+.summary {
+    min-height: 100%;
+    border: 1px solid #d3d3d3;
+    box-shadow: 1px 1px 1px 1px #BEBEBE;
+    border-radius: 10px;
+}
+
+.card-body{
+    border-style: none !important;
+    
+}
+
+// Modal Container
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 120px;
+    left: 750px;
+    right: 0px;
+    width: 320px;
+    height: 26px;
+    overflow: hidden;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    background-color: #f3f3f3;
+    border-radius: 8px;
+}
+
+// Modal Content
+.modal-content {
+  background-color: #fefefe;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+
+// Close Button
+.close {
+font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    width: fit-content;
+}
+
+#progressValue{
+   width: fit-content;
+}
+
+// Progress Bar Style (if needed)
+#progressBar {
+  width: 70%; // Full width of the modal content
+}
+
+
+.card-title {
+    font-weight: bold;
+    font-size: 12px;
+    color: #8898AA;
+    @media (max-width: 1024px){
+        font-size: 10px;
+     
+        
+    }
+}
+
+.card-percentage {
+    font-weight: bolder;
+    font-size: 24px;
+    @media (max-width: 1024px){
+        font-size: 20px;
+     
+        
+    }
+}
+
+
+.card-icon-red{
+    color: #FB6340;
+        // background-color: #ffcccb;
+        margin-top: 4px;
+        font-size: 12px;
+        border-radius: 12%;
+        font-weight: bold;
+        @media (max-width: 1024px){
+            font-size: 11px;
+         
+            
+        }
+}
+.card-icon-grey {
+    color: rgb(88, 87, 87);
+    // background-color: #d3d3d3;
+    margin-top: 4px;
+    // margin-right: 5px;
+    font-size: 12px;
+    border-radius: 12%;
+    font-weight: bold;
+    @media (max-width: 1024px){
+        font-size: 11px;
+     
+        
+    }
+}
+
+.card-icon-green {
+    color: #2DCE89;
+    // background-color: #AFE1AF;
+    // padding: 4px;
+    margin-top: 4px;
+    font-size: 12px;
+    border-radius: 12%;
+    font-weight: bold;
+    @media (max-width: 1024px){
+        font-size: 11px;
+     
+        
+    }
+}
+
+
+.card-text{
+    @media (max-width: 1024px) {
+        flex-wrap: wrap;
+    }
+}
+.card-text2 {
+    margin-left: 10px;
+    @media (max-width: 1024px) {
+        margin-left: 4px;
+        font-size: 14px;
+    }
+}
+
+#csv-icon{
+    position: absolute;
+     margin-left: 20px;
+     height: 22px;
+    left: 87%;
+    padding-right: 3px;
+ }
+ 
+#csv-icon:hover {
+     cursor: pointer;
+}
+ 
+   
+.summary-icons{
+     height: 32px;
+     @media (max-width: 1024px){
+         height: 24px;
+      
+         
+     }
+}
+ 
+.tooltip-outer:hover .tooltip-content {
+    display: block;
+   
+}
+
+
+.tooltip-content {
+    display: none;
+}
+
+.tooltip-outer .tooltip-inner {
+    text-align: justify 
+}
+.tooltip-outer{
+    float: right;
+}
+
+::ng-deep .summary {
+        .card-body{
+            .card-title{
+                span{
+                    &.tooltip-outer{
+                        margin-bottom: -50% !important;
+                        text-align: justify !important;
+                        padding-inline: 10px;
+                    }
+                }
+            }
+        }
+	}
+

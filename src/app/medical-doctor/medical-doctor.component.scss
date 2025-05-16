@@ -1,0 +1,161 @@
+@import './../../assets/sass/themes/case-flow-user-info-theme';
+@import './../../assets/sass/abstracts/mixins/responsive-iPad';
+.md-block{
+	::ng-deep .user-info{
+		.user-img{
+			$img-width-height: 3.4375rem;
+			border: 2px solid $master-user-image-border-color;
+			border-radius: 5px;
+			margin-right: 0.5rem;
+			width: $img-width-height;
+			height: $img-width-height;
+		}
+		.media-body{
+			.row{
+				@media (max-width: 1024px){
+					align-items: center;
+				}
+				@media(max-width: 992.98px){
+					align-items: baseline !important;
+				}
+				h5{
+					margin: 0.3125rem 0.625rem 0px;
+					margin-bottom: 0.5rem;
+					font-size: 1.125rem;
+					letter-spacing: 1px;
+					color: $master-user-header-text-color !important;
+					@media (max-width: 1600.98px){
+						font-size: 1rem;
+						margin-bottom: 0.5rem;
+					}
+					@media (max-width: 1024px){
+						font-size: 0.9375rem;
+						margin: 0.3125rem 0.5625rem 0.125rem;
+					}
+					@media (max-width: 768.98px){
+						margin: 0.3125rem 0.3125rem 0.125rem;
+					}
+					@media (max-width: 576.98px){
+						font-size: 0.875rem;
+					}
+					small{
+						margin-left: 0.5rem;
+						font-size: 0.9375rem;
+						font-weight: 500;
+						color: $master-user-header-text-color !important;
+						@media (max-width: 1230px){
+							font-size: 0.875rem;
+							margin-left: 0.75rem;
+						}
+						@media (max-width: 1024px){
+							margin-left: 0.5rem;
+						}
+						@media(max-width: 992.98px){
+							margin-left: 0;
+						}
+						@media (max-width: 576.98px){
+							font-size: 0.8125rem;
+						}
+						.line-space {
+							margin: 0px 0.5rem;
+							@media(max-width: 992.98px){
+								margin: 0 0.3125rem;
+							}
+						}
+						span{
+							color: $master-user-header-text-color !important;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+.md-content {
+    border: 1px solid #a2a3a2;
+    background: #f7f7f7;
+    //  height: calc(100% - 136px) !important;
+	 height: calc(100% - 50px) !important;
+     margin-top: 0px !important;
+     max-width: 82%; 
+	 flex: 0 0 82%;
+	 @media only screen and (max-width: 991px){
+		max-width: 79% !important;
+		flex: 0 0 79% !important;
+		height: calc(100% - 165px) !important;
+	}
+	@media only screen and (max-width: 767px){
+		max-width: 100% !important;
+        flex: 0 0 100% !important;
+	}
+
+     &.widthMax {
+        max-width: 98% !important;
+		flex: 0 0 98% !important;
+		@media only screen and (max-width: 991px){
+			max-width: 97% !important;
+			flex: 0 0 97% !important;
+		}
+	}
+}
+
+.right-panel {
+    width: 100%;
+}
+
+
+.md-block {
+	border: 20px solid #f8f8f8;
+	border-top: none;
+	height: calc(100vh - 230px) !important;
+	@media only screen and (max-width: 992px) {
+		border: none;
+	}
+}
+@include responsive(landscape_all) {
+	::ng-deep .medical-doctor {
+		.md-block {
+			height: calc(100vh - 290px) !important;
+			.height-auto {
+				height: unset !important;
+				.md-content {
+					height: calc(100vh - 360px) !important;
+				}
+			}
+		}
+	}
+}
+::ng-deep .medical-doctor {
+	.md-block {
+		@media screen and (min-width: 767.98px) {
+			height: calc(100vh - 290px) !important;
+		}
+		@media screen and (min-width: 1023.98px) {
+			height: calc(100vh - 230px) !important;
+		}
+		.height-auto {
+			@media screen and (min-width: 767.98px) {
+				height: auto !important;
+			}
+			.md-content {
+				@media screen and (min-width: 767.98px) {
+					height: calc(100vh - 350px) !important;
+				}
+			}
+		}
+	}
+}
+@include responsive(portrait_all) {
+	::ng-deep .medical-doctor {
+		.md-block {
+			height: calc(100vh - 210px) !important;
+			.height-auto {
+				height: unset !important;
+				.md-content {
+					height: calc(100vh - 380px) !important;
+				}
+			}
+		}
+	}
+}

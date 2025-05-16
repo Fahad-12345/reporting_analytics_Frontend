@@ -1,0 +1,34 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="front-desk-block">
+  <div class="row user-info pt-2">
+    <div class="col-12">
+      <h4 class="my-0 color-green">Patient List</h4>
+    </div>
+  </div>
+  <hr class="line-bottom">
+  <div class="row">
+    <div class="col-12">
+      <div class="mt-2 search-filter border-0 p-0">
+        <div class="d-block" *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_add)">
+          <a href="javascript:void(0)" class="btn btn-default round-btn float-right"
+            [routerLink]="['/front-desk/patients/patient-add']" routerLinkActive="router-link-active" title="Add New">
+            <span>Add New</span> <span class="icon-plus-circle ms-2"></span>
+          </a>
+        </div>
+        <div class="search-filter-body" *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_filter)">
+          <dynamic-form (submit)="submit({ offset: 0 })" (onReady)="onReady($event)" (onValueChange)="onValueChanges($event)" [fields]="fieldConfig">
+          </dynamic-form>
+        </div>
+      </div>
+      <div class="card  p-0 mt-2 mb-0 data-table-btn position-relative border-0"
+        *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_listing)">
+        <app-patient-listing [patientRows]="patients" [hideDelButton]="hideDelButton" (setPage)="setPage($event)"
+          (pageLimitChange)="pageLimitChange($event)" [totalRows]="page.totalElements" [pageNumber]="page.pageNumber"
+          [pageSize]="page.size">
+        </app-patient-listing>
+      </div>
+    </div>
+  </div>
+</div>
+
+

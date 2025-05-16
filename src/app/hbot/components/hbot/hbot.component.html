@@ -1,0 +1,90 @@
+<!-- <div id="wrapper">
+  <header id="header">
+    <app-main-header></app-main-header>
+    <app-front-desk-navbar></app-front-desk-navbar>
+  </header>
+  <main id="main">
+    <div class="main-container h-100"> -->
+      <!-- <app-sidebar-left></app-sidebar-left> -->
+
+      <!-- <div class="user-info">
+				<div class="row">
+					<div class="col-md-12">
+						<h4 class="my-0 color-green ps-3 mb-1">Manual Specialty</h4>
+					</div>
+				</div>
+      </div> -->
+
+
+      <!-- <app-profile-header [data]="appointmentDetail?.patient"></app-profile-header>
+
+      <div class="row">
+        <div class="col-12">
+          <nav class="left-nav p-0 link-style">
+            <ul class="list-unstyled">
+              <li class="button--wayra" routerLinkActive="active"><a
+                  routerLink="/hbot/contradiction-to-hbot">Contradiction to
+                  HBOT</a></li>
+              <li class="button--wayra" routerLinkActive="active"><a routerLink="/hbot/hbot-notes">HBOT Notes</a></li>
+            </ul>
+          </nav> -->
+
+          <!-- <ul class="nav nav-tabs mt-1 text-center" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/hbot/contradiction-to-hbot" routerLinkActive="active">Contradiction to
+                HBOT</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/hbot/hbot-notes" routerLinkActive="active">HBOT Notes</a>
+            </li>
+          </ul> -->
+        <!-- </div>
+      </div> -->
+
+
+      <!-- <app-sidebar-right></app-sidebar-right> -->
+
+      <!-- <div class="row h-100 m-0">
+        <div class="col-12 h-100 px-0" style="border: 1px solid #a2a3a2;
+              background: #f7f7f7; height: calc(100% - 130px) !important;">
+          <router-outlet *ngIf="showRoute"></router-outlet>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <p>Copyrights@ovada.com</p>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+ -->
+
+
+
+<!-- <div class="main-container h-100"> -->
+  <app-profile-header [data]="appointmentDetail?.patient"></app-profile-header>
+
+  <div class="row">
+    <div class="col-12">
+      <nav class="left-nav p-0 link-style">
+        <ul class="list-unstyled">
+          <li class="button--wayra" routerLinkActive="active"><a
+              routerLink="/hbot/contradiction-to-hbot">Contradiction to
+              HBOT</a></li>
+          <li class="button--wayra" routerLinkActive="active"><a routerLink="/hbot/hbot-notes">HBOT Notes</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+
+  <div class="row m-0">
+    <div class="col-12 px-0" style="border: 1px solid #a2a3a2;
+          background: #f7f7f7; height: calc(100% - 130px) !important;">
+      <router-outlet *ngIf="showRoute"></router-outlet>
+    </div>
+  </div>
+<!-- </div> -->

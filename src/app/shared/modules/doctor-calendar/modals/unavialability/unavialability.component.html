@@ -1,0 +1,71 @@
+<div class="modal-header">
+    <h4 class="modal-title">Unavailability</h4>
+    <button  type="button" class="close" data-dismiss="modal" (click)="activeModal.dismiss('Cross click')">&times;</button>
+</div>
+<form [formGroup]="myForm">
+    <div class="modal-body">
+        <div class="row" *ngIf="isSupervisor">
+            <div class="col-md-12 mb-1">
+                <label for="doctorName">Provider*</label>
+                <select class="form-select" style="padding:4px; width: 100%;height: 31px;" formControlName='doctorName'>
+					<option   [value]="''"></option>
+					<option *ngFor="let doc of allDoctors;"  value={{doc.id}}>{{doc.name}}
+					</option>
+				</select>
+				<span class="text-muted danger position-relative"  *ngIf="submitted && f.doctorName.errors&&f.doctorName.errors?.required">This field is required</span>
+            </div>
+            <div class='col-sm-6 col-lg-3'>
+				<app-mat-date-picker-sharedable [classesName]="['form-group', 'date-field', 'vertical-label-cross']" [lableName]="'Start Date*'" (valueChange)="onChangeStartDate($event)" [defaultDate]="startDate" [placeholder]="'Enter date'" ></app-mat-date-picker-sharedable>
+                <span class="text-muted danger" *ngIf="startDate==null">
+					This field is required
+				</span>
+            </div>
+            <div class='col-sm-6 col-lg-3'>
+				<app-mat-date-picker-sharedable [classesName]="['form-group', 'date-field', 'vertical-label-cross']" [lableName]="'End Date*'" (valueChange)="onChangeEndtDate($event)" [defaultDate]="endDate" [min]="minDate" [placeholder]="'Enter date'" ></app-mat-date-picker-sharedable>
+
+                <span class="text-muted danger" *ngIf="endDate==null">
+					This field is required
+				</span>
+
+            </div>
+            <div class='col-sm-6 col-lg-3'>
+                <label class="title" for="starttime">Start Time*</label>
+                <ejs-timepicker strictMode=true  [step]='interval' [(value)]='startTime' (change)="changeStartTime()"></ejs-timepicker>
+                <span class="text-muted danger" *ngIf="startTime==null">
+					This field is required
+				</span>
+            </div>
+            <div class='col-sm-6 col-lg-3'>
+                <label class="title" for="endtime">End Time* </label>
+                <ejs-timepicker strictMode=true [min]="minTime" [step]='interval' [(value)]='endTime' (change)="changeEndTime()">
+                </ejs-timepicker>
+                <span class="text-muted danger" *ngIf="endTime==null">
+					This field is required
+				</span>
+            </div>
+            <div class='col-md-6 col-lg-12 mt-3'>
+                <label class="d-block" for="subject">Subject*</label>
+                <input type="text" class="form-control" formControlName="subject">
+                <div *ngIf="submitted && f.subject.errors" >
+                    <div class="title" *ngIf="f.subject.errors.minlength">Subject must be at least 4 characters</div>
+                    <div class="text-muted danger" *ngIf="f.subject.errors?.required">This field is required</div>
+                </div>
+            </div>
+            <div class='col-md-6 col-lg-12 mt-3'>
+                <label class="d-block" for="descrpition">Description*</label>
+                <textarea type="textarea" class="form-control" formControlName="descrpition"></textarea>
+                <div *ngIf="submitted && f.descrpition.errors" >
+                    <div class=" title" *ngIf="f.descrpition.errors.minlength">Descrpition must be at least 20 characters
+                    </div>
+                    <div class=" title" *ngIf="f.descrpition.errors.maxlength">Descrpition not more than 512 characters
+                    </div>
+                    <div class="text-muted danger" *ngIf="f.descrpition.errors?.required">This field is required</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+        <button class="btn btn-success" type="submit" (click)="addUnavailability()" [disabled]="addFalse">Add</button>
+    </div>
+</form>

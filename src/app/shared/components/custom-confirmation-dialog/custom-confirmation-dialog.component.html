@@ -1,0 +1,15 @@
+<div class="confirm-modal-header">
+	<strong class="modal-title">{{ title }}</strong>
+	  <button *ngIf="showCrossIcon" type="button" class="close" aria-label="Close" (click)="activeModal.dismiss();">
+		<span aria-hidden="true">&times;</span>
+	  </button> 
+	</div>
+	<div *ngIf="!enableHtml" class="confirm-modal-body">
+		{{ message }}
+	</div>
+	<div *ngIf="enableHtml" class="confirm-modal-body" [innerHTML]="message"></div>
+	<div class="confirm-modal-footer">
+	  <button type="button" class="btn btn-default" (click)="decline()">{{ btnCancelText }}</button>
+	  <!-- <button type="button" class="btn btn-danger" (click)="accept()">{{ btnOkText }}</button> -->
+	  <button type="button" [class]="class" (click)="accept()">{{ btnOkText }}</button>
+</div>

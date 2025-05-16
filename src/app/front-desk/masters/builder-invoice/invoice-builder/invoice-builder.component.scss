@@ -1,0 +1,691 @@
+@import "../../../../../assets/sass/abstracts/mixins/grid";
+
+.invoice-builder {
+  .card {
+    padding: 0 4.25rem;
+    @media only screen and (max-width: 992px) {
+      padding: 0;
+    }
+    .form {
+      .invoice-header {
+        .invoice-logo {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          p {
+            margin-bottom: 0;
+          }
+          ::ng-deep label {
+            &.mat-slide-toggle-label {
+              margin: 0;
+            }
+          }
+        }
+        .invoice-form-group,
+        .invoice-heading {
+          margin-bottom: 0 !important;
+          text-align: -webkit-center;
+          .form-group {
+            max-width: 12rem;
+            small {
+              text-align: left;
+            }
+          }
+        }
+        .template-name {
+          font: 500 16px/22px "Poppins", Arial, Helvetica, sans-serif;
+          text-align: center;
+        }
+        .invoice-mat-calender {
+          display: flex;
+          align-items: center;
+          position: relative;
+          float: right;
+        }
+        .close {
+          position: absolute;
+          right: 80px;
+          top: 5px;
+          @media only screen and (max-width: 992px) {
+            right: 9px;
+            top: 0;
+          }
+          .icon-plus {
+            background: rgb(102, 102, 102);
+            color: #fff;
+            border-radius: 50%;
+            margin-left: 5px;
+            padding: 3px;
+            font-size: 12px;
+            transform: rotate(45deg);
+            &:hover {
+              background: #00a650;
+            }
+          }
+        }
+      }
+      .invoice-info {
+        margin-top: 13px;
+        .form-group {
+          display: flex;
+          justify-content: space-between;
+          margin: 0 0 15px 0 !important;
+          app-ng-select-shareable {
+            width: 100%;
+          }
+          &.currency {
+            max-width: 83%;
+            .form-control {
+              width: 100% !important;
+            }
+            span {
+              width: 70%;
+            }
+            .fa-dollar-sign {
+              left: 42%;
+            }
+          }
+        }
+        .invoice-sec-left {
+          width: 65%;
+          @media only screen and (max-width: 992px) {
+            width: 100%;
+          }
+          .form-group {
+            &.invoice-to-form {
+              .ng-select {
+                ::ng-deep.ng-dropdown-panel {
+                  .ng-dropdown-panel-items {
+                    .ng-option {
+                      padding: 7px 9px !important;
+                      &.ng-option-marked,
+                      .ng-option-selected {
+                        padding: 7px 9px !important;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            ul {
+              list-style: none;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              padding: 0;
+              margin: 0;
+              width: 100%;
+              position: relative;
+              li {
+                svg {
+                  &.fa-phone {
+                    transform: rotate(99deg);
+                  }
+                }
+                &.invoice-list {
+                  display: flex;
+                  justify-content: space-between;
+                  width: 100%;
+                  padding: 0 0 0 30px;
+                }
+                &.invoice-to-list {
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+        .invoice-sec-right {
+          width: 65%;
+          float: right;
+          @media only screen and (max-width: 1140px) {
+            width: 80%;
+          }
+          @media only screen and (max-width: 992px) {
+            width: 100%;
+          }
+          input {
+            &.form-control {
+              margin-bottom: 1.4rem;
+              width: 75% !important;
+            }
+          }
+          .form-dob {
+            &.form-control {
+              margin-bottom: 0;
+            }
+          }
+          .pt-detail {
+            justify-content: space-between;
+          }
+          .form-group {
+            margin-bottom: -6px !important;
+            ul {
+              list-style: none;
+              display: flex;
+              justify-content: space-between;
+              padding: 0;
+              margin: 0;
+              width: 100%;
+              li {
+                &.invoice-list {
+                  display: flex;
+                  width: 68%;
+                  app-ng-select-shareable {
+                    width: 75%;
+                  }
+                  ng-select {
+                    width: 100%;
+                    margin: 0 0 20px 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      .invoice-total-amount {
+        .invoice-sec-right {
+          max-width: 550px;
+          width: 100%;
+          margin-left: auto;
+          .invoice-tax, .amount-due {
+            ul {
+              list-style: none;
+              display: grid;
+              grid-template-columns: 51% 37% 10%;
+              justify-content: flex-end;
+              align-items: center;
+              gap: 1rem;
+              li {
+                position: relative;
+                @at-root .invoice-tax, .amount-due {
+                  &.currency {
+                    ul {
+                      li {
+                        .form-control {
+                          padding-left: 1.4rem !important;
+                        }
+                      }
+                    }
+                  }
+                }
+                svg {
+                  width: 8px;
+                  height: 14px;
+                  position: absolute;
+                  top: 50%;
+                  left: 10px;
+                  transform: translateY(-50%);
+                }
+              }
+            }
+          }
+        }
+      }
+      ::ng-deep.grid-main {
+        .inner-grid {
+          margin: 0 0 0 0 !important;
+        }
+        .ng-select {
+          &.ng-select-multiple {
+            .ng-select-container {
+              .ng-value-container {
+                .ng-value {
+                  .ng-value-label {
+                    -webkit-line-clamp: 1 !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      .format-box {
+        width: 100%;
+        margin: 0 auto;
+        .format-load-box {
+          [class^="col-"] {
+            padding: 0 7.5px 0px;
+          }
+          .invoice-name-card {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0.75rem;
+            position: relative;
+            min-height: 158px;
+            margin-bottom: 15px;
+            .form-group {
+              margin-bottom: 0 !important;
+              & + .form-group {
+                margin-top: 10px !important;
+              }
+              ul {
+                list-style: none;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                position: relative;
+                li {
+                  list-style: none;
+                  svg {
+                    &.fa-phone {
+                      transform: rotate(99deg);
+                    }
+                  }
+                  &.invoice-list {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+                    padding: 0 30px 0 15px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 3;
+                    /* autoprefixer: ignore next */
+                    -webkit-box-orient: vertical;
+                  }
+                }
+              }
+            }
+
+            .close {
+              position: absolute;
+              right: 7px;
+              top: 0;
+              .icon-plus {
+                background: rgb(102, 102, 102);
+                color: #fff;
+                border-radius: 50%;
+                margin-left: 5px;
+                padding: 3px;
+                font-size: 12px;
+                transform: rotate(45deg);
+                &:hover {
+                  background: #00a650;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      ::ng-deep.invoice-table {
+        .ngx-datatable {
+          overflow: unset;
+          z-index: 1;
+          .datatable-body {
+            .datatable-scroll {
+              .datatable-row-wrapper {
+                .datatable-body-row {
+                  .datatable-row-center {
+                    .datatable-body-cell {
+                      .datatable-body-cell-label {
+                        a {
+                          &.edit-hov {
+                            i {
+                              color: #c1272d !important;
+                            }
+                          }
+                        }
+                        .form-group {
+                          margin: 15px 0 !important;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        .mat-slide-toggle {
+          &.mat-checked {
+            .mat-slide-toggle-bar {
+              background: rgba(252, 252, 252, 0.951) !important;
+            }
+            .mat-slide-toggle-thumb {
+              background: #ccc !important;
+            }
+          }
+        }
+        .mat-slide-toggle-bar {
+          &.mat-slide-toggle-bar {
+            background-color: #ccc;
+          }
+        }
+      }
+      .invoice-btns {
+        .text-md-end {
+          @media only screen and (max-width: 840px) {
+            padding-right: 56px;
+          }
+          button {
+            &.btn {
+              min-width: 145px;
+            }
+          }
+        }
+      }
+      .invoice-footer {
+        background: #fff;
+        border: 1px solid #d5caca;
+        padding: 15px;
+        position: relative;
+        .footer-text {
+          text-align: center;
+          .invoice-toggle {
+            position: absolute;
+            right: -49%;
+            top: 0;
+            z-index: 9;
+          }
+        }
+      }
+    }
+  }
+  ::ng-deep.mat-slide-toggle {
+    &.mat-checked {
+      .mat-slide-toggle-bar {
+        background: rgba(80, 187, 94, 0.54) !important;
+      }
+      .mat-slide-toggle-thumb {
+        background: #00a650 !important;
+      }
+    }
+  }
+  &.invoice-builder-template {
+    .card {
+      padding: 0;
+      .card-body {
+        background-color: transparent;
+        border: 0;
+        padding: 0;
+        ::ng-deep .ng-select-container {
+          background-color: #ffffff !important;
+        }
+        .invoice-builder-form {
+          ::ng-deep .ng-select {
+            &.ng-select-single,
+            &.ng-select.ng-select-multiple {
+              max-width: 260px;
+              width: 100%;
+              @media only screen and (min-width: 991.98px) and (max-width: 1279.98px){
+                max-width: clamp(167px, 17vw, 18.5vw);
+              }
+              &.invoice-select {
+                max-width: 410px;
+              }
+              .ng-select-container {
+                flex-wrap: nowrap;
+                .ng-value-container {
+                  width: 80%;
+                }
+              }
+              :where(.ng-tags) {
+                & > .ng-option-label {
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                }
+              }
+              .ng-arrow-wrapper {
+                z-index: 10;
+              }
+            }
+          }
+          ::ng-deep .light-list-striped {
+            ul {
+              min-height: 48px;
+              li {
+                padding: 0 7.5px;
+                margin-bottom: 0;
+                label {
+                  font-size: 13px !important;
+                  min-width: 105px;
+                  margin-right: 10px;
+                }
+              }
+            }
+            .mat-ng-select, .practice-select {
+              ::ng-deep app-ng-select-shareable {
+                .form-group {
+                  margin-bottom: 0;
+                }
+              }
+            }
+          }
+          ::ng-deep .ng-check {
+            & > .form-label {
+              padding-right: 19%;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: block;
+              max-width: 98%;
+            }
+          }
+        }
+        .form-group.currency {
+          &.currency {
+            .fa-dollar-sign {
+              top: 8px;
+            }
+          }
+        }
+        .invoice-total-amount {
+          .invoice-sec-right {
+            .invoice-tax, .amount-due {
+              ul {
+                grid-template-columns: 51% 37%;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  &.invoice-builder-master {
+    ::ng-deep.card {
+      ::ng-deep.card-body {
+        .invoice-builder-form {
+          .invoice-info {
+            .invoice-sec-right {
+              .invoice-list {
+                @include flex(flex, $justify-content: space-between);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .column-data {
+    margin-bottom: 1rem;
+    label {
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+    }
+    span {
+      font-size: 14px;
+    }
+  }
+}
+.heading-style {
+  color: #34c3ee;
+}
+::ng-deep .light-list-striped {
+  &.light-mat-striped {
+    ul {
+      li {
+        span {
+          padding: 0;
+        }
+      }
+    }
+  }
+  ul {
+    li {
+      .mat-ng-select {
+        span {
+          padding: 0;
+        }
+      }
+    }
+  }
+  .ng-select {
+    &.ng-select-multiple {
+      .ng-dropdown-panel {
+        .ng-dropdown-panel-items {
+          .ng-option {
+            padding: 8px 10px;
+            span {
+              padding: 0;
+            }
+            &.ng-option-selected {
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.inv-chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  background: none !important;
+  .inv-chip-hold {
+    border-radius: 2px;
+    font-size: 0.9rem;
+    font-weight: 400;
+    margin: 0;
+    margin-left: 4px;
+    background-color: #ebf5ff !important;
+    ::ng-deep .mat-mdc-chip-ripple {
+      display: none !important;
+    }
+    ::ng-deep .mdc-evolution-chip__cell {
+      padding: 0 !important;
+      .mdc-evolution-chip__action  {
+        padding-left: 0 !important;
+        .mat-mdc-chip-action-label {
+          padding: 0;
+          .mat-mdc-focus-indicator {
+            padding-inline: 0;
+          }
+        }
+      }
+    }
+    .mat-mdc-chip-remove {
+      padding: 0 !important;
+    }
+    span {
+      padding: 0;
+      &.mat-cancel {
+        &:hover {
+          background-color: #f6f8fa !important;
+        }
+        &.left {
+          border-right: 0;
+          opacity: unset;
+          font-size: 0.75rem;
+          padding: 1px 5px;
+          margin: 0;
+          align-items: center;
+          display: flex;
+          font-weight: 600;
+          color: #333;
+          cursor: pointer;
+          border-left: 1px solid #b8dbff !important;
+          &:hover {
+            background-color: #dee9f5 !important;
+            border-left: 1px solid #b8dbff !important;
+          }
+        }
+      }
+      &.mat-value-label {
+        font-size: 0.68rem !important;
+        font-weight: 400;
+        color: #333;
+        border-left: 1px solid #b8dbff !important;
+        padding: 1px 4.5px;
+      }
+    }
+    &.mat-mdc-chip {
+      &.mat-mdc-standard-chip {
+        box-shadow: none !important;
+        padding: 0 !important;
+        min-height: 24px !important;
+        height: 100%;
+        &::after {
+          background: none !important;
+        }
+      }
+    }
+  }
+}
+
+.bill-id-flow {
+  ::ng-deep .checkbox-btn {
+    .fake-label {
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+}
+
+::ng-deep .inv-spec{
+  .ng-select {
+    &.ng-select-multiple {
+      .ng-dropdown-panel {
+        .ng-dropdown-panel-items {
+          .ng-optgroup {
+            .checkbox-btn {
+              .fake-label {
+               display: inline-block;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.invoice-table {
+  ::ng-deep .ngx-datatable {
+    .datatable-header {
+      .datatable-header-cell {
+        &.press.longpress.dragging {
+          background-color: #4b4b4b  !important;
+          color: #fff !important;
+          z-index: 99999;
+          user-select: none;
+        }
+        .drag-area {
+          background: url('../../../../../assets/images/draggable.svg') no-repeat center center;
+          background-size: 24px;
+          width: 36px;
+          height: 26px;
+        }
+        .datatable-header-cell-template-wrap {
+          user-select: none;
+          @include flex(flex,$align-items:center, $justify-content: center );
+          :where(.mat-mdc-slide-toggle.mat-accent) {
+            zoom: 0.82;
+          }
+        }
+      }
+    
+    }
+  }
+}
+

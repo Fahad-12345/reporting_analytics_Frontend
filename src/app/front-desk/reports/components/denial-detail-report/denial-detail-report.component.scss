@@ -1,0 +1,112 @@
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Adjust as needed */
+  }
+  
+  button {
+    margin-bottom: 10px; /* Adjust as needed */
+  }
+
+  .bold-row {
+    font-weight: bold;
+  }
+  :host ::ng-deep .ngx-datatable {
+    max-height: 70vh !important;
+
+    .datatable-body {
+
+      .datatable-scroll {
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        cursor: pointer;
+      }
+    } 
+  }
+  
+//   .back-arrows {
+//     display: inline-block;
+//     width: 20px; /* Adjust as needed */
+//     height: 20px; /* Adjust as needed */
+//     position: relative;
+//   }
+  
+//   .back-arrows span {
+//     position: absolute;
+//     top: 0;
+//     width: 0;
+//     height: 0;
+//     border-style: solid;
+//   }
+  
+//   .arrow-dark {
+//     border-width: 10px 10px 10px 0;
+//     border-color: transparent #06063a transparent transparent;
+//     left: 0;
+// }
+
+// .arrow-medium {
+//     border-width: 10px 10px 10px 0; /* Increase border width */
+//     border-color: transparent #033d03 transparent transparent;
+//     left: 10px; /* Adjust left position */
+// }
+
+// .arrow-light {
+//     border-width: 10px 10px 10px 0;
+//     border-color: transparent #999595 transparent transparent;
+//     left: 20px; /* Adjust left position */
+// }
+
+  
+//   .back-arrows:hover span {
+//     cursor: pointer;
+//   }
+  
+
+
+// new data 
+
+.back-arrows {
+  display: inline-block;
+}
+
+.round-button {
+  width: 26px; /* Adjust width as needed */
+  height: 26px; /* Adjust height as needed */
+  border-radius: 50%; /* Make it a circle */
+  background-color: #07cd22be; /* Set background color */
+  padding-right: 3px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer; /* Add cursor pointer to indicate it's clickable */
+}
+
+.arrow-dark {
+  width: 6px;
+  height: 6px;
+  border-style: solid;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #eeeef6 transparent transparent;
+  position: center;
+   left: -8px; /* Adjust for positioning */
+}
+.arrow-line {
+  position: absolute;
+  top: 50%;
+  left: 12px; /* Adjust for positioning */
+  width: 24px; /* Adjust width as needed */
+  height: 2px; /* Adjust height as needed */
+  background-color:transparent; /* Match the color of the arrow */
+  transform: translateY(-50%) rotate(45deg); /* Rotate line to match arrow angle */
+}
+
+
+/* Add styles for other arrows as needed */
+
+
+
+

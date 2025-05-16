@@ -1,0 +1,21 @@
+::ng-deep .add-payer-modal {
+    &.modal_extraDOc {
+        .modal-dialog {
+            max-width: 1500px;
+
+            .modal-content {
+                .modal-body {
+                    padding-top: 0.9375rem !important;
+
+                    .form-group {
+                        .form-control {
+                            margin-bottom: 0;
+                            height: 1.875rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}

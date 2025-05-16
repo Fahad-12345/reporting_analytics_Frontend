@@ -1,0 +1,23 @@
+<!-- <div class="modal-body"> -->
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<form [formGroup]="erxOverrideReasonDetailForm">
+	<div class="row">
+		<div class="col-12">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': erxOverrideReasonDetailForm.get('reason').value != '' && erxOverrideReasonDetailForm.get('reason').value != null }">
+				<label class="form-label" for="reason">Reason</label>
+				<textarea class="form-control form-input" formControlName="reason"></textarea>
+			</div>
+		</div>
+	</div>
+</form>
+<div class="col-md-12 modal-btn-width text-center">
+	<button *ngIf="erxOverrideReasonDetail.action == action.EDIT || erxOverrideReasonDetail.action == action.ADD"
+		class="btn btn-primary me-3" type="button" (click)="closeModal()">Cancel</button>
+	<button *ngIf="erxOverrideReasonDetail.action == action.EDIT || erxOverrideReasonDetail.action == action.ADD"
+		[disabled]="erxOverrideReasonDetailForm.invalid" (click)="saveContinue()" class="btn btn-success"
+		type="submit">Save
+		&amp;
+		Continue </button>
+</div>
+<!-- </div> -->

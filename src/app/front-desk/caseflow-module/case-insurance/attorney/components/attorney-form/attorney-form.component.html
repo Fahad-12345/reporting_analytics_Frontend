@@ -1,0 +1,13 @@
+<div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center mt-3"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_attorney_info_view)">
+    <a *ngIf="case?.is_finalize && aclService.hasPermission(userPermissions.patient_case_list_insurance_attorney_info_edit) "
+        tooltip="Edit" (click)="formToggle()">
+        <i class="icon-pencil"></i>
+    </a>
+</div>
+<div class="card card-bg w-100"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_attorney_info_view)">
+    <h6 class="pull-left color-blue d-inline-block mb-3">Firm's Information</h6>
+    <dynamic-form #dymanic2 (onReady)="onReady($event)" [fields]="fieldConfig" (submit)="onSubmit($event)">
+    </dynamic-form>
+</div>

@@ -1,0 +1,256 @@
+.font-bold {
+  font-weight: 600;
+}
+
+@media only screen and (max-width: 600px) {
+  .cal-assign-speciality-month-view .doc-label {
+    font-size: 15px;
+  }
+}
+.cal-assign-speciality-month-view .cell-appointment {
+  padding-left: 3px !important;
+  font-size: 13px !important;
+}
+.cal-assign-speciality-month-view .main-cell:hover .app-extra div {
+  background-color: black;
+}
+.cal-assign-speciality-month-view .add-assignment:hover span i.fa {
+  background-color: red !important;
+}
+.cal-assign-speciality-month-view :mainEventPopover:hover {
+  display: none;
+}
+.cal-assign-speciality-month-view .margin-weekday {
+  margin-left: 10%;
+}
+.cal-assign-speciality-month-view .bg-none {
+  background-color: transparent !important;
+}
+.cal-assign-speciality-month-view .close-btn {
+  width: 18px;
+}
+.cal-assign-speciality-month-view .add-event {
+  background-color: #e1e1e1;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+}
+.cal-assign-speciality-month-view .add-event:hover {
+  border: 1px solid #000;
+  cursor: pointer;
+}
+.cal-assign-speciality-month-view .display-none {
+  display: none !important;
+}
+.cal-assign-speciality-month-view .fa-pen {
+  color: white !important;
+}
+.cal-assign-speciality-month-view .dot {
+  height: 10px;
+  width: 10px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+}
+.cal-assign-speciality-month-view .popover-top-text {
+  margin-top: 14px;
+  margin-right: 0px;
+  margin-left: 5px;
+  color: white;
+  font-weight: bold;
+}
+.cal-assign-speciality-month-view .dateMargin {
+  margin-top: 0 !important;
+}
+.cal-assign-speciality-month-view .selectedCell {
+  width: 25px;
+  border-radius: 50%;
+  text-align: center;
+}
+.cal-assign-speciality-month-view .circle-pen {
+  background-color: #9fabea;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  text-shadow: 0 0 3px black;
+  border: 1px solid #fff;
+}
+.cal-assign-speciality-month-view .circle-pen:hover {
+  border: 1px solid #ccc;
+}
+.cal-assign-speciality-month-view .event {
+  margin-left: 0;
+  margin-right: 0;
+  height: 20px;
+  color: #000 !important;
+  width: 100%;
+  margin-top: 1px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.cal-assign-speciality-month-view .color-marker {
+  width: 20px;
+  float: left;
+  height: 18px;
+}
+.cal-assign-speciality-month-view .doc-label {
+  font-size: 12px;
+}
+.cal-assign-speciality-month-view .font-leveler {
+  font-size: 12px;
+}
+.cal-assign-speciality-month-view .display-none {
+  display: none;
+}
+.cal-assign-speciality-month-view .cal-header {
+  text-align: center;
+  font-weight: bolder;
+}
+.cal-assign-speciality-month-view .cal-cell-row:hover {
+  background-color: #fafafa;
+}
+.cal-assign-speciality-month-view .cal-header .cal-cell {
+  padding: 5px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  white-space: nowrap;
+}
+.cal-assign-speciality-month-view .cal-cell-row .cal-cell:hover,
+.cal-assign-speciality-month-view .cal-cell.cal-has-events.cal-open {
+  background-color: #ededed;
+}
+.cal-assign-speciality-month-view .cal-days {
+  border: 1px solid #e1e1e1;
+  border-bottom: 0;
+}
+.cal-assign-speciality-month-view .cal-cell-top {
+  min-height: 30px;
+  flex: 1;
+  margin: 0 !important;
+}
+.cal-assign-speciality-month-view .cal-cell-row {
+  display: flex;
+}
+.cal-assign-speciality-month-view .cal-cell {
+  float: left;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.cal-assign-speciality-month-view .cal-day-cell {
+  min-height: 50px;
+  max-height: 100px;
+  min-width: 100px;
+}
+@media all and (-ms-high-contrast: none) {
+  .cal-assign-speciality-month-view .cal-day-cell {
+    display: block;
+  }
+}
+.cal-assign-speciality-month-view .cal-day-cell:not(:last-child) {
+  border-right: 1px solid #e1e1e1;
+}
+.cal-assign-speciality-month-view .cal-days .cal-cell-row {
+  border-bottom: 1px solid #e1e1e1;
+}
+.cal-assign-speciality-month-view .cal-day-badge {
+  margin-top: 18px;
+  margin-left: 10px;
+  background-color: #b94a48;
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  color: white;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: 10px;
+}
+.cal-assign-speciality-month-view .cal-day-number {
+  position: relative;
+  font-weight: 400;
+  opacity: 0.9;
+  float: right;
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  margin-left: 0 !important;
+  text-align: right !important;
+  padding-right: 5px !important;
+}
+.cal-assign-speciality-month-view .cal-events {
+  position: absolute;
+  margin: 3px;
+  line-height: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  height: 80px;
+}
+.cal-assign-speciality-month-view .cal-event {
+  height: 20px;
+  display: inline-block;
+  margin: 2px;
+  background-color: transparent;
+  border-color: #d1e8ff;
+  color: #000;
+  width: 110px;
+  border: 1px solid #ccc;
+  border-radius: 6%;
+}
+.cal-assign-speciality-month-view .cal-day-cell.cal-in-month.cal-has-events {
+  cursor: pointer;
+}
+.cal-assign-speciality-month-view .cal-day-cell.cal-out-month .cal-day-number {
+  opacity: 0.1;
+  cursor: default;
+}
+.cal-assign-speciality-month-view .cal-day-cell.cal-weekend .cal-day-number {
+  color: darkred;
+}
+.cal-assign-speciality-month-view .cal-day-cell.cal-today {
+  background-color: #e8fde7;
+}
+.cal-assign-speciality-month-view .cal-day-cell.cal-drag-over {
+  background-color: #e0e0e0 !important;
+}
+.cal-assign-speciality-month-view .cal-open-day-events {
+  padding: 15px;
+  color: white;
+  background-color: #555;
+  box-shadow: inset 0 0 15px 0 rgba(0, 0, 0, 0.5);
+}
+.cal-assign-speciality-month-view .cal-open-day-events .cal-event {
+  position: relative;
+  top: 2px;
+}
+.cal-assign-speciality-month-view .app-bar {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.cal-assign-speciality-month-view .cal-out-month .cal-day-badge,
+.cal-assign-speciality-month-view .cal-out-month .cal-event {
+  opacity: 0.3;
+}
+.cal-assign-speciality-month-view .cal-draggable {
+  cursor: move;
+}
+.cal-assign-speciality-month-view .cal-drag-active * {
+  pointer-events: none;
+}
+.cal-assign-speciality-month-view .cal-event-title {
+  cursor: pointer;
+}
+.cal-assign-speciality-month-view .cal-event-title:hover {
+  text-decoration: underline;
+}
+
+.unique .modal-lg {
+  width: 1000px !important;
+  max-width: 1000px;
+}

@@ -1,0 +1,1721 @@
+
+<div class="page-scroller" *ngIf="!viewSummaryCheck">
+    <div class="front-desk-block">
+        <div class="row user-info pt-2">
+            <div class="col-11">
+                <h4 class="my-0 color-green">Add New ERX</h4>
+            </div>
+            <div class="col-1 text-end">
+                <button *ngIf="_router.url.includes('template-manager')" (click)="closeTMModal()" class="btn btn-danger"> X</button>
+            </div>
+        </div>
+        <hr class="line-bottom" />
+        <div class="row">
+            <div class="col-12">
+                <div *ngIf="!patientIn && !caseIn" class="card mt-2 search-filter-block border-0 p-0">
+                    <div class="card-body">
+                        <form class="dynamic-form-block form">
+                            <div class="row">
+                                <div class="col-12 col-xl-10">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="search-container form-group" id="searchByName1">
+                                                    <ng-autocomplete placeholder="Search by name"
+                                                        class="form-input search-box w-100" id="searchByName"
+                                                        [(ngModel)]="searchByName" 
+                                                        [data]="data" name="patient"
+                                                        [searchKeyword]="keyword" (inputChanged)='onChangeSearch($event)'
+                                                        (inputCleared)="clearData($event)" [itemTemplate]="itemTemplate"
+                                                        (selected)='selectEvent($event,1)'
+                                                        [ngModelOptions]="{standalone: true}">
+                                                    </ng-autocomplete>
+
+                                                    <ng-template #itemTemplate let-item>
+                                                        <a
+                                                            [innerHTML]="item.name"></a>
+                                                    </ng-template>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="search-container  form-group" id="searchByChart1">
+                                                <ng-autocomplete placeholder="Search by Chart"
+                                                    class="form-input search-box w-100" id="searchByChart"
+                                                    [(ngModel)]="searchByChart" [data]="dataChart" name="patientChart"
+                                                    [searchKeyword]="keywordChart"
+                                                    (inputChanged)='onChangeSearch($event,1)'
+                                                    (inputCleared)="clearData($event,1)"
+                                                    [itemTemplate]="itemTemplateChart"
+                                                    (selected)='selectEvent($event,2)'
+                                                    [ngModelOptions]="{standalone: true}">
+                                                </ng-autocomplete>
+
+                                                <ng-template #itemTemplateChart let-item>
+                                                    <a [innerHTML]="item.chart_id"></a>
+                                                </ng-template>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="search-container  form-group" id="searchByCase1">
+                                                <ng-autocomplete placeholder="Search by Case No." id="searchByCase"
+                                                    [(ngModel)]="searchByCase" name="caseStr"
+                                                    class="form-input search-box w-100" [data]="dataCase"
+                                                    [searchKeyword]="keywordCase" [minQueryLength]="1"
+                                                    (selected)='selectEventCase($event)'
+                                                    (inputChanged)='onChangeSearchCase($event)'
+                                                    (inputCleared)="clearDataCase($event)"
+                                                    [itemTemplate]="itemTemplateCase"
+                                                    [ngModelOptions]="{standalone: true}">
+                                                </ng-autocomplete>
+
+                                                <ng-template #itemTemplateCase let-item>
+                                                    <a [innerHTML]="item.id"></a>
+                                                </ng-template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-xl-2 text-center">
+                                    <div class="row justify-content-center mb-3 mb-xl-0">
+                                        <!-- <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center"><button
+                                                class="btn btn-success btn-block mt-0" type="submit">Filter</button>
+                                        </div> -->
+                                        <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center"><button
+                                                class="btn btn-primary btn-block mt-0" id="patientReset" type="button" [disabled]="checkPatientFilterDisability()"
+                                                (click)="resetFilters()">Reset</button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="media user-info pt-3" *ngIf="!patientIn && !caseIn && patient_check || (patientIn && this._router.url.includes('template-manager'))">
+                    <img alt="patient-profile" class="user-img" src="assets/images/user.png" />
+                    <div class="media-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="mt-0">
+                                    <span>
+                                        {{patient_info?.firstName ? patient_info?.firstName : ''}}
+                                        {{patient_info?.middleName ? patient_info?.middleName : ''}}
+                                        {{patient_info?.lastName ? patient_info?.lastName : ''}}
+                                    </span>
+                                    <small class="ms-0"><span>(</span> {{(patient_info?.dob ? patient_info?.dob : 'N/A')
+                                        | calculateAge}}
+                                        <span class="line-space">|</span> {{patient_info.dob | date: 'MM-dd-yyyy'}}
+                                        <span class="line-space">|</span> {{patient_info.gender.toUpperCase()}}
+                                        <span>)</span></small>
+                                </h5>
+                            </div>
+
+                            <div class="col-md-12">
+                                <ul>
+                                    <li><i class="icon-phone ms-1" style="font-size: 14px;"></i><span>
+                                            {{patient_info.primaryPhone.number}}</span></li>
+                                    <li><i class="icon-envelope"
+                                            style="font-size: 15px; top: 2px; position: relative;"></i><span> N/A</span>
+                                    </li>
+                                    <li><span class="font-600">Weight
+                                            :</span><span>{{patient_info.weight?patient_info.weight+" lbs":'N/A'}}
+                                        </span></li>
+                                    <li><span class="font-600">Height :
+                                        </span><span>{{
+                                            patient_info.height_ft? patient_info.height_ft + "'" + patient_info.height_in + '"': 'N/A'}}</span></li>
+                                    <li><span class="font-600">DOA :</span><span> N/A</span></li>
+                                    <li><span class="font-600">DOAdm :</span><span></span></li>
+                                    <li><span class="font-600">Last Apt :</span><span> </span></li>
+                                    <li><span class="font-600">Next Apt :</span><span> </span></li>
+                                    <li><span class="font-600">Address :</span>
+                                        <span> {{patient_info.addressLine1 ? patient_info.addressLine1+',' : ''}}
+                                            {{patient_info.addressLine2 ? patient_info.addressLine2+',' : ''}}
+                                            {{patient_info.city}} , {{patient_info.stateProvince}}
+                                            , {{patient_info.postalCode}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="line-bottom mb-3" *ngIf="!patientIn && !caseIn && patient_check" />
+
+                <div class="manager-header-footer-preview" *ngIf="patient_check">
+                    <div id="template-manager">
+                        <div class="left-section"
+                            *ngIf="taskdetail?.task?.numType==1 || taskdetail?.task?.numStatus == 6 || !taskdetail ? true : false"
+                            [style.display]="leftSection ? 'table-cell' : 'none'">
+                            <div class="card bg-light-grey">
+                                <div class="card-header">
+                                    <h3 class="card-title">Search</h3>
+                                </div>
+                                <div class="card-body">
+
+                                    <div class="multi-switch btn-group mb-3 full-switch">
+                                        <label class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                        ngbTooltip="{{erxDisableTitle}}" placement="bottom" container="body" ><input class="form-control" [checked]="_service.erxCheck==0"
+                                            (click)="onErxClick()"
+                                                style="white-space: pre;"
+                                                type="radio" name="14" id="switch0"
+                                                [disabled]="checkErxDisablity()"
+                                                 />
+                                                <span class="value" style="white-space: pre;" 
+                                                for="switch0">ERX</span></label>
+                                        <label><input class="form-control" [checked]="_service.erxCheck==1"
+                                                (click)="onManualClick()" style="white-space: pre;"
+                                                type="radio" name="15" id="switch1"
+                                                [disabled]="(_service.erxCheck==0 || _service.erxCheck==2) && medicationObj.length>0"
+                                                 /><span class="value" style="white-space: pre;"
+                                                for="switch1">Manual</span></label>
+                                        <label class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                        ngbTooltip="{{erxDisableTitle}}" placement="bottom" container="body"
+                                        ><input class="form-control" [checked]="_service.erxCheck==2"
+                                                (click)="onCompoundClick()" style="white-space: pre;"
+                                                type="radio" name="16" id="switch2"
+                                                [disabled]="checkCompoundDisability()"
+                                                 /><span class="value" style="white-space: pre;"
+                                                for="switch2">Compound</span></label>
+                                    </div>
+
+
+                                    <div class="search-category mb-3">
+                                        <div class="input-group">
+                                            <select class="form-select mb-3" style="width:100px;" *ngIf="_service.erxCheck!=2"
+                                                (change)="medSearchType=$event.target.value;getMedicine(0,value);">
+                                                <option id="dropErx" value="erx" [selected]="dropCheck==true && checkErxSelection() || dropCheck==false && this.medSearchType=='erx'">ERX</option>
+                                                <option id="dropFav" value="favourite" [selected]="dropCheck==true && checkFavoriteSelection() || dropCheck==false && this.medSearchType=='favourite'" *ngIf="_service.erxCheck!=2">Favourite</option>
+                                                <option id="dropPack" *ngIf="_service.erxCheck==1" value="package" [selected]="dropCheck==true && checkPackageSelection() || dropCheck==false && this.medSearchType=='package'">Package</option>
+                                                <option id="dropDisp" *ngIf="_service.erxCheck==1" value="dispense" [selected]="dropCheck==true && checkDispenseSelection() || dropCheck==false && this.medSearchType=='dispense'" >Dispense</option>
+                                            </select>
+                                            <div class="intellisense-box search-content w-100">
+                                                <div class="intellisene-field" *ngIf="medSearchType!='favourite'">
+                                                    <input class="form-control" placeholder="Search Medicine" id="searchMed"
+                                                        type="text" (input)="getMedicine($event)"
+                                                        [(ngModel)]="searchMed" [ngModelOptions]="{standalone: true}">
+                                                    <div class="intellisense-results" (scroll)="onScroll($event)"
+                                                        *ngIf="medicineData?.length>0">
+                                                        <ul id="notFav">
+                                                            <li *ngFor="let item of medicineData;let a=index">
+                                                                <a id="{{item.PackagedDrugDesc?item.PackagedDrugDesc:item?.RepresentativeERXPackagedDrug?.PackagedDrugDesc?item.RepresentativeERXPackagedDrug.PackagedDrugDesc:item.DispensableDrugDesc}}" 
+                                                                *ngIf="(item?.RepresentativeERXPackagedDrug &&
+                                                                    item?.RepresentativeERXPackagedDrug?.PackagedDrugDesc) 
+                                                                    || item.PackagedDrugDesc || item.DispensableDrugDesc"
+                                                                    (mousedown)="onSelectMedicine(item,a)">
+                                                                    {{item.PackagedDrugDesc?item.PackagedDrugDesc:item?.RepresentativeERXPackagedDrug?.PackagedDrugDesc?item.RepresentativeERXPackagedDrug.PackagedDrugDesc:item.DispensableDrugDesc}}
+                                                                </a>
+                                                                <a id="{{item.rawMed.drugName}}" *ngIf="item?.rawMed?.drugName"
+                                                                    (mousedown)="onSelectMedicine(item,a)">
+                                                                    {{item.rawMed.drugName}}
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="input-group-prepend">
+                                                        <button class="input-group-text search-btn" type="submit"><span
+                                                                class="icon-search"></span></button>
+                                                    </div>
+                                                </div>
+                                                <div class="intellisene-field" *ngIf="medSearchType=='favourite'">
+                                                    <input class="form-control" placeholder="Search Medicine"
+                                                        type="text" (click)="getMedicine($event)" (input)="getMedicine($event)"
+                                                        [(ngModel)]="searchMed" [ngModelOptions]="{standalone: true}">
+                                                    <div class="intellisense-results" (scroll)="onScroll($event)"
+                                                        *ngIf="medicineData?.length>0">
+                                                        <ul id="favMed">
+                                                            <li *ngFor="let item of medicineData;let a=index">
+                                                                <a id=" {{item.PackagedDrugDesc?item.PackagedDrugDesc:item?.RepresentativeERXPackagedDrug?.PackagedDrugDesc?item.RepresentativeERXPackagedDrug.PackagedDrugDesc:item.DispensableDrugDesc}}" *ngIf="(item?.RepresentativeERXPackagedDrug &&
+                                                                    item?.RepresentativeERXPackagedDrug?.PackagedDrugDesc) 
+                                                                    || item.PackagedDrugDesc || item.DispensableDrugDesc"
+                                                                    (mousedown)="onSelectMedicine(item,a)">
+                                                                    {{item.PackagedDrugDesc?item.PackagedDrugDesc:item?.RepresentativeERXPackagedDrug?.PackagedDrugDesc?item.RepresentativeERXPackagedDrug.PackagedDrugDesc:item.DispensableDrugDesc}} - {{item.sig}}
+                                                                
+                                                                </a>
+                                                                <a id="{{item.rawMed.drugName}}" *ngIf="item?.rawMed?.drugName"
+                                                                    (mousedown)="onSelectMedicine(item,a)">
+                                                                    {{item.rawMed.drugName}} - {{item.sig}}
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="input-group-prepend">
+                                                        <button class="input-group-text search-btn" type="submit"><span
+                                                                class="icon-search"></span></button>
+                                                    </div>
+                                                </div>
+
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="main-list" *ngIf="_service.erxCheck!=2">
+                                        <ul class="list-strip medicine-scroller">
+                                            <li *ngFor="let item of medicationObj; let i = index">
+                                                <div class="list-text"><a>{{item?.medication?.rawMed?.drugName}}</a></div>
+                                                <div class="list-action">
+                                                    <a class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                                    ngbTooltip="Apply" placement="bottom" container="body"
+                                                        [ngClass]="{'applied':i==selectedIndex && medicationObj[selectedIndex]}"
+                                                        (mousedown)="showDetailMedicine(i,true)"><i
+                                                            class="icon2-apply-template"></i></a>
+                                                    <a class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                                    ngbTooltip="Delete" placement="bottom" container="body" *ngIf="i>oldMed"
+                                                        (mousedown)="removeMedicine(i)"><i
+                                                            class="icon2-trashcan1 fs-14"></i></a>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="main-list" *ngIf="_service.erxCheck==2">
+                                        <ul class="list-strip medicine-scroller" *ngIf="compRxChange==false">
+                                            <li *ngFor="let item of medicationObj; let i = index">
+                                                <div class="list-text"><a>{{item.medication.rawMed.drugName}}</a></div>
+                                                <div class="list-action">
+                                                    <!-- <a data-toggle="tooltip" title="Apply" *ngIf="(i==(medicationObj.length-1))"
+                                                        [ngClass]="{'applied':i==selectedIndex && medicationObj[selectedIndex]}"
+                                                        (mousedown)="showDetailMedicine(0)"><i
+                                                            class="icon2-apply-template"></i></a> -->
+                                                    <a data-toggle="tooltip" title="Delete" *ngIf="i>oldMed"
+                                                        (mousedown)="removeMedicine(i)"><i
+                                                            class="icon2-trashcan1 fs-14"></i></a>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </li>
+                                        </ul>
+                                        <ul class="list-strip medicine-scroller" *ngIf="compRxChange==true">
+                                            <li *ngFor="let item of multipleCompund; let i = index">
+                                                <div class="list-text"><a>{{item[0].medication.description}}</a></div>
+                                                <div class="list-action">
+                                                    <a data-toggle="tooltip" title="Apply"
+                                                        [ngClass]="{'applied':i==compSelectedIndex}"
+                                                        (mousedown)="applyMultipleCompound(i)"><i
+                                                            class="icon2-apply-template"></i></a>
+                                                    
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="main-section"
+                            [ngClass]="{'full-Section': rightSection==false && leftSection==false}">
+                            <div class="slide-arrow">
+                                <a *ngIf="taskdetail?.task?.numType==1 || taskdetail?.task?.numStatus == 6 || !taskdetail ? true : false"
+                                    class="arrow-left" title="Collapse Left Panel" (click)="arrowLeftRight('left')"><i
+                                        class="icon2-arrow-left"
+                                        [ngClass]="{'icon2-arrow-right': leftSection==false}"></i></a>
+                                <a class="arrow-right" title="Collapse Right Panel" (click)="arrowLeftRight('right')"><i
+                                        [ngClass]="{'icon2-arrow-left': rightSection==false}"
+                                        class="icon2-arrow-right"></i></a>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <ng-template #content let-modal>
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Deny</h4>
+                                            <button type="button" class="close" aria-label="Close"
+                                                (click)="modal.dismiss('Cross click')">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <select class="form-select" [(ngModel)]="selectedReasonValue">
+                                                <option *ngFor="let item of reasonCode" [ngValue]="item.code">
+                                                    {{item.code}} - {{item.description}}</option>
+                                            </select>
+                                            <textarea class="form-control mt-2" placeholder="Comments*" type="text"
+                                                [(ngModel)]="presResponseReason"></textarea>
+                                        </div>
+                                        <div class="justify-content-center modal-footer">
+                                            <button class="btn btn-success" [disabled]="presResponseReason==''"
+                                                (click)="modal.close('Close click');denyConfirm()">Confirm</button>
+                                            <button class="btn btn-danger"
+                                                (click)="modal.close('Close click')">Cancel</button>
+                                        </div>
+                                    </ng-template>
+                                    <div class="float-left template-title-head" (clickOutside)="editTempNameOutside()">
+                                        <h3 class="card-title">Medication</h3>
+                                    </div>
+                                    <div class="float-right top-btn" *ngIf="!replaceCheck">
+                                        <span *ngIf="medicationObj[selectedIndex]?.medication?.alerts?.length"
+                                            class="color-white">{{medicationObj[selectedIndex]?.medication?.alerts?.length}}</span>
+                                        <button class="btn btn-link text-warning" title="Precautions"
+                                            *ngIf="medicationObj[selectedIndex]?.medication?.alerts?.length"
+                                            style="padding-left: 2px !important;" (click)="alertsAction()"><i
+                                                class="icon2-warning3 fs-15"></i></button>
+                                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{buttonDisableTitle}}" placement="bottom" container="body">
+                                        <button *ngIf="(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !_router.url.includes('template-manager')"
+                                            class="btn btn-default ms-2" [disabled]="checkDisablity()" (click)="addToDraftBtn(0)">Add to Draft</button>
+                                        </span>
+                                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{buttonDisableTitle}}" placement="bottom" container="body">
+                                            <button
+                                            *ngIf="(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && _service.erxCheck!=1 && (containSupervisor==0||(containSupervisor==1 && canFinalize==1 ))"
+                                            class="btn btn-success template-save ms-2" [disabled]="checkDisablity()"
+                                            (click)="addToDraftBtn(1)">Order
+                                            Rx</button>
+                                        </span>
+                                        <button
+                                            *ngIf="(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && _service.erxCheck==1 && !(containSupervisor==1 && canFinalize==0)"
+                                            class="btn btn-success template-save ms-2" [disabled]="medicationObj.length==0"
+                                            (click)="addToDraftBtn(1)">Print</button>
+                                            
+                                        <button
+                                            *ngIf="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6)"
+                                            class="btn btn-danger ms-2" (click)="deny(content)">Deny</button>
+                                        <button
+                                            *ngIf="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && taskdetail?.task?.numType!=1"
+                                            class="btn btn-default ms-2" (click)="onReplaceButton()">Replace</button>
+                                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                        ngbTooltip="{{approveDisableReason}}" placement="bottom" container="body" >
+                                        <button
+                                        *ngIf="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6)"
+                                        [disabled]="approveDisabilityCheck()"
+                                        class="btn btn-success ms-2" (click)="approve()">Approve</button>
+                                        </span>
+
+                                    </div>
+                                    <div class="float-right top-btn" *ngIf="replaceCheck">
+                                        <span class="color-white" *ngIf="medicationObj[selectedIndex]?.medication?.alerts?.length>0">{{medicationObj[selectedIndex]?.medication?.alerts?.length}} <button class="btn btn-link text-warning"><i
+                                                class="icon2-warning3 fs-15"></i></button></span>
+                                        <button class="btn btn-success" (click)="replaceConfirm()">Confirm</button>
+                                        <button class="btn btn-default" (click)="replaceCheck=false">Cancel</button>
+
+                                    </div>
+                                </div>
+                                <div class="middle-scroll" #scrollMe id="middle-scroll">
+                                    <div class="card-body" *ngIf="medicationObj[selectedIndex]">
+                                        <div class="d-flex justify-content-between flex-wrap">
+                                            <div class="float-left w-50 medicine-script">
+                                                <h6 *ngIf="_service.erxCheck!=2">{{medicationObj[selectedIndex].medication.rawMed.drugName}}</h6>
+                                                <h6 *ngIf="_service.erxCheck==2">Compound Medication Drug</h6>
+                                            </div>
+                                            <div class="float-right text-end">
+                                                <p>Script date: {{currentDate| date: 'MM-dd-yyyy'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <form class="form">
+                                            <div *ngIf="replaceCheck" class="intellisense-box search-content"
+                                                style="width:50%;">
+                                                <div class="intellisene-field">
+                                                    <input class="form-control" placeholder="Search Medicine"
+                                                        type="text" (input)="getMedicine($event)"
+                                                        [(ngModel)]="searchMed" [ngModelOptions]="{standalone: true}">
+                                                    <div class="intellisense-results" *ngIf="medicineData?.length>0">
+                                                        <ul>
+                                                            <li *ngFor="let item of medicineData;let a=index">
+                                                                <a  id="{{item.RepresentativeERXPackagedDrug.PackagedDrugDesc}}"
+                                                                (mousedown)="onSelectMedicine(item,a,true)">
+                                                                    {{item.RepresentativeERXPackagedDrug.PackagedDrugDesc}}
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="input-group-prepend">
+                                                        <button class="input-group-text search-btn" type="submit"><span
+                                                                class="icon-search"></span></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+
+                                            <p class="mb-2 text-danger fs-14" *ngIf="_service.erxCheck!=2">
+                                                <span
+                                                    *ngIf="medicationObj[selectedIndex].medication?.rawMed?.rawData?.FederalDEAClassCode!=0">
+                                                    Schedule
+                                                    {{medicationObj[selectedIndex].medication.rawMed.rawData.FederalDEAClassCodeDesc}}
+
+                                                </span>
+                                                <span *ngIf="drugPricingData.length>0">
+                                                    <span
+                                                        *ngIf="medicationObj[selectedIndex].medication?.rawMed?.rawData?.FederalDEAClassCode!=0 && drugPricingData[0][0]?.Price">
+                                                        ,
+                                                    </span>
+                                                    <span *ngIf="drugPricingData[0][0]?.Price">
+                                                        Price
+                                                        $ {{drugPricingData[0][0]?.Price | number:'1.2-2'}} per unit
+    
+                                                        <a class="ms-2" placement="right"
+                                                            [ngbPopover]="popover" triggers="hover"><i
+                                                                class="icon2-question"></i></a>
+                                                    </span>
+                                                </span>
+                                                <ng-template #popover>
+                                                    <div id="popover-add">
+                                                        <ol class="list-menu">
+                                                            <li *ngFor="let item of drugPricingData[0]"><a>Price $ {{item.Price
+                                                                    | number:'1.2-2'}}
+                                                                    per {{item.PriceTypeCodeDesc}}</a></li>
+                                                        </ol>
+                                                    </div>
+                                                </ng-template>
+                                            </p>
+
+                                            
+
+                                            <p *ngIf="alertChecks[selectedIndex]?.duplicatetherapy"
+                                                class="text-danger mb-2 fs-14">Drug Duplication Alert <a>View</a></p>
+
+                                            <div class="light-box mb-3 mt-3 pb-3 pt-3">
+                                                <div class="form-group field mb-1" *ngIf="_service.erxCheck==2"  [ngClass]="{'focused':medicationObj[selectedIndex].medication.description!= '' && medicationObj[selectedIndex].medication.description!= null }" >
+                                                    <label class="" for="Sig">Enter Medicine
+                                                        Name*</label>
+                                                    <input class="form-input form-control" [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                    [(ngModel)]="medicationObj[selectedIndex].medication.description" maxlength="105"
+                                                    [ngModelOptions]="{standalone: true}" />
+                                                </div>
+                                                <div class="form-group field mt-0 mb-3">
+                                                    <label class="form-label mb-2 position-static text-dark"
+                                                        for="Sig">Sig*</label>
+                                                    <ng-select id="Sig" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                                        [appendTo]="'body'"
+                                                    ngbTooltip="{{medicationObj[selectedIndex].medication.sig}}" placement="bottom" container="body"
+                                                        *ngIf="!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6 || replaceCheck || taskdetail?.task?.numType==1"
+                                                        [(ngModel)]="medicationObj[selectedIndex].medication.sig"
+                                                        [addTag]="addTagFn"
+                                                        [items]="medicationObj[selectedIndex].rawSig"
+                                                        [closeOnSelect]='true' [multiple]="false" bindLabel="SigText"
+                                                        (change)="sigChange($event)"
+                                                        
+                                                        [ngModelOptions]="{standalone: true}">
+                                                    </ng-select>
+                                                    <input
+                                                        *ngIf="taskdetail?.task?.numStatus != 6 && taskdetail?.task?.numStatus && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                        class="form-input form-control"
+                                                        value='{{medicationObj[selectedIndex].medication.sig}}'
+                                                        disabled />
+                                                </div>
+
+                                                <div class="mb-2">
+                                                    <label class="d-inline-block chkbox position-relative me-3" *ngIf="_service.erxCheck!=2">
+                                                        <input id="favourite" type="checkbox"
+                                                            [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                            [value]='medicationObj[selectedIndex].favourite'
+                                                            [checked]="medicationObj[selectedIndex].favourite"
+                                                            (change)="addToFavFun($event.target.checked)" />
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <label class="fake-label d-block mb-0" for="favourite">Add to
+                                                            favourite</label>
+                                                    </label>
+                                                    <label class="d-inline-block chkbox position-relative">
+                                                        <input id="brandrequired" type="checkbox"
+                                                            [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                            [value]='medicationObj[selectedIndex].medication.substitute'
+                                                            (change)="medicationObj[selectedIndex].medication.substitute=$event.target.checked==true?1:0"
+                                                            [checked]="medicationObj[selectedIndex].medication.substitute" />
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <label class="fake-label d-block mb-0" for="brandrequired">Brand
+                                                            medically required</label>
+                                                    </label>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-sm-4 mb-3" *ngIf="_service.erxCheck==2">
+                                                        <div class=" field  focused">
+                                                            <label for="DispenseUnit">Strength Form*</label>
+                                                            <ng-select [items]="strengthData" class="filled"
+                                                            bindLabel="term" bindValue="id" [closeOnSelect]='true'
+                                                             placeholder=""
+                                                            [(ngModel)]="medicationObj[selectedIndex].medication.strengthFormId"
+                                                            (change)="setStrengthForm($event)"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                            (keyup)="getStrengthForm($event)"
+                                                            >
+                                                        </ng-select>
+                                                            <!-- <select class="form-select form-input filled"
+                                                                (click)="getStrengthForm('Ae')">
+                                                                <option value="1">Form 1</option>
+                                                                <option value="2">Form 2</option>
+                                                                <option value="3">Form 3</option>
+                                                            </select> -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4 mb-3">
+                                                        <label  
+                                                            class="">
+                                                            {{startDayCheck==true? 'Start Date*' : 'Start Date'}}
+                                                        </label>
+                                                      
+                                                         
+                                                        <input class="form-input form-control"
+                                                        *ngIf="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                        type="text"
+                                                        [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                        [ngModel]="medicationObj[selectedIndex].medication.effectiveDate | date: 'dd/MM/yyyy'"
+                                                        [ngModelOptions]="{standalone: true}"/>
+                                                        <ejs-datepicker
+                                                            *ngIf="!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6 || taskdetail?.task?.numType==1 || replaceCheck"
+                                                            placeholder="Start Date"
+                                                            [min]="minDate"
+                                                            [max]="getMaxStartDate()"
+                                                            [value]="medicationObj[selectedIndex].medication.effectiveDate"
+                                                            (change)="ChangeStartDate($event)">
+                                                        </ejs-datepicker>
+                                                    </div>
+                                                    <div class="col-sm-4 mb-3" *ngIf="_service.erxCheck!=2">
+                                                        <div class="field  focused">
+                                                            <label for="Dispense"> Dispense*</label>
+                                                            <input class="form-input form-control" id="Dispense"
+                                                                type="text" maxlength="11"
+                                                                [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                                [(ngModel)]="medicationObj[selectedIndex].medication.quantity"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                (keyup)="removeDot(false); dispenseCheck($event,false)"
+                                                                (change)="removeDot(true); dispenseCheck($event,false)" />
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4 mb-3" *ngIf="_service.erxCheck==2">
+                                                        <div class="field  focused">
+                                                            <label for="Dispense"> Dispense*</label>
+                                                            <input class="form-input form-control" id="Dispense"
+                                                                type="text" maxlength="11"
+                                                                [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                                [(ngModel)]="medicationObj[selectedIndex].medication.compoundQuantity"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                (keyup)="removeDot(false); dispenseCheck($event,true)"
+                                                                (change)="removeDot(true); dispenseCheck($event,true)" />
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4 mb-3">
+                                                        <div class="field focused form-group">
+                                                            <label for="DispenseUnit">
+                                                                Dispense unit*</label>
+                                                            <input *ngIf="_service.erxCheck!=2 && clinicQuan!=false" class="form-input form-control" id="DispenseUnit"
+                                                                type="text" max="99" min="0"
+                                                                [ngModel]="medicationObj[selectedIndex]?.medication?.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                value={{medicationObj[selectedIndex]?.medication?.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc}}
+                                                                [disabled]="medicationObj[selectedIndex]?.medication?.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc!=''"
+                                                             />
+                                                             
+                                                             <ng-select *ngIf="_service.erxCheck!=2 && medicationObj[selectedIndex]?.medication?.rawMed?.type!=3 && clinicQuan==false" [items]="quantityMeasure" class="filled"
+                                                                bindLabel="term" bindValue="term" [closeOnSelect]='true'
+                                                                 placeholder=""
+                                                                 (change)="onChangeDispenseClinic($event)"
+                                                                [(ngModel)]="medicationObj[selectedIndex].medication.rawMed.rawData.ClinicalQuantity.eRxScriptUnitOfMeasureDesc"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                                (keyup)=getQuantityMeasure($event)
+                                                            >
+                                                            </ng-select>
+
+                                                            <ng-select *ngIf="_service.erxCheck==2" [items]="quantityMeasure" class="filled"
+                                                                bindLabel="term" bindValue="code" [closeOnSelect]='true'
+                                                                 placeholder=""
+                                                                 (change)="onChangeDispense($event)"
+                                                                [(ngModel)]="medicationObj[selectedIndex].medication.quantityUnitOfMeasureCode"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                                (keyup)=getQuantityMeasure($event)
+                                                            >
+                                                            </ng-select>
+
+
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-4 mb-3">
+                                                        <div class="form-group field  focused">
+                                                            <label class="" for="DaySupply"> {{daySupplyScheduleII(selectedIndex)?'Day Supply*':'Day Supply'}}</label>
+                                                            <input class="form-input form-control" id="DaySupply"
+                                                                type="number"
+                                                                value={{medicationObj[selectedIndex].medication.daysSupply}}
+                                                                [max]="isC2Schedule?medDaySupply:999" [min]="1"
+                                                                (keyup)="onChangeSupply($event)"
+                                                                [(ngModel)]="medicationObj[selectedIndex].medication.daysSupply"
+                                                                [ngModelOptions]="{standalone: true}"
+                                                                [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                                 />
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4 mb-3">
+                                                        <div  [ngClass]="{'focused': (medicationObj[selectedIndex].medication.refill!== '' && medicationObj[selectedIndex].medication.refill!== null) }"
+                                                         
+                                                        class="tooltip-outer form-group field  focused" tooltipClass="table-custom-tooltip" ngbTooltip="{{!taskdetail?.task?.numType || taskdetail?.task?.numType == 0 || taskdetail?.task?.numType == 1?'The total number of dispensing is 1 + the refill quantity':' The total number of dispensings is only the refill quantity'}}" placement="bottom" container="body">
+
+                                                            <label class="" for="Refill" data-toggle="tooltip"
+                                                                >Refill*</label>
+
+                                                            <input class="form-input form-control" id="Refill"
+                                                                type="number"
+                                                                value={{medicationObj[selectedIndex].medication.refill}}
+                                                                [max]="99" [min]="taskdetail?.task?.numType==2?1:0"
+                                                                (change)="refillChange=    this.refillChange = refillChange==-1?-1:true;medRefill($event.target.value)"
+                                                                (keyup)="onChangeRefill($event)"
+                                                                [disabled]="checkRefill()" />
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-sm-4 align-self-center">
+                                                        <label *ngIf="_service.erxCheck!=1"
+                                                            class="d-inline-block chkbox position-relative me-3">
+                                                            <input id="Refill" name="recurrenceAfter"
+                                                                id="RefillAsNeeded" type="checkbox"
+                                                                value="{{refillAsNeeded}}"
+                                                                [disabled]="checkRefillAsNeed()"
+                                                                [checked]="medicationObj[selectedIndex].medication.refill==99"
+                                                                (change)="refillFun($event.target.checked)" />
+                                                            <span class="fake-input position-absolute"></span>
+                                                            <label class="fake-label d-block mb-0"
+                                                                for="RefillAsNeeded">Refill as needed</label>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- for compound start -->
+
+                                            
+                                            <!-- for compound end  -->
+                                             <!-- for compound medicines start  -->
+                                            <!-- Designers Condition -->
+                                            <div
+                                                *ngIf="_service.erxCheck==2">
+                                                <div class="light-box mb-3 mt-3 compound-medicines">
+                                                    <h6 class="mb-3">Compound Medicines : </h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table table-sm table-borderless">
+                                                            
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Sr No.</th>
+                                                                    <th>Medicine-Drug</th>
+                                                                    <th>Dispense</th>
+                                                                    <th>Dispense Unit</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let item of medicationObj; let i = index">
+                                                                    <td>{{i+1}}</td>
+                                                                    <td class="w-50">{{item.medication.rawMed.drugName}}
+                                                                        <p class="mb-2 text-danger fs-14">
+                                                                            <span
+                                                                                *ngIf="medicationObj[i].medication?.rawMed?.rawData?.FederalDEAClassCode!='0'">
+                                                                                Schedule
+                                                                                {{medicationObj[i].medication.rawMed.rawData.FederalDEAClassCodeDesc}}
+
+                                                                            </span>
+                                        
+                                                                            <span *ngIf="drugPricingData && drugPricingData[i] && drugPricingData[i].length>0">
+                                                                                <span *ngIf="medicationObj[i].medication?.rawMed?.rawData?.FederalDEAClassCode!='0' && drugPricingData[i][0]?.Price">
+                                                                               ,
+                                                                                </span>
+                                                                                <span *ngIf="drugPricingData[i][0]?.Price">
+                                                                                    Price
+                                                                                    $ {{drugPricingData[i][0]?.Price |
+                                                                                    number:'1.2-2'}} per unit
+    
+                                                                                    <a class="ms-2"
+                                                                                        placement="right"
+                                                                                        [ngbPopover]="popoverinfo"
+                                                                                        triggers="hover"><i
+                                                                                            class="icon2-question"></i></a>
+                                                                                </span>
+                                                                            </span>
+                                                                        </p>
+                                                                        <ng-template #popoverinfo>
+                                                                            <div id="popover-add">
+                                                                                <ol class="list-menu">
+                                                                                    <li *ngFor="let item of drugPricingData[i]"><a>Price $ {{item.Price
+                                                                                            | number:'1.2-2'}}
+                                                                                            per {{item.PriceTypeCodeDesc}}</a></li>
+                                                                                </ol>
+                                                                            </div>
+                                                                        </ng-template>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input class="form-input form-control" id="Dispense{{i}}"
+                                                                        type="text" maxlength="11"
+                                                                        [(ngModel)]="medicationObj[i].medication.quantity"
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                        (keyup)="removeDot(false); dispenseCheck($event,false,i)"
+                                                                        (change)="removeDot(true); dispenseCheck($event,false,i)" />
+                                                                       
+                                                                    </td>
+                                                                    <td class="w-25">
+                                                                        <input class="form-input form-control"
+                                                                            id="DispenseUnit{{i}}" type="text" max="99"
+                                                                            min="0"
+                                                                            [ngModel]="medicationObj[i]?.medication?.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc"
+                                                                            [ngModelOptions]="{standalone: true}"
+                                                                            value={{medicationObj[i]?.medication?.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc}}
+                                                                            [disabled]="medicationObj[i]?.medication?.rawMed?.rawData?.ClinicalQuantity?.eRxScriptUnitOfMeasureDesc!=''" />
+                                                                    </td> 
+                                                                    <td class="w-5"  *ngIf="replaceCheck">
+                                                                        <a data-toggle="tooltip" title="Delete"
+                                                                            (mousedown)="removeMedicine(i)"><i
+                                                                                class="icon2-trashcan1 fs-14"></i></a>
+                                                                    </td> 
+                                                                </tr> 
+                                                                
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- for compound medicines end  -->
+
+
+
+
+                                            <!-- Compound Med code -->
+                                            <p *ngIf="alertChecks[selectedIndex]?.other"
+                                                class="text-danger mb-2 fs-14 ">Min max dose Alert <a>View</a></p>
+
+
+                                            <div class="light-box mb-3 mt-3 pb-1 pt-2 associate">
+                                                <h6 class="mb-3">Associate diagnoses</h6>
+                                                <div class="search-category mb-3">
+                                                    <div class="form-group field"
+                                                        [ngClass]="{'focused':medicationObj[selectedIndex].medication.icd10Codes.codes.length>0 || focuscheck==true}">
+                                                        <label class="form-label">ICD 10 codes</label>
+                                                        
+                                                        <ng-select #selectedValue id="ICT10codes" class="form-input2 filled"
+                                                            [ngClass]="{'inputDisabled': !(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1}"
+                                                            [(ngModel)]="medicationObj[selectedIndex].medication.icd10Codes.codes"
+                                                            [items]="lstICDcodes" [closeOnSelect]='false'
+                                                            [multiple]="true" bindLabel="full_ict"
+                                                            [maxSelectedItems]="2" (keyup)="getICDcodes($event)"
+                                                            (change)='removeICDcodeFromList($event)'
+                                                            [disabled]="!(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && !replaceCheck && taskdetail?.task?.numType!=1"
+                                                            [ngModelOptions]="{standalone: true}">
+                                                            <ng-template ng-label-tmp let-item="item">
+                                                                {{item.name}} - {{item.description}}
+                                                            </ng-template>
+                                                        </ng-select>
+                                                        <span class="icon2-search form-control-feedback"></span>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group field mb-3"
+                                                    [ngClass]="{'focused':medicationObj[selectedIndex].medication.internalComments != '' && medicationObj[selectedIndex].medication.internalComments != null }">
+                                                    <label class="form-label focused" for="InternalNotes">Internal
+                                                        Notes</label>
+                                                    <textarea class="form-input form-control" id="InternalNotes"
+                                                        rows="3" maxlength="500"
+                                                        value="{{medicationObj[selectedIndex].medication.internalComments}}"
+                                                        (change)="medicationObj[selectedIndex].medication.internalComments=$event.target.value"
+                                                        (keyup)=onChangeInternalNotes($event)></textarea>
+                                                </div>
+                                                <div class="form-group field mt-2"
+                                                    [ngClass]="{'focused':medicationObj[selectedIndex].medication.pharmacyNotes != '' && medicationObj[selectedIndex].medication.pharmacyNotes != null }">
+                                                    <label class="form-label focused" for="NotetoPharmacy">Note to
+                                                        Pharmacy {{(medicationObj[selectedIndex].medication.rawMed.rawData['DefaultETCID'] == '5619') ?'*':''}}
+                                                    </label>
+                                                    <textarea class="form-input form-control" id="NotetoPharmacy"
+                                                        rows="3"
+                                                        [ngStyle]="xyremCheck ? {'border' : '1px solid red !important'} : {'color' : 'black'}"
+                                                        value="{{medicationObj[selectedIndex].medication.pharmacyNotes}}"
+                                                        maxlength="210"
+                                                        (change)="medicationObj[selectedIndex].medication.pharmacyNotes=$event.target.value"
+                                                        (keyup)=onChangePharmacyNotes($event)></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive mt-3" *ngIf="!((!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && _service.erxCheck!=1)
+                                            && taskdetail?.pharmacy && taskdetail?.pharmacy?.name">
+                                                <table class="table table-sm">
+                                                    <tr>
+                                                        <h6>Pharmacy </h6>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <h6><b>Name :</b>{{taskdetail.pharmacy.name}}</h6>
+                                                            <p class="float-left me-3 mb-1">
+                                                                <b>Address :</b>
+                                                                {{taskdetail.pharmacy?.addressLine1 ?
+                                                                taskdetail.pharmacy.addressLine1+',' : ''}}
+                                                                {{taskdetail.pharmacy?.addressLine2 ?
+                                                                taskdetail.pharmacy.addressLine2+',' : ''}}
+                                                                {{taskdetail.pharmacy?.city}} ,
+                                                                {{taskdetail.pharmacy?.stateProvince}}
+                                                                , {{taskdetail.pharmacy?.postalCode}} ,
+                                                                Phone:{{taskdetail.pharmacy?.primaryPhone?.number ?
+                                                                taskdetail.pharmacy?.primaryPhone?.number : "N/A"}}
+                                                            </p>
+                                                            <p class="float-left me-3 mb-1"><b>Specialty :</b>
+                                                                {{taskdetail?.pharmacy?.type[0]?.name}}
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <table class="table table-sm">
+                                                    <tr>
+                                                        <h6>Prescriber</h6>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <h6><b>Name :</b>{{taskdetail.prescriber.firstName}}
+                                                                {{taskdetail.prescriber.lastName}}</h6>
+                                                            <p class="float-left me-3 mb-1">
+                                                                <b>Address :</b>
+                                                                {{taskdetail.prescriber?.addressLine1 ?
+                                                                taskdetail.prescriber.addressLine1+',' : ''}}
+                                                                {{taskdetail.prescriber?.addressLine2 ?
+                                                                taskdetail.prescriber.addressLine2+',' : ''}}
+                                                                {{taskdetail.prescriber?.city}} ,
+                                                                {{taskdetail.prescriber?.stateProvince}}
+                                                                , {{taskdetail.prescriber?.postalCode}} ,
+                                                                Phone:
+                                                                {{taskdetail.prescriber.primaryPhone?.extension}}{{taskdetail.prescriber.primaryPhone.number
+                                                                ?
+                                                                taskdetail.prescriber.primaryPhone.number : "N/A"}}
+                                                            </p>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <div
+                                                *ngIf="(!taskdetail?.task?.numStatus || taskdetail?.task?.numStatus == 6) && _service.erxCheck!=1">
+                                                <div class="light-box mb-3 mt-3">
+                                                    <h6 class="mb-3">Pharmacy*</h6>
+                                                    <div class="row">
+                                                        <div class="col-sm-5">
+                                                            <div class="search-category mb-3">
+                                                                <div class="form-group field"
+                                                                    [ngClass]="{'focused':searchPharmacy != '' && searchPharmacy != null }">
+                                                                    <label class="form-label"
+                                                                        for="SearchPharmacy">Pharmacy
+                                                                        Name</label>
+                                                                    <input class="form-input form-control"
+                                                                        id="SearchPharmacy" type="text"
+                                                                        value="{{searchPharmacy}}" maxlength="70"
+                                                                        (keyup)="searchPharmacy=$event.target.value"
+                                                                        (change)="searchPharmacy=$event.target.value" />
+                                                                    <!-- <span
+                                                                        class="icon2-search form-control-feedback"></span> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-3">
+                                                            <div class="form-group field mb-0"
+                                                                [ngClass]="{'focused':pharmacyType != '' && pharmacyType != null }">
+                                                                <label class="form-label mb-0" for="PharmacyType">Type
+                                                                </label>
+                                                               
+                                                                <select id="PharmacyType"
+                                                                        class="form-control filled"
+                                                                        [(ngModel)]="pharmacyType" name="pharmacyType"
+                                                                        [ngModelOptions]="{standalone: true}"
+                                                                    >
+                                                                    <option *ngFor="let item of pharmacy_types"
+                                                                        [value]="item.id">{{item.name}}</option>
+                                                                </select>
+                                                                <!-- <p *ngIf="type_check" class="required">Type is required
+                                                                </p> -->
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-sm-4">
+                                                            <label class="d-inline-block chkbox position-relative me-3">
+                                                                <input id="Patientdefault" name="recurrenceAfter"
+                                                                    id="Patientdefault" type="checkbox"
+                                                                    value="{{patientDefault}}"
+                                                                    [checked]="patientDefault"
+                                                                    (change)="patientDefault=!patientDefault" />
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <label class="fake-label d-block mb-0"
+                                                                    for="Patientdefault">Patient default</label>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group field mb-0"
+                                                        [ngClass]="{'focused':address_line != '' && address_line != null }">
+                                                        <label class="form-label focused" for="InternalNotes">Address
+                                                            Line</label>
+                                                        <textarea class="form-input form-control" id="InternalNotes"
+                                                            maxlength="40" value="{{address_line}}"
+                                                            (keyup)="address_line=$event.target.value"
+                                                            (change)="address_line=$event.target.value"></textarea>
+                                                    </div>
+
+                                                    <div class="filter-parameters">
+                                                        <div class="form-group field"
+                                                            [ngClass]="{'focused':zip_code != '' && zip_code != null }">
+                                                            <label class="form-label focused" for="InternalNotes">Zip
+                                                                Code</label>
+                                                            <input class="form-input form-control" id="InternalNotes"
+                                                                value="{{zip_code}}" type="text" minlength="5"
+                                                                maxlength="9" (keyup)="zip_code=$event.target.value"
+                                                                (change)="zip_code=$event.target.value" />
+                                                        </div>
+                                                        <div class="form-group field"
+                                                            [ngClass]="{'focused':city != '' && city != null }">
+                                                            <label class="form-label focused"
+                                                                for="InternalNotes">City</label>
+                                                            <textarea class="form-input form-control" id="InternalNotes"
+                                                                maxlength="35" value="{{city}}"
+                                                                (keyup)="city=$event.target.value"
+                                                                (change)="city=$event.target.value"></textarea>
+                                                        </div>
+                                                        <div class="form-group field"
+                                                            [ngClass]="{'focused':state != '' && state != null }">
+                                                            <label class="form-label focused"
+                                                                for="InternalNotes">State</label>
+                                                            <textarea class="form-input form-control" id="InternalNotes"
+                                                                maxlength="2" value="{{state}}"
+                                                                (keyup)="state=$event.target.value"
+                                                                (change)="state=$event.target.value"></textarea>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="input-feilds-container">
+                                                        <button class="btn btn-success filter-btn" (click)="Filter()">
+                                                            Filter
+                                                        </button>
+                                                        <button class="btn btn-primary filter-btn reset-btn"
+                                                            (click)="Reset()">
+                                                            Reset
+                                                        </button>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="table-responsive mt-3">
+                                                    <table class="table table-sm">
+                                                        <tr *ngFor="let row of pharmacyData">
+                                                            <td width="50">
+                                                                <label class="radiobox" name="radio">
+                                                                    <input id="abc" (click)="selectPharmacy(row)"
+                                                                        style="white-space: pre;" type="radio"
+                                                                        [checked]="row?.id==medicationObj[selectedIndex]?.pharmacy?.id"
+                                                                        name="pharmacy-options">
+                                                                    <span class="fake-input position-absolute"></span>
+                                                                    <span class="fake-label d-block pe-0" for="abc"
+                                                                        style="white-space: pre;">&nbsp;</span>
+                                                                </label>
+                                                            </td>
+                                                            <td>
+                                                                <h6>Name : {{row.organization_name}}</h6>
+                                                                <p class="float-left me-3 mb-1"><b>AddressLine1 :</b>
+                                                                    {{row.address_line1}}</p>
+                                                                <p class="float-left me-3 mb-1"><b>City :</b>
+                                                                    {{row.city}}</p>
+                                                                <p class="float-left me-3 mb-1"><b>State Province :</b>
+                                                                    {{row.state_province}}</p>
+                                                                <p class="float-left me-3 mb-1"><b>Postal Code :</b>
+                                                                    {{row.postal_code}}</p>
+                                                                <p class="float-left me-3 mb-1"><b>Primary Phone :</b>
+                                                                    {{row.primary_telephone}}</p>
+                                                                <p class="float-left me-3 mb-1"><b>Specialty :</b>
+                                                                    {{row?.erx_organization_types?.[0]?.organization_type?.name}}
+                                                                </p>
+                                                            </td>
+                                                            <td width="100">
+                                                                <label class="checkbox">
+                                                                    <input id="abc" type="checkbox"
+                                                                        (change)="defaultPhar($event,row)" [disabled]="row.id!=medicationObj[selectedIndex]?.pharmacy?.id
+                                                                        || row?.default_pharmacy"
+                                                                        [checked]="row?.default_pharmacy || defaultPharmId==row.id">
+                                                                    <span class="fake-input position-absolute"></span>
+                                                                    <span class="fake-label d-block" for="abc"
+                                                                        style="white-space: pre;">
+                                                                        Default Pharmacy</span>
+                                                                </label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngIf="pharmacyData && pharmacyData.length==0">
+                                                            <td>
+                                                                <h6>Pharmacy not found</h6>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <nav aria-label="Page navigation example"
+                                                        *ngIf="pharmacyData && pharmacyData.length>0">
+                                                        <ul class="pagination">
+                                                            <li class="page-item" *ngIf="current_page!=1"><a
+                                                                    class="page-link"
+                                                                    (click)="Filter(current_page-1)"><i
+                                                                        class="fa fa-backward"></i></a></li>
+                                                            <li class="page-item" *ngIf="current_page!=1"><a
+                                                                    class="page-link"
+                                                                    (click)="Filter(current_page-1)">{{current_page-1}}</a>
+                                                            </li>
+                                                            <li class="page-item active"><a class="page-link "
+                                                                    >{{current_page}}</a>
+                                                            </li>
+                                                            <li class="page-item"
+                                                                *ngIf="current_page!=totalPharmacy && totalPharmacy>current_page">
+                                                                <a class="page-link"
+                                                                    (click)="Filter(current_page+1)">{{current_page+1}}</a>
+                                                            </li>
+                                                            <li class="page-item"
+                                                                *ngIf="current_page!=totalPharmacy && totalPharmacy>current_page">
+                                                                <a class="page-link" (click)="Filter(current_page+1)"><i
+                                                                        class="fa fa-forward"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
+                                                </div>
+
+
+
+                                            </div>
+                                           
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="right-section" [ngClass]="{'no-left-section': hideLeftSection==true}"
+                            [style.display]="rightSection ? 'table-cell' : 'none'">
+                            <div class="accordion" id="alertscollapse">
+                                <div class="card bg-light-grey height-three">
+                                    <!-- *ngIf="medicationObj[selectedIndex]?.medication?.alerts?.length>0"> -->
+
+                                    <div class="card-header" [ngClass]="alertsCollapse == true ? 'collapsed' : ''"
+                                        data-target="#alerts-tab" (click)="changeCollapse()">
+                                        <h3 class="card-title float-left">Alerts</h3>
+                                        <div class="card-action">
+                                            <a class="toggle action-warning" data-toggle="tooltip"></a>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="collapse" [ngClass]="alertsCollapse == false ? 'show' : ''"
+                                        id="alerts-tab" data-parent="#alertscollapse">
+                                        <div class="card-body">
+                                            <div class="right-scroll">
+                                                <!-- <div class="property-box mb-2"
+                                                    *ngIf="!(medicationObj[selectedIndex]?.medication?.alerts?.length>0)"> -->
+                                                <!-- <div  > -->
+                                                <!-- <div class="box-body">
+                                                        No Alerts
+                                                    </div> -->
+                                                <!-- </div> -->
+                                                <!-- </div> -->
+                                                <form class="form"
+                                                    *ngIf="medicationObj[selectedIndex]?.medication?.alerts?.length>0">
+
+                                                    <label class="chkbox position-relative me-3 mb-3">
+                                                        <input id="override-alerts" name="recurrenceAfter"
+                                                            (change)="allAlertCheck()" type="checkbox"
+                                                            [checked]="medicationObj[this.selectedIndex].medication.allALertCheck.check" />
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <label class="fake-label d-block mb-0"
+                                                            for="override-alerts">Reason to override all alerts</label>
+                                                    </label>
+
+                                                    <div class="form-group field mb-3"
+                                                        [ngClass]="{'focused':medicationObj[selectedIndex].medication['allALertCheck']['allReason']!='' && medicationObj[selectedIndex].medication['allALertCheck']['allReason']!=null}">
+                                                        <label class="form-label mb-0">Select Override Reason </label>
+                                                        <select [disabled]="!medicationObj[this.selectedIndex].medication.allALertCheck.check"
+                                                            class="form-select form-input filled"
+                                                            (change)="allReasonChange(selectedIndex)"
+                                                            [(ngModel)]="medicationObj[selectedIndex].medication['allALertCheck']['allReason']"
+                                                            [ngModelOptions]="{standalone: true}">
+                                                            <!-- <option value=""></option> -->
+                                                            <option *ngFor="let option of overRideReasons"
+                                                                value={{option.reason}}>{{option.reason}}</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="form-group field mb-3"
+                                                        [ngClass]="{'focused':medicationObj[selectedIndex].medication['allALertCheck']['allComment']!='' && medicationObj[selectedIndex].medication['allALertCheck']['allComment']!=null}">
+                                                        <label class="form-label">Comment</label>
+                                                        <textarea (input)="allCommentChange(selectedIndex)"
+                                                            [(ngModel)]="medicationObj[selectedIndex].medication['allALertCheck']['allComment']"
+                                                            [ngModelOptions]="{standalone: true}"
+                                                            [disabled]="!medicationObj[this.selectedIndex].medication.allALertCheck.check"
+                                                            maxlength="500"
+                                                            class="form-input form-control extended-textarea"></textarea>
+                                                    </div>
+
+                                                    <div class="accordion mb-3" id="alert-accordion">
+                                                        <div class="card bg-light-grey"
+                                                            *ngIf="alertChecks[selectedIndex]?.duplicatetherapy">
+                                                            <div class="card-header" data-toggle="collapse" data-target="#collapse1"
+                                                            [ngClass]="duplicateTherapyCollapse == true ? 'collapsed' : ''" (click)="changeDuplicateTherapyCollapse()">
+                                                                <h3 class="card-title float-left">Duplicate therapy</h3>
+                                                                <div class="card-action">
+                                                                    <a class="toggle action-warning"
+                                                                        data-toggle="tooltip"></a>
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                            <div class="collapse" id="collapse1" data-parent="#alert-accordion"
+                                                            [ngClass]="duplicateTherapyCollapse == false ? 'show' : ''">
+                                                                <div class="card-body overflow-auto">
+                                                                    <div
+                                                                        *ngFor="let alert of medicationObj[selectedIndex]?.medication?.alerts;let index=index">
+                                                                        <div
+                                                                            *ngIf="alert.alertType=='duplicatetherapy'">
+                                                                            <div>
+                                                                                <h6>{{alert.drugName}}
+                                                                                </h6>
+                                                                            </div>
+                                                                            <p class="text-danger">
+                                                                                {{alert.screenMessage}}
+                                                                            </p>
+                                                                            <label
+                                                                                class="chkbox position-relative me-3 mb-3">
+                                                                                <input
+                                                                                    id="override-Reason{{selectedIndex}}"
+                                                                                    name="recurrenceAfter"
+                                                                                    (change)="singleAlertCheck(alert)"
+                                                                                    [(ngModel)]="alert.alertCheck"
+                                                                                    [ngModelOptions]="{standalone: true}" 
+                                                                                    [checked]="alert.alertCheck"
+                                                                                    type="checkbox" />
+                                                                                <span
+                                                                                    class="fake-input position-absolute"></span>
+                                                                                <label class="fake-label d-block mb-0"
+                                                                                    for="override-Reason{{selectedIndex}}">Override
+                                                                                    Reason</label>
+                                                                            </label>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.reason!='' && alert.reason!=null}">
+                                                                                <label class="form-label mb-0">Select
+                                                                                    Override Reason </label>
+                                                                                <select [disabled]="!alert.alertCheck"
+                                                                                    (change)="alert.reason=$event.target.value"
+                                                                                    [(ngModel)]="alert.reason"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-select form-input filled">
+                                                                                    <!-- <option value=""></option> -->
+                                                                                    <option
+                                                                                        *ngFor="let option of overRideReasons"
+                                                                                        value={{option.reason}}>
+                                                                                        {{option.reason}}</option>
+
+                                                                                </select>
+                                                                            </div>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.comment!='' && alert.comment!=null}">
+                                                                                <label
+                                                                                    class="form-label">Comment</label>
+                                                                                <textarea [(ngModel)]="alert.comment" [disabled]="!alert.alertCheck"
+                                                                                    maxlength="500"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-input form-control extended-textarea"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="card bg-light-grey"
+                                                            *ngIf="alertChecks[selectedIndex]?.drugdruginteraction">
+                                                            <div class="card-header" data-toggle="collapse" data-target="#collapse2"
+                                                            [ngClass]="drugDrugCollapse == true ? 'collapsed' : ''" (click)="changeDrugDrugCollapse()">
+                                                                <h3 class="card-title float-left">Drug to Drug
+                                                                    Interaction</h3>
+                                                                <div class="card-action">
+                                                                    <a class="toggle action-warning"
+                                                                        data-toggle="tooltip"></a>
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                            <div class="collapse" id="collapse2"
+                                                                data-parent="#alert-accordion" [ngClass]="drugDrugCollapse == false ? 'show' : ''">
+                                                                <div class="card-body overflow-auto">
+                                                                    <div
+                                                                        *ngFor="let alert of medicationObj[selectedIndex]?.medication?.alerts">
+                                                                        <div
+                                                                            *ngIf="alert.alertType=='drugdruginteraction'">
+                                                                            <div>
+                                                                                <h6>{{alert.drugName}}
+                                                                                </h6>
+                                                                            </div>
+                                                                            <button class="btn btn-danger mb-2">Severe
+                                                                                {{alert.severity}}</button>
+                                                                            <p class="text-danger">
+                                                                                {{alert.screenMessage}}
+                                                                            </p>
+
+                                                                            <label
+                                                                                class="chkbox position-relative me-3 mb-3">
+                                                                                <input
+                                                                                    id="Interaction-override-Reason{{selectedIndex}}"
+                                                                                    name="recurrenceAfter"
+                                                                                    (change)="singleAlertCheck(alert)"
+                                                                                    [(ngModel)]="alert.alertCheck"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    [checked]="alert.alertCheck"
+                                                                                    type="checkbox" />
+                                                                                <span
+                                                                                    class="fake-input position-absolute"></span>
+                                                                                <label class="fake-label d-block mb-0"
+                                                                                    for="Interaction-override-Reason{{selectedIndex}}">Override
+                                                                                    Reason</label>
+                                                                            </label>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.reason!='' && alert.reason!=null}">
+                                                                                <label class="form-label mb-0">Select
+                                                                                    Override Reason </label>
+                                                                                <select [disabled]="!alert.alertCheck" 
+                                                                                    (change)="alert.reason=$event.target.value"
+                                                                                    [(ngModel)]="alert.reason"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-select form-input filled">
+                                                                                    <!-- <option value=""></option> -->
+                                                                                    <option
+                                                                                        *ngFor="let option of overRideReasons"
+                                                                                        value={{option.reason}}>
+                                                                                        {{option.reason}}</option>
+                                                                                </select>
+                                                                            </div>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.comment!='' && alert.comment!=null}">
+                                                                                <label
+                                                                                    class="form-label">Comment</label>
+                                                                                <textarea [(ngModel)]="alert.comment" [disabled]="!alert.alertCheck"
+                                                                                    maxlength="500"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-input form-control extended-textarea"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card bg-light-grey"
+                                                            *ngIf="alertChecks[selectedIndex]?.drugfoodinteraction">
+                                                            <div class="card-header" data-target="#collapse3" 
+                                                            [ngClass]="drugFoodCollapse == true ? 'collapsed' : ''" (click)="changeDrugFoodCollapse()">
+                                                                <h3 class="card-title float-left">Drug to Food
+                                                                    Interaction</h3>
+                                                                <div class="card-action">
+                                                                    <a class="toggle action-warning"
+                                                                        data-toggle="tooltip"></a>
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                            <div class="collapse" id="collapse3"
+                                                                data-parent="#alert-accordion" [ngClass]="drugFoodCollapse == false ? 'show' : ''">
+                                                                <div class="card-body overflow-auto">
+                                                                    <div
+                                                                        *ngFor="let alert of medicationObj[selectedIndex]?.medication?.alerts">
+                                                                        <div
+                                                                            *ngIf="alert.alertType=='drugfoodinteraction'">
+                                                                            <div>
+                                                                                <h6>{{alert?.drugName}}
+                                                                                </h6>
+                                                                            </div>
+                                                                            <p class="text-danger">
+                                                                                {{alert?.screenMessage}}
+                                                                            </p>
+
+                                                                            <label
+                                                                                class="chkbox position-relative me-3 mb-3">
+                                                                                <input
+                                                                                    id="Food-override-Reason{{selectedIndex}}"
+                                                                                    [(ngModel)]="alert.alertCheck"
+                                                                                    (change)="singleAlertCheck(alert)"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    [checked]="alert.alertCheck"
+                                                                                    name="recurrenceAfter"
+                                                                                    type="checkbox" />
+                                                                                <span
+                                                                                    class="fake-input position-absolute"></span>
+                                                                                <label class="fake-label d-block mb-0"
+                                                                                    for="Food-override-Reason{{selectedIndex}}">Override
+                                                                                    Reason</label>
+                                                                            </label>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.reason!='' && alert.reason!=null}">
+                                                                                <label class="form-label mb-0">Select
+                                                                                    Override Reason </label>
+                                                                                <select [disabled]="!alert.alertCheck" [disabled]="!alert.alertCheck"
+                                                                                    (change)="alert.reason=$event.target.value"
+                                                                                    [(ngModel)]="alert.reason"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-select form-input filled">
+                                                                                    <!-- <option value=""></option> -->
+                                                                                    <option
+                                                                                        *ngFor="let option of overRideReasons"
+                                                                                        value={{option.reason}}>
+                                                                                        {{option.reason}}</option>
+                                                                                </select>
+                                                                            </div>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.comment!='' && alert.comment!=null}">
+                                                                                <label
+                                                                                    class="form-label">Comment</label>
+                                                                                <textarea [(ngModel)]="alert.comment" [disabled]="!alert.alertCheck"
+                                                                                    maxlength="500"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-input form-control extended-textarea"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card bg-light-grey"
+                                                            *ngIf="alertChecks[selectedIndex]?.drugallergyinteraction">
+                                                            <div class="card-header" data-toggle="collapse" data-target="#collapse4"
+                                                            [ngClass]="drugAllergyCollapse == true ? 'collapsed' : ''" (click)="changeDrugAllergyCollapse()">
+                                                                <h3 class="card-title float-left">Drug to Allergy
+                                                                    Interaction</h3>
+                                                                <div class="card-action">
+                                                                    <a class="toggle action-warning"
+                                                                        data-toggle="tooltip"></a>
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                            <div class="collapse" id="collapse4" data-parent="#alert-accordion"
+                                                            [ngClass]="drugAllergyCollapse == false ? 'show' : ''">
+                                                                <div class="card-body overflow-auto">
+                                                                    <div
+                                                                        *ngFor="let alert of medicationObj[selectedIndex]?.medication?.alerts">
+                                                                        <div
+                                                                            *ngIf="alert.alertType=='drugallergyinteraction'">
+                                                                            <div>
+                                                                                <h6>{{alert.drugName}}
+                                                                                </h6>
+                                                                            </div>
+                                                                            <p class="text-danger">
+                                                                                {{alert.screenMessage}}
+                                                                            </p>
+                                                                            <label
+                                                                                class="chkbox position-relative me-3 mb-3">
+                                                                                <input
+                                                                                    id="Allergy-override-Reason{{selectedIndex}}"
+                                                                                    name="recurrenceAfter"
+                                                                                    (change)="singleAlertCheck(alert)"
+                                                                                    [(ngModel)]="alert.alertCheck"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    [checked]="alert.alertCheck"
+                                                                                    type="checkbox" />
+                                                                                <span
+                                                                                    class="fake-input position-absolute"></span>
+                                                                                <label class="fake-label d-block mb-0"
+                                                                                    for="Allergy-override-Reason{{selectedIndex}}">Override
+                                                                                    Reason</label>
+                                                                            </label>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.reason!='' && alert.reason!=null}">
+                                                                                <label class="form-label mb-0">Select
+                                                                                    Override Reason </label>
+                                                                                <select [disabled]="!alert.alertCheck"
+                                                                                    (change)="alert.reason=$event.target.value"
+                                                                                    [(ngModel)]="alert.reason"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-select form-input filled">
+                                                                                    <!-- <option value=""></option> -->
+                                                                                    <option
+                                                                                        *ngFor="let option of overRideReasons"
+                                                                                        value={{option.reason}}>
+                                                                                        {{option.reason}}</option>
+                                                                                </select>
+                                                                            </div>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.comment!='' && alert.comment!=null}">
+                                                                                <label
+                                                                                    class="form-label">Comment</label>
+                                                                                <textarea [(ngModel)]="alert.comment" [disabled]="!alert.alertCheck"
+                                                                                    maxlength="500"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-input form-control extended-textarea"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card bg-light-grey"
+                                                            *ngIf="alertChecks[selectedIndex]?.other">
+                                                            <div class="card-header" data-toggle="collapse" data-target="#collapse5"
+                                                            [ngClass]="otherCollapse == true ? 'collapsed' : ''" (click)="changeOtherCollapse()">
+                                                                <h3 class="card-title float-left">Other</h3>
+                                                                <div class="card-action">
+                                                                    <a class="toggle action-warning"
+                                                                        data-toggle="tooltip"></a>
+                                                                </div>
+                                                                <div class="clearfix"></div>
+                                                            </div>
+                                                            <div class="collapse" id="collapse5" data-parent="#alert-accordion"
+                                                            [ngClass]="otherCollapse == false ? 'show' : ''">
+                                                                <div class="card-body overflow-auto">
+                                                                    <div
+                                                                        *ngFor="let alert of medicationObj[selectedIndex]?.medication?.alerts">
+                                                                        <div *ngIf="alert.alertType=='other'">
+                                                                            <div>
+                                                                                <h6>{{alert.drugName}}
+                                                                                </h6>
+                                                                            </div>
+                                                                            <p class="text-danger">
+                                                                                {{alert.screenMessage}}
+                                                                            </p>
+                                                                            <label
+                                                                                class="chkbox position-relative me-3 mb-3">
+                                                                                <input
+                                                                                    id="Other-override-Reason{{selectedIndex}}"
+                                                                                    name="recurrenceAfter"
+                                                                                    [(ngModel)]="alert.alertCheck"
+                                                                                    (change)="singleAlertCheck(alert)"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    [checked]="alert.alertCheck"
+                                                                                    type="checkbox" />
+                                                                                <span
+                                                                                    class="fake-input position-absolute"></span>
+                                                                                <label class="fake-label d-block mb-0"
+                                                                                    for="Other-override-Reason{{selectedIndex}}">Override
+                                                                                    Reason</label>
+                                                                            </label>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.reason!='' && alert.reason!=null}">
+                                                                                <label class="form-label mb-0">Select
+                                                                                    Override Reason </label>
+                                                                                <select [disabled]="!alert.alertCheck"
+                                                                                    (change)="alert.reason=$event.target.value"
+                                                                                    [(ngModel)]="alert.reason"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-select form-input filled">
+                                                                                    <!-- <option value=""></option> -->
+                                                                                    <option
+                                                                                        *ngFor="let option of overRideReasons"
+                                                                                        value={{option.reason}}>
+                                                                                        {{option.reason}}</option>
+                                                                                </select>
+                                                                            </div>
+
+                                                                            <div class="form-group field mb-3"
+                                                                                [ngClass]="{'focused':alert.comment!='' && alert.comment!=null}">
+                                                                                <label
+                                                                                    class="form-label">Comment</label>
+                                                                                <textarea [(ngModel)]="alert.comment" [disabled]="!alert.alertCheck"
+                                                                                    maxlength="500"
+                                                                                    [ngModelOptions]="{standalone: true}"
+                                                                                    class="form-input form-control extended-textarea"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card bg-light-grey height-three">
+                                    <div class="card-header" data-toggle="collapse" (click)="changeLabelCollapse()"
+                                        data-target="#label-alerts" [ngClass]="labelAlertsCollapse == false ? 'collapsed' : ''">
+                                        <h3 class="card-title float-left">Label Alerts</h3>
+                                        <div class="card-action">
+                                            <a class="toggle action-warning" data-toggle="tooltip"></a>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="collapse" id="label-alerts" data-parent="#alertscollapse"
+                                    [ngClass]="labelAlertsCollapse == true ? 'show' : ''">
+                                        <div class="card-body">
+                                            <div class="right-scroll">
+                                                <div class="property-box mb-2" *ngFor="let item of labelsData">
+                                                    <div class="box-body">
+                                                        {{item.LabelWarningText}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card bg-light-grey height-three">
+                                    <div class="card-header" data-toggle="collapse" [ngClass]="advisoryCollapse == false ? 'collapsed' : ''"
+                                        data-target="#advisory-alerts" (click)="changeAdvisoryCollapse()">
+                                        <h3 class="card-title float-left">Advisory</h3>
+                                        <div class="card-action">
+                                            <a class="toggle action-warning" data-toggle="tooltip"></a>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="collapse" id="advisory-alerts" data-parent="#alertscollapse" [ngClass]="advisoryCollapse == true ? 'show' : ''">
+                                        <div class="card-body">
+                                            <div class="right-scroll">
+                                                <div class="property-box mb-2" *ngFor="let item of advisoryData">
+                                                    <div class="box-body">
+                                                        {{item.ProfessionalText1}} {{item.ProfessionalText2}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ng-template #contentAuthenticate let-modal>
+        <div class="modal-header">
+            <h6 class="modal-title">
+                EPCS {{
+                tempData.basic_info.epcs_status_id==2?
+                'Acceptance':'Removal'}} Permission</h6>
+             <button #closeBtn type="button" class="close" aria-label="Close" (click)="modal.close('Close click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form  [formGroup]="passwordForm" autocomplete="off" novalidate>
+            <div class="row mb-2 justify-content-center">
+                <div class="col-md-12 col-lg-12">
+                    <input class="form-control" type="password" formControlName="confirm_password"
+                    autocomplete="new-password" placeholder="Password">
+                    <!-- <input class="form-control mt-2" placeholder="Enter Password" type="password"
+                        [(ngModel)]="confirmPass" /> -->
+                    </div>
+                    <small class="form-text text-muted danger"
+                    *ngIf="passwordForm.get('confirm_password').errors?.required && (passwordForm.get('confirm_password').dirty || passwordForm.get('confirm_password').touched)">Password is required!</small>
+                    <small class="form-text text-muted danger"
+                    *ngIf="passwordForm.get('confirm_password').errors?.minlength && passwordForm.get('confirm_password').dirty">
+                    Password minimum length is 4 characters </small>
+                    <small class="form-text text-muted danger"
+                    *ngIf="passwordForm.get('confirm_password').errors?.maxlength && passwordForm.get('confirm_password').dirty">
+                    Password maximum length is 24 characters</small>
+                    
+                </div>
+            </form>
+        </div>
+        <div class="justify-content-end modal-footer">
+            <button class="btn btn-danger" 
+                (click)="modal.close('Close click')">Decline</button>
+            <button class="btn btn-primary" [disabled]="!passwordForm.valid"
+                (click)="passwordAuthentication(1)">Accept</button>
+
+        </div>
+    </ng-template>
+    <!-- This is the otp model I would work on -->
+    <ng-template #contentOpt let-modal>
+        <div class="modal-header">
+            <h6 class="modal-title">
+                EPCS {{
+                    tempData.basic_info.epcs_status_id==2?
+                    'Acceptance':'Removal'}} Permission
+            </h6>
+            <button #closeBtn type="button" class="close" aria-label="Close" (click)="cancelQuery(); modal.close('Close click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-9">
+                    <h6 class="mb-1">Waiting For One Touch Approval</h6>
+                    <div class="flex-class d-flex">
+
+                        <div class="progress mt-1" style="width: 95%;">
+
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"
+                                [ngStyle]="{'width': loadingBar}">
+                                <span class="sr-only">70% Complete</span>
+                            </div>
+                        </div>
+
+                        <a *ngIf="disableTouch" href="javascript:voide(0)" (click)="cancelQuery()"
+                            class="text-danger ms-3" data-placement="top" title="Cancel"><i class="fa fa-times"></i></a>
+
+                    </div>
+                    <p><small> Click on the 'X' to Enter OTP</small></p>
+                </div>
+                <div class="col-3 text-end">
+                    <div class="touch-btn mt-4 justify-content-end">
+                        <button type="button" [disabled]="disableTouch" class="btn btn-success" aria-label="Close"
+                            (click)="sendOptQuery()">One-Touch</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-2 justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <input class="form-control mt-2" placeholder="Otp Code" pattern="[0-9]{1,6}" type="text"
+                        minlength="6" maxlength="6" [(ngModel)]="optAuth" [disabled]="!enableOtp" />
+                </div>
+            </div>
+
+            
+        </div>
+
+        <div class="justify-content-end modal-footer">
+            <button class="btn btn-danger" (click)="cancelQuery(); modal.close('Close click')">Cancel</button>
+            <button class="btn btn-success" [disabled]="optAuth.length!=6 || disableTouch"
+                (click)="modal.close('Save click')">Confirm</button>
+
+        </div>
+    </ng-template>
+    <ng-template #contentSupervisor let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">Select Supervisor</h4>
+            <button type="button" class="close" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <ng-select [items]="supervisors" class="filled"
+                            bindLabel="full_name" bindValue="id" [closeOnSelect]='true'
+                             placeholder="Choose Supervisor"
+                            [(ngModel)]="selectedSupervisor"
+                            (change)="selectSupervisor($event)"
+                            [ngModelOptions]="{standalone: true}"
+                            
+                            >
+                        </ng-select>
+        </div>
+        <div class="justify-content-center modal-footer">
+            <button class="btn btn-success" [disabled]="supervisor==null"
+                (click)="modal.close('Save click')">Confirm</button>
+            <button class="btn btn-danger"
+                (click)="modal.close('Close click')">Cancel</button>
+        </div>
+    </ng-template>
+
+    <ng-template #contentPrompt let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">Prescription Prompt</h4>
+            <button type="button" class="close" aria-label="Close"
+                (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row justify-content-center">
+                <div class="col-md-12 col-lg-12">
+
+                    <p class="mb-0">
+                        The prescription is not for a controlled substance.
+                     </p>
+                </div>
+            </div>
+        </div>
+        <div class="justify-content-center modal-footer">
+            <button class="btn btn-success"
+                (click)="modal.close('Save click')">Confirm</button>
+            <button class="btn btn-danger"
+                (click)="modal.close('Close click')">Cancel</button>
+        </div>
+    </ng-template>
+    
+</div>
+<app-view-summary *ngIf="viewSummaryCheck" (viewSummaryFun)="viewSummaryFun($event)"></app-view-summary>

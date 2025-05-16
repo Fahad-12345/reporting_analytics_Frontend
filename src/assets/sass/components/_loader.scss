@@ -1,0 +1,28 @@
+
+.lds-roller {
+	display: inline-block;
+	@include square(100%);
+	position: fixed;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	text-align: center;
+	top: 0;
+	z-index: 999999;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgba(82, 82, 82, 0.38);
+
+	@include media('<xxl-widescreen') {
+		top: 0;
+	}
+
+	@media (max-width: 769px) {
+		top: 0;
+	}
+
+	img {
+		max-width: 5rem;
+	}
+}

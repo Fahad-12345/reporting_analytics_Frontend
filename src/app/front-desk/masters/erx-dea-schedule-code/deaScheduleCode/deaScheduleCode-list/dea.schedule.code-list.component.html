@@ -1,0 +1,144 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="col-12 user-info px-0">
+	<h4 class="my-0 color-green">Erx Dea Scheduler Code</h4>
+</div>
+<hr class="line-bottom">
+<div class="search-filter">
+	<!-- CURRENTLY NOT REQUIRED -->
+	<!-- <div class="d-block">
+		<button class="btn btn-default round-btn float-right" (click)="getDeaSchedulerCodeByID(viewReactionModal,action.DELETE)">
+			<span class="icon-plus-circle"></span> Add New
+		</button>
+	</div> -->
+	<app-deaScheduleCodeEnum-filter (onFilterDeaSchedulerCodeList)="get_filtered_data($event)">
+	</app-deaScheduleCodeEnum-filter>
+</div>
+<div class="data-table">
+	<div class="row mt-2">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit"
+							(change)="setDeaSchedulerCodePageSize($event.target.value)" [(ngModel)]="deaSchedulerCodePage.size">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2">
+		</div>
+	</div>
+	<ngx-datatable class="bootstrap" [rows]="deaSchedulerCodeList?.result?.data" [columnMode]='"force"'
+		[footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+		[count]="deaSchedulerCodeList?.result?.total" (page)="setDeaSchedulerCodePageNumber($event)"
+		[offset]="deaSchedulerCodeOffSet" [limit]="deaSchedulerCodePage.size">
+		<ngx-datatable-column name="Federal Dea Class Code" [sortable]="false" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" prop="federal_dea_class_code" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Federal Dea Class Code Desc" [sortable]="false" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" prop="federal_dea_class_code_desc" [width]="240">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Ncit Code" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="ncit_code" [width]="160">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Ncpdp Preferred Term" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="ncpdp_preferred_term" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+					container="body">
+					{{value ? value : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Created By" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+		[resizeable]="false" prop="created_by" [width]="200">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+				container="body">
+				{{value ? value : 'N/A'}}
+			</div>
+		</ng-template>
+	</ngx-datatable-column>
+	<ngx-datatable-column name="Created At" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+		[resizeable]="false" prop="created_at" [width]="200">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+				ngbTooltip="{{value ? (value  | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}" container="body">
+				{{value ? (value | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+			</div>
+		</ng-template>
+	</ngx-datatable-column>
+	<ngx-datatable-column name="Updated By" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+		[resizeable]="false" prop="updated_by" [width]="200">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ? value : 'N/A'}}"
+				container="body">
+				{{value ? value : 'N/A'}}
+			</div>
+		</ng-template>
+	</ngx-datatable-column>
+	<ngx-datatable-column name="Updated At" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+	[resizeable]="false" prop="updated_at" [width]="200">
+	<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+			ngbTooltip="{{value ? (value  | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}" container="body">
+			{{value ? (value | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+		</div>
+	</ng-template>
+</ngx-datatable-column>
+		<ngx-datatable-column name="Actions" sortable="false" prop="id" cellClass="action-icon" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" [width]="120">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<!-- VIEW BUTTON -->
+				<a class="mx-1 view-hov" ngbTooltip="View" container="body" href="javascript:void(0)" role="button"
+					(click)="getDeaSchedulerCodeByID(row,viewReactionModal,action.VIEW)"><i class="icon-eye"></i></a>
+				<!-- EDIT BUTTON CURRENTLY NOT REQUIRED -->
+				<!-- <a class="mx-1 edit-hov" ngbTooltip="Edit" container="body" href="javascript:void(0)" role="button"
+					(click)="getDeaSchedulerCodeByID(row,viewReactionModal,action.EDIT)"><i class="icon-pencil"></i></a> -->
+				<!-- DELETE BUTTON CURRENTLY NOT REQUIRED -->
+				<!-- <a class="mx-1 remove-hov me-1" ngbTooltip="Delete" container="body" href="javascript:void(0)"
+					role="button" (click)="getDeaSchedulerCodeByID(row,viewReactionModal,action.DELETE)"><i
+						class="icon-remove"></i></a> -->
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>
+<!-- MODAL -->
+<ng-template #viewReactionModal let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-static-name" class="modal-title text-capitalize">{{deaSchedulerCodeDetail.action}}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<app-deaScheduleCodeView-view [deaSchedulerCodeDetail]="deaSchedulerCodeDetail"></app-deaScheduleCodeView-view>
+	</div>
+</ng-template>

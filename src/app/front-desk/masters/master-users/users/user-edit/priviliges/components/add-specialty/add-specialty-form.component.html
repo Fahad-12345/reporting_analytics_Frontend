@@ -1,0 +1,39 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">{{'Add Specialty'}}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="close()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+
+	<div class="modal-body modal-pt-15">
+		<form [formGroup]="specialtyForm" (ngSubmit)="onSubmit(specialtyForm.value)">
+			<div class="row">
+				
+				<div  class="col-md-12">
+					<div class="form-group field mb-1 cpt-plc-hold search-label">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'specialty_ids'"
+										[showSelectFieldList]="selectedMultipleFieldFiter['specialty_ids']"
+										[qulifierShown] = "true" [ngSelectShow]="true"
+ 										 [showSelectFieldOnRefresh]="specialtyForm.get('specialty_ids').value" 
+										 [lableName]="'Specialty Name*'"
+										 [showSelectAll] ="true"
+                                		 [showGroupBy] = "true" [bindlable]="'name'" [searchLableName]="'specialty_ids'"
+										 [bindId]="'id'" [apiPath]="EnumApiPath.get_user_specialties"  [conditionalExtraApiParams]="conditionalExtraApiParams"
+										 (valueChange)="selectionOnValueChange($event,specialtyForm)" 
+										 [multiple]="true" ></app-ng-select-shareable> 
+					</div>
+				</div>   
+	
+			</div>
+		
+			<div class="row">
+				<div class="col-md-12 modal-btn-width text-center">
+					<button class="btn btn-primary me-3" (click)="close()" type="button"
+						>Cancel</button>
+						<button [disabled]="specialtyForm.invalid"class="btn btn-success" type="submit"
+						>Save & Continue </button>
+				</div>
+			</div>
+		</form>
+	</div>

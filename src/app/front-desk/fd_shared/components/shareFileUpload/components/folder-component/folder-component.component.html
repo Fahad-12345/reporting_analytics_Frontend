@@ -1,0 +1,141 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="card mb-3" >
+	<div class="card-header" style="padding: 0px 15px !important;">
+		<div class="row align-items-center">
+			<div class="col-md-6 pe-0 ps-3">
+				<span>
+					<p class="mb-0 text-white" *ngIf="title; else NoTitle"> {{ title | titlecase}}</p>
+					<ng-template #NoTitle>
+						User Documents
+					</ng-template>
+				</span>
+			</div>
+			<div class="col-md-6 text-sm-end ps-0 pe-2">
+				<button (click)="toggleFolderShow(folder)" type="button" class="btn slide-btn"
+					[class.btn-primary]="!folderShown" [class.btn-success]="folderShown">
+					<i *ngIf="folderShown" class="icon-minus"></i>
+					<i *ngIf="!folderShown" class="icon-plus bg-none m-0 p-0"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="folderShown" class="card-body data-table border-top-0 pt-0">
+
+		<div class="col-12 edit-block px-0">
+			<a class="btn btn-default round-btn mt-3" style="float: right;" *ngIf="selectionData.length > 0"
+				(click)="_deleteMultipleFiles()">
+				<span class="icon-remove me-1"></span> Delete [{{selectionData.length}}]
+			</a>
+			<div class="form-group field option-field mb-2 d-inline-block mt-1 mb-1">
+				<ul>
+					<li>Show</li>
+					<li>
+
+						<select (change)="changeDocumentPageSize(folder,$event)" class="custom-select" name="limit">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li class="text-capitalize">entries</li>
+				</ul>
+
+			</div>
+		</div>
+		<ngx-datatable class="bootstrap scroll-hide custom-scroll-x table icons-center" [rows]="folder.files" [scrollbarH]="true"
+			[columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]=" page.size"
+			[externalPaging]="true" [virtualization]="false" [count]="page.totalElements" [offset]="page.pageNumber - 1"
+			(page)="changeDocumentPageNumber(folder,$event.offset)">
+
+			<ngx-datatable-column name="Document Name" [width]="150" [sortable]="false" prop="file_title">
+				<ng-template let-column="column" ngx-dattable-header-template>
+					Document Name
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row.file_title}}">
+						{{row.file_title}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Tags" [width]="150" [sortable]="false" prop="tags">
+
+				<ng-template let-row="row" let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+					<ng-container *ngIf="row.tags" class="btn-tooltip-top">
+						<button class="btn btn-outline-secondary" type="button" [ngClass]="{'pointer-none':isSameUser}">{{row && row?.tags &&
+							row?.tags?.split(',')[0] &&
+							row?.tags?.split(',')[0].length > 10 ? row?.tags?.split(',')[0].substring(0, 10)+'...' :
+							row?.tags?.split(',')[0]}}</button>
+					</ng-container>
+
+					<span *ngIf="editable" (click)="_addTagModal(row)" [ngClass]="{'pointer-none':isSameUser}"
+						class="btn btn-success add-tag-btn custom-btn-tooltip list-unstyled"
+						tooltipClass="table-custom-tooltip" ngbTooltip="{{row.tags}}">
+						<i class="fa fa-plus"></i>
+					</span>
+					<span *ngIf="!editable" [hidden]="row && row.tags && row.tags.length <= 0"
+						class="custom-btn-tooltip list-unstyled" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row.tags}}">
+						<i class="fa fa-ellipsis-v ms-1"></i>
+					</span>
+
+					<!-- 
+					<button class="btn btn-success add-tag-btn custom-btn-tooltip list-unstyled"
+						(click)="_addTagModal(row)" style="padding: 0px 3px 1px !important;
+                      font-size: 12px;"><i class="fa fa-plus"></i>
+
+						<li *ngIf="row.tags" class="btn-tooltip-top">
+							<span style="max-height: 48px;">
+								<ng-container *ngFor="let tag of row?.tags?.split(',')">
+									<button type="button" class="btn btn-outline-secondary mb-1"
+										style="color:#4b4b4b;">{{tag &&  tag.length > 10 ?  tag.substring(0, 10)+'...' :  tag}}</button>
+								</ng-container>
+							</span>
+							<i style="top:100% !important;"></i>
+						</li>
+
+					</button> -->
+				</ng-template>
+
+			</ngx-datatable-column>
+
+
+			<ngx-datatable-column name="Action" [width]="150" [sortable]="false">
+				<ng-template ngx-datatable-header-template name="Actions">
+					<mat-checkbox   [class.not-active]="!editable" (change)="masterToggle($event)" [checked]="isallComplete()" [ngClass]="{'pointer-none':isSameUser}">
+					</mat-checkbox>
+					Actions
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<mat-checkbox 
+						[checked]=" selection.isSelected(row) " [class.not-active]="!editable" (change)="getData(row)" [ngClass]="{'pointer-none':isSameUser}">
+					</mat-checkbox>
+					<a href="javascript:void(0)" class="view-hov mx-1" tooltipClass="table-custom-tooltip"
+						ngbTooltip="View" role="button" 
+						(click)="_showMedia({files:row.pre_signed_url,type:row.ext}, row.id)"><i
+							class="icon-eye selected-icon" [ngClass]="{'selected-icon': selectedRow === row.id }"></i></a>
+
+
+					<span *ngIf=" !isSameUser" class="mx-1 edit-hov" [class.not-active]="!editable" ngbTooltip="Edit" tooltipClass="table-custom-tooltip"
+						(click)="_editDocModal(row)" role="button"><i class="icon-pencil"></i></span>
+
+					<a *ngIf=" !isSameUser"
+					[class.not-active]="!editable"
+					 class="mx-1 printer-hov" (click)="_print()" tooltipClass="table-custom-tooltip" ngbTooltip="Print" target="_blank"
+						href="{{row.pre_signed_url}}" role="button"><i
+							class="icon-printer"></i></a>
+
+					<span *ngIf=" !isSameUser" [class.not-active]="!editable" class="mx-1 remove-hov me-1" tooltipClass="table-custom-tooltip"
+						ngbTooltip="Delete" [class.not-active]="!editable" role="button" (click)="deleteFile(row)"><i class="icon-remove"></i></span>
+
+
+				</ng-template>
+
+			</ngx-datatable-column>
+		</ngx-datatable>
+	</div>
+</div>

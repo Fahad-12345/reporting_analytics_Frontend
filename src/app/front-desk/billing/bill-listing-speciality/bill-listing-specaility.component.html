@@ -1,0 +1,132 @@
+
+<app-filter [fieldShow]="specalityFiled" [showCategoryDropdown]="false" [showPacketIDFilter]="false" [formFiledValue]="formFiledValue" [formFiledListOfValue]="formFiledListOfValue" (searchFilterData)="filterResponseData($event)" ></app-filter>
+<div class="table-hold edit-block">
+	<ul class="my-2">
+		<li>Show</li>
+		<li>
+			<select class="custom-select" name="limit" id="limit"  [(ngModel)]="page.size" (change)="pageLimit($event.target.value)">
+				<option [value]="10" selected>10</option>
+				<option [value]="20">20</option>
+				<option [value]="30">30</option>
+				<option [value]="40">40</option>
+				<option [value]="50">50</option>
+				<option [value]="100">100</option>
+			</select>
+		</li>
+		<li>Entries</li>
+	</ul>
+	<ul class="my-2 text-end">
+		<li>
+			<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+				Customize Columns
+			</button>
+		</li>
+	</ul>
+	<ngx-datatable #maintable class="bootstrap billing-datatable" 
+	[rows]="billListSpecality" 
+	[columnMode]='"force"'
+	[footerHeight]="50" [rowHeight]="'auto'" 
+	[virtualization]="false" 
+	[externalPaging]="true" 
+	[scrollbarH]="true"
+	[count]="page.totalElements" 
+	[offset]="page.offset"
+	[limit]="page.size" 
+	(page)="onPageChange($event)">
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Bill Status"
+		prop="bill_status_name" [sortable]="false">
+		<ng-template let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+			  {{value}}
+			</div>
+		  </ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Practice-Location"
+		prop="facility_location_name" [sortable]="false">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.facility_location_name}}" container="body">
+				{{row?.facility_location_qualifier}}
+			</div>
+		</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Specialty"
+		prop="speciality_name" [sortable]="false">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.speciality_name}}" container="body">
+				<a class="underline-hov" (click)="moveToBillListingComponent(row)" > {{row?.speciality_qualifier}} </a>
+			</div>
+		</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case Type"
+		prop="case_type_name" [sortable]="false">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+				{{value}}
+			</div>
+		</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Bill Date"
+		prop="bill_date" [sortable]="false">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}" container="body">
+				{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+			</div>
+		</ng-template>
+		</ngx-datatable-column>
+
+		<!-- this code is required in future. for now https://d-media.atlassian.net/browse/CM1-11269
+		 <ngx-datatable-column name="Visit Date" [width]="100" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="updated_by">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.from_date | date:commonService.slashDateFormat_MM_dd_yyyy() }}{{commonService.signBetweenDates()}}{{row?.to_date | date:commonService.slashDateFormat_MM_dd_yyyy()}}">
+			  {{row?.from_date | date:commonService.slashDateFormat_MM_dd_yyyy()}}{{commonService.signBetweenDates()}}{{row?.to_date | date:commonService.slashDateFormat_MM_dd_yyyy()}}
+			  </div>
+			  </ng-template>
+		  </ngx-datatable-column> -->
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Count of Bills"
+		prop="no_of_bills" [sortable]="false">
+		<ng-template let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+				{{value}}
+			</div>
+		</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Sum of Amounts"
+		prop="total_bill_amount" [sortable]="false">
+		<ng-template let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{(value || 0 )| currency}}" container="body">
+				{{(value || 0 )| currency}}
+			</div>
+		</ng-template>
+	</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Actions" [sortable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="billReportHistoryStats(row)">
+					<i class="fa fa-history"></i>
+				</a>
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,1093 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="document-manager add-user px-0">
+	<div class="card" style="padding:0px; border:none;">
+		<!-- (ngSubmit)="onSubmit(form.value)" -->
+		<form [formGroup]="form" autocomplete="off" class="dynamic-form-block">
+			<div class="form">
+				<div class="card-body px-3 py-3">
+					<div class="row m-0">
+						<div class="col-md-12 px-0">
+							
+							<div class="row">
+								<div class="col-lg-5 col-xl-5 px-1">
+									<div class="form-group radio-block in-stop-work in-md-radio user-md-radio mb-3">
+										<span class="">Medical Credentials:</span>
+										<ul class="list-inline">
+											<li class="list-inline-item">
+												<label for="Verified" class="d-block position-relative m-0">
+													<input id="Verified" name="medical_credentials" type="radio" [value]="1"
+														formControlName="medical_credentials">
+													<span class="fake-input position-absolute"></span>
+													<span class="fake-label d-block text-center">Verified</span>
+												</label>
+											</li>
+											<li class="list-inline-item">
+												<label for="notVerified" class="d-block position-relative m-0">
+													<input name="medical_credentials" id="notVerified" type="radio"
+														[value]="0" formControlName="medical_credentials" checked>
+													<span class="fake-input position-absolute"></span>
+													<span class="fake-label d-block" style="text-align:center;">Not
+														Verified</span>
+												</label>
+											</li>
+										</ul>
+	
+									</div>
+								</div>
+								<div class="col-lg-5 col-xl-5 ps-3 px-1">
+									<div class="form-group radio-block in-stop-work in-md-radio user-md-radio mb-3">
+										<span class="">Type:</span>
+										<ul class="list-inline">
+											<li class="list-inline-item">
+												<label for="Individual" class="d-block position-relative m-0">
+													<input id="Individual" name="is_individual" type="radio" [value]=1
+														formControlName="is_individual">
+													<span class="fake-input position-absolute"></span>
+													<span class="fake-label d-block text-center">Individual</span>
+												</label>
+											</li>
+											<li class="list-inline-item">
+												<label for="Institutional" class="d-block position-relative m-0">
+													<input name="is_individual" id="Institutional" type="radio"
+														[value]=0 formControlName="is_individual" checked>
+													<span class="fake-input position-absolute"></span>
+													<span class="fake-label d-block" style="text-align:center;">
+														Institutional</span>
+												</label>
+											</li>
+										</ul>
+
+									</div>
+								</div>
+								<div class="col-lg-2 col-xl-2">
+									<div class="form-group in-stop-work in-md-radio user-md-radio mb-3 d-flex">
+										<button class="btn btn-success float-right" [disabled]="isSameUserLogin" (click)="openModal(SpiModal);onClickFacility()"> Get Spi Number</button>
+									</div>
+								</div>
+							</div>
+							<!-- <div class="row">
+                                <div class="col-md-2">
+                                    <p class="mb-0 pt-2">Medical Credentials:</p>
+                                </div>
+                                <div class="col-md-10">
+                                    <ul class="list-inline">
+                                        <li class="list-inline-item">
+                                            <label class="d-block position-relative m-0" for="Verified">
+                                                <input value="verified" formcontrolName="medical_credentials"
+                                                    id="Verified" type="radio">
+                                                <span class="fake-input position-absolute"></span>
+                                                <span class="fake-label d-block">Verified</span></label>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <label class="d-block position-relative m-0" for="NotVerified">
+                                                <input value="notVerified" formcontrolName="medical_credentials"
+                                                    id="NotVerified" type="radio">
+                                                <span class="fake-input position-absolute">
+                                                </span>
+                                                <span class="fake-label d-block">Not Verified</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div> -->
+
+
+							<div class="col-12 search-filter-block overflow-hidden pe-1 label-unfocused">
+								<div class="field-block float-left pe-2 pe-sm-0">
+									<ng-container formArrayName="license_history"
+										*ngIf="form['controls'].license_history['controls'].length >0">
+										<ng-container
+											*ngFor="let liscense of form.controls.license_history?.controls; let i=index"
+											[formGroupName]="i">
+											<div class="row mb-2 ps-1 pe-sm-2 pe-md-1 pe-xl-0">
+												<div class="col-12 py-3 px-4 mb-3 bordered">
+
+													<button style="min-width: inherit; padding: 0.20rem 0.40rem !important; background: #4b4b4b; top: 17px;
+                                                        right: -42px; position: absolute;" type="button"
+														*ngIf="i >0 && form['controls'].license_history['controls'] .length >1"
+														(click)="removeliscense(i)"
+														class="btn btn-secondary float-right text-white"><i
+															class="fa fa-times"></i>
+													</button>
+
+													<div class="row">
+														<div class="col-md-6 col-lg-4 col-xl-3">
+															<div class="form-group field mb-xl-0"
+																[ngClass]="{'focused': liscense.get('medical_license').value != '' && liscense.get('medical_license').value != null }">
+																<label class="form-label" for="firstName{{i}}">Medical
+																	License*</label>
+																<input type="text" id="firstName{{i}}"
+																	formControlName="medical_license"
+																	class="form-control form-input">
+															</div>
+															<small class="form-text text-muted danger"
+															*ngIf="(liscense.get('medical_license').errors?.required && ((liscense.get('medical_license').dirty || liscense.get('medical_license').touched))) ">
+															Medical License is required
+														</small>
+														</div>
+
+														<!-- <div class="col-lg-3 col-md-12">
+                                                            <div class="form-group field mb-0">
+                                                                <label for="date" class="form-label">Expiration
+                                                                    Date</label>
+                                                                <input type="text" id="date"
+                                                                    [matDatepicker]="medical_license_expiration_date"
+                                                                    class="form-control form-input"
+                                                                    formControlName="medical_license_expiration_date"
+                                                                    [max]="2099-01-01" [min]="currentDate">
+                                                                <mat-datepicker-toggle
+                                                                    [for]="medical_license_expiration_date">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #medical_license_expiration_date>
+                                                                </mat-datepicker>
+                                                            </div>
+                                                        </div> -->
+
+														<!--  -->
+
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-md-0"
+																[ngClass]="{'focused':( liscense.get('medical_license_issue_date').value != '' && liscense.get('medical_license_issue_date').value != null) || liscense.get('medical_license_issue_date').errors?.invalid_date  }">
+																<label class="form-label" for="issueDate{{i}}">Issue
+																	Date (mm/dd/yyyy)*</label>
+																<input appDateOnly appInputDateMask
+																	[matDatepicker]="medical_license_issue_date"
+																	type="text" id="issueDate{{i}}"
+																	[max]="issuanceDate"
+																	formControlName="medical_license_issue_date"
+																	class="form-control form-input">
+																<!-- <input [matDatepicker]="dob" class="form-control form-input" type="text"  id="dob" formControlName="dob" [max]="2099-01-01" max="2099-01-01"> -->
+																<mat-datepicker-toggle
+																	[for]="medical_license_issue_date">
+																</mat-datepicker-toggle>
+																<mat-datepicker #medical_license_issue_date>
+																</mat-datepicker>
+
+																<span
+																	*ngIf="liscense.get('medical_license_issue_date').value != '' && liscense.get('medical_license_issue_date').value != null"
+																	(click)="liscense.get('medical_license_issue_date').reset(); resetLicenseDateValidation('medical_license_issue_date')"
+																	class="icon-plus select-cross-icon">
+																</span>
+																
+																<small class="form-text text-muted danger"
+																	*ngIf="(liscense.get('medical_license_issue_date').errors?.required && ((liscense.get('medical_license_issue_date').dirty || liscense.get('medical_license_issue_date').touched))) ">
+																	This field is required
+																</small>
+																<small class="form-text text-muted danger"
+																	*ngIf="liscense.errors?.invalidDate && (liscense.get('medical_license_issue_date').dirty && liscense.get('medical_license_issue_date').touched)">
+																	Issue date must be smaller than Expiration date.
+																</small>
+																<!-- <small class="form-text text-muted danger" *ngIf="liscense.get('medical_license_issue_date').value >= liscense.get('medical_license_expiration_date').value && (liscense.get('medical_license_issue_date').dirty && liscense.get('medical_license_issue_date').touched)">
+                                                                    Issue Date must be below than Expiration Date
+                                                                </small> -->
+															</div>
+														</div>
+
+														<!--    state_issuing_the_medical_license -->
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-lg-0"
+																[ngClass]="{'focused': liscense.get('state_issuing_the_medical_license').value != '' && liscense.get('state_issuing_the_medical_license').value != null}">
+																<label class="form-label"
+																	for="state_issuing_the_medical_license">Issuing State</label>
+																<select class="form-select form-input text-truncate"
+																	formControlName="state_issuing_the_medical_license"
+																	id="state_issuing_the_medical_license"
+																	[ngbTooltip]="selectedState" container="body"
+																	tooltipClass="table-custom-tooltip" #state
+																	(change)="stateChange(state,i)">
+																	<option [value]="''"> Select Issuing State
+																	</option>
+																	<option value="{{state}}"
+																		*ngFor="let state of states">{{state |
+																		slice:0:25}}
+																	</option>
+																</select>
+																	<span *ngIf="liscense.get('state_issuing_the_medical_license').value != '' && liscense.get('state_issuing_the_medical_license').value != null"
+																		(click)="removeData()" class="icon-plus select-cross-icon" ></span>
+																
+															</div>
+														</div>
+
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-lg-0"
+																[ngClass]="{'focused': liscense.get('degree_listed_on_the_license').value != '' && liscense.get('degree_listed_on_the_license').value != null}">
+																<label class="form-label" for="Degree{{i}}">Degree
+																	listed</label>
+																<input type="text" class="form-control form-input"
+																	formControlName="degree_listed_on_the_license"
+																	id="Degree{{i}}">
+																<!-- <select class="form-select"
+                                                                    formControlName="degree_listed_on_license">
+                                                                    <option>Degree Listed on Licence</option>
+                                                                </select> -->
+															</div>
+														</div>
+														<!-- 
+                                                        <div class="col-lg-2 col-md-12">
+                                                            <div class="form-group field mb-0">
+                                                                <label for="dob" class="form-label">Issue Date</label>
+                                                                <input type="text" id="dob"
+                                                                    [matDatepicker]="medical_license_issue_date"
+                                                                    formControlName="medical_license_issue_date"
+                                                                    class="form-control form-input" [max]="2099-01-01"
+                                                                    [min]="currentDate">
+                                                                <mat-datepicker-toggle
+                                                                    [for]="medical_license_issue_date">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #medical_license_issue_date>
+                                                                </mat-datepicker>
+                                                            </div>
+                                                        </div> -->
+
+														<div class="col-md-6 col-lg-4 col-xl-3">
+															<div class="form-group field mb-lg-0"
+																[ngClass]="{'focused':( liscense.get('medical_license_expiration_date').value != '' && liscense.get('medical_license_expiration_date').value != null) || liscense.get('medical_license_expiration_date').errors?.invalid_date }">
+																<label class="form-label"
+																	for="expiration_date{{i}}">Expiration
+																	Date (mm/dd/yyyy)*</label>
+																<input appDateOnly appInputDateMask
+																	[matDatepicker]="medical_license_expiration_date"
+																	type="text" id="expiration_date{{i}}"
+																	formControlName="medical_license_expiration_date"
+																	class="form-control form-input"
+																	[min]="liscense.get('medical_license_issue_date').value ">
+																<!-- <input [matDatepicker]="dob" class="form-control form-input" type="text"  id="dob" formControlName="dob" [max]="2099-01-01" max="2099-01-01"> -->
+																<mat-datepicker-toggle
+																	[for]="medical_license_expiration_date">
+																</mat-datepicker-toggle>
+																<mat-datepicker #medical_license_expiration_date>
+																</mat-datepicker>
+
+																<span
+																	*ngIf="liscense.get('medical_license_expiration_date').value != '' && liscense.get('medical_license_expiration_date').value != null"
+																	(click)="liscense.get('medical_license_expiration_date').reset(); resetLicenseDateValidation('medical_license_expiration_date')"
+																	class="icon-plus select-cross-icon"></span>
+																<!-- <small class="form-text text-muted danger"
+                                                                    *ngIf="liscense.errors?.invalidDate">Expiration date
+                                                                    should be
+                                                                    later than Issue
+                                                                    date</small> -->
+																	<small class="form-text text-muted danger"
+																	*ngIf="(liscense.get('medical_license_expiration_date').errors?.required && liscense.get('medical_license_expiration_date').touched)">
+																	This field is required
+																</small>
+																<small class="form-text text-muted danger"
+																	*ngIf="(liscense.errors?.invalidDate && ((liscense.get('medical_license_expiration_date').dirty || liscense.get('medical_license_expiration_date').touched)))">
+																	Expiration date should be greater than Issue date.
+																</small>
+
+															</div>
+														</div>
+
+
+													</div>
+
+
+
+												</div>
+											</div>
+										</ng-container>
+									</ng-container>
+								</div>
+								<div class="colps-btn-block float-right">
+									<button class="btn plus-btn btn-success me-0 float-right px-1 mt-3"
+									[disabled]="isSameUserLogin" (click)="addLicscense()" type="button">
+										<span class="icon-plus"></span>
+									</button>
+								</div>
+							</div>
+
+
+							<!-- Multiple Dea -->
+							<div class="col-12 search-filter-block overflow-hidden pe-1 label-unfocused">
+								<div class="field-block float-left pe-2 pe-sm-0">
+									<ng-container formArrayName="dea_records"
+										*ngIf="form['controls'].dea_records['controls'].length >0">
+										<ng-container
+											*ngFor="let record of form.controls.dea_records?.controls; let i=index"
+											[formGroupName]="i">
+											<div class="row mb-2 ps-1 pe-sm-2 pe-md-1 pe-xl-0" *ngIf="record.get('is_deleted').value==false">
+												<div class="col-12 py-3 px-4 mb-3 bordered border-p">
+
+													<button  type="button"
+														*ngIf="form['controls'].dea_records['controls'].length >=1"
+														(click)="removeDeaRecords(i)"
+														class="btn btn-secondary float-right text-white me-2 minus-btn"><i
+															class="fa fa-times"></i>
+													</button>
+
+													<div class="row">
+
+
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-xl-0"
+																[ngClass]="{'focused': record.get('facility_location_id').value != '' && record.get('facility_location_id').value != null}">
+																<label class="form-label"
+																	for="facility_location_id">User Practice Location
+																</label>
+																<!-- <select class="form-select form-input text-truncate"
+																	formControlName="facility_location_id"
+																	id="facility_location_id"
+																	[ngbTooltip]="selectedState" container="body"
+																	tooltipClass="table-custom-tooltip" #state>
+																	<option [value]="''"> Select Practice Location
+																	</option>
+																	<option value="{{state}}"
+																		*ngFor="let facililty of userFaciltilies">
+
+																		{{facililty.name| slice:0:25}}
+
+																	</option>
+																</select>
+																<span
+																	*ngIf="record.get('facility_location_id').value != '' && record.get('facility_location_id').value != null"
+																	(click)="removeData()"
+																	class="icon-plus select-cross-icon"></span> -->
+
+																<ng-select 
+																	[items]="userFaciltilies"
+																	bindLabel="facility_full_name" bindValue="id"
+																	[closeOnSelect]='true' [multiple]="false"
+																	placeholder=""
+																	placement="bottom"
+																	container="body"
+																	appendTo="body"
+																	class="tooltip-outer" tooltipClass="table-custom-tooltip"
+																	ngbTooltip="{{pracReason}}"
+																	(click)="userPracticeClicked()"
+																	(mouseover)="onPracticeHover(record)"
+																	(change)="onChangePracticeLocation($event,record)"
+																	formControlName="facility_location_id">
+																	<!-- [(ngModel)]="facility_location_id" [ngModelOptions]="{standalone: true}" -->
+																</ng-select>
+															</div>
+
+														</div>
+
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-xl-0"
+																[ngClass]="{'focused': record.get('state_id').value != '' && record.get('state_id').value != null}">
+																<label class="form-label"
+																	for="state_issuing_the_medical_license">Issuing State*</label>
+																<ng-select class="tooltip-outer"
+																	[items]="stateList" class="filled" bindLabel="name"
+																	bindValue="id" [closeOnSelect]='true'
+																	appendTo="body"
+																	placement="bottom"
+																	container="body"
+																	tooltipClass="table-custom-tooltip"
+																	(mouseover)="onStateHover(record)"
+																	ngbTooltip="{{stateReason}}"
+																	(click)="onStateClick()"
+																	[multiple]="false" placeholder=""
+																	formControlName="state_id">
+																</ng-select>
+																<small class="form-text text-muted danger"
+																	*ngIf="(record.get('state_id').errors?.required && ((record.get('state_id').dirty || record.get('state_id').touched))) ">
+																	Issuing State is required
+																</small>
+															</div>
+														</div>
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-xl-0"
+																[ngClass]="{'focused': record.get('dean').value != '' && record.get('dean').value != null}" (mouseover)="onDeanHover(record)"
+																ngbTooltip="{{deanReason}}" container="body"
+																tooltipClass="table-custom-tooltip" placement="bottom">
+																<label class="form-label" for="Dean{{i}}" *ngIf="record.get('facility_location_id').value != '' && record.get('facility_location_id').value != null" >
+																	Institutional DEA*
+																</label>
+																<label class="form-label" for="Dean{{i}}" *ngIf="record.get('facility_location_id').value == '' || record.get('facility_location_id').value == null">DEA
+																	(xx0000000)*
+																</label>
+																<input type="text" class="form-control form-input tooltip-outer" placement="bottom"
+																container="body" maxlength="9"
+																formControlName="dean" appNadeanDirective
+																id="Dean{{i}}">
+																<small class="form-text text-muted danger"
+																	*ngIf="(record.get('dean').errors?.minlength && (record.get('dean').dirty && record.get('dean').touched)) ">
+																	Invalid DEA
+																</small>
+																<small class="form-text text-muted danger"
+																	*ngIf="(record.get('dean').errors?.maxlength && (record.get('dean').dirty && record.get('dean').touched)) ">
+																	DEA length must be 9 digits 
+																</small>
+																<small class="form-text text-muted danger"
+																	*ngIf="(record.get('dean').errors?.required && ((record.get('dean').dirty || record.get('dean').touched))) ">
+																	DEA is required
+																</small>
+
+															</div>
+
+														</div>
+
+
+
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-xl-0"
+																[ngClass]="{'focused':( record.get('dean_issue_date').value != '' && record.get('dean_issue_date').value != null) || record.get('dean_issue_date').errors?.invalid_date  }">
+																<label class="form-label" for="issueDate{{i}}">DEA Issue
+																	Date</label>
+																<input appDateOnly appInputDateMask
+																	[matDatepicker]="dean_issue_date" type="text"
+																	id="issueDate{{i}}"
+																	formControlName="dean_issue_date"
+																	class="form-control form-input">
+																<mat-datepicker-toggle [for]="dean_issue_date">
+																</mat-datepicker-toggle>
+																<mat-datepicker #dean_issue_date>
+																</mat-datepicker>
+
+																<span
+																	*ngIf="record.get('dean_issue_date').value != '' && record.get('dean_issue_date').value != null"
+																	(click)="record.get('dean_issue_date').reset()"
+																	class="icon-plus select-cross-icon"></span>
+																<small class="form-text text-muted danger"
+																	*ngIf="record.errors?.invalidDate && (record.get('dean_issue_date').dirty && record.get('dean_issue_date').touched)">
+																	Invalid Date Format
+																</small>
+
+															</div>
+														</div>
+
+
+
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-xl-0"
+																[ngClass]="{'focused':(record.get('dean_expiration_date').value != '' && record.get('dean_expiration_date').value != null) || record.get('dean_expiration_date').errors?.invalid_date }">
+																<label class="form-label" for="expiration_date{{i}}">
+																	DEA Expiration
+																	Date</label>
+																<input appDateOnly appInputDateMask
+																	[matDatepicker]="dean_expiration_date" type="text"
+																	id="expiration_date{{i}}"
+																	formControlName="dean_expiration_date"
+																	class="form-control form-input">
+																<mat-datepicker-toggle [for]="dean_expiration_date">
+																</mat-datepicker-toggle>
+																<mat-datepicker #dean_expiration_date>
+																</mat-datepicker>
+
+																<span
+																	*ngIf="record.get('dean_expiration_date').value != '' && record.get('dean_expiration_date').value != null"
+																	(click)="record.get('dean_expiration_date').reset()"
+																	class="icon-plus select-cross-icon"></span>
+																<small class="form-text text-muted danger"
+																	*ngIf="record.errors?.invalidDate && (record.get('dean_expiration_date').dirty && record.get('dean_expiration_date').touched)">
+																	Invalid Date Format
+																</small>
+
+															</div>
+														</div>
+
+														<div class="col-md-6 col-lg-4 col-xl-2">
+															<div class="form-group field mb-xl-0"
+																[ngClass]="{'focused': record.get('nadean').value != '' && record.get('nadean').value != null}">
+																<label class="form-label" for="Nadean{{i}}">
+																	NA DEA (xx0000000)
+																</label>
+																<input type="text" class="form-control form-input" maxlength="9"
+																	appNadeanDirective formControlName="nadean"
+																	id="Nadean{{i}}">
+
+																<small class="form-text text-muted danger"
+																	*ngIf="(record.get('nadean').errors?.minlength && (record.get('nadean').dirty && record.get('nadean').touched)) ">
+																	Invalid NA DEA
+																</small>
+																<small class="form-text text-muted danger"
+																	*ngIf="(record.get('nadean').errors?.maxlength && (record.get('nadean').dirty && record.get('nadean').touched)) ">
+																	NA DEA length must be 9 digits 
+																</small>
+															</div>
+														</div>
+
+
+													</div>
+
+
+
+												</div>
+											</div>
+										</ng-container>
+									</ng-container>
+								</div>
+								<div class="colps-btn-block float-right">
+									<button class="btn plus-btn btn-success me-0 float-right px-1 mt-3"
+										[disabled]="isSameUserLogin" (click)="addDea()" type="button">
+										<span class="icon-plus"></span>
+									</button>
+								</div>
+							</div>
+
+
+							<!-- Multiple DEA ends -->
+							<div class="col-12 search-filter-block overflow-hidden pe-1 label-unfocused">
+								<div class="field-block float-left pe-2 pe-sm-0" style="width:99.2%;">
+									<!-- *ngIf="form['controls'].dea_records['controls'].length >0" -->
+									<ng-container 
+										*ngIf="medicalIdentifierDetail && medicalIdentifierDetail.spis && medicalIdentifierDetail.spis.length>0">
+										<ng-container>
+											
+											<div class="row mb-2 ps-1 pe-sm-2 pe-md-1 pe-xl-0">
+												<div class="col-12 py-3 px-4 mb-3 bordered border-p">
+													<h5>SPI</h5>
+													<div class="row mt-4 mb-2" *ngFor="let mspi of medicalIdentifierDetail && medicalIdentifierDetail.spis;let i=index">
+
+														<div class="col-md-4 col-lg-3 col-xl-3">
+															<div class="form-group field mb-xl-0"
+																>
+																<label class="form-label" for="FacName{{i}}">Facility Location Name
+																</label>
+																<input type="text" class="form-control form-input"
+																	value="{{mspi?.facility_location?.facility_full_name}}" disabled
+																	id="FacName{{i}}">
+																
+
+															</div>
+															
+
+														</div>
+
+														<div class="col-md-4 col-lg-4 col-xl-3">
+															<div class="form-group field mb-xl-0"
+																>
+																<label class="form-label" for="Spi{{i}}">SPI Number
+																</label>
+																<input type="text" 
+																value="{{mspi.spi}}" class="form-control form-input"
+																	 disabled
+																	id="Spi{{i}}">
+																
+
+															</div>
+
+														</div>
+														<div class="col-md-3 col-lg-3 col-xl-2">
+															<div class="form-group field mb-xl-0"
+																>
+																<label class="form-label" for="Spi{{i}}">Active Start Time
+																</label>
+																<input type="text" 
+																value="{{mspi.active_start_time ? (mspi.active_start_time | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}" class="form-control form-input"
+																	 disabled
+																	id="Spi{{i}}">
+																
+
+															</div>
+
+														</div>
+														<div class="col-md-3 col-lg-2 col-xl-2">
+															<div class="form-group field mb-xl-0"
+																>
+																<label class="form-label" for="Spi{{i}}">Active End Time
+																</label>
+																<input type="text" 
+																value="{{mspi.active_end_time ? (mspi.active_end_time | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}" class="form-control form-input"
+																	 disabled
+																	id="Spi{{i}}">
+																
+
+															</div>
+
+														</div>
+
+														<div class="col-md-3 col-lg-3 col-xl-2">
+															<div class="form-group field mb-xl-0">
+																<label class="form-label">Service Levels
+																</label>
+																
+																<ng-select  
+                                                            	[(ngModel)]="mspi.service_levels"
+                                                            	[items]="serviceLevels" [closeOnSelect]='false'
+                                                            	[multiple]="true" bindLabel="name"
+																container="body"
+																appendTo="body"
+                                                            	[ngModelOptions]="{standalone: true}"
+																(change)="OnServiceLevelChange($event,i)">
+																<ng-template ng-multi-label-tmp let-items="mspi.service_levels" let-clear="clear">
+																	<div class="ng-value ng-label" *ngFor="let item of mspi.service_levels | slice:0:2">
+																		<span class="ng-value-label" [ngbTooltip]="item.name" container="body">
+															
+																			{{item.name}}
+																		</span>
+																		<!-- <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span> -->
+																	</div>
+																	<div class="ng-value bg-none ng-numbers" *ngIf="mspi.service_levels.length > 2">
+																		<span class="ng-value-label border-0">+{{mspi.service_levels?.length
+																			-
+																			2}}</span>
+																	</div>
+																</ng-template>
+																</ng-select>
+
+															</div>
+
+														</div>
+
+
+													</div>
+													
+													
+
+
+
+												</div>
+											</div>
+										</ng-container>
+									</ng-container>
+								</div>
+								
+							</div>
+						</div>
+						<div class="col-md-12 px-1">
+							<div class="row">
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<div class="form-group field"
+										[ngClass]="{'focused': form.get('registration_number').value != '' && form.get('registration_number').value != null}">
+										<label class="form-label" for="RegNumber">Registration Number</label>
+										<input type="text" id="RegNumber" formControlName="registration_number"
+											class="form-control form-input">
+									</div>
+								</div>
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<div class="form-group field"
+										[ngClass]="{'focused': (form.get('registration_expiration_date').value != '' && form.get('registration_expiration_date').value != null) || form.get('registration_expiration_date').errors?.invalid_date }">
+										<label for="RegExpiration" class="form-label">Registration Expiration
+											Date (mm/dd/yyyy)</label>
+										<input type="text" id="RegExpiration"
+											[matDatepicker]="registration_expiration_date"
+											class="form-control form-input"
+											formControlName="registration_expiration_date"
+											name="registration_Expiration" [max]="2099-01-01" appDateOnly
+											appInputDateMask>
+										<mat-datepicker-toggle [for]="registration_expiration_date">
+										</mat-datepicker-toggle>
+										<mat-datepicker #registration_expiration_date></mat-datepicker>
+										<span
+											*ngIf="form.get('registration_expiration_date').value != '' && form.get('registration_expiration_date').value != null"
+											(click)="form.get('registration_expiration_date').reset()"
+											class="icon-plus select-cross-icon"></span>
+										<small class="form-text text-muted danger"
+											*ngIf="form.get('registration_expiration_date').errors?.invalid_date && (form.get('registration_expiration_date').dirty && form.get('registration_expiration_date').touched)">
+											Invalid Date Format
+										</small>
+									</div>
+								</div>
+
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<div class="form-group field"
+										[ngClass]="{'focused': form.get('npi').value != '' && form.get('npi').value != null }">
+										<label class="form-label" for="Zip">NPI Number*</label>
+										<input type="text" numbersOnly id="Zip" maxlength="10" minlength="10"
+											formControlName="npi" class="form-control form-input">
+										<small class="form-text text-muted danger"
+											*ngIf="form.controls['npi'].errors && form.controls['npi'].touched && form.get('npi').value?.length>0">
+											NPI Number can only be of 10 characters.
+										</small>
+										<small class="form-text text-muted danger"
+											*ngIf="form.get('npi').errors?.required && (form.get('npi').dirty || form.get('npi').touched) ">
+											This field is required
+										</small>
+									</div>
+								</div>
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<div class="form-group field">
+										<app-ng-select-shareable #BillingTitle [filterFieldName]="'billing_title_id'"
+											[lableName]="'Billing Title*'"
+											[showSelectFieldList]="lstBillingTitle ? lstBillingTitle : []"
+											[showSelectFieldOnRefresh]="form ? form.get('billing_title_id').value : null"
+											[bindId]="'id'" [apiPath]="EnumApiPath.medicalIdentifierBillingTitle"
+											(valueChange)="selectionOnValueChange($event,'BillTitle')"
+											(touched)="controledTouched($event,'BillTitle')" [multiple]="false">
+										</app-ng-select-shareable>
+										<small class="form-text text-muted danger mt-reverse"
+											*ngIf="form.get('billing_title_id').errors?.required && (form.get('billing_title_id').dirty || form.get('billing_title_id').touched) ">
+											This field is required
+										</small>
+									</div>
+								</div>
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<app-ng-select-shareable #BillingEmploymentType
+										[filterFieldName]="'billing_employment_type_id'"
+										[lableName]="'Billing Employment Type'"
+										[showSelectFieldList]="lstBillingEmploymentType ? lstBillingEmploymentType : []"
+										[showSelectFieldOnRefresh]="form ? form.get('billing_employment_type_id').value : null"
+										[bindId]="'id'" [apiPath]="EnumApiPath.medicalIdentifierBillEmployementTypes"
+										(valueChange)="selectionOnValueChange($event,'BillEmploymentTypeId')"
+										[multiple]="false"></app-ng-select-shareable>
+								</div>
+
+								<!-- <div class="col-lg-3 col-md-12">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('please_specify').value != ''}">
+                                        <label class="form-label" for="Specify">Please Specify</label>
+                                        <input type="text" id="Specify" formControlName="please_specify"
+                                            class="form-control form-input">
+                                    </div>
+                                </div> -->
+								
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<div class="form-group field"
+										[ngClass]="{'focused': form.get('upin').value != '' && form.get('upin').value != null}">
+										<label class="form-label" for="UPIN">UPIN</label>
+										<input type="text" id="UPIN" numbersOnly maxlength="6" formControlName="upin"
+											class="form-control form-input">
+									</div>
+								</div>
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<div class="form-group field"
+										[ngClass]="{'focused': form.get('wcb_authorization').value != '' && form.get('wcb_authorization').value != null}">
+										<label class="form-label" for="WCB">WCB Authorization</label>
+										<input type="text" id="WCB" formControlName="wcb_authorization"
+											class="form-control form-input">
+										<!-- <small class="form-text text-muted danger"
+                                            *ngIf="form.errors?.wcb_code_required && form.get('wcb_date_of_issue').touched">
+                                            Please enter WCB Authorization code
+                                        </small> -->
+										<small class="form-text text-muted danger"
+											*ngIf="form.get('wcb_date_of_issue').value && !form.get('wcb_authorization').value">
+											This field is required
+										</small>
+									</div>
+								</div>
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<div class="form-group field"
+										[ngClass]="{'focused': form.get('wcb_rating_code').value != '' && form.get('wcb_rating_code').value != null}">
+										<label for="wcbRatingCode" class="form-label">WCB Rating Code</label>
+										<input id="wcbRatingCode" class="form-control form-input" type=" text"
+											maxlength="40" formControlName="wcb_rating_code">
+
+										<!-- <select class="form-select" formControlName="wcb_rating_code">
+                                            <option value="6">WCB Rating Code</option>
+                                        </select> -->
+									</div>
+								</div>
+
+								<div class="col-md-6 col-lg-4 col-xl-3">
+									<div class="form-group field mb-2 mb-md-3"
+										[ngClass]="{'focused': (form.get('wcb_date_of_issue').value != '' && form.get('wcb_date_of_issue').value != null ) || form.get('wcb_date_of_issue').errors?.invalid_date}">
+										<label for="dob" class="form-label">WCB Date of Issue (mm/dd/yyyy)</label>
+										<!-- onfocus="(this.type='date')" -->
+										<input [matDatepicker]="wcb_date_of_issue" type="text" id="dob"
+											onfocusout="(this.type='text')" class="form-control form-input"
+											formControlName="wcb_date_of_issue" [max]="currentDate" [min]="1800-01-01"
+											appDateOnly appInputDateMask>
+										<mat-datepicker-toggle [for]="wcb_date_of_issue"></mat-datepicker-toggle>
+										<mat-datepicker #wcb_date_of_issue></mat-datepicker>
+										<small class="form-text text-muted danger"
+											*ngIf="form.errors?.wcb_date_required && form.get('wcb_authorization').touched">
+											This field is required
+										</small>
+										<span
+											*ngIf="form.get('wcb_date_of_issue').value != '' && form.get('wcb_date_of_issue').value != null"
+											(click)="form.get('wcb_date_of_issue').reset()"
+											class="icon-plus select-cross-icon"></span>
+										<small class="form-text text-muted danger"
+											*ngIf="form.get('wcb_date_of_issue').errors?.invalid_date && (form.get('wcb_date_of_issue').dirty && form.get('wcb_date_of_issue').touched)">
+											Invalid Date Format
+										</small>
+										<!-- <img src="assets/images/dob.png" alt=""> -->
+									</div>
+								</div>
+								<div  class="col-md-6 col-lg-4 col-xl-3">
+								<label for="is_reading_provider" class="d-block position-relative m-0">
+									<input id="is_reading_provider" appEnhanceRadio
+										[oldValue]="form.get('is_reading_provider').value"															 checked="checked"
+										type="checkbox" [value]="1" formControlName="is_reading_provider">
+									<span class="fake-input border-success position-absolute"></span>
+									<span class="fake-label d-block">Reading Provider</span>
+								</label>
+							</div>
+							<div class="col-12 mb-2 pe-sm-2 pe-md-1 pe-xl-0">
+								<div class="col-12 pt-4 pb-2 px-4 mb-3 bordered border-p">
+                  <div class="row taxonomy-block">
+                    <div class="col-md-6 col-lg-3 col-xl-2">
+                      <app-ng-select-shareable #specialties [filterFieldName]="'id'" [lableName]="'Specialities'"
+                        [searchLableName]="'name'" [updateOnRunTimeValue]="ngSelectedSpecialty.asObservable()"
+                        [conditionalExtraApiParams]="{user_id:id}" [updateTooltipData]="true" [showSelectFieldList]="selectedMultipleFieldFiter['specialties']"
+                        [bindId]="'id'" [bindlable]="'name'" [onEditCall]="false" (addNewRecord)="specialtyAdded($event)" [showSelectFieldOnRefresh]="form.get('specialty_ids').value" [apiPath]="EnumApiPath.specialityApi"
+                        (valueChange)="selectionOnValueChange($event,'specialities')"
+                        [multiple]="true" (removeEmitter)="removedSpec($event)" [showSelectAll] ="true"></app-ng-select-shareable> 
+                    </div>
+                    <ng-container formArrayName="taxonomy_codes" *ngIf="form['controls'].taxonomy_codes['controls'].length">
+                    <ng-container *ngFor="let taxonomyCode of form.controls.taxonomy_codes?.controls; let i=index"
+                    [formGroupName]="i"> 
+                      <div class="col-md-6 col-lg-3 col-xl-2  taxonomy-info">
+                        <div class="form-group ">
+                            <div class="chos-cross">
+                              <label for="taxonomy_code{{i}}" class="form-label text-truncate">{{taxonomyCode.get('specialty_name').value}}</label>
+                              <span class="icon-plus select-cross-icon" (click)="removeTaxonomy(i)"></span>
+                            </div>
+                          <input type="text" class="form-control form-input" (focusout)="onKeyDownTaxo(i)"  mask="AAAAAAAAAA" placeholder="Taxonomy Code*" appTaxonomycode
+                          formControlName="taxonomy_code" id="taxonomy_code{{i}}">		
+                          <small class="form-text text-muted danger"
+                            *ngIf="(taxonomyCode.get('taxonomy_code').errors?.required && ((taxonomyCode.get('taxonomy_code').dirty || taxonomyCode.get('taxonomy_code').touched))) ">
+                            Taxonomy Code is required.
+                          </small> 
+                          <small class="form-text text-muted danger"
+                            *ngIf="(taxonomyCode.get('taxonomy_code').errors?.pattern && ((taxonomyCode.get('taxonomy_code').dirty || taxonomyCode.get('taxonomy_code').touched))) ">
+							Invalid Code (Use 111N00000X format)
+                          </small> 
+                        </div>
+                      </div>
+                    </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+							</div>
+								<div class="col-12 front-desk-block">
+									<div class="form-group">
+										<div class="radio-block ng-untouched ng-pristine ng-invalid">
+											<!-- <span class="float-sm-left float-md-left" for="id"></span> -->
+											<ul class="list-inline d-flex">
+												<li class="list-inline-item">
+													<label for="is_self" class="d-block position-relative m-0">
+														<input id="is_self" appEnhanceRadio
+															[oldValue]="form.get('is_self').value" checked="checked"
+															type="radio" [value]="1" formControlName="is_self">
+														<span class="fake-input position-absolute"></span>
+														<span class="fake-label d-block">I provided the services listed
+															above.</span>
+													</label>
+												</li>
+
+												<li class="list-inline-item">
+													<label for="is_not_self" class="d-block position-relative m-0">
+														<input id="is_not_self" appEnhanceRadio
+															[oldValue]="form.get('is_self').value"
+															(change)="form.get('doctor_id').reset()" checked="checked"
+															type="radio" [value]="0" formControlName="is_self">
+														<span class="fake-input position-absolute"></span>
+														<span class="fake-label d-block">I actively supervised the
+															health-care provider named below who provided these
+															services.</span>
+													</label>
+												</li>
+
+												
+											</ul>
+										</div>
+
+										<div>
+										</div>
+									</div>
+								</div>
+								<!-- {{form.get('is_self').value === 0 }}{{form.get('is_self').value}} -->
+								<div class="col-lg-12 col-md-12" *ngIf="form.get('is_self').value === 0">
+									<div class="row mb-2 mb-md-3">
+										<div class="col-md-auto">
+											<p class="mb-0 pt-1">Provider</p>
+
+										</div>
+										<div class="col-md-9 col-lg-3">
+											<app-ng-select-shareable  #provider [filterFieldName]="'doctor_id'"
+											[searchLableName]="'doctor_name'"
+											 [showSelectFieldList]="lstProviders ? lstProviders : []"
+											[showSelectFieldOnRefresh]="form ? form.get('doctor_id').value : null"
+										   [bindId]="'id'" [bindlable]="'full_name'" [apiPath]="EnumApiPath.providerApiPath"
+										   (valueChange)="selectionOnValueChange($event,'provider')"
+										   [multiple]="false"></app-ng-select-shareable> 
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-lg-12 col-md-12">
+									<div class="row">
+										<!-- <div class="col-md-3 col-lg-2">
+                                            <p class="mb-0 pt-1">Fvt. ICD-10 Codes:</p>
+                                        </div> -->
+										<div class="col-md-9 col-lg-3 custom-mat-label mat-chip-wrap mb-3">
+											<!-- <ng-select [(ngModel)]="modelICDCode" (keyup)="searchICD($event)"
+                                                [items]="icd10Codes" [multiple]="true" bindLabel="name" bindValue="id"
+                                                [ngModelOptions]="{standalone: true}"
+                                                (selectItem)="selectedICD($event)">
+											</ng-select> -->
+
+											<app-mat-autocomplete class="mb-2" [loader]="showSpinnerIntellicense.icd_10" [selectedOptions]="preselectedIcdCodes" [max]="50"
+												(onkeyUp)="searchICD($event,'search')"(onScrolled)="onScroll($event,'icd')" [multiple]="true"
+												(onChangeEmitter)="selectedICD($event)"
+												[placeHolder]="'Fvt. ICD-10 Codes'" [options]="icd10Codes">
+											</app-mat-autocomplete>
+
+											<!-- <div class="form-group autocomplete-dropdown">
+                                                <ng-template #pt let-r="result" let-t="term">
+                                                    {{r?.name}}
+                                                </ng-template>
+                                                <input type="text" class="form-control" [(ngModel)]="modelICDCode"
+                                                    [ngModelOptions]="{standalone: true}" [ngbTypeahead]="searchICD"
+                                                    [resultTemplate]="pt" [inputFormatter]="ICDFormatter"
+                                                    #pname="ngModel" placeholder="Search ICD"
+													(selectItem)="selectedICD($event)" required /> 
+													
+                                            </div>-->
+
+
+										</div>
+
+										<div class="col-lg-7 col-md-12">
+											<span *ngFor="let selected of selectedICDCodes">
+												{{selected?.name}}
+
+											</span>
+										</div>
+									</div>
+
+
+									<div class="row mb-3">
+										<!-- <div class="col-md-3 col-lg-2">
+                                            <p class="mb-0 pt-1">Fvt. CPT Codes:</p>
+                                        </div> -->
+										<div class="col-md-9 col-lg-3 custom-mat-label mat-chip-wrap">
+											<!-- <ng-select [(ngModel)]="modeCptCode" (keyup)="searchCPT($event)"
+                                                [items]="CodesCPT" [multiple]="true" bindLabel="name" bindValue="id"
+                                                [ngModelOptions]="{standalone: true}">
+											</ng-select> -->
+											<app-mat-autocomplete [loader]="showSpinnerIntellicense?.cpt_codes" (onkeyUp)="searchCPT($event,'search')" [max]="50" (onScrolled)="onScroll($event,'cpt')"
+												[selectedOptions]="preselectedICptCodes" [multiple]="true"
+												(onChangeEmitter)="onCptCodeSelected($event)"
+												[placeHolder]="'Fvt. CPT-10 Codes'" [options]="CodesCPT">
+											</app-mat-autocomplete>
+
+										</div>
+										<!-- <div class="col-lg-3 col-md-12">
+                                            <div class="form-group autocomplete-dropdown">
+                                                <ng-template #pt let-r="result" let-t="term">
+                                                    {{r?.name}}
+                                                </ng-template>
+                                                <input type="text" class="form-control" [(ngModel)]="modeCptCode"
+                                                    [ngModelOptions]="{standalone: true}" [ngbTypeahead]="searchCPT"
+                                                    [resultTemplate]="pt" [inputFormatter]="ICDFormatter"
+                                                    #pname="ngModel" placeholder="Search CPT"
+                                                    (selectItem)="selectedCPT($event)" required />
+                                            </div>
+										</div> -->
+
+										<div class="col-lg-7 col-md-12">
+											<span *ngFor="let selected of selectedCPTCodes">
+												{{selected?.name}}
+
+											</span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xl-6 sign-hold">
+									<app-signature [signatures]="listSignature" [(selectedId)]="selectedId"
+										[(signature)]="signature"></app-signature>
+								</div>
+								<div class="col-xl-6 mb-3 mb-md-0">
+									<app-signature-listing (selectedIdChange)="selectedId= $event"
+										(onDelete)="onSignatureDelete($event)" [(signatures)]="listSignature">
+									</app-signature-listing>
+									<app-add-additional-info #additionalInformationData [events]="additionalInfoEventsSubject.asObservable()"></app-add-additional-info>
+								</div>
+
+							</div>
+
+							<app-shared-file-upload [currentUser]="currentUserID" [objectType]="currentObjectType">
+
+							</app-shared-file-upload>
+							<!-- <div class="row mb-4">
+                                <div class="col-md-2">
+                                    <p class="mb-0 pt-2">Upload Documents:</p>
+                                </div>
+
+                                <div class="col-md-10">
+                                    <div class="file-upload mt-1 mb-3">
+                                        <file-drop headertext="" (onFileDrop)="dropped($event, content)"
+                                            [showBrowseBtn]="true"
+                                            browseBtnClassName="btn btn-success py-1 upload-btn printer-alfa"
+                                            browseBtnLabel="Upload">
+                                            <p>Drag and drop files here to
+                                                <i class="fa fa-upload"
+                                                    style="left: 30px; top: 0px;color:#fff; font-size:15px; position: relative;"></i>
+                                            </p>
+                                        </file-drop>
+                                    </div>
+								</div> -->
+
+
+							<!-- <div class="col-md-10">
+                                    <div class="file-upload mb-0" style="border: 2px dashed #b0b1b1;
+                                          border-radius: 6px;
+                                          padding: 3px;">
+                                        <p>Drag and drop files here to upload
+                                            <button class="btn bg-green upload-btn mt-0" type="submit"><img
+                                                    src="assets/images/upload.png" alt="upload"> Upload</button>
+                                        </p>
+                                    </div>
+								</div> -->
+							<!-- below div is part of above file drop -->
+							<!-- </div> -->
+
+							<!-- {{signature}} -->
+							<div *ngIf="!isSameUserLogin" class="row justify-content-center form-btn mt-3">
+								<a href="javascript:void(0)"
+									routerLink="/front-desk/masters/users/creation/edit/{{id}}/privileges"
+									class="btn btn-primary w-100 float-right mt-0 mb-3 mb-sm-0">
+									<span class="icon-left-arrow me-2"></span> Back</a>
+								<button (click)="formSubmit()" [disabled]='startLoader'
+									class="btn btn-success w-100 mt-0">
+									<span class="icon-save-continue me-2"></span> Save & Continue</button>
+							</div>
+
+						</div>
+						<!-- (click)="formSubmit()" -->
+					</div>
+
+				</div>
+
+			</div>
+		</form>
+	</div>
+	<ng-template #SpiModal let-modal>
+		<div class="modal-header">
+			<h4 class="modal-title">SPI Number</h4>
+			<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<div>
+				<label>
+					Facility Locations :
+				</label>
+			</div>
+		<div class="mb-3">
+			<ng-select class="form-control form-input text-truncate" [items]="spiFacilities" class="filled"
+				bindLabel="facility_full_name" bindValue="id" [closeOnSelect]='true' [multiple]="false"
+				placeholder="Enter Facility Location" [(ngModel)]="facilityLocId" (change)="onChangeSpiFacility($event)">
+			</ng-select>
+		</div>
+		
+			<div class="mb-2" *ngFor="let spi of spiDea">
+				<p class="mb-1 text-center">
+					<label>
+						{{checkIdentifier==1?'':'Institutional'}}
+						DEA: <span class="font-weight-normal">{{spi.dean|| "N/A"}} </span></label>
+									
+				</p>
+
+				<p class="mb-1 text-center">
+					<label> NA DEA: <span class="font-weight-normal">{{spi.nadean|| "N/A"}} </span></label>
+				</p>
+			</div>
+			<div class="text-center mt-1 mb-1">
+				<button class="btn btn-success" (click)="GenerateSPI();modal.dismiss('Save click')"> Generate</button>
+			</div>
+			
+
+		</div>
+		
+	</ng-template>
+</div>

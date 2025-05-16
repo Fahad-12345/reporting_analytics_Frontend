@@ -1,0 +1,62 @@
+
+.toast-container.toast-bottom-center .ngx-toastr,
+.toast-container.toast-top-center .ngx-toastr {
+	@include px-to-rem(min-width, 300px, false);
+	box-shadow: 0 5px 20px rgba(0, 0, 0, .6) !important;
+}
+
+.ngx-toastr.toast-error,
+.ngx-toastr.toast-success, 
+.ngx-toastr.toast-info {
+	background: $white;
+	border: 1px solid transparent;
+	box-shadow: none;
+	border-radius: 5px;
+	box-shadow: none;
+	margin: 0;
+	@include px-to-rem(padding, 15px 15px 15px 70px, false);
+	position: relative;
+}
+
+.ngx-toastr.toast-error .toast-title,
+.ngx-toastr.toast-success .toast-title, 
+.ngx-toastr.toast-info .toast-title {
+	display: block;
+	text-transform: capitalize;
+	font: 400 1.25rem/26px Poppins, Arial, Helvetica, sans-serif;
+}
+
+.ngx-toastr.toast-error .toast-message,
+.ngx-toastr.toast-success .toast-message, 
+.ngx-toastr.toast-info .toast-message {
+	font: 400 0.8125rem/20px Poppins, Arial, Helvetica, sans-serif;
+}
+
+.ngx-toastr.toast-error:after {
+	content: "\e90a" !important;
+}
+
+.ngx-toastr.toast-info:after {
+	content: "\e927" !important;
+}
+
+.ngx-toastr.toast-error:after,
+.ngx-toastr.toast-success:after, 
+.ngx-toastr.toast-info:after {
+	left: 15px;
+	content: "\e908";
+	@include px-to-rem(font-size, 34px, false);
+	top: calc(50% - 24px);
+	position: absolute;
+	font-family: 'icomoon';
+}
+
+.toast-container .ngx-toastr {
+	@include px-to-rem(padding, 15px 15px 15px 60px, true);
+}
+
+.toast-container {
+	.ngx-toastr {
+		opacity: 1;
+	}
+}

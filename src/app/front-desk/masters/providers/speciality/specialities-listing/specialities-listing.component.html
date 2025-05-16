@@ -1,0 +1,515 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader>  -->
+<div *ngIf="aclService.hasPermission(userPermissions.master_speciality_view)">
+   <div class="d-block text-end" *ngIf="aclService.hasPermission(userPermissions.master_speciality_add_new)">
+      <a href="javascript:void(0)" (click)="openSpecialityForm(content, null)" data-target="#speciality-name"
+         data-bs-toggle="modal" class="btn btn-default round-btn" id="speciality-add-new">
+      <span class="icon-plus-circle"></span> Add New
+      </a>
+   </div>
+   <form class="form" autocomplete="off" [formGroup]="searchForm" *ngIf="aclService.hasPermission(userPermissions.master_speciality_filter)">
+        <div class="search-filter search-filter-bg-light filter-grid grid-3" [class.hide-remaining-search-filter]="!isCollapsed">
+            <div class="filter-grid-container">
+                <div class="form-group" [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+                    <label class="form-label" for="name">Specialty Name</label>
+                    <input type="text" formControlName="name" id="specialty-name" class="form-control form-input">
+                </div>
+                <div class="form-group" [ngClass]="{'focused': searchForm.get('time_slot').value != '' && searchForm.get('time_slot').value != null }">
+                    <label class="form-label" for="time_slot">Time Slot</label>
+                    <input type="text" formControlName="time_slot" id="time_slot" class="form-control form-input">
+                </div>
+                <div class="form-group" [ngClass]="{'focused': searchForm.get('over_booking').value != '' && searchForm.get('over_booking').value != null }">
+                    <label class="form-label" for="over_booking">Over Booking</label>
+                    <input type="text" formControlName="over_booking" id="over_booking" class="form-control form-input">
+                </div>
+            </div>
+            <div class="collape-btn">
+                <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+                [class.btn-success]="isCollapsed" type="button">
+                    <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+                </button>
+            </div>
+            <div class="search-filter-btn-group" [class.btn-group-mrgin-top]="isCollapsed">
+                <button class="btn btn-success" (click)="setPage({ offset: 0 });" id="specialty-filter">Filter</button>
+                <button class="btn btn-primary" [disabled]="checkInputs()" (click)="onResetFilters()" id="specialty-reset">Reset</button>
+            </div>
+        </div>
+   </form>
+   <!-- <form class="form" autocomplete="off" [formGroup]="searchForm" *ngIf="aclService.hasPermission(userPermissions.master_speciality_filter)">
+      <div class="search-filter-body">
+         <div class="row">
+            <div class="col-xl-10">
+               <div class="row">
+                  <div class="col-md-4">
+                     <div class="form-group field"
+                        [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+                        <label class="form-label" for="name">
+                        Specialty Name</label>
+                        <input type="text" formControlName="name" id="name" class="form-control form-input">
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group field"
+                        [ngClass]="{'focused': searchForm.get('time_slot').value != '' && searchForm.get('time_slot').value != null }">
+                        <label class="form-label" for="time_slot">Time Slot</label>
+                        <input type="text" formControlName="time_slot" id="time_slot" class="form-control form-input">
+                     </div>
+                  </div>
+                  <div class="col-md-4">
+                     <div class="form-group field"
+                        [ngClass]="{'focused': searchForm.get('over_booking').value != '' && searchForm.get('over_booking').value != null }">
+                        <label class="form-label" for="over_booking">Over Booking</label>
+                        <input type="text" formControlName="over_booking" id="over_booking" class="form-control form-input">
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-xl-2">
+               <div class="row justify-content-center mb-3 mb-xl-0">
+                  <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                     <button class="btn btn-success w-100 me-3" (click)="setPage({ offset: 0 });"> Filter
+                     </button>
+                  </div>
+                  <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                     <button class="btn btn-primary w-100" [disabled]="checkInputs()"
+                     (click)="onResetFilters()">
+                     Reset</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </form> -->
+</div>
+<div class="data-table">
+   <div class="row mt-2">
+      <div class="col-12 col-sm-6 edit-block text-start">
+         <div class="form-group field option-field mb-2 d-inline-block">
+            <ul>
+               <li>Show</li>
+               <li>
+                  <select class="custom-select" name="limit" id="limit" id="limit"
+                  (change)="pageLimit($event.target.value)" [(ngModel)]="page.size">
+                  <option [value]="10" selected>10</option>
+                  <option [value]="20">20</option>
+                  <option [value]="30">30</option>
+                  <option [value]="40">40</option>
+                  <option [value]="50">50</option>
+                  <option [value]="100">100</option>
+                  </select>
+               </li>
+               <li>Entries</li>
+            </ul>
+         </div>
+      </div>
+      <div class="text-end mb-2">
+         <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+            Customize Columns
+         </button>
+      </div>
+   </div>
+      <ngx-datatable class="bootstrap" #specialityList [rows]="specialities"
+      [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+      [limit]="page.size" (page)="setPage($event)" [count]='page.totalElements' [offset]="page.pageNumber"
+      [externalPaging]="true" [virtualization]="false">
+      <ngx-datatable-column name="Specialty Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="name">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+         <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name}}" container="body">
+            {{row.name}}
+         </div>
+      </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Short Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [width]="130" [resizeable]="false" prop="qualifier">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+         <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.qualifier}}" container="body">
+           {{row.qualifier}}
+         </div>
+      </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column [headerClass]="'text-transform-none'" name="Time Slot (minutes)" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="time_slot" [width]="90"></ngx-datatable-column>
+      <ngx-datatable-column name="Over Booking" [sortable]="false" prop="over_booking" [width]="90">
+      </ngx-datatable-column>
+      <ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Create Specialty Appointment"
+      prop="is_create_appointment" [width]="130">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+         <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.is_create_appointment?'Yes':'No'}}" container="body">
+            {{row?.is_create_appointment?'Yes':'No'}}
+         </div>
+      </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Types"
+      prop="visit_types" [width]="130" cellClass="action-icon" [sortable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+         <span *ngFor="let visit of value" class="badge bg-info modal-name text-white tooltip-outer"
+         tooltipClass="table-custom-tooltip" ngbTooltip="{{visit?.name}}" container="body" 
+        >
+         {{visit?.qualifier}} 
+         </span>
+      </ng-template>
+      </ngx-datatable-column>
+      
+      <ngx-datatable-column name="Actions" sortable="false" prop="id" cellClass="action-icon"
+      [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+      >
+      <ng-template let-column="column" ngx-datatable-header-template>
+         <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_speciality_edit)"
+         (change)="$event ? masterToggle($event) : null" [checked]="selection.hasValue() && isAllSelected()"
+         [indeterminate]="selection.hasValue() && !isAllSelected()" disabled>
+         </mat-checkbox>
+         Actions
+      </ng-template>
+      <ng-template let-row="row" let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+         <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_speciality_edit)"
+         (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+         [checked]="selection.isSelected(row)" disabled>
+         </mat-checkbox>
+         <button *ngIf="aclService.hasPermission(userPermissions.master_speciality_edit)" title="{{rowIndex}}-title" class="edit-hov mx-1"
+         ngbTooltip="Edit" container="body" (click)="openSpecialityForm(content, row)">
+         <i class="icon-pencil"></i>
+         </button>
+         <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="specialtyHistoryStats(row)">
+            <i class="fa fa-history"></i>
+          </a>
+        
+      </ng-template>
+      </ngx-datatable-column>
+      </ngx-datatable>
+   
+</div>
+<ng-template #content let-modal>
+   <!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+   <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{hasId?'Edit Specialty':'Add Specialty'}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="crossClose()">
+      <span aria-hidden="true">&times;</span>
+      </button>
+   </div>
+   <div class="modal-body modal-pt-15">
+     
+      <form [formGroup]="specialityForm" (ngSubmit)="onSubmit(specialityForm?.value, cancelAppt)">
+      <div class="row ">
+         <div class="col-12">
+            <div class="form-group mb-1"
+               [ngClass]="{'focused': specialityForm.get('name').value != '' && specialityForm.get('name').value != null }">
+               <label class="form-label">Specialty Name*</label>
+               <input type="text" formControlName="name" name="specialty_name" class="form-control form-input mb-0" notFirstCharactorSpace />
+               <small class="form-text text-muted danger" *ngIf="specialityForm.get('name').errors?.required && 
+                  (specialityForm.get('name').dirty ||
+                  specialityForm.get('name').touched)">
+               This field is required</small>
+            </div>
+         </div>
+
+		 <div class="col-12">
+            <div class="form-group mb-1"
+               [ngClass]="{'focused': specialityForm.get('qualifier').value != '' && specialityForm.get('qualifier').value != null }">
+               <label class="form-label">Short Name*</label>
+               <input type="text" formControlName="qualifier" name="specialty_short_name" class="form-control form-input mb-0"
+			   [allowedLength] = "14"
+			   [currentValue] ="specialityForm.getRawValue()?.qualifier" specficCharacterLengthDirective 
+			   appBlockCopyPaste
+			   notFirstCharactorSpace />
+               <small class="form-text text-muted danger" *ngIf="specialityForm.get('qualifier').errors?.required && 
+                  (specialityForm.get('qualifier').dirty ||
+                  specialityForm.get('qualifier').touched)">
+               This field is required</small>
+            </div>
+         </div>
+
+         <div class="col-12">
+            <div class="form-group field mb-1"
+               [ngClass]="{'focused': specialityForm.get('visit_type_ids').value != '' && specialityForm.get('visit_type_ids').value != null}">
+               <label for="visit_type_ids" class="form-label">Visit Types*</label>
+               <ng-select  formControlName="visit_type_ids" [closeOnSelect]="false"  [items]='lstVisitTypes'
+               bindValue='id' bindLabel='name' multiple='true' notFirstCharactorSpace (change)="changeVisitTypes($event)" [clearable]="false" [typeahead]="commonSearch$"> 
+               <ng-template ng-label-tmp ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label"
+                  *ngFor="let item of items | slice:0:1">
+                  <span class="ng-value-label tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{item.name}}" container="body">
+                  
+                     {{ item?.qualifier }}
+                  </span>
+                  <span *ngIf="item?.is_editable" class="ng-value-icon right" (click)="clear(item)"
+                    aria-hidden="true">×</span>
+                 </div>
+                 <div class="ng-value bg-none ng-numbers" *ngIf="items?.length > 1">
+                  <span class="ng-value-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip">+{{items?.length -
+                     1}}</span>
+                 </div>
+             </ng-template>
+
+			
+
+			<ng-template #ngSelectOptionDisabled ng-option-tmp let-item="item" let-search="searchTerm" >
+            <div  class="ng-value-label tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{item.name}}" container="body">
+				<div  [ngClass]="{'ngSelectOptionDisabled' : item.is_editable}" >
+					{{item.qualifier}}</div>
+				</div>
+			</ng-template>
+               </ng-select>
+               <small class="form-text text-muted danger" *ngIf="specialityForm.get('visit_type_ids').errors?.required &&
+                  (specialityForm.get('visit_type_ids').dirty ||
+                  specialityForm.get('visit_type_ids').touched)">
+				  This field is required</small>
+             
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-12 specialty-tbl"> 
+            <table class="table" *ngIf="specialityForm.get('pre_defined_specialty').value || (specialityForm.get('visit_type_ids').value != '' && specialityForm.get('visit_type_ids').value != null)">
+               <thead class="table-head">
+                  <tr class="tb-data">
+                     <th scope="col">Sequence</th>
+                     <th scope="col">Name</th>
+                     <th scope="col">Required</th>
+                     <th scope="col">Multiple on Other Days</th>
+                     <th scope="col">Multiple on Same Day</th>
+                     <th scope="col">Allow Multiple CPTs</th>
+                     <th scope="col">CPT Codes</th>
+                  </tr>
+               </thead>
+               <tbody cdkDropList (cdkDropListDropped)="dropTable($event)" >
+                  <tr *ngFor="let visitType of lstvisitTypesAgainstSpecialty; let rowIndex = index" cdkDrag [cdkDragData]="visitType" cdkDragLockAxis="y" >
+                  <td >
+                     <i  class="column-drag-handle fa fa-bars all_Scroll ms-1" aria-hidden="true"></i><span class="class-sequence">{{ rowIndex+1 }}</span> 
+                  </td>
+                  <td class="wrap-name">
+                     <span class=" tooltip-outer d-inline-block fake-label text-wrap"  tooltipClass="table-custom-tooltip" ngbTooltip="{{ visitType.name }}" container="body">
+                        {{ visitType?.qualifier }}
+                     </span>
+                  </td>
+                  <td>
+                     <mat-checkbox 
+                     (click)="$event.stopPropagation()" [(ngModel)]="visitType.is_required"   [ngModelOptions]="{standalone: true}"
+                     [checked]="visitType.is_required" >
+                     </mat-checkbox>
+                    
+                  </td>
+                  <td>
+                     <mat-checkbox 
+                     (click)="$event.stopPropagation()" [(ngModel)]="visitType.is_multiple" tooltipClass="table-custom-tooltip"ngbTooltip="Create multiple appointments for the selected specialty and visit type within the same case and on different days." container="body" [ngModelOptions]="{standalone: true}"
+                     [checked]="visitType.is_multiple" >
+                     </mat-checkbox>
+                  </td>
+                  <td>
+                     <mat-checkbox 
+                     (click)="$event.stopPropagation()" name="is_multiple_same_day" [(ngModel)]="visitType.is_multiple_same_day"  tooltipClass="table-custom-tooltip" ngbTooltip="Create multiple appointments for the selected specialty and visit type within the same case and on the same day." container="body" [ngModelOptions]="{standalone: true}"
+                     [checked]="visitType.is_multiple_same_day" >
+                     </mat-checkbox>
+                  </td>
+                  <td>
+                     <mat-slide-toggle  name="allow_multiple_cpt_codes"  [(ngModel)]="visitType.allow_multiple_cpt_codes" tooltipClass="table-custom-tooltip" ngbTooltip="Allow selecting multiple CPTs for the selected specialty and visit type." container="body"  [ngModelOptions]="{standalone: true}" [labelPosition]="'before'" ></mat-slide-toggle>
+                  </td>
+                  <td>
+                     <div class="action-icon action-bdg" *ngIf="visitType && visitType.code_ids && visitType.code_ids.length>0;else all">
+                        <span class="badge badge-info tooltip-outer d-inline-block wrap-text" *ngFor="let cpt of visitType.code_ids"  tooltipClass="table-custom-tooltip" ngbTooltip="{{cpt.name +(cpt.description?' - '+cpt.description:'')}}" container="body">
+                        {{cpt.name +(cpt.description?' - '+cpt.description:'')}}
+                        </span>
+                     </div>
+                     <ng-template #all>
+                        <div   class="action-icon">
+                           <span class="badge badge-info tooltip-outer d-inline-block wrap-text"   tooltipClass="table-custom-tooltip" ngbTooltip="All" container="body">
+                           All
+                           </span>
+                        </div>
+                     </ng-template>
+                  </td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-sm-6">
+           
+            <label>Time Slot*</label>
+            <div class="input-group mb-1 form-group">
+               <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon">Minutes</span>
+               </div>
+               <input formControlName="time_slot" (input)="onValueChange($event.target.value, 'time_slot');"
+                  type="number" min="5" max="200" class="form-control mb-0" name="specialty_time_slot"
+                  aria-describedby="basic-addon3" notFirstCharactorSpace onkeydown="if(event.key==='.'){event.preventDefault();}">
+            </div>
+               <small class="form-text text-muted danger" *ngIf="specialityForm.get('time_slot').errors?.required &&
+               (specialityForm.get('time_slot').dirty ||
+               specialityForm.get('time_slot').touched)">
+                  This field is required</small>
+               <small class="form-text text-muted danger" *ngIf="specialityForm.get('time_slot').errors?.min &&
+               (specialityForm.get('time_slot').dirty ||
+               specialityForm.get('time_slot').touched)">
+            This field must be greater than 5 mins.</small>
+         </div>
+         <div class="col-sm-6">
+            <div class="form-group mb-1">
+               <label>Over Booking No.*</label>
+               <input type="number" formControlName="over_booking"
+                  (input)="onValueChange($event.target.value, 'over_booking');"min="0"  name="specialty_over_booking" class="form-control mb-0" notFirstCharactorSpace onkeydown="if(event.key==='.'){event.preventDefault();}" />
+               <small class="form-text text-muted danger" *ngIf="specialityForm.get('over_booking').errors?.required &&
+                  (specialityForm.get('over_booking').dirty ||
+                  specialityForm.get('over_booking').touched)">
+				  This field is required</small>
+			   <small class="form-text text-muted danger" *ngIf="specialityForm.get('over_booking').errors?.min &&
+			   (specialityForm.get('over_booking').dirty ||
+			   specialityForm.get('over_booking').touched)">
+			This field cannot be less than zero.</small>
+            </div>
+         </div>
+      </div>
+      <div class="row form pt-3">
+         <div class="col-6">
+            <div class="form-group field mb-2"
+               [ngClass]="{'focused': specialityForm.get('is_create_appointment').value != '' && specialityForm.get('is_create_appointment').value != null }">
+               <label class="chkbox">
+               <input formControlName="is_create_appointment" [checked]="specialityForm.get('is_create_appointment').value==1" type="checkbox" id="createappt" >
+               <span class="fake-input position-absolute"></span>
+               <span  class="fake-label d-block" for="createappt">Create Specialty Appointment</span>				
+               </label>
+            </div>
+         </div>
+         <div class="col-6">
+            <div class="form-group field mb-2"
+               [ngClass]="{'focused': specialityForm.get('is_multiple_visit').value != '' && specialityForm.get('is_multiple_visit').value != null }">
+               <label class="chkbox">
+               <input formControlName="is_multiple_visit" [checked]="specialityForm.get('is_multiple_visit').value==1" type="checkbox" id="createappt" >
+               <span class="fake-input position-absolute"></span>
+               <span  class="fake-label d-block tooltip-outer " for="createappt" tooltipClass="table-custom-tooltip" ngbTooltip="Allow the system to create multiple appointments automatically if multiple CPTs are selected (1 CPT = 1 Appointment)." container="body">Allow to create multiple appointments/visits with CPT codes</span>				
+               </label>
+            </div>
+         </div>
+      </div>
+      <div class="row form">
+         <div class="col-12">
+            <div class="form-group field"
+               [ngClass]="{'focused': specialityForm.get('description').value != '' && specialityForm.get('description').value != null }">
+               <label for="comments">Comments</label>
+               <textarea id="comments" type="text" formControlName="description" 
+                  class="form-control form-input"></textarea>
+            </div>
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-md-12 modal-btn-width text-center">
+            <button class="btn btn-primary me-3" (click)="closeModal()" type="button"
+               >Cancel</button>
+            <button class="btn btn-success" type="submit"
+               [disabled]="isDisabled()">{{hasId?'Update':'Save & Continue'}} </button>
+         </div>
+      </div>
+      </form>
+   </div>
+</ng-template>
+
+<ng-template #cancelAppt let-modal>
+   <div class="modal-header">
+     <h4 id="dialog-sizes-name1" class="modal-title pull-left">Cancel Appointments</h4>
+     <button type="button" class="close" aria-label="Close" (click)="crossCancel()">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     </div>
+   <div class="modal-body practice-status">
+     <p><strong>Note:</strong> Please cancel all the mentioned appointments from the Appointment List first to update specialty</p>
+ 
+     <div class="row select-all-document align-items-start align-items-sm-center">
+       <div class="col-12 edit-block text-start">
+         <div class="form-group field option-field d-inline-block mb-2">
+           <ul>
+             <li>Show</li>
+             <li>
+               
+               <select [(ngModel)]="specialtyAppointmentPage.size" (change)="pageLimitAppointment($event.target.value)" class="custom-select" name="limit" class="custom-select" name="limit">
+                 <option [value]="10">10</option>
+                 <option [value]="20">20</option>
+                 <option [value]="30">30</option>
+                 <option [value]="40">40</option>
+                 <option [value]="50">50</option>
+                 <option [value]="100">100</option>
+               </select>
+             </li>
+             <li>Entries</li>
+           </ul>
+ 
+         </div>
+       </div>
+     </div>
+ 
+     <ngx-datatable class="bootstrap" [columnMode]="'force'" [rows]="specialtyAppointmentsData"  [headerHeight]="50" [footerHeight]="50"
+       [rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true" [count]="specialtyAppointmentPage?.totalElements" [offset]="specialtyAppointmentPage?.offset" 
+       [limit]="specialtyAppointmentPage?.size" (page)="onPageChangeNew($event)" [externalPaging]="true">
+       <ngx-datatable-column name="Case ID" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="case_id" [width]="80">
+         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+           <span  class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+             ngbTooltip="{{value}}">
+             {{value}} 
+            </span>
+         </ng-template>
+       </ngx-datatable-column>
+       <ngx-datatable-column name="Provider Name" prop="doctor_first_name" [sortable]="false" prop="bill_id" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+         <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Provider Name" [width]="100" [minWidth]="100">
+           <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+             <span *ngIf="row?.doctor_first_name || row?.doctor_middle_name || row?.doctor_last_name; else noNames" class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.doctor_first_name}} {{row?.doctor_middle_name}} {{row?.doctor_last_name}}">
+               {{row?.doctor_first_name}} {{row?.doctor_middle_name}}
+               {{row?.doctor_last_name}}
+             </span>
+             <ng-template #noNames>
+               <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="N/A">
+                 N/A
+               </span>
+             </ng-template>
+           </ng-template>
+         </ngx-datatable-column>
+       </ngx-datatable-column>
+       <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Date" [width]="80" [minWidth]="80">
+         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+           <span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+             {{row?.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+           </span>
+         </ng-template>
+       </ngx-datatable-column>
+       <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Time" [width]="110" [minWidth]="110">
+         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+           <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{timeConversion(row?.scheduled_date_time) | date: 'hh:mm a'}}" container="body">
+             {{timeConversion(row?.scheduled_date_time) | date: 'hh:mm a'}}
+           </div>
+         </ng-template>
+       </ngx-datatable-column>
+       <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Specialty" [width]="80" [minWidth]="80">
+         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+           <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.speciality_name}}" container="body">
+             {{row?.speciality_qualifier}}
+           </div>
+         </ng-template>
+       </ngx-datatable-column>
+       <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Visit Type" [width]="80" [minWidth]="80">
+         <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+           <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.appointment_type_name}}" container="body">
+             {{row?.visit_type}}
+           </div>
+         </ng-template>
+       </ngx-datatable-column>
+     </ngx-datatable>
+   </div>
+ </ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

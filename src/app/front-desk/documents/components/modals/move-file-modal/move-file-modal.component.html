@@ -1,0 +1,81 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Select Folder</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form [formGroup]="form">
+  <input type="hidden" formControlName="ext">
+
+
+  <div class="modal-body">
+    <div class="row fields-holder">
+      
+      <ng-container>
+        <div class="col-12">
+          <div class="row align-items-center">
+            <label for="parentId" class="col-sm-4 form-label">Select Folder * </label>
+            <div class="col-sm-8">
+
+              <ng-select formControlName="parentId" [items]="lstFolder" bindValue="id" bindLabel="folder_name" [closeOnSelect]="false">
+              </ng-select>
+
+              <!-- <select class="custom-select" formControlName="parentId" id="parentId">
+                <option [value]=""> </option>
+                <ng-container *ngFor="let folder of lstFolder">
+                  <option [value]="folder.id"> {{ folder.folder_name }}</option>
+                </ng-container>
+              </select> -->
+            </div>
+            <small class="form-text text-muted danger offset-md-4 ps-2"
+              *ngIf="form.get('parentId').errors?.required && (form.get('parentId').dirty || form.get('parentId').touched)">This field is required</small>
+          </div>
+        </div>
+        <div formArrayName="sfolderId" class="col-12"
+          *ngFor="let subfolder of form['controls'].sfolderId['controls'];let i=index">
+          <div [formGroupName]="i" class="row align-items-center mt-3">
+            <label for="sfolderId" class="col-sm-4 form-label">Subfolders</label>
+            <div class="col-sm-8">
+
+              <ng-select [items]="lstSubFolders[i]" [closeOnSelect]="false" formControlName="id" bindLabel="folder_name" bindValue="id">
+              </ng-select>
+              <!-- <select class="custom-select" formControlName="id" id="sfolderId">
+                <option [value]=""> </option>
+                <ng-container *ngFor="let sfolder of lstSubFolders[i]">
+                  <option [value]="sfolder.id"> {{ sfolder.folder_name }}</option>
+                </ng-container>
+              </select> -->
+              <!-- <label class="form-label">No subfolders</label> -->
+
+            </div>
+            <small class="form-text text-muted danger offset-md-4 ps-2"
+              *ngIf="form.get('sfolderId').errors?.required && (form.get('sfolderId').dirty || form.get('sfolderId').touched)">This field is required</small>
+          </div>
+        </div>
+      </ng-container>
+      <div *ngIf="patientId" class="col-12 mt-1 mb-3">
+        <div class="col-sm-8 offset-sm-4 pe-0 ps-2">
+          <div class="row mt-2">
+            <div class="col-12">
+              <a href="javascript:void(0)" class="badge badge-primary bg-blue pb-1" (click)="createFolder()"> {{(form.get('parentId').value)?"Create
+                  Subfolder":"Create
+                  Folder"}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 modal-btn-width d-flex justify-content-center mt-3">
+        <button type="button" (click)="close()" class="btn btn-outline-secondary me-3">Cancel</button>
+        <button class="btn btn-success" id="btnFileUpload" type="button"
+        (click)="submitForm(form.value)" [disabled]="disableBtn || form.invalid"><span
+          class="icon-save-continue me-2"></span>
+        {{ disableBtn ?  'Please Wait...' : 'Submit' }}
+        </button>
+      </div>
+      
+    </div>
+  </div>
+
+</form>
+
+<!-- {{form?.value | json}} -->

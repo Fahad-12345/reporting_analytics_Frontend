@@ -1,0 +1,124 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Upload Document</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form [formGroup]="form" (ngSubmit)="submitForm(form.value)">
+  <input type="hidden" formControlName="ext">
+
+  <div class="modal-body">
+    <div class="row fields-holder">
+      <div class="col-12" *ngIf="uploadCount==1">
+        <div class="form-group row fields-holder align-items-center mb-3"
+          [ngClass]="{'focused': form.get('fileTitle').value != ''}">
+          <label for="fileTitle" class="col-md-4 form-label">Document Name *</label>
+          <div class="col-md-8">
+            <input type="text" id="fileTitle" class="form-control form-input mb-0" formControlName="fileTitle"
+              placeholder="Enter Document Name">
+          </div>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('fileTitle').errors?.required && (form.get('fileTitle').dirty || form.get('fileTitle').touched)">This field is required</small>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('fileTitle').errors?.maxLength?.requiredLength==100">Maximum characters
+            should be 100!</small>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group align-items-center row fields-holder mb-3"
+          [ngClass]="{'focused': form.get('tags').value != ''}">
+          <label for="tags" class="form-label col-md-4" style="padding-left:10px !important;">Enter
+            Tags</label>
+          <div class="col-md-8">
+            <tag-input formControlName="tags" theme='bootstrap3-info'></tag-input>
+
+          </div>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('tags').errors?.required && (form.get('tags').dirty || form.get('tags').touched)">This field is required</small>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('tags').errors?.maxLength?.requiredLength==100">Maximum characters
+            should be 100!</small>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group align-items-center row fields-holder mb-3"
+          [ngClass]="{'focused': form.get('description').value != ''}">
+          <label for="description" class="form-label col-md-4" style="padding-left:10px !important;">Description</label>
+          <div class="col-md-8">
+            <input type="text" id="description" class="form-control form-input mb-0" formControlName="description"
+              placeholder="Enter Description">
+
+          </div>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('description').errors?.required && (form.get('description').dirty || form.get('description').touched)">This field is required</small>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('description').errors?.maxLength?.requiredLength==100">Maximum
+            characters should be 100!</small>
+        </div>
+      </div>
+
+      <ng-container *ngIf="folderList?.length">
+        <div class="col-12">
+          <div class="row align-items-center">
+            <label for="parentId" class="col-sm-4 form-label">Select Folder *</label>
+            <div class="col-sm-8">
+              <select class="custom-select" (change)="getSubFoldersByFolderId($event.target.value)"
+                formControlName="parentId" id="parentId" [disabled]="folderId">
+                <option [value]=""> </option>
+                <ng-container *ngFor="let folder of folderList">
+                  <option [value]="folder.id"> {{ folder.folder_name }}</option>
+                </ng-container>
+              </select>
+            </div>
+            <small class="form-text text-muted danger offset-md-4 ps-2"
+              *ngIf="form.get('parentId').errors?.required && (form.get('parentId').dirty || form.get('parentId').touched)">
+			  This field is required</small>
+          </div>
+        </div>
+        <div *ngIf="form.get('parentId').value " class="col-12">
+          <div class="row align-items-center mt-3">
+            <label for="sfolderId" class="col-sm-4 form-label">Subfolders</label>
+            <div class="col-sm-8">
+              <select *ngIf="subfolderList.length" class="custom-select" formControlName="sfolderId" id="sfolderId">
+                <option [value]=""> </option>
+                <ng-container *ngFor="let sfolder of subfolderList">
+                  <option [value]="sfolder.id"> {{ sfolder.folder_name }}</option>
+                </ng-container>
+              </select>
+              <label *ngIf="!subfolderList.length" class="form-label">No subfolders</label>
+
+            </div>
+            <small class="form-text text-muted danger offset-md-4 ps-2"
+              *ngIf="form.get('sfolderId').errors?.required && (form.get('sfolderId').dirty || form.get('sfolderId').touched)">This field is required</small>
+          </div>
+        </div>
+      </ng-container>
+      <div class="col-12 mt-1">
+        <div class="col-sm-8 offset-sm-4 pe-0 ps-2">
+          <div class="row mt-2">
+            <div class="col-12">
+              <a href="javascript:void(0)" class="badge badge-primary bg-blue pb-1" (click)="createFolder()"> {{(form.get('parentId').value)?"Create
+                  Subfolder":"Create
+                  Folder"}}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mb-0 px-0 mt-3">
+        <div class="col-sm-8 offset-sm-4">
+          <div class="row">
+            <div class="col-8">
+              <button class="btn btn-success w-100" id="btnFileUpload" type="submit"
+                [disabled]="disableBtn || form.invalid"><span class="icon-save-continue me-2"></span>
+                {{ disableBtn == false ? 'Upload Document' : 'Please Wait...' }}</button>
+            </div>
+            <div class="col-4">
+              <button type="button" (click)="close()" class="btn btn-outline-secondary w-100">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>

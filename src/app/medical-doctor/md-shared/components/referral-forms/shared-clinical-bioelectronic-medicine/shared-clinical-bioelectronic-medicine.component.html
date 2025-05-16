@@ -1,0 +1,337 @@
+<form class="form h-100" [formGroup]="form">
+      <perfect-scrollbar>
+          <div class="inner-frame position-relative profile-box p-3 bg-light"
+               style="overflow: visible;">
+            <!-- <strong class="section-title position-absolute">Clinical Bioelectronic</strong> -->
+            <div class="row">
+              <div class="col-12">
+                <!-- <strong class="sub-title position-absolute" style="left: 10px; right: auto; font-size: 12px;">CLINICAL
+                  BIOELECTRONIC</strong> -->
+                <div class="message rounded-0 ad-border pt-4 ps-4 pe-4 pb-0">
+                  <div class="row fields-holder">
+                    <div class="col-lg-4">
+                      <div class="form-group field focused">
+                        <label for="patient" class="form-label">Patient</label>
+                        <input type="text" id="patient" class="form-control form-input" value="{{patient.firstName}} {{patient.middleName}} {{patient.lastName}}" disabled="disabled">
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="form-group field focused">
+                        <label for="file-no" class="form-label">File No.</label>
+                        <input type="text" id="file-no" class="form-control form-input" disabled="disabled">
+                      </div>
+                    </div>
+                    <div class="col-lg-4">
+                      <div class="form-group field focused">
+                        <label for="doa" class="form-label">Date of Accident</label>
+                        <input type="text" id="doa" class="form-control form-input" value="{{patient.accidentDate}}" disabled="disabled">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="table-holder bg-white mt-3">
+                  <table class="table table-bordered w-100 m-0" style="border-color: #a2a3a2;">
+                    <thead>
+                    <tr>
+                      <th style="width:70px">S. NO.</th>
+                      <th>TREATMENT DAY</th>
+                      <th>AREA</th>
+                      <th>TREATMENT TIME</th>
+                      <th>BIAS</th>
+                      <th>DOSAGE LEVEL</th>
+                      <th>DESIRED ELECTRODES</th>
+                      <th style="width:75px">ACTION</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr formArrayName="synapticDetails" *ngFor="let item of form.get('synapticDetails').value; let i = index;  trackBy:trackByFn">
+                      <ng-container [formGroupName]="i">
+                        <td data-title="S. No.">{{i+1}}</td>
+                        <td data-title="Treatment Day" style="padding: 2px;">
+                            <input type="date"  class="form-control" formControlName="treatmentDay">
+                        </td>
+                        <td data-title="Area" style="padding: 2px;">
+                            <input type="text"  class="form-control" formControlName="area">
+                        </td>
+                        <td data-title="Treatment Time" style="padding: 2px;">
+                            <input type="text"  class="form-control" formControlName="treatmentTime">
+                        </td>
+                        <td data-title="Bais" style="padding: 2px;">
+                            <input type="number" max="9.9" min="0"  (input)="onBiasChange($event.target.value, form.controls['synapticDetails'].controls[i])" class="form-control" formControlName="bias">
+                        </td>
+                        <td data-title="Dosage Level" style="padding: 2px;">
+                            <input type="number" max="9.9" min="0"  (input)="onDosageLevelChange($event.target.value, form.controls['synapticDetails'].controls[i])" class="form-control" formControlName="dosageLevel">
+                        </td>
+                        <td data-title="Desired Electrodes" style="padding: 2px;">
+                            <input type="text"  class="form-control" formControlName="designedElectrodes">
+                        </td>
+                        <td data-title="Action">
+                          <button class="btn btn-danger icon-remove" style="font-size: 12px;border-radius: 100%;width: 20px;height: 20px;padding: 1px;" (click)="deleteSynapticDetails(i)"></button>
+                        </td>
+                      </ng-container>
+                    </tr>
+                   
+                    <tr>
+                      <td  colspan="8">
+                        <button class="btn btn-success float-right icon-plus" style="border-radius: 100%;width: 30px;height: 30px;padding: 4px;" (click)="addNewSynapticDetails(null)"></button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="margin-top: 35px;">
+              <div class="col-lg-6">
+             
+              </div>
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <!-- <strong class="sub-title position-absolute" style="left: 10px; right: auto; font-size: 12px;">Pain
+                        Scale</strong> -->
+                      <div class="message rounded-0 bg-white ad-border pt-4 ps-4 pe-4 pb-0">
+                        <p>Pain Scale Score: 0= no pain. 10= severe pain</p>
+                      </div>
+                    <div class="table-holder mt-2 bg-white">
+                      <table class="table table-bordered m-0" style="border-color: #a2a3a2;">
+                        <thead>
+                        <tr>
+                          <th style="width:70px">S. NO.</th>
+                          <th>TREATMENT DAY</th>
+                          <th>BEFORE TREATMENT</th>
+                          <th>AFTER TREATMENT</th>
+                          <th style="width:75px">ACTION</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                          <tr formArrayName="painScaleScore" *ngFor="let item of form.get('painScaleScore').value; let i = index;  trackBy:trackByFn">
+                            <ng-container [formGroupName]="i">
+                              <td data-title="S. No.">{{i+1}}</td>
+                              <td data-title="Treatment Day" style="padding: 2px;">
+                                <input type="date" class="form-control" formControlName="treatmentDay">
+                              </td>
+                              <td data-title="Before Treatment" style="padding: 2px;">
+                                  <input type="number" min="0" max="10" (input)="onTreatmentChange($event.target.value, form.controls['painScaleScore'].controls[i])"  class="form-control" formControlName="beforeTreatment">
+                                </td>
+                              <td data-title="After Treatment" style="padding: 2px;">
+                                  <input type="number" min="0" max="10" (input)="onTreatmentChange($event.target.value, form.controls['painScaleScore'].controls[i])"  class="form-control" formControlName="afterTreatment">
+                              </td>
+                              <td data-title="Action">
+                                <button class="btn btn-danger icon-remove" style="font-size: 12px;border-radius: 100%;width: 20px;height: 20px;padding: 1px;" (click)="deletePainScaleScore(i)"></button>
+                              </td>
+                            </ng-container>
+                          </tr>
+                          <tr>
+                            <td  colspan="5">
+                              <button class="btn btn-success float-right icon-plus" style="border-radius: 100%;width: 30px;height: 30px;padding: 4px;" (click)="addNewPainScaleScore(null)"></button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="col-lg-12">
+                    <div class="notes-box mt-2">
+                      <div class="message p-2">
+                        <div class="row">
+                          <div class="col-auto align-self-center">
+                            <span class="label">Tentative Diagnosis</span>
+                          </div>
+                          <div class="col align-self-center">
+                            <div class="form-group m-0">
+                              <input type="text" class="form-control" formControlName="treatmentDiagnosis">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row mt-3">
+                          <div class="col-auto align-self-center">
+                            <span class="label">Treatment Plan:</span>
+                          </div>
+                          <div class="col align-self-center">
+                            <div class="form-group m-0">
+                              <input type="number" min='1' class="form-control" style="width: 70px;"  formControlName="treatmentNoOfTimes">
+                            </div>
+                          </div>
+                          <div class="col align-self-center">
+                              <!-- <span class="label">time{{(form.controls['treatmentNoOfTimes'].value==1)?"":"s"}} per</span> -->
+                              <span class="label">times per</span>
+                          </div>
+                          <div class="col-auto align-self-center" >
+                          <ul class="list-inline m-0">
+                              <li class="list-inline-item">
+                                <label for="day" class="d-block position-relative m-0">
+                                  <input id="day" value="day" type="radio" formControlName="treatmentIntervalName" (change)="handleChange($event)">
+                                  <span class="fake-input position-absolute"></span>
+                                  <span class="fake-label d-block">Day</span>
+                                </label>
+                              </li>
+                              <li class="list-inline-item">
+                                <label for="week" class="d-block position-relative m-0">
+                                  <input id="week" value="week" type="radio" formControlName="treatmentIntervalName" (change)="handleChange($event)">
+                                  <span class="fake-input position-absolute"></span>
+                                  <span class="fake-label d-block">Week</span>
+                                </label>
+                              </li>
+                              <li class="list-inline-item">
+                                <label for="month" class="d-block position-relative m-0">
+                                  <input id="month" value="month"  type="radio" formControlName="treatmentIntervalName" (change)="handleChange($event)">
+                                  <span class="fake-input position-absolute"></span>
+                                  <span class="fake-label d-block">Month</span>
+                                </label>
+                              </li>
+                              <li class="list-inline-item">
+                                <label for="year" class="d-block position-relative m-0">
+                                  <input id="year" value="year" type="radio" formControlName="treatmentIntervalName" (change)="handleChange($event)">
+                                  <span class="fake-input position-absolute"></span>
+                                  <span class="fake-label d-block">Year</span>
+                                </label>
+                              </li>
+                          </ul>
+        
+        
+                          </div>
+                          <ng-container *ngIf="this.form.get('treatmentIntervalName').value"> 
+                            <div class="col align-self-center">
+                                <span class="label">for</span>
+                            </div>
+                            <div class="col align-self-center">
+                              <div class="form-group m-0">
+                                <input type="number" min="1" class="form-control" style="width: 60px;"  formControlName="treatmentInterval">
+                              </div>
+                            </div>
+                            <div class="col-auto align-self-center">
+                              <ul class="list-inline m-0">
+                                <li class="list-inline-item" *ngIf="
+                                form.controls['treatmentIntervalName'].value=='day'
+                                ">
+                                  <label for="dayPeriod" class="d-block position-relative m-0">
+                                    <input id="dayPeriod" value="day" type="radio" formControlName="treatmentPeriodName">
+                                    <span class="fake-input position-absolute"></span>
+                                    <span class="fake-label d-block">Day{{(form.controls['treatmentInterval'].value==1)?"":"s"}}</span>
+                                  </label>
+                                </li>
+                                <li class="list-inline-item"  *ngIf="
+                                form.controls['treatmentIntervalName'].value=='day' || 
+                                form.controls['treatmentIntervalName'].value=='week'
+                                ">
+                                  <label for="weekPeriod" class="d-block position-relative m-0">
+                                    <input id="weekPeriod" value="week" type="radio" formControlName="treatmentPeriodName">
+                                    <span class="fake-input position-absolute"></span>
+                                    <span class="fake-label d-block">Week{{(form.controls['treatmentInterval'].value==1)?"":"s"}}</span>
+                                  </label>
+                                </li>
+                                <li class="list-inline-item" *ngIf="
+                                form.controls['treatmentIntervalName'].value=='day' || 
+                                form.controls['treatmentIntervalName'].value=='week' ||
+                                form.controls['treatmentIntervalName'].value=='month'
+                                ">
+                                  <label for="monthPeriod" class="d-block position-relative m-0">
+                                    <input id="monthPeriod" value="month"  type="radio" formControlName="treatmentPeriodName">
+                                    <span class="fake-input position-absolute"></span>
+                                    <span class="fake-label d-block">Month{{(form.controls['treatmentInterval'].value==1)?"":"s"}}</span>
+                                  </label>
+                                </li>
+                                <li class="list-inline-item" *ngIf=" (
+                                form.controls['treatmentIntervalName'].value!='day' || 
+                                form.controls['treatmentIntervalName'].value!='week' ||
+                                form.controls['treatmentIntervalName'].value!='month' ) &&
+                                form.controls['treatmentIntervalName'].value!='year' 
+                                ">
+                                  <label for="yearPeriod" class="d-block position-relative m-0">
+                                    <input id="yearPeriod" value="year" type="radio" formControlName="treatmentPeriodName">
+                                    <span class="fake-input position-absolute"></span>
+                                    <span class="fake-label d-block">Year{{(form.controls['treatmentInterval'].value==1)?"":"s"}}</span>
+                                  </label>
+                                </li>
+                                <li class="list-inline-item" *ngIf=" (
+                                form.controls['treatmentIntervalName'].value!='day' || 
+                                form.controls['treatmentIntervalName'].value!='week' ||
+                                form.controls['treatmentIntervalName'].value!='month' ) &&
+                                form.controls['treatmentIntervalName'].value=='year' 
+                                ">
+                                {{form.controls['treatmentIntervalName'].value}}{{(form.controls['treatmentInterval'].value==1)?"":"s"}}
+                                </li>
+                              </ul>
+                            </div>
+                          </ng-container>
+                          <!-- <div class="col-auto align-self-center">
+                            <span class="label">{{form.controls['treatmentInterval'].value}}{{(form.controls['treatmentNoOfTimes'].value==1)?'':'s'}}.</span>
+                          </div> -->
+                        </div>
+                        
+                        <ng-container *ngIf="this.form.get('treatmentIntervalName').value"> 
+                          <div class="row">
+                            <div class="alert alert-secondary col-12" role="alert">
+                                <b>Preview:</b>
+                                {{form.controls['treatmentNoOfTimes'].value}} 
+                                <!-- time{{(form.controls['treatmentNoOfTimes'].value==1)?"":"s"}} per -->
+                                times per
+                                {{form.controls['treatmentIntervalName'].value}} 
+                        
+                                <ng-container *ngIf="this.form.get('treatmentPeriodName').value"> 
+                                  for
+                                  {{form.controls['treatmentInterval'].value}} 
+                                  {{form.controls['treatmentPeriodName'].value}}{{(form.controls['treatmentInterval'].value==1)?"":"s"}}
+                                </ng-container>
+                                <button type="button" class="btn btn-danger float-right" style="padding: 5px; font-size: 12px; border-radius: 5px;" (click)="resetTreatmentPlan()">Reset</button>
+                              </div>
+                          </div>
+                        </ng-container>
+                        <div class="row mt-3">
+                          <div class="col-auto align-self-center">
+                            <span class="label">Comments</span>
+                          </div>
+                          <div class="col align-self-center">
+                            <div class="form-group m-0">
+                              <input type="text" class="form-control" formControlName="comments">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-12">
+                    <div class="notes-box bg-white">
+                      <div class="message p-4">
+                        <div class="row">
+                          <div class="col-lg-6">
+                            <label for="DoctorName" class="position-static text-dark">Ordering
+                              Physician's Name</label>
+                            <input type="text" id="DoctorName" disabled="disabled" class="form-control" value="{{user.firstName}} {{user.middleName}} {{user.lastName}}">
+                          </div>
+                          <div class="col-lg-6">
+                            <div class="form-group">
+                              <label class="position-static text-dark">Signature</label>
+                              <div class="signature-box"></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <span class="text-dark d-inline-block align-middle me-2">Date:</span>
+                                    <time datetime="2018-12-13" class="d-inline-block align-middle">{{getCurrentDate()}}
+                                    </time>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+      </perfect-scrollbar>
+    <!-- <div class="paging-bar d-flex justify-content-between mb-1">
+      <a class="btn btn-primary" routerLink="['/medical-doctor/treatment-rendered']"><span class="icon-arrow-left-filled d-block"></span>Back</a>
+      <a class="btn btn-primary"><span class="icon-arrow-right-filled d-block"></span>Next</a>
+    </div> -->
+    <div class="paging-bar form-btn text-center mb-1">
+        <button href="javascript:void(0)" class="btn btn-primary me-3" (click)="back()"><span class="icon-left-arrow me-2"></span> Back</button>
+        <!-- <a href="#" class="btn btn-primary"><span class="icon-arrow-left-filled d-block"></span>Back</a> -->
+        <button href="javascript:void(0)" class="btn btn-default me-3" (click)="complete()">Complete Visit</button>
+        <button href="javascript:void(0)" type="submit" class="btn btn-primary" (click)="next()"><span class="icon-save-continue me-2"></span>  Save & Continue</button>
+      </div>
+  </form>

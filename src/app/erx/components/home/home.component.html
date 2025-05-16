@@ -1,0 +1,291 @@
+
+<div class="front-desk-block" *ngIf="!viewSummaryCheck">
+  <div class="row user-info pt-2">
+    <div class="col-12">
+      <h4 class="my-0 color-green">Task List</h4>
+	  <!-- This is the task list -->
+    </div>
+  </div>
+  <hr class="line-bottom">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mt-2 search-filter-block border-0 p-0">
+        <div class="card-body">
+          <form class="dynamic-form-block form">
+            <div class="row px-2">
+                <div class="table-fields">
+                    <div class="row">
+                        <div class="col-sm-3" *ngIf="!patientIn && !caseIn">
+                            <div class="form-group field"  [ngClass]="{'focused':patientName!='' && patientName!=null}">
+                                <label class="form-label" for="PatientName">Patient Name</label>
+                                <input type="text" id="PatientName" class="form-control form-input" maxlength="105" value={{patientName}}
+                                (keyup)="patientName=$event.target.value"    
+                                (change)="patientName=$event.target.value">
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-3">
+                            <div class="form-group field"   [ngClass]="{'focused':medDesc!='' && medDesc!=null}">
+                                <label class="form-label" for="MedicineDescription">Medicine Description</label>
+                                <input type="text" id="MedicineDescription" maxlength="105" class="form-control form-input" value={{medDesc}}
+                                (keyup)="medDesc=$event.target.value"    
+                                (change)="medDesc=$event.target.value">
+                            </div>
+                        </div>
+                        <div class="col-sm-3" *ngIf="!caseIn" [ngClass]="{'focused':caseId!='' && caseId!=null}">
+                            <div class="form-group field">
+                                <label class="form-label" for="CaseID">Case ID</label>
+                                <input type="text" id="CaseID"  maxlength="19" class="form-control form-input" value={{caseId}}
+                                (keyup)="caseId=$event.target.value" 
+                                (change)="caseId=$event.target.value">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group field" [ngClass]="{'focused':type!='' && type!=null}">
+                                <label class="form-label" for="Type">Type</label>
+                                <select class="form-select form-input filled" [value]='type' name="type" (change)="type=$event.target.value" id="Type">
+                                    <option [value]="0">Rx Order</option>
+                                    <option [value]="1">Rx Change</option>
+                                    <option [value]="2">Rx Refill</option>
+                                    <option [value]="3">Prescriber Authorization</option>
+                                    <option [value]="4">Rx Cancel</option>
+                                    <option [value]="5">Prior Authorization</option>
+                                </select>
+                            </div>
+                            
+                        </div>
+                        <div class="col-sm-3" *ngIf="patientIn || caseIn">
+                            <div class="form-group field" [ngClass]="{'focused':status!='' && status!=null}">
+                                <label class="form-label" for="Status">Status</label>
+                                <select class="form-select" [value]='status' name="Status" (change)="status=$event.target.value" id="Status">
+                                    <option [value]="0">Pending</option>
+                                    <option [value]="1">Verified</option>
+                                    <option [value]="2">Error</option>
+                                    <option [value]="3">Incomplete</option>
+                                    <option [value]="4">Complete</option>
+                                    <option [value]="5">Denied</option>
+                                    <option [value]="6">Draft</option>
+                                    <option [value]="7">Cancelled</option>
+                                    <option [value]="8">Acknowledged</option>
+                                </select>
+                                <!-- <input type="text" id="Status" class="form-control form-input" value={{status}} (change)="status=$event.target.value"> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" [hidden]="!isOpenFilters">
+                        
+                        <div class="col-sm-3" *ngIf="!patientIn && !caseIn">
+                            <div class="form-group field" [ngClass]="{'focused':status!='' && status!=null}">
+                                <label class="form-label" for="Status">Status</label>
+                                <select class="form-select form-input filled" [value]='status' name="Status" (change)="status=$event.target.value" id="Status">
+                                    <option [value]="0">Pending</option>
+                                    <option [value]="1">Verified</option>
+                                    <option [value]="2">Error</option>
+                                    <option [value]="3">Incomplete</option>
+                                    <option [value]="4">Complete</option>
+                                    <option [value]="5">Denied</option>
+                                    <option [value]="6">Draft</option>
+                                    <option [value]="7">Cancelled</option>
+                                    <option [value]="8">Acknowledged</option>
+                                </select>
+                                <!-- <input type="text" id="Status" class="form-control form-input" value={{status}} (change)="status=$event.target.value"> -->
+                            </div>
+                        </div>
+                        
+                        <!-- <div class="col-sm-3" *ngIf="!patientIn && !caseIn">
+                        <div class="form-group field">
+                            <label class="form-label">Visit Date</label>
+                            <input class="form-input form-control" type="date" [(ngModel)]="visitDate"
+                                [ngModelOptions]="{standalone: true}" value={{visitDate}}
+                                (change)="visitDate=$event.target.value" />
+                        </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="plus-btn-width">
+                    <button [hidden]="isOpenFilters" class="btn plus-btn float-right mt-0 btn-primary" (click)="isOpenFilters=!isOpenFilters">
+                        <span class="icon-plus"></span>
+                    </button>
+                    <button [hidden]="!isOpenFilters" class="btn plus-btn float-right mt-0 btn-success" (click)="isOpenFilters=!isOpenFilters">
+                        <span class="icon-minus"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="row" [hidden]="!isOpenFilters">
+                <div class="col-md-12 text-center search-filter-btn">
+                    <button class="btn btn-success mt-0 me-3" type="submit" (click)="offset=1;taskList()"> Filter </button>
+                    <button class="btn btn-primary mt-0" type="button" [disabled]="checkResetDisability()" (click)="offset=1;resetFilters()"> Reset</button>
+                </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="card data-table p-0 mt-2 mb-0 data-table-btn position-relative border-0">
+        <div class="row">
+            <div class="col-md-6 edit-block">
+                <div class="form-group field option-field mb-2 d-inline-block">
+                    <ul class="text-capitalize">
+                        <li>Show</li>
+                        <li>
+                            <select class="custom-select" [value]='limit' name="limit" (change)="limitChange($event.target.value)" id="limit">
+                                <option [value]="10">10</option>
+                                <option [value]="20">20</option>
+                                <option [value]="30">30</option>
+                                <option [value]="40">40</option>
+                                <option [value]="50">50</option>
+                                <option [value]="100">100</option>
+                            </select>
+                        </li>
+                        <li>entries</li>
+                    </ul>
+                </div>
+            </div>
+          <div class="col-md-6 text-end mt-2 mb-2">
+            <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+				Customize Columns
+			</button>
+          </div>
+        </div>
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+            <ngx-datatable class="bootstrap scroll-hide" #taskList [rows]="taskListData.data" [count]="taskListData.total_count"
+            [columnMode]="'force'" [rowHeight]="'auto'"
+            [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50" [externalPaging]="true"
+            [offset]="taskListData.offset-1" [limit]="taskListData.limit" (page)="onPageChange($event)">
+
+                <ngx-datatable-column name="Date" prop="task.date" [width]="150" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" >{{value| date: 'MM-dd-yyyy'}}</span> 
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Case ID" prop="task.case_id"  [width]="50" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">{{value}}</span> 
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Patient Details" prop="patient" [width]="200" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.first_name}}&nbsp;{{value.middle_name}}&nbsp;{{value.last_name}}">
+                            {{value.first_name}} {{value.middle_name}} {{value.last_name}} <br>
+                        </span>
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{(value?.dob ? value?.dob : 'N/A')| calculateAge}}&nbsp;/&nbsp;{{value.gender
+                        }}&nbsp;/&nbsp;DOB&nbsp;:&nbsp;{{value.dob | date: 'MM-dd-yyyy'}}">
+                        {{(value?.dob ? value?.dob : 'N/A') | calculateAge}}  /    
+                        {{value.gender}} / DOB : {{value.dob | date: 'MM-dd-yyyy'}}
+                        </span>
+                        
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Type" prop="task.type" [width]="50" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">{{value}}</span> 
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column  name="Medicine Description" prop="medication" [width]="150" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div  class="column-scroll" *ngIf="value.length>0">
+                            <div *ngFor="let item of value" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{item.drug_name}} - {{item.sig}} {{item.rxfill_note && item.rxfill_status!=''?'('+item.rxfill_status+')':''}}">
+                                {{item.drug_name}} - {{item.sig}} {{item.rxfill_note && item.rxfill_status!=''?'('+item.rxfill_status+')':''}} <br>
+                            </div>
+                        </div> 
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Order No." prop="task.order_id" [width]="50" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">{{value}}</span> 
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="User Activity"  [width]="75" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span [style.color]="row?.task?.action == 'Denied' ? 'red' : ''" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.task?.action}}">{{row?.task?.action}}
+                        </span> 
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Status"  [width]="75" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <span [style.color]="row?.task?.status == 'Denied' ? 'red' : ''" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.task?.status == 'Error' ? row?.error?.error_message : row?.task?.status}}">{{row?.task?.status}}
+                        </span> 
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column name="Created By" prop="createdBy" [width]="100" [canAutoResize]="true" [draggable]="false"
+						[resizeable]="false">
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.firstName| titlecase}} {{value.middleName| titlecase}} {{value.lastName| titlecase}}"
+								container="body">
+								<span *ngIf="!value.firstName && !value.middleName && !value.lastName">
+									N/A
+								</span>
+								<span *ngIf="value.firstName">
+									{{value.firstName| titlecase}}
+								</span>
+								<span *ngIf="value.middleName">
+									{{value.middleName| titlecase}}
+								</span>
+								<span *ngIf="value.lastName">
+									{{value.lastName| titlecase}}
+								</span>
+							</div>
+						</ng-template>
+				</ngx-datatable-column>	
+                
+                <ngx-datatable-column cellClass="action-icon" [canAutoResize]="true" name="Actions" prop="task" [width]="100" [canAutoResize]="true" [draggable]="false">
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button [ngClass]="{'eye-hov': value.status!='Draft'}" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="View"  role="button" (click)="viewTaskDetails(value.status,value.id,value)">
+                                    <i class="fa fa-eye" ></i>
+                                </button>
+                                <button [ngClass]="{'eye-hov': value?.status!='Draft'}" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="View File" [disabled]="!value?.link" role="button" (click)="openPdf(value?.link)">
+                                    <i class="fa fa-file-pdf ms-2" ></i>
+                                </button>
+                                <!-- <button [ngClass]="{'edit-hov': value.status=='Draft'}" class=" mx-1" tooltip="Edit" role="button" [disabled]="(value.status!='Draft' && value.status != 'Incomplete') || value.type_id==5 || value.type_id==4" (click)="viewTaskDetails(value.status,value.id,value)">
+                                    <i class="icon-pencil" [ngStyle]="{cursor: (value.status=='Draft) ? 'pointer' : 'no-drop','color': (value.status=='Draft') ? '#000000' : '#afafaf'}"></i>
+                                </button> -->
+                                
+                                <button [ngClass]="{'remove-hov': checkRemoveDisabiltyColor(value)}" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="Delete"  role="button" (click)="taskDelete(value.id)" [disabled]="checkRemoveDisabilty(value)">
+                                    <i class="icon-remove ms-2" [ngStyle]="{cursor: checkRemoveDisabiltyColor(value) ? 'pointer' : 'no-drop','color': checkRemoveDisabiltyColor(value) ? '#000000' : '#afafaf'}"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+    
+      
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-view-summary *ngIf="viewSummaryCheck"
+ (viewSummaryFun)="viewSummaryFun($event)"></app-view-summary>

@@ -1,0 +1,40 @@
+<!-- modal start -->
+<div class="modal-header">
+    <h4 class="modal-title">Cancel Appointment</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+
+<div class="modal-body assignment-modal">
+    <form [formGroup]="myForm">
+        <div class="row">
+            <div class="col-md-12"  >
+                <label class="title">Select Reason</label>
+            </div>
+        </div>
+        <div class="row radiooptions radio-button-sch" >
+			
+		<div  class="col-12" >
+			<select class="form-select" formControlName="defaultComments" (change)="getSelectionchage($event)">
+				<option *ngFor="let com of defaultComments; let i=index" value={{com.name}}>{{com.name}}
+				</option>
+			</select>
+		</div>
+		<div *ngIf="isSelectedOtherReason" class="col-12">
+			<textarea type="textarea" placeholder="Enter Reason" class=" form-control  mb-0 mt-2" formControlName="otherComments" ></textarea>
+			<span *ngIf="myForm.get('otherComments').errors?.required  && (myForm.get('otherComments').dirty || myForm.get('otherComments').touched)" style="color: red;font-size: 12px;">
+				*Reason is required
+			</span>
+		</div>
+        </div>
+    
+        <div class="row d-flex justify-content-center mt-3">
+            <div class="col-md-5">
+                <button class="btn btn-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+            </div>
+            <div class="col-md-5">
+                <button class="btn btn-success w-100" type="submit" [disabled]='myForm.invalid ' (click)="addReason()">Add</button>
+            </div>
+
+        </div>
+    </form>
+</div>

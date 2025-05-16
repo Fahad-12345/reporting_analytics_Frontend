@@ -1,0 +1,605 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="front-desk-block billing-info"
+  *ngIf="aclService.hasPermission(userPermissions.master_billing_employer_view)">
+
+	<div class="d-block text-end">
+		<a *ngIf="aclService.hasPermission(userPermissions.master_billing_employer_add)" href="javascript:void(0)"
+		(click)="openModal(employerFormModal)" class="btn btn-default round-btn">
+			<span class="icon-plus-circle"></span> Add New 
+		</a>
+	</div>
+
+	<form class="form" autocomplete="off" [formGroup]="searchForm" *ngIf="aclService.hasPermission(userPermissions.master_billing_employer_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+                    <label class="form-label" for="FirmName">Employer Name</label>
+                    <input type="text" id="FirmName" class="form-control form-input" formControlName="name">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('street_address').value != '' && searchForm.get('street_address').value != null }">
+                    <label class="form-label" for="street_address">Street Address</label>
+                    <input type="text" id="street_address" class="form-control form-input" formControlName="street_address">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('city').value != '' && searchForm.get('city').value != null }">
+                    <label class="form-label" for="city">City</label>
+                    <input type="text" id="city" class="form-control form-input" formControlName="city">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('state').value != '' && searchForm.get('state').value != null }">
+                    <label class="form-label" for="state">State</label>
+                    <input type="text" id="state" class="form-control form-input" formControlName="state">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('zip').value != '' && searchForm.get('zip').value != null }">
+                    <label class="form-label" for="zip">Zip</label>
+                    <input type="text" id="zip" class="form-control form-input" formControlName="zip">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('phone_no').value != '' && searchForm.get('phone_no').value != null }">
+                    <label class="form-label" for="phone_no">Phone No</label>
+                    <input type="text" id="phone_no" class="form-control form-input" formControlName="phone_no" mask='000-000-0000' [dropSpecialCharacters]="true">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('ext').value != '' && searchForm.get('ext').value != null }">
+                    <label class="form-label" for="ext">Extension</label>
+                    <input type="text" id="ext" class="form-control form-input" formControlName="ext" maxlength="10">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('email').value != '' && searchForm.get('email').value != null }">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="text" id="email" class="form-control form-input" formControlName="email">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('fax').value != '' && searchForm.get('fax').value != null }">
+                    <label class="form-label" for="fax">Fax</label>
+                    <input type="text" id="fax" mask='000-000-0000' [dropSpecialCharacters]="true" class="form-control form-input" formControlName="fax">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('contact_person_name').value != '' && searchForm.get('contact_person_name').value != null }">
+                    <label class="form-label" for="contact_person_name">Contact Person Name</label>
+                    <input type="text" id="contact_person_name" class="form-control form-input" formControlName="contact_person_name">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('apartment_suite').value != '' && searchForm.get('apartment_suite').value != null }">
+                    <label class="form-label" for="apartment_suite">Suite No</label>
+                    <input type="text" id="apartment_suite" class="form-control form-input" formControlName="apartment_suite">
+                </div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success" (click)="setPage({ offset: 0 });">Filter</button>
+				<button class="btn btn-primary" (click)="resetFilter()" [disabled]="checkInputs()">Reset</button>
+			</div>
+		</div>
+   </form>
+
+
+  <!-- <div class="search-filter">
+    <div class="float-right">
+      <a *ngIf="aclService.hasPermission(userPermissions.master_billing_employer_add)" href="javascript:void(0)"
+        (click)="openModal(employerFormModal)" class="btn btn-default round-btn float-right">
+        <span class="icon-plus-circle"></span> Add New 
+      </a>
+    </div>
+
+    <form autocomplete="off" [formGroup]="searchForm"
+      *ngIf="aclService.hasPermission(userPermissions.master_billing_employer_filter)">
+      <div class="form">
+        <div class="search-filter-body" [class.pb-3]="!isCollapsed">
+          <div class="row px-2">
+            <div class="field-block">
+              <div class="row pb-1">
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <div class="form-group field mb-lg-0"
+                    [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+                    <label class="form-label" for="FirmName">Employer Name</label>
+                    <input type="text" id="FirmName" class="form-control form-input" formControlName="name">
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <div class="form-group field mb-lg-0"
+                    [ngClass]="{'focused': searchForm.get('street_address').value != '' && searchForm.get('street_address').value != null }">
+                    <label class="form-label" for="street_address">Street Address</label>
+                    <input type="text" id="street_address" class="form-control form-input"
+                      formControlName="street_address">
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <div class="form-group field mb-0"
+                    [ngClass]="{'focused': searchForm.get('city').value != '' && searchForm.get('city').value != null }">
+                    <label class="form-label" for="city">City</label>
+                    <input type="text" id="city" class="form-control form-input" formControlName="city">
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                  <div class="form-group field mb-0"
+                    [ngClass]="{'focused': searchForm.get('state').value != '' && searchForm.get('state').value != null }">
+                    <label class="form-label" for="state">State</label>
+                    <input type="text" id="state" class="form-control form-input" formControlName="state">
+                  </div>
+                </div>
+              </div>
+              <div class="row collapse-basic pt-3" id="collapseBasic" [collapse]="!isCollapsed" [isAnimated]="true">
+                <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('zip').value != '' && searchForm.get('zip').value != null }">
+                    <label class="form-label" for="zip">Zip</label>
+                    <input type="text" id="zip" class="form-control form-input" formControlName="zip" 
+                     >
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('phone_no').value != '' && searchForm.get('phone_no').value != null }">
+                    <label class="form-label" for="phone_no">Phone No</label>
+                    <input type="text" id="phone_no" class="form-control form-input" formControlName="phone_no"
+                      mask='000-000-0000' [dropSpecialCharacters]="true">
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('ext').value != '' && searchForm.get('ext').value != null }">
+                    <label class="form-label" for="ext">Extension</label>
+                    <input type="text" id="ext" class="form-control form-input" formControlName="ext"                 maxlength="10">
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('email').value != '' && searchForm.get('email').value != null }">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="text" id="email" class="form-control form-input" formControlName="email">
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('fax').value != '' && searchForm.get('fax').value != null }">
+                    <label class="form-label" for="fax">Fax</label>
+                    <input type="text" id="fax" mask='000-000-0000' [dropSpecialCharacters]="true"
+                      class="form-control form-input" formControlName="fax">
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('contact_person_name').value != '' && searchForm.get('contact_person_name').value != null }">
+                    <label class="form-label" for="contact_person_name">Contact Person Name</label>
+                    <input type="text" id="contact_person_name" class="form-control form-input"
+                      formControlName="contact_person_name">
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3 d-inline-block float-left">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchForm.get('apartment_suite').value != '' && searchForm.get('apartment_suite').value != null }">
+                    <label class="form-label" for="apartment_suite">Suite No</label>
+                    <input type="text" id="apartment_suite" class="form-control form-input"
+                      formControlName="apartment_suite">
+                  </div>
+                </div>
+                <div class="col-md-12 text-center search-filter-btn float-left mb-3">
+                  <button class="btn btn-success mt-0 me-3" (click)="setPage({ offset: 0 });">
+                    Filter </button>
+                  <button class="btn btn-primary mt-0" (click)="resetFilter()" [disabled]="checkInputs()"> Reset</button>
+                </div>
+              </div>
+            </div>
+            <div class="colps-btn-block">
+              <button class="btn plus-btn float-right mt-0" (click)="isCollapsed = !isCollapsed"
+                [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+                [class.btn-success]="isCollapsed" type="button"><span class="" [class.icon-plus]="!isCollapsed"
+                  [class.icon-minus]="isCollapsed"></span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div> -->
+  <div class="card data-table p-0 mt-2 ma-datatable-ui employer-datatable">
+    <div class="row">
+      <div class="col-12 col-sm-6 edit-block text-start">
+        <div class="form-group field option-field mb-2 d-inline-block">
+          <ul>
+            <li>Show</li>
+            <li>
+              <select class="custom-select" name="limit" id="limit" (change)="onResultPerPageChange($event)" [(ngModel)]="page.size">
+                <option [value]="10" selected>10</option>
+                <option [value]="20">20</option>
+                <option [value]="30">30</option>
+                <option [value]="40">40</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+              </select>
+            </li>
+            <li>Entries</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+				<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+					Customize Columns
+				</button>
+			</div>
+    </div>
+
+    <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" #employerList [rows]="employerData" [columnMode]='"force"'
+      [footerHeight]="50" [headerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [limit]="page.size" [count]="page.totalElements"
+      (page)="setPage($event)" [offset]="page.pageNumber" [virtualization]="false" [externalPaging]="true">
+
+		  
+	  <!-- <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="patientRows" [columnMode]="'force'"
+	  [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [externalPaging]="true"
+	  [virtualization]="false" [count]="totalRows" [offset]="pageNumber" [limit]="pageSize"
+	  (page)="nextPage($event)"> -->
+
+	  <!-- Comment By Hamza Ali said on 07/12/2020 -->
+	  <!-- <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Chart ID" prop="id" [width]="80">
+		<ng-template let-column="column" ngx-dattable-header-template>
+			Chart ID
+		</ng-template>
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<a class="underline-hov" [routerLink]="['/front-desk/patients/profile', row.id]"
+				*ngIf="aclService.hasPermission(userPermissions.patient_patient_list_profile)">{{ row.chart_id }}</a>
+		</ng-template>
+	</ngx-datatable-column> -->
+
+      <ngx-datatable-column name="Employer Name" [sortable]="false" [resizeable]="false" [draggable]="false" [canAutoResize]="true" prop="employer_name">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A'}}" container="body">
+            {{value ||'N/A'}}
+          </div>
+        </ng-template>
+	  </ngx-datatable-column>
+	
+      <ngx-datatable-column name="Street Address" [sortable]="false" [resizeable]="false" [width]="110" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-row="row">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.street_address ||'N/A'}}" container="body">
+            {{row.street_address ||'N/A'}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="City" [sortable]="false" prop="city" [width]="70" [resizeable]="false" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A'}}" container="body">
+            {{value ||'N/A'}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="State" [sortable]="false" [width]="70" prop="state" [resizeable]="false" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A'}}" container="body">
+            {{value ||'N/A'}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Zip" [sortable]="false" prop="zip" [width]="70" [resizeable]="false" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A'}}" container="body">
+            {{value ||'N/A'}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Phone No" [sortable]="false" prop="phone_no" [resizeable]="false" [width]="105" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A' |phoneFormatPipe}}" container="body">
+            {{value ||'N/A' |phoneFormatPipe}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Extension" [sortable]="false" prop="ext" [resizeable]="false" [draggable]="false" [width]="80" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A'}}" container="body">
+            {{value ||'N/A'}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Suite No" [sortable]="false" prop="apartment_suite"[width]="100" [resizeable]="false" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">
+            {{value || 'N/A'}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Email" [sortable]="false" prop="email" [width]="100" [resizeable]="false" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A'}}" container="body">
+            {{value ||'N/A'}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Fax" [sortable]="false" prop="fax" [width]="100" [resizeable]="false" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A' |phoneFormatPipe}}" container="body">
+            {{value ||'N/A' |phoneFormatPipe}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Contact Person Name" [sortable]="false" [resizeable]="false" [width]="154" [draggable]="false" [canAutoResize]="true" [width]="180">
+        <ng-template ngx-datatable-cell-template let-row="row">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{contactPersonNameShow(row)}}" container="body">
+            {{contactPersonNameShow(row)}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Actions" [sortable]="false" cellClass="action-icon" [resizeable]="false" [draggable]="false" [canAutoResize]="true">
+        <ng-template ngx-datatable-header-template>
+          <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_employer_edit)"
+            (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()" disabled>
+          </mat-checkbox> Actions
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+          <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_employer_edit)"
+            (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)" disabled>
+          </mat-checkbox>
+          <a *ngIf="aclService.hasPermission(userPermissions.master_billing_employer_edit)" class="edit-hov mx-1"
+            tooltip="Edit" (click)="openModal(employerFormModal, row)" href="javascript:void(0)" role="button"><i
+              class="icon-pencil"></i></a>
+          <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="employerHistoryStats(row)">
+            <i class="fa fa-history"></i>
+          </a>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<ng-template #employerFormModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{modelTitle}} Employers</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form [formGroup]="form" (ngSubmit)="onSubmitEmployer(form.value)">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('employer_name').value != '' && form.get('employer_name').value != null }">
+            <label class="form-label">Employer Name*</label>
+            <input type="text" class="form-control mb-0" formControlName="employer_name" notFirstCharactorSpace>
+            <small class="form-text text-muted danger" *ngIf="form.get('employer_name').errors?.required && 
+                              (form.get('employer_name').dirty || form.get('employer_name').touched)">
+							  This field is required
+							</small>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('street_address').value != '' && form.get('street_address').value != null }">
+            <label class="form-label">Street Address*</label>
+            <input ngx-google-places-autocomplete [options]="{
+              types: [],
+              componentRestrictions: { country: 'US' }
+              }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'form')"
+			  type="text" class="form-control mb-0" formControlName="street_address">
+			  <small class="form-text text-muted danger" *ngIf="form.get('street_address').errors?.required && 
+			  (form.get('street_address').dirty || form.get('street_address').touched)">
+			  This field is required  
+			</small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('apartment_suite').value != '' && form.get('apartment_suite').value != null }">
+            <label class="form-label">Apartment/Suite</label>
+            <input type="text" class="form-control mb-0" formControlName="apartment_suite">
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('city').value != '' && form.get('city').value != null }">
+            <label class="form-label">City*</label>
+            <input type="text" class="form-control mb-0" formControlName="city">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('state').value != '' && form.get('state').value != null }">
+            <label class="form-label">State*</label>
+            <ng-select formControlName="state" class="ng-value-label border-0 tooltip-outer"  ngbTooltip="{{selectedState}}" (change)="stateChange($event)" tooltipClass="table-custom-tooltip" [items]="allStates" container="body" bindLabel="name" bindValue="name">
+							<ng-template ng-option-tmp let-item="item">
+							  <span class="ng-value-label border-0 tooltip-outer"  tooltipClass="table-custom-tooltip" ngbTooltip="{{item.fullName}}" container="body">{{item.name}}</span>
+							</ng-template>
+						  </ng-select>          </div>
+        </div>
+        <div class="col-md-4">
+          <!-- <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('zip').value != '' && form.get('zip').value != null }">
+            <label class="form-label">Zip</label>
+            <input type="text" class="form-control mb-0" mask="00000" formControlName="zip">
+            <label class="form-text text-muted danger"
+              *ngIf="form.get('zip').value && form.get('zip').value.length > 0 && form.get('zip').value.length < 5 ">
+              Invalid Format: 00000
+			  zipFormatMessage
+            </label>
+          </div> -->
+		  <div class="form-group field mb-1"
+		  [ngClass]="{'focused': form.get('zip').value != '' && form.get('zip').value != null }">
+		  <label class="form-label">Zip*</label>
+		  <input type="text" class="form-control mb-0"  formControlName="zip">
+		  <label class="form-text text-muted danger"
+			*ngIf="form.get('zip').value && form.get('zip').value.length > 0 && form.get('zip').errors?.pattern ">
+			{{zipFormatMessage.format_usa}}
+			
+		  </label>
+		</div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('phone_no').value != '' && form.get('phone_no').value != null }">
+            <label class="form-label">Phone No*</label>
+            <input type="text" class="form-control mb-0" id="phone_no" formControlName="phone_no" mask='000-000-0000'
+              [dropSpecialCharacters]="true">
+            <label class="form-text text-muted danger"
+              *ngIf="form.get('phone_no').value && form.get('phone_no').value.length > 0 && form.get('phone_no').value.length < 10 &&form.get('phone_no').touched ">
+              Invalid Format: 000-000-0000
+            </label>
+			<label class="form-text text-muted danger"
+			*ngIf="form.get('phone_no').errors?.required && 
+			  (form.get('phone_no').dirty || form.get('phone_no').touched)">
+			  This field is required
+		  </label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('ext').value != '' && form.get('ext').value != null }">
+            <label class="form-label">Extension</label>
+            <input type="text" class="form-control mb-0" id="ext" formControlName="ext" appOnlyNumeric maxlength="10">
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('email').value != '' && form.get('email').value != null }">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control mb-0" id="email" formControlName="email">
+            <small class="form-text text-muted danger"
+              *ngIf="form.get('email').errors && (form.get('email').dirty && form.get('email').touched)">
+              Email is not valid</small>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': form.get('fax').value != '' && form.get('fax').value != null }">
+            <label class="form-label">Fax</label>
+            <input type="fax" class="form-control mb-0" id="fax" formControlName="fax" mask='000-000-0000'
+              [dropSpecialCharacters]="true">
+            <small class="form-text text-muted danger"
+              *ngIf="form.get('fax').errors && (form.get('fax').dirty && form.get('fax').touched)">
+              Invalid Format: 000-000-0000</small>
+          </div>
+        </div>
+      </div>
+      <ng-container [formGroup]="contactPersonForm">
+        <div class="row">
+          <div class="col-12">
+            <h6 class="color-green mb-0 mt-1">Contact Person Information</h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group field mb-1"
+              [ngClass]="{'focused': contactPersonForm.get('first_name').value != '' && contactPersonForm.get('first_name').value != null }">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control mb-0" formControlName="first_name">
+              <small class="form-text text-muted danger"
+                *ngIf="contactPersonForm.get('first_name').errors?.required && 
+                          (contactPersonForm.get('first_name').dirty || contactPersonForm.get('first_name').touched)">
+						  This field is required
+						</small>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group field mb-1"
+              [ngClass]="{'focused': contactPersonForm.get('middle_name').value != '' && contactPersonForm.get('middle_name').value != null }">
+              <label class="form-label">Middle Name</label>
+              <input type="text" class="form-control mb-0" formControlName="middle_name">
+              <small class="form-text text-muted danger"
+                *ngIf="contactPersonForm.get('middle_name').errors?.required && 
+                        (contactPersonForm.get('middle_name').dirty || contactPersonForm.get('middle_name').touched)">
+						This field is required</small>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group field mb-1"
+              [ngClass]="{'focused': contactPersonForm.get('last_name').value != '' && contactPersonForm.get('last_name').value != null }">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control mb-0" formControlName="last_name">
+              <small class="form-text text-muted danger" *ngIf="contactPersonForm.get('last_name').errors?.required && 
+                      (contactPersonForm.get('last_name').dirty || contactPersonForm.get('last_name').touched)">
+					  This field is required
+					</small>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group field mb-1"
+              [ngClass]="{'focused': contactPersonForm.get('phone_no').value != '' && contactPersonForm.get('phone_no').value != null }">
+              <label class="form-label">Phone No</label>
+              <input type="text" class="form-control mb-0" formControlName="phone_no" mask='000-000-0000'>
+              <label class="form-text text-muted danger"
+                *ngIf="contactPersonForm.get('phone_no').value && contactPersonForm.get('phone_no').value.length > 0 && contactPersonForm.get('phone_no').value.length < 10 && contactPersonForm.get('phone_no').touched">
+                Invalid Format: 000-000-0000
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group field mb-1"
+              [ngClass]="{'focused': contactPersonForm.get('extension').value != '' && contactPersonForm.get('extension').value != null }">
+              <label class="form-label">Extension</label>
+              <input type="text" class="form-control mb-0" appOnlyNumeric maxlength="10" formControlName="extension">
+              <label class="form-text text-muted danger"
+                *ngIf="contactPersonForm.get('extension').value && contactPersonForm.get('extension').value.length > 0 && contactPersonForm.get('extension').value.length < 1">Invalid
+                Extention
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group field mb-1"
+              [ngClass]="{'focused': contactPersonForm.get('email').value != '' && contactPersonForm.get('email').value != null }">
+              <label class="form-label">Email</label>
+              <input type="text" class="form-control mb-0" formControlName="email">
+              <small class="form-text text-muted danger"
+                *ngIf="contactPersonForm.get('email').errors && (contactPersonForm.get('email').dirty || contactPersonForm.get('email').touched)">
+                Email is not valid</small>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group field mb-1"
+              [ngClass]="{'focused': contactPersonForm.get('fax').value != '' && contactPersonForm.get('fax').value != null }">
+              <label class="form-label">Fax</label>
+              <input type="text" class="form-control mb-0" formControlName="fax" mask='000-000-0000'>
+
+              <label class="form-text text-muted danger"
+                *ngIf="contactPersonForm.get('fax').value && contactPersonForm.get('fax').value.length > 0 && contactPersonForm.get('fax').value.length < 10">
+                Invalid Format: 000-000-0000</label>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="row mt-3">
+        <div class="col-md-12 modal-btn-width text-center">
+          <button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+            (click)="closeModal()">Cancel</button>
+          <button type="submit" [disabled]="isDisabledSaveContinue()" class="btn btn-success">{{modelSubmit}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+
+<div class="modal-header">
+	<h5 class="modal-title">{{title}}</h5>
+	<button type="button" class="close" data-dismiss="modal" (click)="closeModal()" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body scroll-control">
+		<div *ngIf="adminVisit" class="row mt-2 pt-2 px-1">
+			<div class="col-12">
+				<h5 class="mt-0 ms-2 icd-edit-bills" >
+					<span class="badge bg-success text-white text-uppercase py-2">{{Visit_data.case_id}} {{Visit_data.p_first_name+' '+(Visit_data.p_middle_name?Visit_data.p_middle_name+' ':'') +Visit_data.p_last_name}}</span>
+					 <!-- <small >{{Visit_data.case_id}}</small> -->
+					 <span>|</span> 
+					 <span><strong>Specialty :</strong> <small
+						
+						class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{Visit_data?.speciality_name}}" container="body"
+						>{{Visit_data?.speciality_qualifier}}</small></span> 
+				</h5>
+			</div>
+
+			<!-- <div class="col-4 ">
+				<h5 class="mt-0 ms-2" >
+					<span class="md_new">Patient Name</span> :
+					Patient Name : <small>{{Visit_data.p_first_name+' '+(Visit_data.p_middle_name?Visit_data.p_middle_name+' ':'') +Visit_data.p_last_name}} </small>
+				</h5>
+			</div>
+
+			<div class="col-4 ">
+				<h5 class="mt-0 ms-2" >
+					<span class="md_new"> Speciality</span> :
+					Speciality : <small>{{Visit_data.speciality_name}}</small>
+				</h5>
+			</div> -->
+			
+		</div>
+		<hr *ngIf="adminVisit" class="line-bottom">
+	
+	<form autocomplete="off">
+		<div class="row mt-4 pt-2 px-1">
+			<div class="col-12 form-group">
+				<app-mat-autocomplete   (onkeyUp)="getICDcodes($event, 'search')" (onScrolled)="onScroll($event)" (onChangeEmitter)="removeICDcodeFromList($event)"
+					[selectedOptions]="selected_icd10_Codes" [placeHolder]="'ICD-10 Codes*'" [options]="lstICDcodes">
+				</app-mat-autocomplete>
+			</div>
+		</div>
+	</form>
+	<div class="row">
+		<div class="col-12">
+		<app-bulk-edit-icd10-codes-visit-listing (getVisitDataIcdEvent) = "getVisitDataIcdEvent($event)"[adminVisit]="adminVisit" [Visit_data]='Visit_data' (selected)="setSelectedVal($event)"></app-bulk-edit-icd10-codes-visit-listing>
+		</div>
+	</div>
+	<div class="d-flex justify-content-center mt-2 mb-1 modal-btn">
+		<button type="button" class="btn btn-primary me-3" (click)='modalRef.close()'>Cancel
+		</button>
+		<button [disabled]="disable_btn_on_submit || (this.selected_icd10_Codes.length=='0' || this.selectedVisits.length=='0') " type="button" class="btn btn-success text-white" (click)="submit()" >{{ButtonTitle}}</button>
+	</div>
+</div>
+

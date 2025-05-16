@@ -1,0 +1,14 @@
+footer {
+	p {
+		color: #7a7b7b;
+		@include px-to-rem(padding-bottom, 5px, false);
+		border: 20px solid $light-alabaster;
+		@include px-to-rem(font-size, 12px, false);
+		@include px-to-rem(margin-bottom, 0px, false);
+		border-top: none;
+		@media (max-width: 769px) {
+			border:none;
+			@include px-to-rem(padding-bottom, 10px, false);
+		}
+	}
+}

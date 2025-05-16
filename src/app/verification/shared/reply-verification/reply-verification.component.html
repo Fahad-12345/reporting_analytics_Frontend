@@ -1,0 +1,148 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+
+<div class="form-group field option-field mb-2 d-inline-block edit-block mb-3">
+  <ul>
+    <li>Show</li>
+    <li>
+      <select class="custom-select" name="limit" [(ngModel)]="limit" id="limit"
+        (change)="pageLimit($event.target.value)">
+        <option [value]="10">10</option>
+        <option [value]="20">20</option>
+        <option [value]="30">30</option>
+        <option [value]="40">40</option>
+        <option [value]="50">50</option>
+        <option [value]="100">100</option>
+      </select>
+    </li>
+    <li>Entries</li>
+  </ul>
+</div>
+<ngx-datatable class="bootstrap g-pom-listing scroll-hide" [rows]="verficationReplies" [columnMode]="'force'"
+[footerHeight]="50" [rowHeight]="'auto'"  [virtualization]="false" [scrollbarH]="true" [limit]="limit" >
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Bill ID" prop="bill_label" [minWidth]="90" [width]="90">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{row?.bill?.label_id}}" container="body">
+          {{row?.bill?.label_id}}
+        </div>
+      </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Case ID" prop="case_id" [minWidth]="80" [width]="80">
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+        ngbTooltip="{{row?.bill?.case_id || 'N/A'}}" container="body">
+        {{row?.bill?.case_id || 'N/A'}}
+      </div>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Case Type" prop="case_type_name" [minWidth]="75" [width]="80">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+    <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+      ngbTooltip="{{row?.bill?.case_type_name || 'N/A'}}" container="body">
+      {{row?.bill?.case_type_name || 'N/A'}}
+    </div>
+  </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Patient Name" prop="" [minWidth]="100" [width]="100">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+    ngbTooltip=" {{row?.bill?.patient_first_name}}
+    {{row?.bill?.patient_middle_name?row.patient_middle_name:''}}
+    {{row?.bill?.patient_last_name}}" container="body">
+    {{row?.bill?.patient_first_name}}
+    {{row?.bill?.patient_middle_name?row?.bill?.patient_middle_name:''}}
+    {{row?.bill?.patient_last_name}}
+  </div>
+  </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="DOS" prop="dos_from_date" [minWidth]="80" [width]="80">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+  ngbTooltip="{{row?.bill?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy() || 'N/A'}}-{{row?.bill?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy() || 'N/A'}}" container="body">
+  {{row?.bill?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy() || 'N/A'}}-{{row?.bill?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy() || 'N/A'}}
+  </div>
+  </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="Bill To" [minWidth]="80" [width]="90" [sortable]="false" [canAutoResize]="true" prop="bill_recipients" [draggable]="false" [resizeable]="false" [sortable]="false" cellClass="action-icon count-hold">
+    <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+      <div  *ngIf="row?.bill?.bill_recipients?.length>0" class="tooltip-outer" popoverClass="visit-bill-popover" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
+      {{getRecipatentName(row?.bill?.bill_recipients[0],row?.bill)}}<span *ngIf="row?.bill?.bill_recipients?.length>1">...</span>
+      </div>
+      <ng-template #popContent >
+        <table class="w-100 text-start">
+        <tbody>
+          <tr>
+            <td class="border-right"><span class="font-bold"> Recipient Type Name </span></td>
+            <td><span class="font-bold"> Recipient Name </span></td>
+          </tr>
+          <tr *ngFor="let item of row?.bill?.bill_recipients;let x = index">
+            <td *ngIf="item?.recipient" class="border-right"> {{item.recipient_type_name | titlecase}}</td>
+            <td *ngIf="item?.recipient"> {{getRecipatentName(item,row?.bill)}}</td>
+          </tr>
+        </tbody>
+        </table>
+      </ng-template>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Provider" prop="doctor_name" [minWidth]="80" [width]="90">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+  ngbTooltip="  {{row?.bill?.doctor_first_name}}
+  {{row?.bill?.doctor_middle_name?row?.bill?.doctor_middle_name:''}}
+  {{row?.bill?.doctor_last_name}}" container="body">
+  {{row?.bill?.doctor_first_name}}
+    {{row?.bill?.doctor_middle_name?row?.bill?.doctor_middle_name:''}}
+    {{row?.bill?.doctor_last_name}}
+  </div>
+  </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Verification Received Date" prop="verification_received_date" [minWidth]="105" [width]="105">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+  ngbTooltip="{{row?.recieve_date | date: commonService.slashDateFormat_MM_dd_yyyy() || 'N/A'}}" container="body">
+  {{row?.recieve_date | date: commonService.slashDateFormat_MM_dd_yyyy() || 'N/A'}}
+  </div>
+  </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Verification Received Description" prop="" [minWidth]="120" [width]="130">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+  ngbTooltip="{{row?.recieve_description || 'N/A'}}" container="body">
+  {{row?.recieve_description || 'N/A'}}
+  </div>
+  </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Verification Sent Date" prop="date" [minWidth]="105" [width]="115">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+  ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy() || 'N/A'}}" container="body">
+  {{value | date: commonService.slashDateFormat_MM_dd_yyyy() || 'N/A'}}
+  </div>
+  </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Verification Sent Description" prop="description" [minWidth]="120" [width]="130">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+    <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+      ngbTooltip="{{value || 'N/A'}}" container="body">
+      {{value || 'N/A'}}
+    </div>
+  </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="Actions" sortable="false" prop="" cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [minWidth]="70" [width]="80">
+    <ng-template let-column="column" ngx-datatable-header-template>
+     <mat-checkbox (click)="checkAll()" [checked]="selectAll"></mat-checkbox>
+      Actions
+    </ng-template>
+    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+      <mat-checkbox name="{{row.id}}" [checked]="row?.selected"
+      (click)="checkSelection(row)"></mat-checkbox>
+  <span class="fake-input"></span>
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>
+
+<div class="mt-3 text-center">
+  <button class="btn btn-success" [disabled]="isDisableButton"  (click)="generatePOM()">Generate</button>
+</div>
+

@@ -1,0 +1,250 @@
+<perfect-scrollbar style="max-height: 100%;">
+
+  <div class="col-12">
+          <div class="row">
+              <div class="col">
+                  <div class="card">
+                      <div class="card-header text-center custom-tooltip-hov">
+                          <h1 class="card-title text-white m-0">{{title}}
+                            <a class="success p-0 float-right text-white" tooltip="Edit" (click)="form.enable()">
+                                <i class="icon-pencil me-2"></i>
+                            </a>
+                          </h1>
+                      </div>
+                      <div class="card-body">
+                          <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                              <div class="form" action="#">
+                                <div class="row mt-3 fields-holder">
+                                  <div class="col-xl-3 col-lg-12">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('year').value != '' && form.get('year').value != null }">
+                                          <label for="year" class="form-label">Year </label>
+                                          <input type="text" id="year" class="form-control form-input"  formControlName="year" (keypress)="numberOnly($event)">
+                                          <!-- <small class="form-text text-muted danger" *ngIf="form.get('year').errors?.required && (form.get('year').dirty || form.get('first_name').touched)">Please enter first name!</small> -->
+                                          <small class="form-text text-muted danger" *ngIf="(form.get('year').errors?.maxlength) && form.get('year').dirty">Maximum characters should be 4!</small>
+                                      </div>
+                                  </div>
+                                  <div class="col-xl-3 col-lg-12">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('make').value != '' && form.get('make').value != null }">
+                                          <label for="make" class="form-label">Make</label>
+                                          <input type="text" id="make" class="form-control form-input" formControlName="make">
+                                          <small class="form-text text-muted danger" *ngIf="(form.get('make').errors?.maxlength) && form.get('make').dirty">Maximum characters should be 20!</small>
+                                      </div>
+                                  </div>
+                                  <div class="col-xl-3 col-lg-12">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('model').value != ''}">
+                                          <label for="model" class="form-label" >Model</label>
+                                          <input type="text" id="model" class="form-control form-input" formControlName="model">
+                                          <!-- <small class="form-text text-muted danger" *ngIf="form.get('last_name').errors?.required && (form.get('last_name').dirty || form.get('last_name').touched)">Please enter last name!</small> -->
+                                          <small class="form-text text-muted danger" *ngIf="(form.get('model').errors?.maxlength) && form.get('model').dirty">Maximum characters should be 20!</small>    
+                                      </div>
+                                  </div>
+                                  <div class="col-xl-3 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('color').value != ''}">
+                                        <label for="color" class="form-label" >Color</label>
+                                        <!-- <input type="text" id="color" class="form-control form-input" formControlName="color"> -->
+                                        <select class="custom-select" formControlName="color">
+                                          <option value=""></option>
+                                          <option *ngFor="let color of colors">{{ color }}</option>
+                                        </select>
+                                        <!-- <small class="form-text text-muted danger" *ngIf="form.get('color').errors?.required && (form.get('color').dirty || form.get('color').touched)">Please enter last name!</small> -->
+                                        <!-- <small class="form-text text-muted danger" *ngIf="(form.get('color').errors?.maxlength) && form.get('color').dirty">Maximum characters should be 20!</small>     -->
+                                    </div>
+                                  </div>
+                              </div>
+                              <div class="row fields-holder">
+                                    <div class="col-xl-6 col-lg-12">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('licensePlateNo').value != ''}">
+                                          <label for="licensePlateNo" class="form-label">License Plate #</label>
+                                          <input type="text" id="licensePlateNo" class="form-control form-input" formControlName="licensePlateNo">
+                                          <!-- <small class="form-text text-muted danger" *ngIf="form.get('dob').errors?.required && (form.get('dob').dirty || form.get('dob').touched)">Please enter Date Of Birth!</small> -->
+                                         <small class="form-text text-muted danger" *ngIf="(form.get('licensePlateNo').errors?.maxlength) && form.get('licensePlateNo').dirty">Maximum characters should be 7!</small>    
+
+                                      </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12">
+                    <div class="form-group field" [ngClass]="{'focused': form.get('licensePlateNo').value != '' && form.get('licensePlateNo').value != null  }">
+                        <label for="licensePlateNo" class="form-label">State</label>
+                        <input type="text" id="licensePlateNo" class="form-control form-input" formControlName="licensePlateNo">
+                        
+                        <small class="form-text text-muted danger" *ngIf="(form.get('licensePlateNo').errors?.maxlength) && form.get('licensePlateNo').dirty">Maximum characters should be 7!</small>    
+
+                    </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-12">
+                    <div class="form-group field" [ngClass]="{'focused': form.get('licensePlateNo').value != '' && form.get('licensePlateNo').value != null  }">
+                        <label for="licensePlateNo" class="form-label">Insured by</label>
+                        <input type="text" id="licensePlateNo" class="form-control form-input" formControlName="licensePlateNo">
+                        
+                        <small class="form-text text-muted danger" *ngIf="(form.get('licensePlateNo').errors?.maxlength) && form.get('licensePlateNo').dirty">Maximum characters should be 7!</small>    
+
+                    </div>
+                    </div>
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('policyNumber').value != ''}">
+                                          <label for="email1" class="form-label">Policy Number</label>
+                                          <input type="text" id="policyNumber" class="form-control form-input" formControlName="policyNumber">
+                                          <small class="form-text text-muted danger" *ngIf="(form.get('policyNumber').errors?.maxlength) && form.get('policyNumber').dirty">Maximum characters should be 25!</small>    
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('vehicleNo').value != ''}">
+                                            <label for="vehicleNo" class="form-label">Vehicle No.</label>
+                                            <select class="custom-select" formControlName="vehicleNo">
+                                                <option value=""></option>
+                                                <option *ngFor="let vehicle of vehicles" [value]="vehicle"> {{ vehicle }}</option>
+                                            </select>
+                                        </div>
+                                    </div> -->
+                                </div>
+
+                                <div class="row fields-holder">
+                                  <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('driverFirstName').value != ''}">
+                                        <label for="driverFirstName" class="form-label">Driver First Name</label>
+                                        <input type="text" id="driverFirstName" class="form-control form-input" formControlName="driverFirstName">
+                                        <!-- <small class="form-text text-muted danger" *ngIf="form.get('dob').errors?.required && (form.get('dob').dirty || form.get('dob').touched)">Please enter Date Of Birth!</small> -->
+                                       <small class="form-text text-muted danger" *ngIf="(form.get('driverFirstName').errors?.maxlength) && form.get('driverFirstName').dirty">Maximum characters should be 20!</small>    
+                                    </div>
+                                  </div>
+                                  <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('driverMiddleName').value != ''}">
+                                        <label for="driverMiddleName" class="form-label">Driver Middle Name</label>
+                                        <input type="text" id="driverMiddleName" class="form-control form-input" formControlName="driverMiddleName">
+                                        <!-- <small class="form-text text-muted danger" *ngIf="form.get('dob').errors?.required && (form.get('dob').dirty || form.get('dob').touched)">Please enter Date Of Birth!</small> -->
+                                       <small class="form-text text-muted danger" *ngIf="(form.get('driverMiddleName').errors?.maxlength) && form.get('driverMiddleName').dirty">Maximum characters should be 20!</small>    
+                                    </div>
+                                  </div>
+                                  <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('driverLastName').value != ''}">
+                                        <label for="driverLastName" class="form-label">Driver Last Name</label>
+                                        <input type="text" id="driverLastName" class="form-control form-input" formControlName="driverLastName">
+                                        <!-- <small class="form-text text-muted danger" *ngIf="form.get('dob').errors?.required && (form.get('dob').dirty || form.get('dob').touched)">Please enter Date Of Birth!</small> -->
+                                       <small class="form-text text-muted danger" *ngIf="(form.get('driverLastName').errors?.maxlength) && form.get('driverLastName').dirty">Maximum characters should be 20!</small>    
+                                    </div>
+                                  </div>
+                                </div>
+
+                                
+                                <div class="row fields-holder">
+                                    <div class="col-xl-3 col-lg-6">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('driverAddress').value != ''}">
+                                            <label for="address" class="form-label">Driver Address</label>
+                                            <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+                                            <input ngx-google-places-autocomplete [options]="{
+                                                types: [],
+                                                componentRestrictions: { country: 'US' }
+                                                }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'driver')" class="form-control form-input" formControlName="driverAddress"  />
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('driverCity').value != ''}">
+                                            <label for="driverCity" class="form-label">City</label>
+                                            <input type="text" id="driverCity" class="form-control form-input" formControlName="driverCity" [readonly]="form.get('driverAddress').value !=''">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('driverState').value != ''}">
+                                            <label for="driverState" class="form-label">State</label>
+                                            <input type="text" id="driverState" class="form-control form-input" formControlName="driverState"  [readonly]="form.get('driverAddress').value !=''">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('driverZip').value != ''}">
+                                            <label for="driverZip" class="form-label">Zip</label>
+                                            <input type="tel" id="driverZip" class="form-control form-input" formControlName="driverZip" mask="00000"  [readonly]="form.get('driverAddress').value !=''">
+                                            <small class="form-text text-muted danger" *ngIf="form.get('driverZip').errors?.minlength?.requiredLength==10">Maximum characters should be 5</small>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                
+                                <div class="row fields-holder">
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('ownerFirstName').value != ''}">
+                                          <label for="ownerFirstName" class="form-label">Owner First Name *</label>
+                                          <input type="text" id="ownerFirstName" class="form-control form-input" formControlName="ownerFirstName">
+                                          <!-- <small class="form-text text-muted danger" *ngIf="form.get('ownerFirstName').errors?.required && (form.get('ownerFirstName').dirty || form.get('ownerFirstName').touched)">Please enter First Name!</small> -->
+                                          <small class="form-text text-muted danger" *ngIf="(form.get('ownerFirstName').errors?.maxlength) && form.get('ownerFirstName').dirty">Maximum characters should be 20!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('ownerMiddleName').value != ''}">
+                                          <label for="ownerMiddleName" class="form-label">Owner Middle Name </label>
+                                          <input type="text" id="ownerMiddleName" class="form-control form-input" formControlName="ownerMiddleName">
+                                          <small class="form-text text-muted danger" *ngIf="(form.get('ownerMiddleName').errors?.maxlength) && form.get('ownerMiddleName').dirty">Maximum characters should be 20!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('ownerLastName').value != ''}">
+                                          <label for="ownerLastName" class="form-label">Owner Last Name *</label>
+                                          <input type="text" id="ownerLastName" class="form-control form-input" formControlName="ownerLastName">
+                                          <small class="form-text text-muted danger" *ngIf="form.get('ownerLastName').errors?.required && (form.get('ownerLastName').dirty || form.get('ownerLastName').touched)">This field is required
+										</small>
+                                          <small class="form-text text-muted danger" *ngIf="(form.get('ownerLastName').errors?.maxlength) && form.get('ownerLastName').dirty">Maximum characters should be 20!</small>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fields-holder">
+                                  <div class="col-xl-3 col-lg-6">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('ownerAddress').value != ''}">
+                                          <label for="address" class="form-label">Owner Address</label>
+                                          <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+                                          <input ngx-google-places-autocomplete [options]="{
+                                              types: [],
+                                              componentRestrictions: { country: 'US' }
+                                              }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'owner')" class="form-control form-input" formControlName="ownerAddress"  />
+                                      </div>
+                                  </div>
+                                  <div class="col-xl-3 col-lg-12">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('ownerCity').value != ''}">
+                                          <label for="ownerCity" class="form-label">City</label>
+                                          <input type="text" id="ownerCity" class="form-control form-input" formControlName="ownerCity" [readonly]="form.get('ownerAddress').value !=''">
+                                      </div>
+                                  </div>
+                                  <div class="col-xl-3 col-lg-12">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('ownerState').value != ''}">
+                                          <label for="ownerState" class="form-label">State</label>
+                                          <input type="text" id="ownerState" class="form-control form-input" formControlName="ownerState"  [readonly]="form.get('ownerAddress').value !=''">
+                                      </div>
+                                  </div>
+                                  <div class="col-xl-3 col-lg-12">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('ownerZip').value != ''}">
+                                          <label for="ownerZip" class="form-label">Zip</label>
+                                          <input type="tel" id="ownerZip" class="form-control form-input" formControlName="ownerZip" mask="00000"  [readonly]="form.get('ownerAddress').value !=''">
+                                          <small class="form-text text-muted danger" *ngIf="form.get('ownerZip').errors?.minlength?.requiredLength==10">Maximum characters should be 5</small>
+                                      </div>
+                                  </div>
+                                </div>
+
+                                <div class="row fields-holder">
+                                  <div class="col-xl-6">
+                                      <div class="form-group field" [ngClass]="{'focused': form.get('effectiveDate').value != ''}">
+                                        <label for="effectiveDate" class="form-label">Effective Date</label>
+                                        <input type="date" class="form-control form-input" formControlName="effectiveDate">
+                                      </div>
+                                  </div>
+                                  <div class="col-xl-6">
+                                      <div class="form-group field " [ngClass]="{'focused': form.get('expirationDate').value != ''}">
+                                        <label for="expirationDate" class="form-label">Expiration Date</label>
+                                        <input type="date" class="form-control form-input" formControlName="expirationDate">
+                                      </div>
+                                  </div>
+                                </div>
+
+                                <div class="row" style="margin-top:20px" *ngIf="!form.disabled">
+                                  <div class="col-12">
+                                      <!-- <button type="button" class="btn btn-default d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" (click)="goBack()">Back</button> -->
+                                      <button type="submit" class="btn btn-primary d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" [disabled]="disableBtn">{{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+                                  </div>
+                                </div>
+                            </div>    
+                          </form>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </perfect-scrollbar>

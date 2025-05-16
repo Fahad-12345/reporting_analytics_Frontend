@@ -1,0 +1,84 @@
+<div (mousedown)="$event.stopPropagation()" (touchstart)="$event.stopPropagation()" class="angular-editor" #angularEditor [style.width]="config.width" [style.minWidth]="config.minWidth">
+    <angular-editor-toolbar *ngIf="config.toolbarPosition === 'top'" #editorToolbar [id]="id" [uploadUrl]="config.uploadUrl" [showToolbar]="config.showToolbar !== undefined ? config.showToolbar : true" [customClasses]="config.customClasses" (multiPdfSelectIntance)="multiPdfSelectIntance.emit($event)"
+        [(bold)]="bold" [defaultFontName]="config.defaultFontName" [defaultFontSize]="config.defaultFontSize" (executeSelection)="executeSelection($event)" [(multiplePreviews)]="multiplePreviews" (execute)="executeCommand($event)"></angular-editor-toolbar>
+    <div class="editor-wrapper">
+        <!-- <div class="editor-dropdown-option uicomponent-list" *ngIf="obj && obj?.type">
+            <div >
+                <button class="btn" (click)="uiComponentsDropdown()">
+                    <a title=" Click to view mapped values" (click)="uiAction.toggle()"
+                     [autoClose]="'outside'" triggers="manual" [ngbPopover]="uicomponentsPopover" placement="left"
+                     data-container="body" popoverClass="my-custom-arrow"
+                    #uiAction="ngbPopover"><span class="fas fa-chevron-left"></span> @</a>
+                    <ng-template #uicomponentsPopover>
+                       
+                            <ng-autocomplete
+                            class="ng-auto"
+                            [data]="editableComponent"
+                            [searchKeyword]="keyword"
+                            (selected)="addComponent($event)"
+                            [itemTemplate]="itemTemplate"
+                            placeholder="Enter Name"
+                            [notFoundTemplate]="notFoundTemplate">
+                            </ng-autocomplete>
+                        
+                            <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item"></a>
+                            </ng-template>
+                        
+                            <ng-template #notFoundTemplate let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                       
+                    </ng-template>
+                    </button>
+            </div>
+        </div>
+        <div class="editor-dropdown-option editor-dropdown-option2 uicomponent-list " *ngIf="obj && obj?.type">
+            <div >
+                <button class="btn" (click)="mappingKeywordsDropdown()">
+                    <a title=" Click to view UI Components" (click)="keyAction.toggle()"
+                    [autoClose]="'outside'" triggers="manual" [ngbPopover]="keywordsPopover" popoverClass="my-custom-arrow"
+                    placement="left" data-container="body" #keyAction="ngbPopover" ><span class="fas fa-chevron-left"></span> #</a>
+					
+
+	
+  
+					<ng-template #keywordsPopover>
+                      
+
+                            <ng-autocomplete
+                            class="ng-auto"
+                            [data]="editableMappingComponent"
+                            [searchKeyword]="keyword"
+                            placeholder="Enter Name"
+                            (selected)="addMappingComponent($event)"
+                            [itemTemplate]="itemTemplate"
+                            [notFoundTemplate]="notFoundTemplate">
+                            
+                            </ng-autocomplete>
+                        
+                            <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item"></a>
+                            </ng-template>
+                        
+                            <ng-template #notFoundTemplate let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                        
+                    </ng-template>
+
+                    </button>
+            </div>
+        </div> -->
+        <div class="angular-editor-wrapper" #editorWrapper [hidden]="id=='combinePro'">
+            <div #editor class="angular-editor-textarea" [attr.contenteditable]="disabled ? false :config.editable" [attr.tabindex]="disabled ? -1 : tabIndex" [attr.translate]="config.translate" [attr.spellcheck]="config.spellcheck" [style.minHeight]="config.minHeight"
+                [style.maxHeight]="config.maxHeight" [style.outline]="config.outline === false ? 'none': undefined" (input)="onContentChange($event.target,$event)" (focus)="onTextAreaFocus($event)" (blur)="onTextAreaBlur($event)" (click)="exec()" (keyup)="exec()">
+            </div>
+            <span *ngIf="id!='Calculation' && (id!='fieldMaskInput'+obj?.uicomponent_name||obj?.fieldMaskProperty=='' || obj?.validationValue?.value)" class="angular-editor-placeholder">{{ disabled ? "" : placeholder || config['placeholder'] }}</span>
+            <span *ngIf="id=='Calculation'" class="angular-editor-placeholder">{{ disabled ? "" : placeholder || config['placeholder_calculation'] }}</span>
+            <span *ngIf="id=='fieldMaskInput'+obj?.uicomponent_name && obj?.fieldMaskProperty!='' && !obj?.validationValue?.value" class="angular-editor-placeholder">{{ disabled ? "" : obj.fieldMaskProperty }}</span>
+        </div>
+    </div>
+    <angular-editor-toolbar *ngIf="config.toolbarPosition === 'bottom'" #editorToolbar [(bold)]="bold" [id]="id" [uploadUrl]="config.uploadUrl" [showToolbar]="config.showToolbar !== undefined ? config.showToolbar : true" [customClasses]="config.customClasses"
+        (multiPdfSelectIntance)="multiPdfSelectIntance.emit($event)" [defaultFontName]="config.defaultFontName" [defaultFontSize]="config.defaultFontSize" (execute)="executeCommand($event)" (executeSelection)="executeSelection($event)" [(multiplePreviews)]="multiplePreviews"></angular-editor-toolbar>
+</div>

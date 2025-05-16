@@ -1,0 +1,13 @@
+@import './../../../../../../../assets/sass/components/new-search-filters';
+
+::ng-deep .table-custom-tooltip {
+    &.tooltip-left {
+        .tooltip-inner {
+            text-align: left !important;
+            white-space: pre-line ;
+          }
+    }
+    
+  }
+  
+  

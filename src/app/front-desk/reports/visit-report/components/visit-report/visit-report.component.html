@@ -1,0 +1,26 @@
+<div class="row user-info pt-2">
+	<div class="col-12">
+	  <h4 class="my-0 color-green mt-2">Visit Report</h4>
+	  <hr class="line-bottom mb-3">  
+	</div>
+</div>
+<div class="row pom-report">
+	<div class="col-12">
+		<div class="card text-center border-0">
+			<ul class="nav nav-tabs card-header-tabs m-0">
+				<li class="nav-item">
+					<a routerLinkActive="active" class="nav-link " routerLink="/visit-reports/visit-detail">Visit Detail Report</a>
+				  </li>
+				<li class="nav-item">
+				  <a routerLinkActive="active" class="nav-link " routerLink="/visit-reports/visit-summery">Visit Summary Report</a>
+				</li>
+				
+			  </ul>
+			<div class="card-body border-pumice border-top-0">
+			  <div class="tab-content">
+				<router-outlet></router-outlet>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>

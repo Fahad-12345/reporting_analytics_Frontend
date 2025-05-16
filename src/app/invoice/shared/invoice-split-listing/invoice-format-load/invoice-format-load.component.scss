@@ -1,0 +1,82 @@
+.format_box {
+  border: 1px solid #c4c4c4;
+  clear: both;
+  background: #fff;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.format_load_box {
+  height: 400px;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+  &:hover {
+    &::-webkit-scrollbar-thumb {
+      background-color: #1da5ce;
+    }
+  }
+}
+
+
+.invoice-format-modal {
+  .invoice-modal-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    .invoice-sec-left {
+      flex: 1;
+      @media screen and (max-width: 991.98px) {
+        width: 40%;
+      }
+    }
+    .invoice-sec-right {
+      margin-top: 0.5rem;
+      button {
+        background-color: #34c3ee;
+        border: 0;
+        border-radius: 0.25rem;
+        height: 29px;
+        & + button {
+          margin-left: 0.75rem;
+        }
+      }
+      .create-invoice-btn {
+        font-size: 14px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+      }
+      .filter-invoice-btn {
+        min-width: 85px;
+      }
+    }
+  }
+
+  .format_load_box {
+    height: 350px;
+    ::ng-deep .ngx-datatable {
+      .datatable-header {
+        .datatable-header-inner {
+          height: 100%;
+        }
+      }
+    }
+  }
+  .generate-link {
+    color: #34c3ee;
+    text-transform: capitalize;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+      color:#241f20;
+      text-decoration: underline;
+    }
+  }
+}

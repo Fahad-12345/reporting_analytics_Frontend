@@ -1,0 +1,11 @@
+.form{
+    .form-group{
+       ::ng-deep .mat-datepicker-toggle{
+            .mat-icon-button{
+                .mat-button-wrapper{
+                    margin-top: 2px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,335 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="front-desk-block billing-info">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="exampleModalLabel">{{title}} Location</h5>
+      <button type="button" (click)="cancel()" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body modal-pt-15">
+      <form [formGroup]="locationForm" class="search-label">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="custom-control custom-checkbox my-1 me-sm-2">
+              <input type="checkbox" class="custom-control-input" id="is_main_location" name="is_main_location"
+                formControlName="is_main_location" (click)="setPrimaryLocation($event)" type="checkbox">
+              <label class="custom-control-label" for="is_main_location"><span style="position: relative;
+                top: 2px;
+            ">Set as Primary Location</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group mb-1">
+              <label class="form-label">Location Name*</label>
+              <input class="form-control mb-0" formControlName="location_name" required type="text"
+                notFirstCharactorSpace>
+              <small class="form-text text-muted danger"
+                *ngIf="locationForm.get('location_name').errors?.required && (locationForm.get('location_name').dirty || locationForm.get('location_name').touched)">
+                This field is required</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1">
+              <label class="form-label">Location Code</label>
+              <input class="form-control mb-0" formControlName="location_code" type="text">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group field mb-1"
+              [ngClass]="{'focused': locationForm.get('phone_no').value != '' && locationForm.get('phone_no').value != null }">
+              <label class="form-label" for="phone">Phone No</label>
+              <input formControlName="phone_no" mask='000-000-0000' type="text" id="phone"
+                class="form-control form-input mb-0">
+              <label class="form-text text-muted danger"
+                *ngIf="locationForm.get('phone_no').value && locationForm.get('phone_no').value.length > 0 && locationForm.get('phone_no').value.length < 10 ">
+                Invalid Format: 000-000-0000
+              </label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group field  mb-1"
+              [ngClass]="{'focused': locationForm.get('ext').value != '' && locationForm.get('ext').value != null }">
+              <label class="form-label" for="Ext">Extension</label>
+              <input formControlName="ext" appOnlyNumeric maxlength="10" minlength="1" type="text" id="Ext"
+                class="form-control form-input  mb-0">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label">Street Address*</label>
+              <input class="form-control mb-0" ngx-google-places-autocomplete [options]="{
+                    types: [],
+                    componentRestrictions: { country: 'US' }
+                    }" #placesRef="ngx-places" placeholder=""
+                (onAddressChange)="handleAddressChange($event, 'location')" formControlName="street_address">
+                <small class="form-text text-muted danger"
+                *ngIf="locationForm.get('street_address').errors?.required && (locationForm.get('street_address').dirty || locationForm.get('street_address').touched)">
+                This field is required</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label">Suite / Floor</label>
+              <input class="form-control mb-0" formControlName="apartment_suite" type="text">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group field  mb-1"
+              [ngClass]="{'focused': locationForm.get('cell_number').value != '' && locationForm.get('cell_number').value != null }">
+              <label class="form-label" for="Cell">Cell No.</label>
+              <input formControlName="cell_number" mask='000-000-0000' type="text" id="Cell"
+                class="form-control form-input  mb-0">
+              <label class="form-text text-muted danger"
+                *ngIf="locationForm.get('cell_number').value && locationForm.get('cell_number').value.length > 0 && locationForm.get('cell_number').value.length < 10">
+                Invalid Format: 000-000-0000</label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group field  mb-1"
+              [ngClass]="{'focused': locationForm.get('email').value != '' && locationForm.get('email').value != null }">
+              <label class="form-label" for="email">Email</label>
+              <input formControlName="email" type="text" type="email" id="email" class="form-control form-input  mb-0">
+              <label class="form-text text-muted danger" *ngIf="locationForm.get('email').invalid">Invalid email address
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label">City*</label>
+              <input class="form-control mb-0" formControlName="city" type="text">
+              <small class="form-text text-muted danger"
+                *ngIf="locationForm.get('city').errors?.required && (locationForm.get('city').dirty || locationForm.get('city').touched)">
+                This field is required</small>
+            </div>
+          </div>
+          <div class="col-md-3" #states>
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'State*'"
+              [bindlable]="'name'" [searchLableName]="'name'" [bindQualifierLabel]="'code'" [bindId]="'id'" [className]="['two']"
+              [showSelectFieldOnRefresh]="locationForm.get('kiosk_state_id').value" [updateOnRunTimeValue]="ngSelectState.asObservable()" [disableField]="hideShowUpdateInsuranceButton"
+              [closeOnSelect]="true" [lists]="dynamicStates" [showSelectFieldList]="selectState" [forceApiHitonOpen]="isEditMode"
+              [qulifierShown]="true" [conditionalExtraApiParams]="{order:'asc'}" [apiPath]="EnumApiPath.CH_States_List"
+              (valueChange)="selectionOnValueChange($event,'state')" [multiple]="false"></app-ng-select-shareable>
+            <span class="text-muted danger absolute-error-0"
+              *ngIf="(locationForm.get('state').errors?.required && locationForm.get('state').value == '' || locationForm.get('state').value == null) && (locationForm.get('state').dirty || locationForm.get('state').touched)">This
+              field is
+              required</span>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1">
+              <label class="form-label">Zip*</label>
+              <input class="form-control mb-0" formControlName="zip" type="text">
+              <label class="form-text text-muted danger"
+                *ngIf="locationForm.get('zip').value && locationForm.get('zip').errors?.pattern ">
+                {{zipFormatMessage.format_usa}}
+              </label>
+              <small class="form-text text-muted danger"
+              *ngIf="locationForm.get('zip').errors?.required && (locationForm.get('zip').dirty || locationForm.get('zip').touched)">
+              This field is required</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group field  mb-1"
+              [ngClass]="{'focused': locationForm.get('fax').value != '' && locationForm.get('fax').value != null }">
+              <label class="form-label" for="fax">Fax</label>
+              <input formControlName="fax" mask='000-000-0000' type="text" id="fax"
+                class="form-control form-input  mb-0">
+              <label class="form-text text-muted danger"
+                *ngIf="locationForm.get('fax').value && locationForm.get('fax').value.length > 0 && locationForm.get('fax').value.length < 10">
+                Invalid Format: 000-000-0000</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <h6 class="color-green mb-0 mt-1">Contact Person Information</h6>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label"> First Name</label>
+              <input formControlName="contact_person_first_name" class="form-control mb-0" type="text">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label">Middle Name</label>
+              <input formControlName="contact_person_middle_name" class="form-control mb-0" type="text">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label">Last Name</label>
+              <input formControlName="contact_person_last_name" class="form-control mb-0" type="text">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1">
+              <label class="form-label">Cell No</label>
+              <input class="form-control mb-0" mask="000-000-0000" formControlName="contact_person_cell_number"
+                type="text">
+              <label class="form-text text-muted danger"
+                *ngIf="locationForm.get('contact_person_cell_number').value && locationForm.get('contact_person_cell_number').value.length > 0 && locationForm.get('contact_person_cell_number').value.length < 10">
+                Invalid Format: 000-000-0000</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label">Phone No</label>
+              <input class="form-control mb-0" mask="000-000-0000" formControlName="contact_person_phone_no"
+                type="text">
+              <label class="form-text text-muted danger"
+                *ngIf="locationForm.get('contact_person_phone_no').value && locationForm.get('contact_person_phone_no').value.length > 0 && locationForm.get('contact_person_phone_no').value.length < 10">
+                Invalid Format: 000-000-0000</label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label">Extension</label>
+              <input class="form-control mb-0" appOnlyNumeric maxlength="10" minlength="2"
+                formControlName="contact_person_ext" type="text">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1">
+              <label class="form-label">Email</label>
+              <input formControlName="contact_person_email" class="form-control mb-0" type="text">
+              <label class="form-text text-muted danger"
+                *ngIf="locationForm.get('contact_person_email').invalid">Invalid
+                email address
+              </label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group mb-1"><label class="form-label">Fax</label>
+              <input class="form-control mb-0" mask="000-000-0000" formControlName="contact_person_fax" type="text">
+              <label class="form-text text-muted danger"
+                *ngIf="locationForm.get('contact_person_fax').value && locationForm.get('contact_person_fax').value.length > 0 && locationForm.get('contact_person_fax').value.length < 10">
+                Invalid Format: 000-000-0000</label>
+            </div>
+          </div>
+        </div>
+        <div class="row" *ngIf="locationForm.get('kiosk_state_id').value">
+          <div class="col-12">
+            <div class="d-flex payer-selected-option">
+              <label class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                ngbTooltip="{{(hideshowPayersTooltip && !payer_info_list.length)?'No payer exists against the selected state and insurance.':''}}"
+                class="radio-btn payer-radio fake-radio-label-disbaled">Is this location associated with a
+                payer?*</label>
+              <label class="radio-btn payer-radio" for="yes">
+                <input type="radio" id="yes" (change)="getPayers($event.target.value)"
+                  formControlName="is_associate_with_payer" value="1" name="is_associate_with_payer">
+                <span
+                  [ngClass]="(hideshowPayersTooltip && !payer_info_list.length)?'fake-radio-button payer-radio-disabled':'fake-radio-button'"></span>
+                <span
+                  [ngClass]="((hideshowPayersTooltip && !payer_info_list.length) || hideShowUpdateInsuranceButton)?'fake-radio-label-disbaled':'fake-radio-label'">Yes</span>
+              </label>
+              <label class="radio-btn payer-radio" for="no">
+                <input type="radio" id="no" formControlName="is_associate_with_payer" value="0"
+                  name="is_associate_with_payer">
+                <span
+                  [ngClass]="(hideshowPayersTooltip && !payer_info_list.length)?'fake-radio-button payer-radio-disabled':'fake-radio-button'"></span>
+                <span
+                  [ngClass]="((hideshowPayersTooltip && !payer_info_list.length) || hideShowUpdateInsuranceButton)?'fake-radio-label-disbaled':'fake-radio-label'">No</span>
+              </label>
+            </div>
+            <span class="text-muted danger absolute-error-0"
+              *ngIf="(locationForm.get('is_associate_with_payer').errors?.required && locationForm.get('is_associate_with_payer').value == '' || locationForm.get('is_associate_with_payer').value == null) && (locationForm.get('is_associate_with_payer').dirty || locationForm.get('is_associate_with_payer').touched)">This
+              field is
+              required</span>
+          </div>
+        </div>
+        <div *ngIf="(hideshowPayers && payer_info_list.length) || (hideShowUpdateInsuranceButton && locationForm.get('is_associate_with_payer').value == '1' && payer_info_list.length)">
+          <ngx-datatable [rows]="payer_info_list" [columnMode]='"force"'
+            class='ngx-datatable bootstrap white-space-wrap custom-scroll-x visit-bill-table fixed-header virtualized scroll-horz payer-info-action'
+            [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="false" [virtualization]="false"
+            [externalPaging]="false">
+
+            <ngx-datatable-column name="CH Name" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+              [resizeable]="false" prop="clearinghouse">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                  ngbTooltip="{{row.clearinghouse.name || 'N/A'}}" container="body">
+                  {{row.clearinghouse.name || 'N/A'}}</div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Payer ID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+              [resizeable]="false" prop="payer_id">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.payer_id || 'N/A'}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Professional" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+              [resizeable]="false" prop="professional">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.professional?'Y':row.professional == 0 ? 'N':'N/A'}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Institutional" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+              [resizeable]="false" prop="institutional">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.institutional?'Y':row.institutional == 0 ? 'N':'N/A'}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Automotive" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+              [resizeable]="false" prop="automotive">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.automotive?'Y':row.automotive == 0 ? 'N':'N/A'}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Worker Compensation" [sortable]="false" [canAutoResize]="true"
+              [draggable]="false" [resizeable]="false" prop="worker_compensation">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.worker_compensation?'Y':row.worker_compensation == 0 ? 'N':'N/A'}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="EOB/835" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+              [resizeable]="false" prop="eob_835">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.eob_835?'Y':row.eob_835 == 0 ? 'N':'N/A'}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Supported Transaction" [sortable]="false" [canAutoResize]="true"
+              [draggable]="false" [resizeable]="false" prop="supported_transaction">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.supported_transaction || 'N/A'}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Pharmacy Rx" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+              [resizeable]="false" prop="pharmacy_Rx">
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                {{row.pharmacy_Rx?'Y':row.pharmacy_Rx == 0 ? 'N':'N/A'}}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" sortable="false" [width]="100">
+              <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+                <mat-radio-button (click)="setDefaultPayer(row)" [disabled]="hideShowUpdateInsuranceButton || payer_info_list.length === 1"
+                  [value]="row.is_default_payer" [checked]="row.is_default_payer">
+                </mat-radio-button>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group mb-3">
+              <label class="form-label">Comments</label>
+              <textarea formControlName="comments" row="3" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12 modal-btn-width text-center">
+            <button class="btn btn-primary me-3" (click)="cancel()" type="button">Cancel</button>
+            <button *ngIf="!hideShowUpdateInsuranceButton" (click)="save(locationForm)" [disabled]="loading"
+              data-dismiss="modal" class="btn btn-success">{{submitbtn}}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

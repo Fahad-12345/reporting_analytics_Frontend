@@ -1,0 +1,75 @@
+@import '../../../../../assets/sass/components/collapse-sidebar';
+@import '../../../../../assets/sass/components/accordian.scss';
+::ng-deep.board{
+        .soft-cross-icon{
+            margin-bottom: 24px !important;
+            top: 1.5rem !important;
+        .date-cross-icon{
+            top: 0.6875rem !important;
+        }
+    }
+    .title{
+        font-size: 12px !important;
+        line-height: 0;
+    }
+    .form{
+        .form-label{
+            line-height: 0.8375rem;
+            font-size: 0.7875rem;
+            font-weight: 400;
+        }
+    } 
+    
+}
+.cross-icon {
+	top: 34px;
+    right: 25px;
+}
+
+::ng-deep .soft-patient-create-appointment {
+    .form label {
+        &.chkbox {
+            [type="checkbox"],
+            [type="radio"] {
+                & ~ .fake-label {
+                    background-color: transparent !important;
+                    color: #000;
+                    border-color: transparent;
+                }
+                &:checked {
+                    & ~ .fake-label {
+                        background-color: transparent !important;
+                        color: #000 !important;
+                        border-color: transparent;
+                    }
+                }
+            }
+        }
+    }
+    .for-soft-registration {
+        .trans-form {
+            .trans-form-hold {
+                .radio-block {
+                    background: none;
+                    border: 0;
+                    margin-bottom: 0;
+                }
+                .transport-radio-btns {
+                    .fake-radio-button {
+                        min-width: 0.875rem;
+                    }
+                    .fake-label-radio-check {
+                        align-items: center;
+                        .fake-label {
+                            padding-inline-start: 0;
+                            background: none;
+                            color: #000 !important;
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

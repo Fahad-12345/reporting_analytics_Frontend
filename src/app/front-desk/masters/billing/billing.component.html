@@ -1,0 +1,44 @@
+<div class="row">
+	<div class="col-12" style="padding-top:14px;">
+		<nav class="left-nav p-0">
+			<ul class="list-unstyled">
+				<li class="button--wayra" [class.active]="router.url.includes('insurance')"
+					*ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_menu)"><a
+						(click)="nav('Insurance')" class="d-block">Insurance</a></li>
+				<li class="button--wayra" [class.active]="router.url.includes('clearinghouse')"
+					*ngIf="aclService.hasPermission(userPermissions.master_clearinghouse_menu)"><a
+						[routerLink]="['clearinghouse']" class="d-block">Clearinghouse</a></li>
+				<li class="button--wayra" [class.active]="router.url.includes('linkage')"
+					*ngIf="aclService.hasPermission(userPermissions.master_employer_insurance_linkage_menu)"><a
+						[routerLink]="['emp-ins-linkage']" class="d-block">Employer-Insurance Linkage</a></li>
+
+				<li class="button--wayra" [class.active]="router.url.includes('attorney')"
+					*ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_menu)"><a
+						(click)="nav('Attorney')" class="d-block">Attorney</a></li>
+
+
+				<li class="button--wayra" [class.active]="router.url.includes('employer')"
+					*ngIf="aclService.hasPermission(userPermissions.master_billing_employer_menu)"><a
+						[routerLink]="['employer']" class="d-block">Employer</a></li>
+
+
+				<li class="button--wayra" [class.active]="router.url.includes('codes')"
+					*ngIf="aclService.hasPermission(userPermissions.master_billing_codes_menu)"><a
+						(click)="nav('Codes')" class="d-block">Codes</a></li>
+
+				<li class="button--wayra" [class.active]="router.url.includes('billing-master')"
+					*ngIf="aclService.hasPermission(userPermissions.master_billing_billing_menu)">
+					<a (click)="nav('Billing')" class="d-block">Billing</a>
+				</li>
+				<li class="button--wayra" [class.active]="router.url.includes('invoice-master')"
+					*ngIf="aclService.hasPermission(userPermissions.master_billing_billing_menu)">
+					<a (click)="nav('Invoice')" class="d-block">Invoice</a>
+				</li>
+
+			</ul>
+		</nav>
+
+		<router-outlet></router-outlet>
+
+	</div>
+</div>

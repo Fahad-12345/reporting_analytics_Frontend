@@ -1,0 +1,239 @@
+
+<div class="mb-2 mt-1">
+<form class="form" autocomplete="off" [formGroup]="searchCaseType">
+	<div class="ng-check">
+		<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group"  *ngIf="filtersNeeded.indexOf('caseNo')!==-1" [ngClass]="{'focused': searchCaseType.get('caseNo').value != '' && searchCaseType.get('caseNo').value != null }">
+					<label class="form-label" for="caseNo">Case No</label>
+					<input type="text" id="caseNo" class="form-control form-input"
+					formControlName="caseNo">
+				</div>
+				<div class="form-group" *ngIf="filtersNeeded.indexOf('caseType') !== -1" [ngClass]="{'focused': searchCaseType.get('caseType').value != '' && searchCaseType.get('caseType').value != null }">
+					<label class="form-label" for="caseType">Case Type</label>
+					<input type="text" numericType="number" appOnlyNumeric maxlength="5"
+					minLength="1" id="caseType" class="form-control form-input"
+					formControlName="caseType">
+				</div>
+				<div class="form-group"  *ngIf="filtersNeeded.indexOf('patientName') !== -1" [ngClass]="{'focused': searchCaseType.get('patientName').value != '' && searchCaseType.get('patientName').value != null }">
+					<label class="form-label" for="patientName">Patient Name</label>
+					<input type="text" id="patientName" class="form-control form-input"
+					formControlName="patientName">
+				</div>
+				<div class="form-group" *ngIf="filtersNeeded.indexOf('dateOfAccident')!== -1" [ngClass]="{'focused': searchCaseType.get('DateOfAccident').value != '' && searchCaseType.get('DateOfAccident').value != null }">
+					<label class="form-label" for="DateOfAccident">DateOfAccident</label>
+					<input type="text" id="DateOfAccident" class="form-control form-input"
+					formControlName="DateOfAccident">
+				</div>
+				
+				<div class="form-group">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'city'"
+						[lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" 
+						[qulifierShown] = "true" [ngSelectShow]="true"
+						[showSelectAll] ="true"
+						[showGroupBy] = "true"
+						[bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+						(valueChange)="selectionOnValueChange($event)" 
+						[multiple]="true">
+					</app-ng-select-shareable> 
+				</div>
+				<div class="form-group" *ngIf="filtersNeeded.indexOf('address')!== -1" [ngClass]="{'focused': searchCaseType.get('address').value != '' && searchCaseType.get('address').value != null }">
+					<label class="form-label" for="address">Address</label>
+					<input type="text" id="address" class="form-control form-input" formControlName="address">
+				</div>
+				<div class="form-group"  *ngIf="filtersNeeded.indexOf('speciality')!== -1">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality'"			
+					[lableName]="'Specialty'" [bindlable]="'name'" 
+					[qulifierShown] = "true" [ngSelectShow]="true"
+					[showSelectAll] ="true"
+                    [showGroupBy] = "true"
+					[bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+					(valueChange)="selectionOnValueChange($event)" 
+					[multiple]="true"></app-ng-select-shareable>
+				</div>
+				<div class="form-group" *ngIf="filtersNeeded.indexOf('timeslot')!== -1" [ngClass]="{'focused': searchCaseType.get('timeslot').value != '' && searchCaseType.get('timeslot').value != null }">
+					<label class="form-label" for="timeslot">Time Slot</label>
+					<input type="text" id="timeslot" class="form-control form-input" formControlName="timeslot">
+				</div>
+				<div class="form-group" *ngIf="filtersNeeded.indexOf('overbooking')!== -1" [ngClass]="{'focused': searchCaseType.get('overBookingNo').value != '' && searchCaseType.get('overBookingNo').value != null }">
+					<label class="form-label" for="overBookingNo">Over Booking No.</label>
+					<input type="text" id="overBookingNo" class="form-control form-input" formControlName="overBookingNo">
+				</div>
+				<div class="form-group">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'created_by_ids'"
+						[lableName]="'Created By'" [bindlable]="'full_name'"
+						[ngSelectShow]="true"
+						[showSelectAll] ="false"
+						[showGroupBy] = "false"
+						[bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"  
+						(valueChange)="selectionOnValueChange($event)" 
+						[multiple]="true">
+					</app-ng-select-shareable> 
+				</div>
+				<div class="form-group">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'updated_by_ids'"
+						[lableName]="'Updated By'" [bindlable]="'full_name'"
+						[ngSelectShow]="true"
+						[showSelectAll] ="false"
+						[showGroupBy] = "false"
+						[bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"  
+						(valueChange)="selectionOnValueChange($event)" 
+						[multiple]="true">
+					</app-ng-select-shareable> 
+				</div>
+				<div class="form-group field"
+				[ngClass]="{'focused': searchCaseType.get('created_at').value != '' && searchCaseType.get('created_at').value != null || (searchCaseType.get('created_at').errors?.invalid_date) || ( searchCaseType.get('created_at').errors?.invalid_date  && searchCaseType.get('created_at').errors?.invalid_date?.text != DATEFORMAT) }">
+					<label class="form-label" for="created_at">Created At(mm/dd/yyyy)</label>
+					<input  class="form-control form-input date-field" appInputDateMask [min]="min"
+					[appMaskDate]="searchCaseType.get('created_at').value"
+					[matDatepicker]="created_at"
+						id="created_at" formControlName="created_at" >
+					<span
+						*ngIf="searchCaseType.get('created_at').value != '' && searchCaseType.get('created_at').value != null || (searchCaseType.get('created_at').errors?.invalid_date) || ( searchCaseType.get('created_at').errors?.invalid_date  && searchCaseType.get('created_at').errors?.invalid_date?.text != DATEFORMAT)"
+						(click)="searchCaseType?.get('created_at')?.reset()" class="icon-plus date-cross-icon"></span>
+					<mat-datepicker-toggle matSuffix [for]="created_at"></mat-datepicker-toggle>
+					<mat-datepicker #created_at></mat-datepicker>
+					<small class="form-text text-muted danger text-start ng-star-inserted"
+						*ngIf="searchCaseType.get('created_at').errors?.invalid_date || searchCaseType.get('created_at').errors?.invalid_date  && searchCaseType.get('created_at').errors?.invalid_date?.text != DATEFORMAT ">
+						Date format should be accurate
+					</small>
+				</div>
+
+				<div class="form-group field"
+					[ngClass]="{'focused': searchCaseType.get('updated_at').value != '' && searchCaseType.get('updated_at').value != null || (searchCaseType.get('updated_at').errors?.invalid_date) || ( searchCaseType.get('updated_at').errors?.invalid_date  && searchCaseType.get('updated_at').errors?.invalid_date?.text != DATEFORMAT) }">
+					<label class="form-label" for="updated_at">Updated At(mm/dd/yyyy)</label>
+					<input  class="form-control form-input date-field" appInputDateMask [min]="min"
+					[appMaskDate]="searchCaseType.get('updated_at').value"
+					[matDatepicker]="updated_at"
+						id="updated_at" formControlName="updated_at">
+					<span
+						*ngIf="searchCaseType.get('updated_at').value != '' && searchCaseType.get('updated_at').value != null || (searchCaseType.get('updated_at').errors?.invalid_date) || ( searchCaseType.get('updated_at').errors?.invalid_date  && searchCaseType.get('updated_at').errors?.invalid_date?.text != DATEFORMAT)"
+						(click)="searchCaseType?.get('updated_at')?.reset()" class="icon-plus date-cross-icon"></span>
+					<mat-datepicker-toggle matSuffix [for]="updated_at"></mat-datepicker-toggle>
+					<mat-datepicker #updated_at></mat-datepicker>
+					<small class="form-text text-muted danger text-start ng-star-inserted"
+						*ngIf="searchCaseType.get('updated_at').errors?.invalid_date || searchCaseType.get('updated_at').errors?.invalid_date  && searchCaseType.get('updated_at').errors?.invalid_date?.text != DATEFORMAT ">
+						Date format should be accurate
+					</small>
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success" (click)="filterHandler()">Filter</button>
+				<button class="btn btn-primary" (click)="resetClicked()" [disabled]="checkInputs()">Reset</button>
+			</div>
+		</div>
+	</div>
+
+</form>
+<!--old code-->
+	 <!-- <form autocomplete="off" [formGroup]="searchCaseType">
+		<div class="form">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-12 col-xl-10">
+						<div class="row">
+							<div class="col-sm-6 col-lg-3" *ngIf="filtersNeeded.indexOf('caseNo')!==-1">
+								<div class="form-group field mb-xl-0" [ngClass]="{'focused': searchCaseType.get('caseNo').value != '' && searchCaseType.get('caseNo').value != null }" 
+									>
+									<label class="form-label" for="caseNo">Case No</label>
+									<input type="text" id="caseNo" class="form-control form-input"
+										formControlName="caseNo">
+								</div>
+							</div>
+
+							<div class="col-sm-6 col-lg-3"  *ngIf="filtersNeeded.indexOf('caseType') !== -1">
+								<div class="form-group field mb-xl-0" [ngClass]="{'focused': searchCaseType.get('caseType').value != '' && searchCaseType.get('caseType').value != null }"
+								>
+									<label class="form-label" for="caseType">Case Type</label>
+									<input type="text" numericType="number" appOnlyNumeric maxlength="5"
+										minLength="1" id="caseType" class="form-control form-input"
+										formControlName="caseType">
+								</div>
+							</div>
+							<div class="col-sm-6 col-lg-3"  *ngIf="filtersNeeded.indexOf('patientName') !== -1">
+								<div class="form-group field mb-xl-0" [ngClass]="{'focused': searchCaseType.get('patientName').value != '' && searchCaseType.get('patientName').value != null }"
+									>
+									<label class="form-label" for="patientName">Patient Name</label>
+									<input type="text" id="patientName" class="form-control form-input"
+										formControlName="patientName">
+								</div>
+							</div>
+							<div class="col-sm-6 col-lg-3"  *ngIf="filtersNeeded.indexOf('dateOfAccident')!== -1">
+								<div class="form-group" *ngIf="filtersNeeded.indexOf('dateOfAccident')!== -1" [ngClass]="{'focused': searchCaseType.get('DateOfAccident').value != '' && searchCaseType.get('DateOfAccident').value != null }">
+									<label class="form-label" for="DateOfAccident">DateOfAccident</label>
+									<input type="text" id="DateOfAccident" class="form-control form-input"
+										formControlName="DateOfAccident">
+								</div>
+							</div>
+							<div class="col-sm-6 col-lg-6" *ngIf="filtersNeeded.indexOf('selectLocation')!== -1">
+								<div class="form-group" *ngIf="filtersNeeded.indexOf('selectLocation')!== -1">
+									<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'city'"
+									 [lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" 
+									 [qulifierShown] = "true"
+									 [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+									 (valueChange)="selectionOnValueChange($event)" 
+									 [multiple]="true">
+									</app-ng-select-shareable> 
+
+								</div>
+							</div>
+							
+							<div class="col-sm-6 col-lg-6"  *ngIf="filtersNeeded.indexOf('address')!== -1">
+								<div class="form-group" *ngIf="filtersNeeded.indexOf('address')!== -1" [ngClass]="{'focused': searchCaseType.get('address').value != '' && searchCaseType.get('address').value != null }">
+									<label class="form-label" for="address">Address</label>
+									<input type="text" id="address" class="form-control form-input" formControlName="address">
+								</div>
+							</div>
+							<div class="col-sm-6 col-lg-4"  *ngIf="filtersNeeded.indexOf('speciality')!== -1">
+								<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality'"			
+								 [lableName]="'Specialty'" [bindlable]="'name'" 
+								 [qulifierShown] = "true"
+								 [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+								 (valueChange)="selectionOnValueChange($event)" 
+								 [multiple]="true"></app-ng-select-shareable> 
+							</div>
+						
+						
+							<div class="col-sm-6 col-lg-4"  *ngIf="filtersNeeded.indexOf('timeslot')!== -1">
+								<div class="form-group" *ngIf="filtersNeeded.indexOf('timeslot')!== -1" [ngClass]="{'focused': searchCaseType.get('timeslot').value != '' && searchCaseType.get('timeslot').value != null }">
+									<label class="form-label" for="timeslot">Time Slot</label>
+									<input type="text" id="timeslot" class="form-control form-input" formControlName="timeslot">
+								</div>
+							</div>
+
+							<div class="col-sm-6 col-lg-4"  *ngIf="filtersNeeded.indexOf('overbooking')!== -1">
+								<div class="form-group" *ngIf="filtersNeeded.indexOf('overbooking')!== -1" [ngClass]="{'focused': searchCaseType.get('overBookingNo').value != '' && searchCaseType.get('overBookingNo').value != null }">
+									<label class="form-label" for="overBookingNo">Over Booking No.</label>
+									<input type="text" id="overBookingNo" class="form-control form-input" formControlName="overBookingNo">
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					<div class="col-12 col-xl-2 text-center">
+						<div class="row justify-content-center mb-3 mb-xl-0">
+							<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+								<button type="submit" class="btn btn-success w-100 mt-0"
+								(click)="filterHandler()"
+									> Filter
+								</button>
+							</div>
+							<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+								<button (click)="resetClicked()" class="btn btn-primary w-100 mt-0" [disabled]="checkInputs()"
+									>Reset</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</form>  -->
+</div>

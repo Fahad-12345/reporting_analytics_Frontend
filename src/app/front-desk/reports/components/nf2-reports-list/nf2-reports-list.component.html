@@ -1,0 +1,456 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div class="col-12 user-info pt-2 px-0">
+  <h4 class="my-0 color-green">NF2 Report</h4>
+</div>
+<hr class="line-bottom" />
+
+<app-table-filter
+  [filtersNeeded]="filter"
+  (filterFieldEmitter)="applyFilter($event)"
+  (onResetClickedEmitter)="resetButtonHandler()"
+></app-table-filter>
+<div class="row">
+  <div class="col-6 col-sm-6 edit-block text-start">
+    <div class="form-group field option-field mb-2 d-inline-block">
+      <ul>
+        <li>Show</li>
+        <li>
+          <!-- <select class="custom-select" name="limit" id="limit" > -->
+          <select
+            class="custom-select"
+            name="limit"
+            id="limit"
+            [(ngModel)]="defaultPagination.per_page"
+            (change)="entryCountSelection($event.target.value)"
+          >
+            <!-- <option [value]="20">Items per page</option> -->
+            <option [value]="10">10</option>
+            <option [value]="20">20</option>
+            <option [value]="30">30</option>
+            <option [value]="40">40</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </li>
+        <li>entries</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-6 col-sm-6 edit-block text-end">
+    <button
+      type="button"
+      (click)="openCustomoizeColumn(CustomizeColumnModal)"
+      class="btn btn-default"
+    >
+      Customize Columns
+    </button>
+    <button
+      type="button"
+      (click)="generateExcel()"
+      class="btn btn-success mx-2 mb-2 mb-sm-0"
+    >
+      <i class="fa fa-file-excel"></i> Export To CSV
+    </button>
+    <button
+      *ngIf="reportSelection.selected.length != 0"
+      id="generatePOM"
+      type="button"
+      class="btn btn-primary mx-2 mb-2 mb-sm-0 float-right"
+      (click)="GenereatePOM(content)"
+    >
+      Generate POM [{{ reportSelection.selected.length }}]
+    </button>
+  </div>
+</div>
+
+<div class="nf-reports">
+
+	<ngx-datatable class="bootstrap" #nf2List [columnMode]='"force"' [rowHeight]="'auto'" [footerHeight]="50" 
+		[scrollbarH]="true" [virtualization]="false" [externalPaging]="true" [rows]="rowData" [count]="totalRecord"
+		[offset]="nf2Offset" [limit]="defaultPagination.per_page" (page)='onPageChange($event)' [externalPaging]="true">
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case No" prop="case_no"
+			[width]="80" [sortable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<a  class="tooltip-outer underline-hov" container="body" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row?.id}}"  [routerLink]="['/front-desk/cases/edit/'+row.id+'/patient/patient_summary']">
+					{{row?.id}} 
+				</a>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case Type"
+			prop="case_type" [width]="80" [sortable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{value}}">
+					{{value}} 
+				 </div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case Practice Location"
+			prop="case_practice_location" [width]="200" cellClass="action-icon" [sortable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<span class="badge badge-info tooltip-outer d-inline-block wrap-text" *ngFor="let location of row?.practice_locations" container="body" tooltipClass="table-custom-tooltip"
+				ngbTooltip="{{location.facility.name}} - {{location.name}}" container="body">
+					{{location?.facility?.qualifier}} - {{location?.qualifier}}
+				</span>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Patient name"
+			prop="patient_name" [width]="100" [sortable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.patient_firstname}} {{row.patient_middlename? row.patient_middlename:''}} {{row.patient_lastname}}">
+					{{row.patient_firstname}} {{row.patient_middlename? row.patient_middlename:''}}
+					{{row.patient_lastname}} </div>
+			</ng-template>
+		</ngx-datatable-column>
+		<!-- <ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Patient Location"
+			prop="patient_location" [width]="150">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.patient_location}}">
+					{{row.patient_location}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column> -->
+    <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="DOA"
+      prop="date_of_accident"
+      [width]="80"
+    >
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div
+          class="tooltip-outer"
+          container="body"
+          tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{
+            row.date_of_accident
+              | date : datePipeService.slashDateFormat_MM_dd_yyyy()
+          }}"
+        >
+          {{
+            row.date_of_accident
+              | date : datePipeService.slashDateFormat_MM_dd_yyyy()
+          }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="Insurance Name "
+      prop="insurance_name"
+      [width]="120"
+    >
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div
+          class="tooltip-outer"
+          container="body"
+          tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{ value }}"
+        >
+          {{ value }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="Insurance address"
+      prop="insurance_address"
+      [width]="130"
+    >
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div
+          class="tooltip-outer"
+          container="body"
+          tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{
+            row.insurance_street_address ? row.insurance_street_address : ''
+          }}
+				{{ row.insurance_state ? row.insurance_state : '' }} 		
+				{{ row.insurance_city ? row.insurance_city : '' }} {{
+            row.insurance_zip ? row.insurance_zip : ''
+          }}"
+        >
+          {{ row.insurance_street_address ? row.insurance_street_address : "" }}
+          {{ row.insurance_state ? row.insurance_state : "" }}
+          {{ row.insurance_city ? row.insurance_city : "" }}
+          {{ row.insurance_zip ? row.insurance_zip : "" }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="Claim #"
+      prop="claim_no"
+      [width]="80"
+    >
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.claim_no}}">
+					{{row?.claim_no}}
+				</div>
+			</ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="Policy #"
+      prop="policy_no"
+      [width]="80"
+    >
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.policy_no}}">
+					{{row?.policy_no}}
+				</div>
+			</ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="No of days"
+      prop="no_of_days"
+      [width]="80"
+    >
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div
+          class="tooltip-outer"
+          container="body"
+          tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{ value }}"
+        >
+          {{ value }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="Attorney"
+      prop="attorney"
+      [width]="100"
+    >
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div
+          class="tooltip-outer"
+          container="body"
+          tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{ row.firm_name ? row.firm_name : '' }}"
+        >
+          {{ row.firm_name ? row.firm_name : "" }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      name="Status"
+      prop="status"
+      [width]="100"
+    >
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div
+          class="tooltip-outer"
+          tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{ value }}"
+        >
+          {{ value }}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- <ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Actions" [width]="100"
+			cellClass="action-icon">
+			<ng-template ngx-datatable-header-template name="Actions">
+				<mat-checkbox>
+				</mat-checkbox>
+				Action
+			</ng-template>
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<mat-checkbox (change)="selectReport($event,row)">
+				</mat-checkbox>
+			</ng-template>
+		</ngx-datatable-column> -->
+    <ngx-datatable-column
+      name="Actions"
+      [width]="100" prop="actions"
+      [sortable]="false"
+      [canAutoResize]="true"
+      [draggable]="false"
+      [resizeable]="false"
+      [sortable]="false"
+      cellClass="action-icon count-hold"
+    >
+      <ng-template ngx-datatable-header-template name="Actions">
+        <mat-checkbox
+          id="selectall"
+          class="selectall"
+          (change)="$event ? reportsmasterToggle() : null"
+          [checked]="reportSelection.hasValue() && isreportAllSelected()"
+          [indeterminate]="reportSelection.hasValue() && !isreportAllSelected()"
+        >
+        </mat-checkbox>
+        Actions
+      </ng-template>
+
+      <ng-template
+        ngx-datatable-cell-template
+        let-row="row"
+        let-rowIndex="rowIndex"
+      >
+        <mat-checkbox
+          (click)="$event.stopPropagation()"
+          (change)="$event ? reportSelection.toggle(row) : null"
+          [checked]="reportSelection.isSelected(row)"
+        >
+        </mat-checkbox>
+        <a
+          class="edit-hov mx-1"
+          ngbTooltip="History"
+          container="body"
+          (click)="historyStats(row)"
+        >
+          <i class="fa fa-history"></i>
+        </a>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>
+<ng-template #content let-modal>
+  <!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+  <div class="modal-header">
+    <h4 id="dialog-static-name" class="modal-title text-capitalize">
+      Select Practice
+    </h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body text-center p-2">
+    <div
+      class="form-group radio-block in-stop-work in-md-radio user-md-radio mb-3"
+    >
+      <div class="row">
+        <div class="col-12 padding-col">
+          <span class="">For which Practice you want to generate POM?</span>
+          <div
+            class="radio-block custom-radio"
+            *ngFor="
+              let uniqueLocation of selectedUniquePracticeLocation;
+              index as i
+            "
+          >
+            <div
+              (click)="selectedCasePOM(uniqueLocation)"
+              class="form-check link-color"
+            >
+              <input
+                class="form-check-input mt-2"
+                type="radio"
+                name="location"
+                [id]="i"
+                [value]="i"
+              />
+              <!-- <span class="fake-input position-absolute"></span> -->
+              <label class="form-check-label" [for]="i">
+                {{ uniqueLocation.facility_name }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 modal-btn-width text-center pb-3">
+    <button
+      class="btn btn-primary me-3"
+      type="button"
+      (click)="modal.dismiss('Cross click')"
+    >
+      Cancel
+    </button>
+    <button
+      (click)="selectedLocationPopSave()"
+      class="btn btn-success"
+      type="submit"
+      [disabled]="isSelectedLocationPopSaveDisabled"
+    >
+      Save &amp; Continue
+    </button>
+  </div>
+</ng-template>
+
+<div
+  class="modal fade modal-scroll"
+  bsModal
+  #CustomizeColumnModal="bs-modal"
+  [config]="{ backdrop: 'static', keyboard: false }"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="mySmallModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px">
+          Customize Columns
+        </h4>
+        <button
+          type="button"
+          class="close ms-0"
+          aria-label="Close"
+          (click)="onCancel()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column
+          [modalCols]="modalCols"
+          (event)="onSelectHeaders($event)"
+          (singleSelection)="onSingleSelection($event)"
+        ></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2" (click)="onCancel()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-success" (click)="onConfirm(true)">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+    
+
+
+
+
+
+  

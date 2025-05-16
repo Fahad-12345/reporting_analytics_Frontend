@@ -1,0 +1,10 @@
+@mixin search-box() {
+	right: 1.125rem;
+	background: transparent;
+	position: absolute;
+	top: -0.95rem;
+	@include font-size(16px);
+	color: $dark-silver-chalice;
+	border: none;
+	@include padding-same(0px);
+}

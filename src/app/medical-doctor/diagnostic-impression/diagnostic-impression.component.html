@@ -1,0 +1,41 @@
+<!-- <app-shared-diagnostic-impression [data]="data" (nextPage)="nextPage()" (previousPage)="previousPage()"
+    [favoriteCodes]="favoriteCodes">
+</app-shared-diagnostic-impression> -->
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="section-frame reduce-height border-0 pb-2 diagnostic-impression">
+	<div class="inner-frame bg-white ps-2 pe-2 pt-3 h-100 pb-md-5 me-1">
+		<div class="custom-scrollbar">
+			<div class="form position-relative">
+				<div class="header-tools d-flex justify-content-between">
+				</div>
+				<md-diagnostic-codes [codes]="icd10_codes" [visitType]="visitType" [carryForwarded]="carryForwarded"
+				[codeType]="'ICD'" [showdialogbox]="false" [code_type_slug]='case_type_slug' [max]='12' [favoriteCodes]="favoriteCodes" (codesUpdated)="codesUpdated($event)">
+			</md-diagnostic-codes>
+				<div class="row mb-3" [formGroup]="form">
+					<div class="col-12 pt-3">
+						<div class="form-group field m-0"
+							[ngClass]="{'focused': form.get('comments').value != '' && form.get('comments').value != null }"
+							style="overflow: visible;">
+							<label for="comment" class="form-label">Comments </label>
+							<textarea id="comment" class="form-control form-input" rows="3"
+								[ngClass]="{'bg-light-pink':checkCarryForward(form,'comments')}"
+								style="min-width:100%; height: 70px !important;" formControlName="comments"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row paging-bar form-btn mt-md-2">
+			<div class="col-md-12 text-center">
+				<button href="javascript:void(0)" class="btn btn-primary d-inline-block" (click)="changePage('back')"><span
+						class="icon-left-arrow me-1"></span>Back</button>
+			
+                <a *ngIf="mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-info w-100 d-inline-block mx-2"
+				(click)="changePage('saveForLater')"><span class="icon-save-continue me-1"></span> Save For Later</a>
+              
+				<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" class="btn btn-success d-inline-block" (click)="nextPage()"><span
+						class="icon-save-continue me-1"></span> Save & Continue</button>
+			</div>
+		</div>
+	</div>
+</div>

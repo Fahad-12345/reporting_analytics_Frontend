@@ -1,0 +1,117 @@
+<form class="form" [formGroup]="denialForm">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group mb-2 horizontal-label">
+        <label for="denial_date_data" class="text-capitalize">Denial Date*</label>
+        <div class="d-block position-relative">
+          <input  class="form-control form-input mb-0 date-field" [max]="today"  [min]="min" formControlName="date"  [matDatepicker]="denial_date" appInputDateMask [appMaskDate]="denialForm.get('date').value" id="denial_date_data">
+          <mat-datepicker-toggle matSuffix [for]="denial_date"></mat-datepicker-toggle>
+          <mat-datepicker #denial_date></mat-datepicker>
+          <small class="form-text text-muted danger"
+          *ngIf="denialForm.get('date').errors?.required && (denialForm.get('date').dirty || denialForm.get('date').touched)">
+		  This field is required
+        </small> 
+        <small class="form-text text-muted danger" *ngIf="denialForm.errors?.futureDate">
+          Max date should be {{ today | date: dateformateService.slashDateFormat_MM_dd_yyyy() }}
+       </small>      
+        <!-- <small class="form-text text-muted danger"   
+        *ngIf="denialForm.get('date').errors?.invalid_date && (denialForm.get('date').dirty || denialForm.get('date').touched)">
+		This field is required
+        </small> -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group mb-2">
+        <label for="denial_type" class="text-capitalize">Denial Type*</label>
+        <div class="form-group mb-2"  #denialTypeSelection>
+          <ng-multiselect-dropdown id="denial_type" name="denial_type"  [settings]="bpDropdownSettingsEor" (click)="typeClick()"
+            [placeholder]="'Select Denial Type'" [data]="denialTypeData"
+            formControlName="denial_type"
+             class="ng-select-ellipsis top-n2 d-block handle-arrow" style="margin-bottom: 6px;">
+          </ng-multiselect-dropdown>
+          <small class="form-text text-muted danger"
+          *ngIf="denialForm.get('denial_type').errors?.required && typeClicked">
+		  This field is required
+        </small>
+        </div>
+      </div>
+	</div>
+
+	<div class="col-12">
+		<label for="eor_status_id" class="text-capitalize">Denial Status</label>
+		<div class="form-group mb-2" >
+		  <ng-multiselect-dropdown id="eor_status_id" name="eor_status_id" [settings]="bpDropdownSettingsDenialStatus"  (click)="denialStatusClick()"
+		  [placeholder]="'Select Denial Status'" [data]="denialStatusCommingData"
+		  formControlName="denial_status_id" 
+			  [class.disabled_custom]="disableDenial" class="ng-select-ellipsis top-n2 d-block handle-arrow">
+    </ng-multiselect-dropdown>
+    <small class="form-text text-muted danger"
+          *ngIf="denialForm.get('denial_status_id').errors?.required && denialStatusAction">
+		  This field is required
+        </small>
+		</div>
+	  </div>
+    <div class="col-12">
+      <div class="form-group mb-2">
+        <label for="denial_reason" class="text-capitalize">Denial Reason</label>
+        <textarea type="text" formControlName="reason" class="form-control form-input mb-0" rows="3" ></textarea>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-2">
+        <label for="denial_comments" class="text-capitalize">Denial Comments</label>
+        <textarea type="text" formControlName="comments" class="form-control form-input mb-0" rows="3" ></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row align-items-center">
+    <!-- <div class="col-md-6 col-lg-4">
+      <div class="form-group field mb-2 mb-md-3">
+        <label for="denial_pdf" class="text-capitalize">Denial PDF</label>
+        <input class="form-control mb-0" formControlName="file_name" type="text">
+        <span class="icon-eye"></span>
+      </div>
+    </div>
+    <div class="col-md-6 col-lg-8 mt-2 mt-md-4 mb-3">
+      <input type="file" id="file" formControlName="file_name" #file class="file file_style d-none" #pFile
+       accept="application/pdf" />
+      <button class="btn btn-success">
+        <label (click)="file.click()" for="file-upload" class="custom-file-upload text-white">
+          <i class="fa fa-upload" aria-hidden="true"></i> Upload File
+        </label>
+      </button>
+      <span class="ms-2" style="word-break: break-all;"></span>
+    </div> -->
+    <div class="col-12">
+      <div class="form-group view-icon mb-2">
+      <label for="action_type">File Name</label>
+	  <input class="form-control mb-0" type="text" formControlName="file_name" disabled>
+	  <div *ngIf="denialModel.getMediaExist()">
+		<a class="pdf-view view-hov">
+		  <i class="icon-eye" (click)="viewDocFile(denialModel.getMediaLink())"></i></a>
+	   </div>
+      </div>
+    </div>
+    <div class="col-md-12 mt-2 mb-1">
+    <label style="vertical-align: middle; margin-top: 0;" for="file" class="pe-1 d-none">Choose File</label>
+    <input type="file" id="file" #file class="file file_style d-none" #pFile (click)="pFile.value = null"
+      (change)="handleFileInput($event.target.files)" accept="application/pdf" />
+    <label (click)="file.click()" for="file-upload" class="custom-file-upload btn btn-success text-white">
+      <i class="fa fa-upload" aria-hidden="true"></i> Upload a File
+    </label>
+    <span class="ms-2" *ngIf="!denialForm?.value?.id"
+      style="word-break: break-all;">{{fileToUpload? fileToUpload.name :null}}</span>
+      <span class="ms-2"  *ngIf="denialForm?.value?.id"
+      style="word-break: break-all;">{{fileToUpload? fileToUpload.name : denialModel.getMediaExist() ? denialForm?.value?.file_name : '' }} </span>
+    </div>
+
+   
+  </div>
+  <div class="col-12 search-filter-block mt-3">
+    <div class="row justify-content-center search-filter-btn mb-0">
+      <button *ngIf="!denialForm?.value?.id" class="btn btn-primary mx-2" type="button" (click)= "resetDenial()" [disabled]="(checkInputs() && fileToUpload === null) ">Clear</button>
+      <button class="btn btn-success mx-2" (click)= "postDenial()" [disabled]="!denialForm.value.date || !denialForm.valid || btnDisable">{{(denialForm?.value?.id)?'Update':'Save'}} </button>
+    </div>
+  </div>
+</form>

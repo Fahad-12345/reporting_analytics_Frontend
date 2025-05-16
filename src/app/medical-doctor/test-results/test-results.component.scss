@@ -1,0 +1,11 @@
+.form-control:invalid {
+	color: #495057;
+	background-color: #fff;
+	border-color: #ff6846;
+	outline: 0;
+	box-shadow: 0 0 0 0.2rem rgba(255, 0, 26, 0.25);
+}
+
+.form-btn .btn {
+	padding: .4rem .3rem !important;
+}

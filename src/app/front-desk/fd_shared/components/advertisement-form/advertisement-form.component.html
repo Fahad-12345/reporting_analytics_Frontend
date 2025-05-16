@@ -1,0 +1,51 @@
+<perfect-scrollbar style="max-height: 100%;">
+
+    <div class="row mb-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h1 class="card-title text-white m-0">Advertisment Form</h1>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                        <div class="form" action="#">
+
+                            <div class="row mt-3 fields-holder" formArrayName="advertisments" *ngFor="let refer of form['controls'].advertisments['controls']; let i=index;">
+                            <div [formGroupName]="i" class="col-12">
+                                <div class="row mt-3">
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field">
+                                            <!-- <label for="{{i}}" class="form-label">Referred By *</label> -->
+                                            <select class="custom-select" formControlName="id">
+                                                <option value="">Advertisment Whice One:</option>
+                                                <option *ngFor="let ad of allAds" value="{{ ad.id }}">{{ ad.name }}</option>
+                                            </select>
+                                            <small class="form-text text-muted danger" *ngIf="form.get('id').errors?.required && (form.get('id').dirty || form.get('id').touched)">Please select Referral!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field">
+                                            <label for="description-{{i}}" class="form-label">description *</label>
+                                            <input type="text" id="description-{{i}}" class="form-control form-input"  formControlName="description">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+                                
+                            </div>
+                            </div>
+
+                            <div class="row" style="margin-top:20px">
+                            <div class="col-12">
+                                <button type="button" class="btn btn-default d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" (click)="form.reset()">Back</button>
+                                <button type="submit" class="btn btn-primary d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;">Submit</button>
+                            </div>
+                            </div>
+                        </div>    
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+      </perfect-scrollbar>

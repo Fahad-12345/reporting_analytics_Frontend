@@ -1,0 +1,9 @@
+<!-- <busy-loader [loaderSpin]="caseFlowService?.loadSpin"></busy-loader> -->
+<app-case-header [patient]="caseFlowService?.case?.patient" [case]="caseFlowService?.case"></app-case-header>
+<hr class="line-bottom">
+<div class="row">
+  <div class="col-12">
+
+    <app-case-left-sidebar [caseType]="caseType" [speciality]="speciality" [purpose]="purpose"></app-case-left-sidebar>
+  </div>
+</div>

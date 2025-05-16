@@ -1,0 +1,35 @@
+@import './../../../../../../../assets/sass/components/new-search-filters';
+
+
+.inventory-btn{
+    padding: 0;
+    button {
+        &.btn {
+            &.btn-default {
+                margin-right: 10px;
+                span{
+                    margin-top: -2px;
+                    margin-right: 2px;
+                }
+            }
+        }
+    }
+} 
+
+::ng-deep .tax-modal{
+    &.modal_extraDOc {
+		.modal-dialog {
+			max-width: 450px;
+		}
+	}
+}
+
+@media (max-width:575px) {
+    button{
+        &.btn{
+            &.btn-danger {
+              float: right;
+            }
+        }
+    }
+}

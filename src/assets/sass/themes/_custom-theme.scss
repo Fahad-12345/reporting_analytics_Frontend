@@ -1,0 +1,1984 @@
+body {
+  background: $body-background-bg-color !important;
+  .main-container {
+    border-color: $main-container-bg-color !important;
+  }
+}
+// Header background, colors, border-colors
+body {
+  &.nav-open {
+    #header {
+      .navbar-collapse {
+        background: $header-nav-bar-bg-color !important;
+      }
+      .navbar {
+        .navbar-toggler {
+          .bar {
+            background: $header-burger-menu-bars-open-bg-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+#header {
+  .location-hover {
+    background: $header-mobile-bg-color !important;
+    @media only screen and (min-width: 769px) {
+      background: $header-tablet-bg-color !important;
+    }
+  }
+  .main-nav {
+    &.navbar {
+      @media only screen and (min-width: 769px) {
+        background: $header-main-nav-tablet-bg-color !important;
+      }
+    }
+  }
+  .navbar {
+    background: $header-mobile-bg-color !important;
+    border: 0 !important;
+    @media only screen and (min-width: 769px) {
+      background: $header-tablet-bg-color !important;
+    }
+    .navbar-toggler {
+      background: $header-burger-menu-bg-color !important;
+      border-color: $header-burger-menu-border-color !important;
+      .bar {
+        background: $header-burger-menu-bars-bg-color !important;
+      }
+    }
+    .navbar-collapse {
+      .user-area {
+        .avatar {
+          border-color: $header-burger-menu-user-img-border-color !important;
+          color: $header-burger-menu-user-img-color !important;
+        }
+        .title {
+          color: $header-menu-title-color !important;
+        }
+      }
+      .navbar-nav {
+        &.na-search {
+          li {
+            .form-control {
+              border-color: $header-nav-search-bar-border-color !important;
+              color: $header-nav-search-bar-color !important;
+              background: $header-nav-search-bar-bg-color !important;
+              &::placeholder {
+                color: $header-nav-search-bar-placeholder-color !important;
+              }
+            }
+            .search-btn {
+              background: $header-nav-search-icon-bg-color !important;
+              color: $header-nav-search-icon-text-color !important;
+            }
+            &.hidden-md {
+              .avatar {
+                @media only screen and (min-width: 769px) {
+                  border-color: $header-tablet-user-img-border-color !important;
+                  color: $header-tablet-user-img-color !important;
+                }
+              }
+            }
+          }
+        }
+        &.mobile-menu {
+          .nav-item {
+            .nav-link {
+              color: $header-nav-item-text-color !important;
+            }
+            &:hover {
+              .nav-link {
+                color: $header-nav-item-text-hover-color !important;
+                background: $header-nav-item-bg-hover-color !important;
+                border-color: $header-nav-item-border-hover-color !important;
+              }
+            }
+            .dropdown-menu {
+              background: $header-nav-item-dropdown-bg-hover-color !important;
+              border-color: $header-nav-item-dropdown-border-hover-color !important;
+              @media only screen and (min-width: 769px) {
+                background: $header-dropdown-menu-bg-color !important;
+              }
+              &:before {
+                background: $header-nav-item-dropdown-icon-bg-hover-color !important;
+              }
+              ul {
+                li {
+                  &:hover {
+                    a {
+                      color: $header-nav-text-hover-color !important;
+                    }
+                  }
+                  &:not(:first-child) {
+                    border-top-color: $header-nav-first-child-border-top-color !important;
+                  }
+                  a {
+                    color: $header-nav-text-color !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .additional-links {
+      li {
+        .navbar-icon {
+          color: $header-nav-bar-icon-color !important;
+          &:hover {
+            color: $header-nav-bar-icon-hover-color !important;
+          }
+          .badge {
+            &.badge-info {
+              background: $header-nav-bar-badge-bg-color !important;
+              color: $header-nav-bar-badge-color !important;
+            }
+          }
+        }
+        .dropdown-menu {
+          background: $header-dropdown-menu-bg-color !important;
+          border-color: $header-dropdown-menu-border-color !important;
+          &:before {
+            background: $header-dropdown-menu-upper-line-color !important;
+          }
+          .form {
+            li {
+              .chkbox {
+                [type="checkbox"]:checked + .fake-input {
+                  border-color: $header-dropdown-checkbox-border-color !important;
+                  background: $header-dropdown-checkbox-bg-color !important;
+                }
+                .fake-input {
+                  background: $header-dropdown-checkbox-inputs-bg-color !important;
+                  border-color: $header-dropdown-checkbox-inputs-border-color !important;
+                  &:before {
+                    border-color: $header-dropdown-checkbox-tick-icon-color !important;
+                  }
+                }
+                .fake-label {
+                  background: $header-dropdown-label-bg-color !important;
+                  color: $header-dropdown-label-color !important;
+                  &:hover {
+                    background: $header-dropdown-label-bg-hover-color !important;
+                    color: $header-dropdown-label-hover-color !important;
+                  }
+                }
+              }
+            }
+            hr {
+              border-top: 1px solid $header-dropdown-border-top-color !important;
+              opacity: 0.1 !important;
+            }
+          }
+          &.notification-menu {
+            ul {
+              li {
+                a,
+                .avtar {
+                  color: $header-notification-menu-color !important;
+                  .media {
+                    .notification-img {
+                      img {
+                        border-color: $dusty-gray !important;
+                      }
+                      .badge {
+                        &.badge-success {
+                          color: $header-notification-menu-success-badge-color !important;
+                          background: $header-notification-menu-success-badge-bg-color !important;
+                          border-color: $header-notification-menu-success-badge-border-color !important;
+                        }
+                        &.badge-light {
+                          color: $header-notification-menu-light-badge-color !important;
+                          background: $header-notification-menu-light-badge-bg-color !important;
+                          border-color: $header-notification-menu-light-badge-border-color !important;
+                        }
+                      }
+                    }
+                    .media-body {
+                      p {
+                        color: $header-notification-menu-time-text-color !important;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.data-table {
+  .table {
+    thead {
+      background: $datatable-header-bg-color !important;
+      tr {
+        th {
+          border-right: 1px solid $datatable-header-border-color !important;
+          color: $datatable-header-text-color !important;
+          &:first-child {
+            border-left: 1px solid $datatable-header-border-first-last-color !important;
+          }
+          &:last-child {
+            border-right: 1px solid $datatable-header-border-first-last-color !important;
+          }
+        }
+      }
+    }
+    tbody {
+      tr {
+        &:nth-child(odd) {
+          background: $datatable-body-row-bg-even-color !important;
+        }
+        &:nth-child(even) {
+          background: $datatable-body-row-bg-odd-color !important;
+        }
+        td {
+          border: 1px solid $datatable-body-border-right-color !important;
+          color: $datatable-body-text-color !important;
+          .dropdown {
+            .dropdown-menu {
+              background: $datatable-btn-dropdown-bg-color !important;
+              border-color: $datatable-btn-dropdown-border-color !important;
+              .dropdown-item {
+                color: $datatable-btn-dropdown-text-color !important;
+                &:hover {
+                  background: $datatable-btn-dropdown-bg-hover-color !important;
+                  color: $datatable-btn-dropdown-text-hover-color !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// ngx datatable backgrounds, colors, border-colors
+.ngx-datatable {
+  // All Datatable Header Start
+  .datatable-header {
+    .datatable-row-center {
+      .datatable-header-cell {
+        background: $datatable-header-bg-color !important;
+        color: $datatable-header-text-color !important;
+        border-right: 1px solid $datatable-header-border-color !important;
+        &:first-child {
+          border-left: 1px solid $datatable-header-border-first-last-color !important;
+        }
+        &:last-child {
+          border-right: 1px solid $datatable-header-border-first-last-color !important;
+        }
+      }
+    }
+  }
+  // All datatable Body Start
+  .datatable-body {
+    .datatable-scroll {
+      .datatable-row-wrapper {
+        .datatable-body-row {
+          &.datatable-row-even {
+            .datatable-row-center {
+              .datatable-body-cell {
+                background: $datatable-body-row-bg-even-color !important;
+              }
+            }
+          }
+          &.datatable-row-odd {
+            .datatable-row-center {
+              .datatable-body-cell {
+                background: $datatable-body-row-bg-odd-color !important;
+              }
+            }
+          }
+          .datatable-row-center {
+            .datatable-body-cell {
+              color: $datatable-body-text-color !important;
+              border-right: 1px solid $datatable-body-border-right-color !important;
+              border-bottom: 1px solid $datatable-body-border-bottom-color !important;
+              &:first-child {
+                border-left: 1px solid $datatable-body-border-left-color !important;
+              }
+              .datatable-body-cell-label {
+                min-height: var(--datatableRowDefaultHeight);
+                a {
+                  color: $datatable-icons-color !important;
+                  &.text-danger {
+                    color: $danger !important;
+                  }
+                  &.text-success {
+                    color: $text-success !important;
+                  }
+                  &.underline-hov {
+                    color: $datatable-body-anchor-text-color !important;
+                    &:hover {
+                      color: $datatable-body-anchor-text-hover-color !important;
+                    }
+                  }
+                }
+                a,
+                button {
+                  background: transparent;
+                  &.btn {
+                    &.add-tag-btn {
+                      background: $datatable-add-tag-icons-bg-color !important;
+                      border-color: $datatable-add-tag-icons-border-color !important;
+                      &:hover {
+                        background: $datatable-add-tag-icons-hover-bg-color !important;
+                        border-color: $datatable-add-tag-icons-hover-border-color !important;
+                      }
+                      svg {
+                        color: $datatable-add-tag-icons-svg-color !important;
+                      }
+                    }
+                  }
+                  &.edit-hov {
+                    i {
+                      color: $datatable-icons-color !important;
+                      &:hover {
+                        color: $datatable-edit-icons-hover-color !important;
+                      }
+                      &.text-primary {
+                        color: $text-primary !important;
+                      }
+                    }
+                    .fa-medkit {
+                      color: $datatable-pharmacy-icons-color !important;
+                      &:hover {
+                        color: $datatable-pharmacy-icon-hover-color !important;
+                      }
+                    }
+                  }
+                  &.view-hov {
+                    i {
+                      color: $datatable-icons-color !important;
+                      &:hover {
+                        color: $datatable-view-icons-hover-color !important;
+                      }
+                      &.text-success {
+                        color: $text-success !important;
+                      }
+                    }
+                  }
+                  &.printer-hov {
+                    i {
+                      color: $datatable-icons-color !important;
+                      &:hover {
+                        color: $datatable-printer-icons-hover-color !important;
+                      }
+                    }
+                  }
+                  &.remove-hov {
+                    i {
+                      color: $datatable-remove-icons-hover-color !important;
+                    }
+                    &:hover {
+                      color: $datatable-remove-icons-hover-color !important;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .empty-row {
+      border: 1px solid $datatable-body-empty-border-color;
+    }
+  }
+  // All Datatable Footer Start
+  .datatable-footer {
+    background: $datatable-footer-bg-color !important;
+    .datatable-footer-inner {
+      .page-count {
+        color: $datatable-footer-text-color !important;
+      }
+      .datatable-pager {
+        .pager {
+          li {
+            a {
+              color: $datatable-pagination-text-color !important;
+              background: $datatable-pagination-bg-color !important;
+            }
+            &:not(.disabled).active,
+            &:not(.disabled):hover {
+              a {
+                color: $datatable-pagination-text-hover-color !important;
+                background: $datatable-pagination-bg-hover-color !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .datatable-header .datatable-row-center .datatable-header-cell,
+  .datatable-body
+    .datatable-scroll
+    .datatable-row-wrapper
+    .datatable-body-row
+    .datatable-row-center
+    .datatable-body-cell
+    .datatable-body-cell-label {
+    .mat-checkbox {
+      .mat-checkbox-layout {
+        .mat-checkbox-inner-container {
+          .mat-checkbox-background {
+            border: 1.5px solid $datatable-checkbox-border-color !important;
+            background: $datatable-checkbox-bg-color !important;
+          }
+        }
+      }
+    }
+    .mat-checkbox-disabled {
+      .mat-checkbox-layout {
+        .mat-checkbox-inner-container {
+          .mat-checkbox-background {
+            background: $datatable-checkbox-disabled-bg-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+// menu buttons colors, borders, background, text-colors
+nav {
+  &.left-nav {
+    ul {
+      .button--wayra {
+        a {
+          color: $menu-btn-text-color !important;
+          background: $menu-btn-background-color !important;
+          border: 1px solid $menu-btn-border-color !important;
+          // line-height: 20px;
+          &.btn-default {
+            background: $menu-btn-default-background-color !important;
+            color: $menu-btn-default-text-color !important;
+            border: 1px solid $menu-btn-default-border-color !important;
+          }
+          &.active {
+            background: $menu-btn-default-hover-background-color !important;
+            color: $menu-btn-default-hover-text-color !important;
+            border: 1px solid $menu-btn-default-hover-border-color !important;
+          }
+        }
+        &:hover,
+        &.active {
+          a {
+            background: $menu-btn-hover-background-color !important;
+            color: $menu-btn-hover-text-color !important;
+            border: 1px solid $menu-btn-hover-border-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+// Search filters background and colors
+.search-filter {
+  .search-filter-body {
+    background: $search-filter-background-color !important;
+    border: 1px solid $search-filter-border-color !important;
+  }
+}
+// buttons backgrounds, colors, text-colors
+.pdf-icon-hov {
+  border-color: $fax-btn-border-color !important;
+  color: $fax-btn-text-color !important;
+  background: $fax-btn-bg-color !important;
+  &:hover {
+    background: $fax-btn-bg-hover-color !important;
+    border-color: $fax-btn-border-hover-color !important;
+    color: $fax-btn-text-hover-color !important;
+  }
+}
+// tabs backgrounds, colors, borders
+.nav {
+  &.nav-tabs {
+    border: 1px solid $nav-tabs-mobile-border-color !important;
+    @media (min-width: 769.98px) {
+      border-top: $nav-tabs-desktop-border-top-color !important;
+      border-right: $nav-tabs-desktop-border-right-color !important;
+      border-left: $nav-tabs-desktop-border-left-color !important;
+    }
+    .nav-item {
+      .nav-link {
+        color: $nav-links-mobile-text-color !important;
+        border-bottom: 1px solid $nav-links-mobile-border-bottom-color !important;
+        @media (min-width: 769.98px) {
+          border: 1px solid $nav-links-desktop-border-color !important;
+          color: $nav-links-desktop-text-color !important;
+          background: $nav-links-desktop-bg-color !important;
+        }
+        &:hover,
+        &.active {
+          color: $nav-links-mobile-text-active-hover-color !important;
+          background: $nav-links-mobile-bg-active-hover-color !important;
+          border-color: $nav-links-mobile-border-active-hover-color !important;
+          @media (min-width: 769.98px) {
+            color: $nav-links-desktop-text-active-hover-color !important;
+            border-color: $nav-links-desktop-border-active-hover-color !important;
+            background: $nav-links-desktop-bg-active-hover-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+// labels and inputs
+.form-control,
+.custom-select {
+  border: 1px solid $input-border-color !important;
+  color: $input-text-color !important;
+  &:focus {
+    border-color: $focused-input-border-blue !important;
+  }
+}
+.form {
+  .form-group {
+    &.focused {
+      .form-label {
+        color: $focused-label-text-color !important;
+      }
+    }
+    .form-label {
+      color: $label-text-color !important;
+    }
+    .form-control,
+    .custom-select {
+      &:disabled,
+      &[readonly] {
+        background: $diable-input-bg-color !important;
+      }
+    }
+    .radio-block,
+    &.radio-block {
+      label {
+        .fake-input {
+          background: $radio-bg-none-label-radio-green-radio-bg-color !important;
+          border-color: $radio-bg-none-label-radio-green-radio-border-color !important;
+        }
+        .fake-label {
+          background: $checkbox-radio-bg-none-label-checkbox-label-bg-color !important;
+          color: $checkbox-radio-bg-none-label-checkbox-label-text-color !important;
+        }
+        [type="radio"] {
+          &:disabled {
+            ~ .fake-label {
+              background: $checkbox-radio-bg-none-label-checkbox-label-bg-color !important;
+              color: $checkbox-radio-bg-none-label-checkbox-label-text-color !important;
+            }
+          }
+        }
+        [type="radio"] {
+          &:checked {
+            + .fake-input {
+              border-color: $radio-bg-none-label-radio-green-radio-check-border-color !important;
+              &:before {
+                background: $radio-bg-none-label-radio-green-radio-check-bg-color !important;
+              }
+            }
+            ~ .fake-label {
+              background: $checkbox-radio-bg-none-label-checkbox-label-check-bg-color !important;
+              color: $checkbox-radio-bg-none-label-checkbox-label-check-text-color !important;
+            }
+          }
+        }
+      }
+    }
+  }
+  label {
+    &.chkbox {
+      .fake-input {
+        background: $checkbox-radio-bg-light-label-checkbox-bg-color !important;
+        border-color: $checkbox-radio-bg-light-label-checkbox-border-color !important;
+      }
+      [type="checkbox"] {
+        &:checked {
+          ~ .fake-input {
+            background: $checkbox-bg-light-label-checkbox-check-bg-color !important;
+            border-color: $checkbox-bg-light-label-checkbox-check-outer-border-color !important;
+          }
+          + .fake-input {
+            &:before {
+              border-color: $checkbox-bg-light-label-checkbox-check-border-color !important;
+            }
+          }
+          ~ .fake-label {
+            background: $checkbox-radio-bg-light-label-checkbox-label-check-bg-color !important;
+            color: $checkbox-radio-bg-light-label-checkbox-label-check-text-color !important;
+          }
+        }
+      }
+    }
+    .fake-label {
+      background: $checkbox-radio-bg-light-label-checkbox-label-bg-color;
+      color: $checkbox-radio-bg-light-label-checkbox-label-text-color !important;
+    }
+  }
+}
+.form-group {
+  &.option-field {
+    .custom-select {
+      color: $input-text-color !important;
+      border: 1px solid $input-border-color !important;
+    }
+  }
+}
+.add-user {
+  .ma-filter-btn {
+    background: $checkbox-radio-bg-blue-label-bg-color !important;
+    label {
+      &.chkbox {
+        .fake-input {
+          background: $checkbox-radio-bg-blue-label-checkbox-bg-color !important;
+          border-color: $checkbox-radio-bg-blue-label-checkbox-border-color !important;
+        }
+        .fake-label {
+          background: $checkbox-radio-bg-blue-label-checkbox-label-bg-color !important;
+          color: $checkbox-radio-bg-blue-label-checkbox-label-text-color !important;
+        }
+        [type="checkbox"] {
+          &:checked {
+            ~ .fake-input {
+              background: $checkbox-radio-bg-blue-label-checkbox-check-bg-color !important;
+              border-color: $checkbox-radio-bg-blue-label-checkbox-check-outer-border-color !important;
+            }
+            + .fake-input {
+              &:before {
+                border-color: $checkbox-radio-bg-blue-label-checkbox-check-border-color !important;
+              }
+            }
+            ~ .fake-label {
+              background: $checkbox-radio-bg-blue-label-checkbox-check-label-bg-color !important;
+              color: $checkbox-radio-bg-blue-label-checkbox-check-label-text-color !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.main-card,
+.assignment-modal,
+.soft-patient-create-appointment,
+.subject-row,
+.recurrence-row {
+  .form {
+    label {
+      &.chkbox {
+        [type="checkbox"] {
+          &:checked {
+            ~ .fake-input {
+              border-color: $checkbox-bg-none-label-check-border-blue-check-outer-border-color !important;
+            }
+            ~ .fake-label {
+              background: $checkbox-radio-bg-none-label-checkbox-label-check-bg-color !important;
+              color: $checkbox-radio-bg-none-label-checkbox-label-check-text-color !important;
+            }
+          }
+        }
+      }
+    }
+    .fake-label-frame {
+      [type="radio"] {
+        &:checked {
+          + .fake-input {
+            border-color: $radio-bg-none-label-radio-green-radio-border-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+.subject-row,
+.effected-clinic {
+  .form {
+    label {
+      &.chkbox {
+        .fake-label {
+          background: $checkbox-radio-bg-none-label-checkbox-label-bg-color !important;
+        }
+      }
+    }
+  }
+}
+.md-block {
+  .md-content {
+    .form {
+      label {
+        &.chkbox {
+          .fake-input {
+            background: $checkbox-radio-bg-light-label-checkbox-bg-color !important;
+            border-color: $checkbox-radio-bg-light-label-checkbox-border-color !important;
+          }
+          [type="checkbox"] {
+            &:checked {
+              ~ .fake-input {
+                background: $checkbox-bg-light-label-checkbox-check-bg-color !important;
+                border-color: $checkbox-bg-light-label-checkbox-check-outer-border-color !important;
+              }
+              + .fake-input {
+                &:before {
+                  border-color: $checkbox-bg-light-label-checkbox-check-border-color !important;
+                }
+              }
+              ~ .fake-label {
+                background: $checkbox-radio-bg-light-label-checkbox-label-check-bg-color !important;
+                color: $checkbox-radio-bg-light-label-checkbox-label-check-text-color !important;
+              }
+            }
+          }
+          .fake-label {
+            &.label-white {
+              background: $checkbox-border-green-label-checkbox-label-bg-color !important;
+              border-color: $checkbox-border-green-label-checkbox-label-border-color !important;
+              color: $checkbox-border-green-label-checkbox-label-text-color !important;
+            }
+          }
+        }
+        .fake-input {
+          border-color: $radio-bg-light-label-radio-border-color !important;
+        }
+        [type="radio"] {
+          &:checked {
+            ~ .fake-input {
+              border-color: $radio-bg-light-label-radio-check-border-color !important;
+            }
+            + .fake-input {
+              &:before {
+                background: $radio-bg-light-label-radio-check-bg-color !important;
+              }
+            }
+            ~ .fake-label {
+              background: $checkbox-radio-bg-light-label-checkbox-label-check-bg-color !important;
+              color: $checkbox-radio-bg-light-label-checkbox-label-check-text-color !important;
+            }
+          }
+        }
+        [type="checkbox"] {
+          &:checked {
+            ~ .fake-input {
+              &.input-white {
+                background: $checkbox-border-green-label-checkbox-check-outer-bg-color !important;
+                border-color: $checkbox-border-green-label-checkbox-check-outer-border-color !important;
+              }
+            }
+            + .fake-input {
+              &.input-white {
+                &:before {
+                  border-color: $checkbox-border-green-label-checkbox-check-border-color !important;
+                }
+              }
+            }
+            ~ .fake-label {
+              &.label-white {
+                background: $checkbox-border-green-label-checkbox-label-check-bg-color !important;
+                color: $checkbox-border-green-label-checkbox-label-check-text-color !important;
+              }
+            }
+          }
+        }
+        &.fake-label-frame {
+          [type="checkbox"] {
+            &:checked {
+              ~ .fake-input {
+                background: $checkbox-border-green-label-checkbox-check-outer-bg-color !important;
+                border-color: $checkbox-border-green-label-checkbox-check-outer-border-color !important;
+              }
+              + .fake-input {
+                &:before {
+                  border-color: $checkbox-border-green-label-checkbox-check-border-color !important;
+                }
+              }
+            }
+          }
+          [type="radio"] {
+            &:checked {
+              ~ .fake-input {
+                border-color: $radio-bg-none-label-radio-green-radio-check-border-color !important;
+              }
+              + .fake-input {
+                &:before {
+                  background: $radio-bg-none-label-radio-green-radio-check-bg-color !important;
+                }
+              }
+            }
+          }
+        }
+      }
+      .custom-checkbox-tools,
+      .course-block {
+        label {
+          .fake-label {
+            background: $checkbox-radio-bg-white-label-checkbox-label-bg-color !important;
+            border-color: $checkbox-radio-bg-white-label-checkbox-label-border-color !important;
+          }
+          [type="radio"],
+          [type="checkbox"] {
+            &:checked {
+              ~ .fake-label {
+                background: $checkbox-radio-bg-light-label-checkbox-label-check-bg-color !important;
+              }
+            }
+          }
+        }
+      }
+      .range-motion {
+        label {
+          &.chkbox {
+            .fake-label {
+              background: $checkbox-radio-bg-none-label-checkbox-label-bg-color !important;
+              color: $checkbox-radio-bg-none-label-checkbox-label-text-color !important;
+            }
+            [type="checkbox"] {
+              &:disabled {
+                ~ .fake-label {
+                  background: $checkbox-radio-bg-none-label-checkbox-label-bg-color !important;
+                  color: $checkbox-radio-bg-none-label-checkbox-label-text-color !important;
+                }
+              }
+            }
+            [type="checkbox"] {
+              &:checked {
+                ~ .fake-input {
+                  border-color: $checkbox-bg-none-label-check-green-checkbox-check-outer-border-color !important;
+                }
+                + .fake-input {
+                  &:before {
+                    border-color: $checkbox-bg-none-label-check-green-checkbox-check-border-color !important;
+                  }
+                }
+                ~ .fake-label {
+                  background: $checkbox-radio-bg-none-label-checkbox-label-check-bg-color !important;
+                  color: $checkbox-radio-bg-none-label-checkbox-label-check-text-color !important;
+                }
+              }
+            }
+          }
+        }
+      }
+      .devices-block,
+      .patient-reffered {
+        label {
+          .fake-label {
+            background: $checkbox-radio-bg-none-label-checkbox-label-bg-color !important;
+            color: $checkbox-radio-bg-none-label-checkbox-label-text-color !important;
+          }
+          [type="checkbox"],
+          [type="radio"] {
+            &:disabled {
+              ~ .fake-label {
+                background: $checkbox-radio-bg-none-label-checkbox-label-bg-color !important;
+                color: $checkbox-radio-bg-none-label-checkbox-label-text-color !important;
+              }
+            }
+          }
+          [type="checkbox"],
+          [type="radio"] {
+            &:checked {
+              ~ .fake-label {
+                background: $checkbox-radio-bg-none-label-checkbox-label-check-bg-color !important;
+                color: $checkbox-radio-bg-none-label-checkbox-label-check-text-color !important;
+              }
+            }
+          }
+          [type="radio"] {
+            &:checked {
+              ~ .fake-input {
+                border-color: $radio-bg-none-label-radio-green-radio-check-border-color !important;
+              }
+              + .fake-input {
+                &:before {
+                  background: $radio-bg-none-label-radio-green-radio-check-bg-color !important;
+                }
+              }
+            }
+          }
+          [type="checkbox"] {
+            &:checked {
+              ~ .fake-input {
+                border-color: $checkbox-bg-none-label-check-green-checkbox-check-outer-border-color !important;
+              }
+              + .fake-input {
+                &:before {
+                  border-color: $checkbox-bg-none-label-check-green-checkbox-check-border-color !important;
+                }
+              }
+            }
+          }
+        }
+      }
+      &.additional-class {
+        label {
+          .fake-label {
+            background: $checkbox-radio-bg-white-label-checkbox-label-bg-color !important;
+            border-color: $checkbox-radio-bg-white-label-checkbox-label-border-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+.body-parts-block {
+  .bodyparts-range {
+    .bodypart-name {
+      h6 {
+        background: $injury-body-parts-header-bg-color !important;
+        color: $injury-body-parts-header-text-color !important;
+      }
+    }
+    h6 {
+      color: $injury-body-parts-body-text-color !important;
+    }
+  }
+  .bodypart-other-blcok {
+    h6 {
+      background: $injury-body-parts-header-bg-color !important;
+      color: $injury-body-parts-header-text-color !important;
+    }
+    .bodyparts-range {
+      .close {
+        color: $injury-body-parts-cross-color !important;
+      }
+      h6 {
+        background: $injury-body-parts-other-body-text-bg-color !important;
+        color: $injury-body-parts-body-text-color !important;
+      }
+    }
+  }
+}
+// mat-date-picker icon
+.mat-datepicker-toggle {
+  color: $mat-date-picker-icon-text-color !important;
+  opacity: 0.54;
+  &:hover {
+    opacity: 1;
+  }
+  .mat-icon-button {
+    &:hover {
+      color: $mat-date-picker-icon-text-hover-color !important;
+      opacity: 1;
+    }
+  }
+}
+.form-label {
+  &.tags-btn {
+    border: 1px solid $badge-tag-btn-border-color !important;
+    background: $badge-tag-btn-bg-color !important;
+    color: $badge-tag-btn-text-color !important;
+    svg {
+      background: $badge-tag-cross-icon-bg-color !important;
+      color: $badge-tag-cross-icon-color !important;
+      &:hover {
+        background: $badge-tag-cross-icon-hover-bg-color !important;
+        color: $badge-tag-cross-icon-hover-color !important;
+      }
+    }
+  }
+}
+// badge backgroung, text-color
+.badge {
+  &.bg-info {
+    background: $badge-bg-color !important;
+    color: $badge-text-color !important;
+  }
+  &.badge-danger {
+    background: $badge-danger-bg-color !important;
+    color: $badge-danger-text-color !important;
+  }
+}
+//modal background and color
+// .modal-backdrop,
+// .ngx-cool-dialog__backdrop{
+//     background: $modal-backdrop-bg-color !important;
+// }
+.modal {
+  .modal-dialog {
+    .modal-content {
+      // modal header
+      .modal-header {
+        background: $modal-header-bg-color !important;
+        color: $modalbox-head-text-color !important;
+        .modal-title {
+          color: $modal-header-title-text-color !important;
+        }
+        .close {
+          color: $modal-header-close-color !important;
+        }
+      }
+      // modal body
+      .modal-body {
+        background: $modalbox-body-bg-color !important;
+        color: $modalbox-body-text-color !important;
+        &.bg-gray {
+          background: $light-alabaster !important;
+        }
+      }
+      //modal footer
+      .modal-footer {
+        background: $modalbox-footer-bg-color;
+        color: $modalbox-footer-border-color;
+      }
+    }
+  }
+}
+// confirmation modal box background, colors, borders
+.confirmation-modal {
+  .modal-dialog {
+    .confirm-modal-header {
+      background: $modal-header-bg-color !important;
+      .modal-title {
+        color: $modal-header-title-text-color !important;
+        font-size: 18px;
+        text-align: center;
+      }
+      .close {
+        color: $modal-header-close-color !important;
+        position: absolute;
+        right: 10px;
+      }
+    }
+    .confirm-modal-body {
+      background: $modalbox-body-bg-color !important;
+      color: $modalbox-body-text-color !important;
+      text-align: center;
+    }
+    .confirm-modal-footer {
+      border-color: $confirm-modal-footer-border-top-color !important;
+      button {
+        &.btn-default {
+          background: $jaspero-confirmation-dialog-btn-default-bg-color !important;
+          color: $jaspero-confirmation-dialog-btn-default-text-color !important;
+          border-right: 1px solid
+            $jaspero-confirmation-dialog-btn-default-border-right-color !important;
+          border-top: 0 !important;
+          border-bottom: 0 !important;
+          border-left: 0 !important;
+          &:hover {
+            background: $jaspero-confirmation-dialog-btn-default-bg-hover-color !important;
+            color: $jaspero-confirmation-dialog-btn-default-text-hover-color !important;
+          }
+        }
+        &.btn-danger {
+          background: $jaspero-confirmation-dialog-btn-primary-bg-color !important;
+          color: $jaspero-confirmation-dialog-btn-primary-text-color !important;
+          &:hover {
+            background: $jaspero-confirmation-dialog-btn-primary-bg-hover-color !important;
+            color: $jaspero-confirmation-dialog-btn-primary-text-hover-color !important;
+          }
+        }
+        &.btn-success {
+          background: $jaspero-confirmation-dialog-btn-success-bg-color !important;
+          color: $jaspero-confirmation-dialog-btn-success-text-color !important;
+          &:hover {
+            background: $jaspero-confirmation-dialog-btn-success-bg-hover-color !important;
+            color: $jaspero-confirmation-dialog-btn-success-text-hover-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+.ngx-cool-dialog {
+  .ngx-cool-dialog__content {
+    .ngx-cool-dialog__header {
+      background: $modal-header-bg-color !important;
+      .ngx-cool-dialog__title {
+        color: $modal-header-title-text-color !important;
+      }
+      .ngx-cool-dialog__close-symbol {
+        &:after,
+        &:before {
+          background: $modal-header-close-color !important;
+        }
+      }
+    }
+    .ngx-cool-dialog__text {
+      background: $modalbox-body-bg-color !important;
+      color: $modalbox-body-text-color !important;
+    }
+    .ngx-cool-dialog__footer {
+      border-top-color: $confirm-modal-footer-border-top-color !important;
+      button {
+        &.ngx-cool-dialog__cancel-btn {
+          background: $jaspero-confirmation-dialog-btn-default-bg-color !important;
+          color: $jaspero-confirmation-dialog-btn-default-text-color !important;
+          border-right: 1px solid
+            $jaspero-confirmation-dialog-btn-default-border-right-color !important;
+          border-top-color: $jaspero-confirmation-dialog-btn-default-border-color !important;
+          border-left-color: $jaspero-confirmation-dialog-btn-default-border-color !important;
+          border-bottom-color: $jaspero-confirmation-dialog-btn-default-border-color !important;
+          &:hover {
+            background: $jaspero-confirmation-dialog-btn-default-bg-hover-color !important;
+            color: $jaspero-confirmation-dialog-btn-default-text-hover-color !important;
+          }
+        }
+        &.ngx-cool-dialog__ok-btn {
+          background: $jaspero-confirmation-dialog-btn-primary-bg-color !important;
+          color: $jaspero-confirmation-dialog-btn-primary-text-color !important;
+          &:hover {
+            background: $jaspero-confirmation-dialog-btn-primary-bg-hover-color !important;
+            color: $jaspero-confirmation-dialog-btn-primary-text-hover-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+//jaspero header,text-color
+.jaspero__confirmation {
+  .jaspero__confirmation_dialog {
+    background: $jaspero-confirmation-dialogue-box-bg-color !important;
+    color: $jaspero-confirmation-dialogue-box-text-color !important;
+    .jaspero__confirmation_dialog-title {
+      background: $jaspero-confirmation-dialog-header-bg-color !important;
+      color: $jaspero-confirmation-dialog-header-text-color !important;
+    }
+    .jaspero__confirmation_dialog-actions {
+      background: $jaspero-confirmation-dialog-footer-bg-color;
+      border-top: 1px solid $jaspero-confirmation-dialog-action-border-color;
+      button {
+        &.default {
+          background: $jaspero-confirmation-dialog-btn-default-bg-color !important;
+          color: $jaspero-confirmation-dialog-btn-default-text-color !important;
+          border-right: 1px solid
+            $jaspero-confirmation-dialog-btn-default-border-right-color !important;
+          &:hover {
+            background: $jaspero-confirmation-dialog-btn-default-bg-hover-color !important;
+            color: $jaspero-confirmation-dialog-btn-default-text-hover-color !important;
+          }
+        }
+        &.primary {
+          background: $jaspero-confirmation-dialog-btn-primary-bg-color !important;
+          color: $jaspero-confirmation-dialog-btn-primary-text-color !important;
+          &:hover {
+            background: $jaspero-confirmation-dialog-btn-primary-bg-hover-color !important;
+            color: $jaspero-confirmation-dialog-btn-primary-text-hover-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+// Patient Profile Styling colors, background, border-color, image styling
+.profile-block {
+  border-color: $patient-profile-block-border-color !important;
+  .profile-image-box {
+    border-color: $patient-profile-image-border-color !important;
+    background: $patient-profile-image-bg-color !important;
+  }
+  .text-hold {
+    h2 {
+      color: $patient-profile-block-heading-color !important;
+      small {
+        span {
+          color: $patient-profile-block-heading-brackets-color !important;
+        }
+      }
+    }
+    h3 {
+      color: $patient-profile-chart-id-color !important;
+    }
+    .patient-info-box {
+      ul {
+        li {
+          color: $patient-profile-info-box-text-color !important;
+          &:nth-child(1),
+          &:nth-child(3),
+          &:nth-child(5),
+          &:nth-child(7),
+          &:nth-child(9),
+          &:nth-child(11),
+          &:nth-child(14) {
+            background: $patient-info-first-child-bg-color !important;
+          }
+          &:nth-child(2),
+          &:nth-child(4),
+          &:nth-child(6),
+          &:nth-child(8),
+          &:nth-child(10),
+          &:nth-child(13),
+          &:nth-child(15) {
+            background: $patient-info-second-child-bg-color !important;
+          }
+          @media only screen and (min-width: 767.98px) {
+            &:nth-child(2),
+            &:nth-child(6),
+            &:nth-child(10),
+            &:nth-child(15) {
+              background: $patient-info-first-child-bg-color !important;
+            }
+            &:nth-child(3),
+            &:nth-child(7),
+            &:nth-child(11) {
+              background: $patient-info-second-child-bg-color !important;
+            }
+          }
+          @media only screen and (min-width: 1199.98px) {
+            &:nth-child(3),
+            &:nth-child(7),
+            &:nth-child(8),
+            &:nth-child(16) {
+              background: $patient-info-first-child-bg-color !important;
+            }
+            &:nth-child(5),
+            &:nth-child(6),
+            &:nth-child(10) {
+              background: $patient-info-second-child-bg-color !important;
+            }
+          }
+          @media only screen and (min-width: 1399.98px) {
+            &:nth-child(4),
+            &:nth-child(9),
+            &:nth-child(10),
+            &:nth-child(11),
+            &:nth-child(12) {
+              background: $patient-info-first-child-bg-color !important;
+            }
+            &:nth-child(7),
+            &:nth-child(8),
+            &:nth-child(14),
+            &:nth-child(15),
+            &:nth-child(16) {
+              background: $patient-info-second-child-bg-color !important;
+            }
+          }
+        }
+      }
+    }
+    .form {
+      .form-group {
+        .form-control {
+          background: $patient-profile-form-input-bg-color;
+        }
+        .icon-alert {
+          color: $patient-profile-form-alert-icon-color !important;
+        }
+      }
+    }
+  }
+}
+//ng progress bar background and box shadow color
+.ng-progress {
+  .bar {
+    background: $ng-progress-bar-bg-color !important;
+    .bar-shadow {
+      box-shadow: 0px 0px 10px $ng-progress-bar-shadow-color,
+        0px 0px 5px $ng-progress-bar-shadow-color !important;
+    }
+  }
+}
+// error-messages text-color
+.text-muted {
+  &.danger {
+    color: $error-messages-text-color !important;
+  }
+}
+.required {
+  color: $error-messages-text-color !important;
+}
+//mat-chip bg,color,border
+.mat-mdc-chip {
+  &.mat-mdc-standard-chip {
+    background: $mat-chip-bg-color !important;
+    box-shadow: 0 1px 4px $mat-chip-shadow-color !important;
+    color: $mat-chip-text-color !important;
+    &:hover {
+      background: $mat-chip-bg-hover-color !important;
+      color: $mat-chip-text-hover-color !important;
+    }
+    .mat-mdc-chip-remove {
+      color: $mat-chip-icon-color !important;
+    }
+  }
+}
+// ng-multiselect bg,color,border
+.multiselect-dropdown {
+  .dropdown-btn {
+    background: $multiselect-dropdown-btn-bg-color !important;
+    color: $multiselect-dropdown-btn-text-color !important;
+    border: 1px solid $multiselect-dropdown-btn-border-color !important;
+    .selected-item {
+      background: $multiselect-selected-item-bg-color !important;
+      border: 1px solid $multiselect-selected-item-border-color !important;
+      padding: 0 5px 2px !important;
+      a {
+        color: $multiselect-cross-icon-color !important;
+      }
+    }
+  }
+}
+.multiselect-item-checkbox {
+  border-bottom: 1px solid $multiselect-item--checkbox-border-bottom-color;
+}
+// comments section input field
+.comments-modal {
+  .inbox_msg {
+    border: 1px solid $comments-modal-inbox-border-color !important;
+    background: $comments-modal-inbox-background-color !important;
+    .time_date {
+      color: $comments-modal-time-date-color !important;
+    }
+    .light-blue {
+      color: $comments-modal-light-blue-class-text-color !important;
+      background: $comments-modal-light-blue-class-bg-color !important;
+    }
+    .sent_msg {
+      p {
+        background: $comments-modal-sent-msg-bg-color none repeat scroll 0 0 !important;
+        color: $comments-modal-sent-msg-text-color !important;
+      }
+    }
+    .badge-light {
+      background: $comments-modal-sent-badge-bg-color !important;
+    }
+  }
+  .mat-select-arrow {
+    color: $comments-modal-mat-select-arrow-color !important;
+  }
+  .type_msg {
+    border-top: 1px solid $comments-modal-type-msg-border-top-color !important;
+  }
+  .msg_send_btn {
+    background: $comments-modal-msg-send-btn-bg-color !important;
+    &.disabled_custom {
+      background: $comments-modal-msg-send-disable-bg-color !important;
+      color: $comments-modal-msg-send-disable-text-color !important;
+    }
+  }
+  .mat-mdc-form-field-label {
+    color: $comments-modal-mat-form-field-color !important;
+  }
+}
+//signature area bg and border color
+.sign-area {
+  .signature-pad {
+    canvas {
+      background: $signature-area-canvas-bg-color !important;
+      border: 1px solid $signature-area-canvas-border-color !important;
+    }
+  }
+  .signature-img {
+    border: 1px solid $signature-area-signature-img-border-color !important;
+  }
+}
+//ng select styling
+.ng-select {
+  &.ng-select-single,
+  &.ng-select-multiple {
+    &.ng-select-disabled {
+      .ng-select-container {
+        background: #e9ecef !important;
+      }
+    }
+  }
+  &.ng-select-multiple {
+    .ng-select-container {
+      border: 1px solid $ng-select-border-color !important;
+      color: $ng-select-text-color !important;
+      background: $ng-select-bg-color !important;
+      .ng-value-container {
+        .ng-placeholder {
+          color: $ng-select-placeholder-text-color !important;
+        }
+        .ng-value {
+          &.ng-label {
+            background: $ng-select-value-bg-color !important;
+            .ng-value-label {
+              border-left: 1px solid $ng-value-label-border-left-color !important;
+              color: $ng-value-label-color !important;
+            }
+            .ng-value-icon {
+              border-left: 1px solid $ng-select-value-icon-border-left-color !important;
+              color: $ng-value-label-color !important ;
+              &:hover {
+                background: $ng-select-value-icon-bg-hover-color !important;
+                color: $ng-value-label-color !important;
+              }
+            }
+          }
+          &.ng-numbers {
+            .ng-value-label {
+              color: $ng-value-label-number-color !important;
+            }
+          }
+        }
+      }
+    }
+  }
+  .ng-clear-wrapper {
+    .ng-clear {
+      color: $ng-select-clear-wrapper-text-color !important;
+      vertical-align: middle;
+    }
+    &:hover {
+      .ng-clear {
+        color: $ng-select-clear-wrapper-text-hover-color !important;
+      }
+    }
+  }
+  .ng-arrow-wrapper {
+    .ng-arrow {
+      border-top-color: $ng-select-arrow-border-color !important;
+    }
+    &:hover {
+      .ng-arrow {
+        border-top-color: $ng-select-arrow-border-hover-color !important;
+      }
+    }
+  }
+  &.ng-select-opened {
+    .ng-select-container {
+      .ng-arrow-wrapper {
+        .ng-arrow {
+          border-bottom-color: $ng-select-arrow-border-color !important;
+        }
+        &:hover {
+          .ng-arrow {
+            border-bottom-color: $ng-select-arrow-border-hover-color !important;
+          }
+        }
+      }
+    }
+  }
+  .ng-dropdown-panel {
+    background: $ng-select-dropdown-panel-bg-color !important;
+    border: 1px solid $ng-select-dropdown-panel-border-color !important;
+    .ng-dropdown-panel-items {
+      .ng-option {
+        background: $ng-select-dropdown-panel-option-bg-color !important;
+        color: $ng-select-dropdown-panel-option-text-color !important;
+        &.ng-option-marked,
+        &.ng-option-selected {
+          background: $ng-select-dropdown-panel-option-marked-bg-color !important;
+          color: $ng-select-dropdown-panel-option-marked-text-color !important;
+        }
+      }
+    }
+  }
+}
+.modal {
+  .dynamic-form-block {
+    .ng-select {
+      .ng-select-container {
+        background: $ng-select-bg-light-color !important;
+      }
+    }
+  }
+}
+// Case Flow Patient Summry text
+.patient-summary {
+  .card {
+    border-color: $patient-info-card-border-color !important;
+    background: $patient-info-card-bg-color !important;
+    .card-body {
+      background: $patient-info-card-body-bg-color !important;
+      border-color: $patient-info-card-border-color !important;
+      ul {
+        background: $patient-info-card-nav-bar-bg-color !important;
+        border-color: $patient-info-card-nav-bar-border-color !important;
+        li {
+          color: $patient-info-card-nav-item-color !important;
+          span {
+            color: $patient-info-card-nav-item-text-color !important;
+          }
+        }
+      }
+    }
+  }
+}
+.master-user {
+  .add-user {
+    .card {
+      .card-body {
+        border-color: $pumice !important;
+        background: $white !important;
+        .document-manager {
+          .document-content-area {
+            .card {
+              .card-header {
+                background: $document-manager-collapse-card-header-bg-color !important;
+                border-color: $document-manager-collapse-card-header-border-color !important;
+                color: $document-manager-collapse-card-header-text-color !important;
+              }
+              .card-body {
+                background: $document-manager-collapse-card-body-bg-color !important;
+                border-color: $document-manager-collapse-card-body-border-color !important;
+              }
+            }
+            .preview-details {
+              .card {
+                .card-header {
+                  background: $document-manager-pdf-view-card-header-bg-color !important;
+                  p {
+                    color: $document-manager-pdf-view-card-header-text-color !important;
+                  }
+                }
+                .preview-scroll {
+                  border-color: $document-manager-pdf-view-card-body-border-color !important;
+                  .card-body {
+                    background: $document-manager-pdf-view-card-body-bg-color !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  // Master Edit user structure colors, background, borders
+  .bill-border {
+    border-color: $pumice !important;
+    .add-user-form {
+      .card-body {
+        background: $white !important;
+        border-color: $pumice !important;
+        .user-basic-info {
+          .profile-image {
+            .ngx-file-drop__drop-zone {
+              border-color: $edward !important;
+              .upload-btn {
+                background-color: $green-haze !important;
+                opacity: 0.42;
+              }
+            }
+          }
+        }
+        .document-manager {
+          .document-content-area {
+            .card {
+              .card-header {
+                background: $document-manager-collapse-card-header-bg-color !important;
+                border-color: $document-manager-collapse-card-header-border-color !important;
+                color: $document-manager-collapse-card-header-text-color !important;
+              }
+              .card-body {
+                background: $document-manager-collapse-card-body-bg-color !important;
+                border-color: $document-manager-collapse-card-body-border-color !important;
+              }
+            }
+            .preview-details {
+              .card {
+                .card-header {
+                  background: $document-manager-pdf-view-card-header-bg-color !important;
+                  p {
+                    color: $document-manager-pdf-view-card-header-text-color !important;
+                  }
+                }
+                .preview-scroll {
+                  border-color: $document-manager-pdf-view-card-body-border-color !important;
+                  .card-body {
+                    background: $document-manager-pdf-view-card-body-bg-color !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// srollbar, perfect-scroll bar, scroll bar-y, scroll bar-x
+// For Perfect Scroll bar background and colors
+.ps {
+  .ps__rail-y,
+  .ps__rail-x {
+    background: $transparent !important;
+    .ps__thumb-y,
+    .ps__thumb-x {
+      background: $picton-blue !important;
+    }
+    &.ps--clicking,
+    &:hover {
+      .ps__thumb-y,
+      .ps__thumb-x {
+        background: $green-haze !important;
+      }
+    }
+  }
+}
+// For data table scrolle bar
+.ngx-datatable {
+  &.scroll-horz {
+    .datatable-body {
+      &::-webkit-scrollbar-track {
+        background: $seashell !important;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: $picton-blue !important;
+        &:hover {
+          background: $green-haze !important;
+        }
+      }
+    }
+  }
+}
+.custom-scroll-x,
+.custom-scroll-y {
+  &::-webkit-scrollbar-track {
+    background: $seashell !important;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $picton-blue !important;
+    &:hover {
+      background: $green-haze !important;
+    }
+  }
+}
+// Drag and drop colors background borders
+.file-upload {
+  border-color: $silver-chalice !important;
+  background: $hint-of-red !important;
+  p {
+    color: $gray !important;
+    .btn {
+      box-shadow: 0px 2px 6px -3px $black !important;
+      &:hover {
+        box-shadow: $none !important;
+      }
+    }
+  }
+}
+//Toaster
+.toast-container {
+  .ngx-toastr {
+    background: $toast-bg-color !important;
+    border-color: $toast-border-color !important;
+    .toast-title {
+      color: $toast-title-text-color !important;
+    }
+    .toast-message {
+      color: $toast-message-text-color !important;
+    }
+  }
+  .toast-error {
+    &:after {
+      color: $toast-error-color !important;
+    }
+  }
+  .toast-success {
+    &:after {
+      color: $toast-success-color !important;
+    }
+  }
+  .toast-info {
+    .toast-title {
+      $toast-title-text-color: $toaster-warning;
+      color: $toast-title-text-color !important;
+    }
+    &:after {
+      color: $toast-info-color !important;
+    }
+  }
+}
+.tamplate-custom-header {
+  .document-content-area {
+    .card {
+      .card-header {
+        &.card-header-custom {
+          background: $collapse-card-header-bg-color !important;
+          border-color: $document-manager-collapse-card-header-border-color !important;
+          border-radius: 6px 6px 0px 0px;
+        }
+      }
+    }
+  }
+}
+// collapse card background, colors, borders
+.document-manager {
+  .role-permissions,
+  .document-content-area {
+    .card {
+      .card-header {
+        background: $collapse-card-header-bg-color !important;
+        border-color: $collapse-card-header-border-color !important;
+        color: $collapse-card-header-text-color !important;
+        .form {
+          span {
+            color: $collapse-card-header-text-color !important;
+          }
+        }
+        ul {
+          li {
+            color: $collapse-card-header-text-color !important;
+          }
+        }
+      }
+      .card-body {
+        background: $collapse-card-body-bg-color !important;
+        border-color: $collapse-card-body-border-color !important;
+        .card {
+          .card-header {
+            background: $collapse-card-inner-header-bg-color !important;
+            border-color: $collapse-card-inner-header-border-color !important;
+            ul {
+              color: $collapse-card-inner-header-text-color !important;
+              li {
+                color: $collapse-card-inner-header-text-color !important;
+                span {
+                  color: $collapse-card-inner-header-text-color !important;
+                }
+              }
+            }
+          }
+          .card-body {
+            background: $collapse-card-inner-body-bg-color !important;
+            border-color: $collapse-card-inner-body-border-color !important;
+            .card {
+              background: $collapse-card-inner-body-header-bg-color !important;
+            }
+          }
+        }
+      }
+    }
+  }
+  .custom-pagination {
+    background: $collapse-card-footer-bg-color !important;
+    span {
+      color: $collapse-card-footer-text-color !important;
+    }
+    .pagination {
+      li {
+        .page-link {
+          background: $collapse-card-footer-pagination-bg-color !important;
+          color: $collapse-card-footer-pagination-text-color !important;
+          border-color: $collapse-card-footer-pagination-border-color !important;
+        }
+        &:not(.disabled) {
+          &.active,
+          &:hover {
+            .page-link {
+              background: $collapse-card-footer-pagination-bg-hover-color !important;
+              color: $collapse-card-footer-pagination-text-hover-color !important;
+              border-color: $collapse-card-footer-pagination-border-hover-color !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// mat-tree background, colors, borders
+.mat-tree-scroller {
+  .mat-tree {
+    background: $mat-tree-bg-color !important;
+    border-color: $mat-tree-border-color !important;
+    .mat-tree-node {
+      border-bottom-color: $mat-tree-border-bottom-color !important;
+      color: $mat-tree-text-color !important;
+      &:nth-child(odd) {
+        background-color: $mat-tree-odd-bg-color !important;
+      }
+      &:nth-child(even) {
+        background-color: $mat-tree-even-bg-color !important;
+      }
+      .mat-icon-button {
+        &:before {
+          border-left-color: $mat-tree-line-border-color !important;
+        }
+        &:after {
+          border-top-color: $mat-tree-line-border-color !important;
+        }
+      }
+      &::-webkit-scrollbar {
+        background: $webkit-scrollbar-bg-color !important;
+      }
+      &::-webkit-scrollbar-track {
+        background: $webkit-scrollbar-track-bg-color !important;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: $webkit-scrollbar-thumb-bg-color !important;
+        &:hover {
+          background: $webkit-scrollbar-thumb-bg-hover-color !important;
+        }
+      }
+    }
+  }
+}
+// Document manager background, color, borders
+.document-manager {
+  .tree-left-sidebar {
+    .doc-manager-panel {
+      .sidebar-frame {
+        background: $document-manager-side-bar-bg-color !important;
+        border-color: $document-manager-side-bar-border-color !important;
+        .widget {
+          .card {
+            .card-header {
+              background: $document-manager-side-bar-card-header-bg-color !important;
+              border-color: $document-manager-side-bar-card-header-border-color !important;
+              p {
+                color: $document-manager-side-bar-card-header-text-color !important;
+              }
+            }
+            .card-body {
+              .mat-tree {
+                border-color: $document-manager-side-bar-mat-tree-border-color !important;
+                .mat-tree-node {
+                  border-bottom-color: $document-manager-side-bar-mat-tree-border-bottom-color !important;
+                  color: $document-manager-side-bar-mat-tree-text-color !important;
+                  &:nth-child(odd) {
+                    background-color: $document-manager-side-bar-mat-tree-odd-bg-color !important;
+                  }
+                  &:nth-child(even) {
+                    background-color: $document-manager-side-bar-mat-tree-even-bg-color !important;
+                  }
+                  .mat-icon-button {
+                    &:before {
+                      border-left-color: $document-manager-side-bar-mat-tree-line-color !important;
+                    }
+                    &:after {
+                      border-top-color: $document-manager-side-bar-mat-tree-line-color !important;
+                    }
+                  }
+                  .border-right-text {
+                    border-right-color: $document-manager-side-bar-mat-tree-line-color !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .document-content-area {
+      .card {
+        .card-header {
+          background: $document-manager-collapse-card-header-bg-color !important;
+          border-color: $document-manager-collapse-card-header-border-color !important;
+          color: $document-manager-collapse-card-header-text-color !important;
+        }
+        .card-body {
+          background: $document-manager-collapse-card-body-bg-color !important;
+          border-color: $document-manager-collapse-card-body-border-color !important;
+          .card {
+            .card-header {
+              background: $document-manager-collapse-card-header-inner-bg-color !important;
+              border-color: $document-manager-collapse-card-header-inner-border-color !important;
+              color: $document-manager-collapse-card-header-inner-text-color !important;
+              .close {
+                color: $document-manager-collapse-card-header-inner-close-icon-color !important;
+              }
+            }
+            .card-body {
+              background: $document-manager-collapse-card-body-inner-bg-color !important;
+              border-color: $document-manager-collapse-card-body-inner-border-color !important;
+            }
+          }
+        }
+      }
+      .preview-details {
+        .card {
+          .card-header {
+            background: $document-manager-pdf-view-card-header-bg-color !important;
+            p {
+              color: $document-manager-pdf-view-card-header-text-color !important;
+            }
+          }
+          .preview-scroll {
+            border-color: $document-manager-pdf-view-card-body-border-color !important;
+            .card-body {
+              background: $document-manager-pdf-view-card-body-bg-color !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// Scheduler Month main calendar bg color, colors, borders
+.scheduler-front-desk {
+  .speciality-month-calendar {
+    .table-width,
+    .total-width {
+      .cal-assign-speciality-month-view {
+        .cal-header {
+          &:hover {
+            background: $cal-month-header-row-bg-color !important;
+          }
+          .cal-cell {
+            color: $cal-month-header-text-color !important;
+            &:hover {
+              background: $cal-month-header-days-bg-color !important;
+            }
+          }
+        }
+        .cal-days {
+          border-color: $cal-month-body-border-color !important;
+          .cal-cell-row {
+            border-bottom-color: $cal-month-body-border-color !important;
+            .cal-day-cell {
+              &:not(:last-child) {
+                border-right-color: $cal-month-body-border-color !important;
+              }
+              .cal-cell-top {
+                .cal-day-number {
+                  color: $cal-month-body-text-color !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// Medical Doctor colors, backgrounds, borders
+.carry-farword {
+  background: $menu-btn-carry-farword-bg-color !important;
+  border-color: $menu-btn-carry-farword-border-color !important;
+  color: $menu-btn-carry-farword-text-color !important;
+}
+.md-block {
+  .md-content {
+    background: $medical-doc-main-bg-color !important;
+    border-color: $medical-doc-main-border-color !important;
+    .nav {
+      &.nav-tabs {
+        border: $medical-doc-tab-main-border-color !important;
+        @media only screen and (min-width: 767.98px) {
+          border-bottom: $medical-doc-tab-main-border-bottom-color !important;
+        }
+        .nav-item {
+          .nav-link {
+            background: $medical-doc-tab-bg-color !important;
+            border-color: $medical-doc-tab-border-color !important;
+            &.active {
+              background: $medical-doc-tab-bg-active-color !important;
+              color: $medical-doc-tab-text-active-color !important;
+              border-color: $medical-doc-tab-border-active-color !important;
+              &:hover {
+                background: $medical-doc-tab-bg-active-color !important;
+                color: $medical-doc-tab-text-active-color !important;
+                border-color: $medical-doc-tab-border-active-color !important;
+              }
+            }
+            &:hover {
+              background-color: $medical-doc-tab-bg-hover-color !important;
+              color: $medical-doc-tab-text-hover-color !important;
+              border-color: $medical-doc-tab-border-hover-color !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.dropdown-arrow-pointer {
+  .ng-select {
+    .ng-arrow-wrapper {
+      .ng-arrow {
+        pointer-events: auto !important;
+      }
+    }
+  }
+}

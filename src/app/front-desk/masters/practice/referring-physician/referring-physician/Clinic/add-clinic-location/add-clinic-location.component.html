@@ -1,0 +1,113 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="modal-content">
+	<div class="modal-header">
+	  <h5 class="modal-title" id="exampleModalLabel">{{locationType}} Location</h5>
+	  <button type="button" (click)="cancel()" class="close" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body modal-pt-15">
+	  <form [formGroup]="locationForm">
+		<div class="row">
+		  <div class="col-md-6">
+			<div class="form-group mb-1">
+				<label class="form-label" for="Street">Street Address*</label>
+				<input style="display: none" type="text" name="street_address" autocomplete="off" />
+				<input ngx-google-places-autocomplete [options]="{
+			  types: [],
+			  componentRestrictions: { country: 'US' }
+			  }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event)"
+				  formControlName="street_address" type="text" id="address" class="form-control form-input mb-0">
+				  <small class="form-text text-muted danger"
+				  *ngIf="locationForm.get('street_address').errors?.required && (locationForm.get('street_address').dirty || locationForm.get('street_address').touched)">
+				  This field is required.</small>
+			</div>
+		  </div>
+		  <div class="col-md-6">
+			<div class="form-group mb-1">
+			  <label class="form-label">Suite/Floor</label>
+			  <input class="form-control mb-0" formControlName="floor" type="text" maxlength='50'>
+			</div>
+		  </div>
+		</div>
+  
+		<div class="row">
+		  <div class="col-md-4">
+			<div class="form-group mb-1"><label class="form-label">City*</label>
+				<input class="form-control mb-0" formControlName="city" type="text" maxlength='50'>
+				<small class="form-text text-muted danger"
+				*ngIf="locationForm.get('city').errors?.required && (locationForm.get('city').dirty || locationForm.get('city').touched)">
+				This field is required.</small>
+			</div>
+		  </div>
+		  <div class="col-md-4">
+			<div class="form-group mb-1"><label class="form-label">State*</label>
+				<ng-select formControlName="state" class="ng-value-label border-0 tooltip-outer"  ngbTooltip="{{selectedState}}" (change)="stateChange($event)" tooltipClass="table-custom-tooltip" [items]="allStates" container="body" bindLabel="name" bindValue="name">
+					<ng-template ng-option-tmp let-item="item">
+					  <span class="ng-value-label border-0 tooltip-outer"  tooltipClass="table-custom-tooltip" ngbTooltip="{{item.fullName}}" container="body">{{item.name}}</span>
+					</ng-template>
+				  </ng-select>			
+				  <small class="form-text text-muted danger"
+				  *ngIf="locationForm.get('state').errors?.required && (locationForm.get('state').dirty || locationForm.get('state').touched)">
+				  This field is required.</small>
+				</div>
+		  </div>
+		  <div class="col-md-4">
+			<div class="form-group mb-1"><label class="form-label">Zip*</label>
+			  <input class="form-control mb-0" formControlName="zip" type="text">
+			  <small class="form-text text-muted danger"
+			  *ngIf="locationForm.get('zip').errors?.required && (locationForm.get('zip').dirty || locationForm.get('zip').touched)">
+			  This field is required.</small>
+			</div>
+		  </div>
+		</div>
+  
+		<div class="row">
+		  <div class="col-md-12">
+			<div class="form-group mb-1">
+				<label class="form-label">Email</label>
+			  <input class="form-control mb-0" formControlName="email" type="text">
+			  <small class="form-text text-muted danger"
+			  *ngIf="locationForm.get('email').errors?.pattern && (locationForm.get('email').dirty || locationForm.get('email').touched)">
+			  Email invalid.</small>
+			</div>
+		  </div>
+		  </div>
+  
+		<div class="row">
+			<div class="col-md-4">
+				<div class="form-group mb-1"><label class="form-label">Phone no</label>
+				  <input class="form-control mb-0" formControlName="phone" type="text" mask='000-000-0000'>
+				<small class="form-text text-muted danger"
+				  *ngIf="(locationForm.get('phone').value && locationForm.get('phone').value.length > 0 && locationForm.get('phone').value.length < 10) && locationForm.get('phone').touched">
+				  Invalid Format: 000-000-0000
+			  	</small>
+				</div>
+			  </div>
+			<div class="col-md-4">
+				<div class="form-group mb-1"><label class="form-label">Extension</label>
+				  <input class="form-control mb-0"  formControlName="extension" type="text" appOnlyNumeric maxlength='10'>
+				</div>
+			  </div>
+		  <div class="col-md-4">
+			<div class="form-group mb-1"><label class="form-label">Fax</label>
+			  <input class="form-control mb-0" mask="000-000-0000" formControlName="fax" type="text">
+			  <label class="form-text text-muted danger"
+				*ngIf="locationForm.get('fax').value && locationForm.get('fax').value.length > 0 && locationForm.get('fax').value.length < 10">
+				Invalid Format: 000-000-0000</label>
+			</div>
+		  </div>
+		</div>
+
+  
+		<div class="row mt-3">
+		  <div class="col-md-12 modal-btn-width text-center">
+			<button class="btn btn-primary me-3" (click)="cancel()" type="button">Cancel</button>
+			<button (click)="save()" [disabled]="locationForm.invalid ||loading" data-dismiss="modal"
+			  class="btn btn-success">{{locationType == 'Add' ? 'Save & Continue' : 'Update & Continue'}}</button>
+		  </div>
+		</div>
+	  </form>
+	</div>
+  </div>
+  

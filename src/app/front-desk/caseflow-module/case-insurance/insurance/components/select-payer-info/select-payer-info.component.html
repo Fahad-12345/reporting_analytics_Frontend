@@ -1,0 +1,104 @@
+
+<div class="front-desk-block billing-info">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Select Payer Info</h5>
+            <button type="button" (click)="cancel()" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+    <div class="modal-body modal-pt-15">
+        <div class="row mb-2">
+            <div class="col-21">
+                <div *ngIf="payer_info_list.length">
+                    <ngx-datatable [rows]="payer_info_list" [columnMode]='"force"'
+                        class='ngx-datatable bootstrap white-space-wrap custom-scroll-x visit-bill-table fixed-header virtualized scroll-horz payer-info-action'
+                        [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="false" [virtualization]="false"
+                        [externalPaging]="false">
+                        <ngx-datatable-column name="CH Name" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="clearinghouse">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                    ngbTooltip="{{row.clearinghouse.name || 'N/A'}}" container="body">
+                                    {{row.clearinghouse.name || 'N/A'}}</div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Payer ID" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="payer_id">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.payer_id || 'N/A'}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="State" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="states">
+                            <ng-template let-row="row" let-value="value"  ngx-datatable-cell-template>
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                ngbTooltip="{{row.states | commaSeparatedValueFromArr:'code' || 'N/A'}}" container="body">
+                                    {{row.states | commaSeparatedValueFromArr:'code' || 'N/A'}}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Professional" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="professional">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.professional?'Y':row.professional == 0 ? 'N':'N/A'}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Institutional" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="institutional">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.institutional?'Y':row.institutional == 0 ? 'N':'N/A'}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Automotive" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="automotive">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.automotive?'Y':row.automotive == 0 ? 'N':'N/A'}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Worker Compensation" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="worker_compensation">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.worker_compensation?'Y':row.worker_compensation == 0 ? 'N':'N/A'}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="EOB/835" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="eob_835">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.eob_835?'Y':row.eob_835 == 0 ? 'N':'N/A'}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Supported Transaction" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="supported_transaction">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.supported_transaction || 'N/A'}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Pharmacy Rx" [sortable]="false" [canAutoResize]="true"
+                            [draggable]="false" [resizeable]="false" prop="pharmacy_Rx">
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                {{row.pharmacy_Rx?'Y':row.pharmacy_Rx == 0 ? 'N':'N/A'}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Actions" sortable="false" [width]="100">
+                            <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+                                <mat-radio-button (click)="setDefaultPayer(row)"
+                                    [disabled]="hideShowUpdateInsuranceButton || payer_info_list.length === 1"
+                                    [value]="row.is_default_payer" [checked]="row.is_default_payer">
+                                </mat-radio-button>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 modal-btn-width text-center">
+                <button class="btn btn-primary me-3" (click)="cancel()" type="button">Cancel</button>
+                <button (click)="save()" data-dismiss="modal" class="btn btn-success">Save & Continue</button>
+            </div>
+        </div>
+    </div>
+</div>

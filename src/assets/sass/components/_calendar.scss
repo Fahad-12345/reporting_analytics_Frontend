@@ -1,0 +1,233 @@
+
+// Calender
+.main-calendar {
+	transition: all .3s;
+}
+
+.sidebar-left {
+	border: 1px solid #b4aeae;
+	width: 350px;
+	@include px-to-rem(width, 350px, false);
+	height: 100%;
+	@include px-to-rem(padding, 10px, false);
+	border-radius: 3px 3px 3px 3px;
+}
+
+// Search Filter
+.btn-filter {
+	@include px-to-rem(height, 38px, false);
+	font-weight: 500;
+	@include px-to-rem(padding, 10px, false);
+	cursor: pointer;
+
+	&:hover {
+		border-bottom: 1px solid #006228;
+		color: #34c3ee;
+	  }
+  }
+
+  .btn-filter-selected {
+	border-bottom: 1px solid #006228;
+  }
+  
+// Clinic list
+.clinic-list  {
+	.list-group {
+		overflow-y: scroll;
+		overflow-x: hidden;
+		border: 1px solid #e5e5e5;
+		height: calc(100vh - 300px);
+		@include px-to-rem(padding, 5px 10px, false);
+		border-radius: 2px;
+
+		.list-group-item {
+			border-radius: 4px;
+			border-top-width: 1px;
+			@include px-to-rem(margin, 4px 0px, false);
+			@include px-to-rem(padding, 12px 15px, false);
+			border-left-width: 4px;
+			cursor: pointer;
+
+			&:hover {
+				box-shadow: rgba(83,74,74,.2) 0 1px 5px !important;
+			}
+
+			.clinic-name {
+				display: inherit;
+				max-width: 85%;
+				font-weight: 500;
+				@include px-to-rem(margin-bottom, 3px, false);
+			}
+
+			.clinic-address {
+				display: inherit;
+				max-width: 85%;
+				color: #6e6b6b;
+			  }
+
+			/* The customcheck */
+			.customcheck {
+				cursor: pointer;
+				position: absolute;
+				top: calc(50% - 31px);
+				right: 15px;
+
+				input {
+					opacity: 0;
+					cursor: pointer;
+					display: none;
+				}
+
+				.checkmark {
+					position: absolute;
+					top: 20px;
+					right: 0;
+					display: block;
+					@include px-to-rem(width, 25px, false);
+					@include px-to-rem(height, 25px, false);
+					background-color: #eee;
+					border-radius: 50%;
+
+					&:after {
+							left: 9px;
+							top: 5px;
+							@include px-to-rem(width, 7px, false);
+							@include px-to-rem(height, 13px, false);
+							border: solid white;
+							border-width: 0 3px 3px 0;
+							-webkit-transform: rotate(45deg);
+							-ms-transform: rotate(45deg);
+							transform: rotate(45deg);
+					}
+				}
+
+				&:hover {
+					 input~.checkmark {
+						background-color: #02cf32;
+					}
+				}
+
+				input:checked~.checkmark {
+					background-color: #02cf32;
+					border-radius: 50%;
+				}
+
+					
+				.checkmark:after {
+					content: "";
+					position: absolute;
+					display: none;
+				}
+
+				input:checked~.checkmark:after {
+					display: block;
+				}
+			
+			}
+
+			.doctor-profile {
+				@include px-to-rem(width, 50px, false);
+				@include px-to-rem(height, 60px, false);
+			  }
+			  .custom-btn{
+				@include px-to-rem(width, 100px, true);
+			}
+
+		}
+	}
+}
+
+.cal-header {
+	.nav {
+		.nav-link {
+			color: #4b4b4b;
+			border: 1px solid #888988;
+			@include px-to-rem(font-size, 16px, false);
+			border-radius: 4px;
+			@include px-to-rem(height, 32px, false);
+			@include px-to-rem(padding, 3px 15px, false);
+			@include px-to-rem(margin, 0px 5px, false);
+			&.active, &:hover {
+				background: #00a650;
+				border: 1px solid #00a650;
+				color: #fff;
+			}
+		}
+	}
+	.previous-date, .next-date {
+		@include px-to-rem(font-size, 24px, false);
+		line-height: 0;
+		cursor: pointer;
+		.fa-caret-left, .fa-caret-right {
+			&:hover {
+				color: #34c3ee; 
+			}
+		}
+	}
+	.btn-outline-secondary {
+		color: #4b4b4b;
+		&:hover {
+			color: #fff;
+		}
+	}
+	.btn {
+		&.btn-outline-secondary{
+			&:hover{
+				background: $green-haze;
+			}
+		}
+	}
+}
+
+.speciality-month-calendar{
+    overflow-x: scroll !important;
+    &.scroll-provider-one{  
+        overflow-x: hidden !important;
+        @media only screen and (max-width: 1330px){
+            overflow-x: scroll !important;
+        }
+    }
+	/* width */
+	&::-webkit-scrollbar {
+		width: 12px;
+		height: 7px;
+		background-color: #F5F5F5;
+	}
+	
+	/* Track */
+	&::-webkit-scrollbar-track {
+		box-shadow: inset 10 10 25px black;
+		border-radius: 3px;
+	}
+	
+	/* Handle */
+	&::-webkit-scrollbar-thumb {
+		height: 10px !important;
+		background-color: #34c3ee;
+		border: 0px solid #525252;
+		/* Handle on hover */
+			&:hover {
+				background-color: #00a650;
+				cursor: pointer;
+				background: #00a650;
+		}
+	}
+}
+
+.mini-calendar{
+    .docList{
+        .speciality-spec{
+            .speciality-name{
+                font-weight: 500;
+            }
+        }
+    }
+}
+
+.cal-assign-speciality-month-view .popover, .popover.sch-popover {
+	max-width: 240px !important;
+}
+
+.mat-calendar-body-label, .mat-calendar-period-button {
+	font-size: 0.875rem !important;
+}

@@ -1,0 +1,72 @@
+<div class="front-desk-block document-manager billing-info add-user">
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="col-12 pt-2">
+        <p class="my-1">Add New Practice Required Fields</p>
+      </div>
+
+
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label mb-1" for="facility">Facility Location *</label>
+		  <ng-select id='facility' formControlName="facility_location_ids" multiple='true' [closeOnSelect]="false"
+		   (change)="onFacilityLocationChange()"
+            [items]="lstFacility" bindValue='id' bindLabel='name'>
+          </ng-select>
+
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label class="form-label mb-1" for="speciality">Specialty *</label>
+          <ng-select id='speciality' (change)="onSpecialityChange($event)" multiple='true' [closeOnSelect]="false"
+            formControlName="speciality_id" [items]="lstSpeciality" bindValue='id' bindLabel='name'>
+          </ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div formArrayName="specialities"
+        *ngFor="let speciality of form['controls'].specialities['controls']; let x=index" class="col-md-6">
+        <div [formGroupName]="x" class="card mb-3">
+          <div class="card-header color-white" style="padding: 0px 15px !important; background: #34c3ee !important;">
+            <div class="row align-items-center">
+              <div class="col-10 pe-0 form text-center">
+                {{speciality.value.name}}
+              </div>
+              <div class="col-2 text-end">
+                <button class="btn slide-btn btn-primary" type="button">
+                  <span class="icon-plus ms-0"></span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-body p-3 border-top-0">
+            <p class="texte-center mb-2"><strong>Visit Type</strong></p>
+            <div formArrayName="visit_types"
+              *ngFor="let visittype of speciality['controls'].visit_types['controls'];let i=index"
+              class="form-group row mb-2">
+              <!-- {{visittype.value | json}} -->
+              <label class="col-sm-3 col-form-label">{{visittype.value.name}}</label>
+              <div [formGroupName]="i" class="col-sm-9">
+
+                <!-- {{speciality['controls'].visit_types['controls'] | json}} -->
+                <ng-select formControlName="fields_controls" [closeOnSelect]="false" [items]='lstRequiredField'
+                  bindValue='id' bindLabel='title' multiple='true'></ng-select>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </form>
+
+  <div class="row form-btn justify-content-center mt-1">
+    <button class="btn btn-primary w-100 mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="goBack()" type="submit"> Back </button>
+    <button [disabled]="disableBtn" (click)="submit(form.value)" class="btn btn-success w-100 mt-1 mt-sm-0 mb-2 mb-sm-0" type="button">{{disableBtn? 'Please Wait' : 'Save &
+      Continue'}}</button>
+    </div>
+  </div>

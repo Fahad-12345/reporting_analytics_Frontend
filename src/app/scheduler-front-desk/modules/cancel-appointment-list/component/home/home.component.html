@@ -1,0 +1,357 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="row user-info pt-2">
+    <div class='col-md-12'>
+        <h4 class="my-0 color-green">Cancelled Appoinment List</h4>
+    </div>
+</div>
+<hr class="line-bottom">
+
+<div *ngIf="aclService.hasPermission(userPermissions.schedule_cancelled_appointment_list_view)">
+    <form class="form" [formGroup]="myForm"
+        *ngIf="aclService.hasPermission(userPermissions.schedule_cancelled_appointment_list_filter)">
+        <div class="ng-check">
+            <div class="search-filter search-filter-bg-light filter-grid grid-4"
+                [class.hide-remaining-search-filter]="!isCollapsed">
+                <div class="filter-grid-container">
+                    <div class="form-group">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'speciality_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['speciality_ids']"
+                            [showSelectFieldOnRefresh]="myForm.get('speciality_ids').value" [lableName]="'Specialty'"
+                            [bindlable]="'name'" [qulifierShown]="true" [showSelectAll]="true" [showGroupBy]="true"
+                            [bindId]="'id'" [apiPath]="EnumApiPathFilter.specialityApi" [ngSelectShow]="true"
+                            (valueChange)="selectionOnValueChange($event,'speciality_ids')" [multiple]="true">
+                        </app-ng-select-shareable>
+                    </div>
+                    <div class="form-group last-calender-btn-option">
+                        <app-mat-date-picker-sharedable [classesName]="['form-group','field']"
+                            [lableName]="'Start date (mm/dd/yyyy)'" (valueChange)="onStartDateChange($event)"
+                            [defaultDate]='startDate'
+                            [disabled]="!aclService.hasPermission(userPermissions.schedule_cancelled_appointment_list_filter)"></app-mat-date-picker-sharedable>
+                    </div>
+                    <div class="form-group last-calender-btn-option">
+                        <app-mat-date-picker-sharedable [classesName]="['form-group','field']"
+                            [lableName]="'End date (mm/dd/yyyy)'" (valueChange)="onEndDateChange($event)"
+                            [defaultDate]='endDate' [min]="minDate"
+                            [disabled]="!aclService.hasPermission(userPermissions.schedule_cancelled_appointment_list_filter)"></app-mat-date-picker-sharedable>
+                    </div>
+                    <div class="form-group"
+                        [class.focused]="(this.docSelectedMultiple != '' && this.docSelectedMultiple != null) || ngFilterService.ngFilterFields.getProvider()">
+                        <!-- <ng-select [items]="assignDoctor" bindValue="id" bindLabel="name" [placeholder]="''" [multiple]="true" [closeOnSelect]="false" [(ngModel)]="docSelectedMultiple" [ngModelOptions]="{standalone: true}" (ngModelChange)="this.setPage({ offset: 0 });changeSelectTemplateForm(docSelectedMultiple , 'docSelectedMultiple')"
+                                (open)="setActionOfNgDropDown('provider', true)" (close)="setActionOfNgDropDown('provider', false)">
+                                    <ng-template ng-label-tmp let-item="item">
+                                        <span>{{ item.name}}</span>
+    
+                                    </ng-template>
+                                    <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                                        <span>{{ item.name}}</span>
+                                    </ng-template>
+    
+                                    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                        <div class="ng-value ng-label" *ngFor="let item of items | slice:0:1">
+                                            <span>{{ item.name}}</span>
+                                            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                        </div>
+                                        <div class="ng-value ng-numbers" *ngIf="items.length > 1">
+                                            <span class="ng-value-label">+{{items.length - 1}}</span>
+                                        </div>
+                                    </ng-template>
+                                </ng-select> -->
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'doctor_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['doctor_ids']"
+                            [showSelectFieldOnRefresh]="myForm.get('doctor_ids').value" [lableName]="'Providers'"
+                            [bindlable]="'full_name'" [showSelectAll]="true" [showGroupBy]="false"
+                            [searchLableName]="'doctor_name'" [bindId]="'id'"
+                            [apiPath]="EnumApiPathFilter.providerApiPath" [ngSelectShow]="true"
+                            (valueChange)="selectionOnValueChange($event,'doctor_ids','appointmentList')"
+                            [multiple]="true">
+                        </app-ng-select-shareable>
+                    </div>
+                    <div class="form-group">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'facility_location_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['facility_location_ids']"
+                            [showSelectFieldOnRefresh]="myForm.get('facility_location_ids').value"
+                            [lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" [qulifierShown]="true"
+                            [showSelectAll]="true" [showGroupBy]="true" [bindId]="'id'"
+                            [apiPath]="EnumApiPathFilter.practiceLocationPath" [ngSelectShow]="true"
+                            (valueChange)="selectionOnValueChange($event,'facility_location_ids')" [multiple]="true">
+                        </app-ng-select-shareable>
+                    </div>
+                    <div class="form-group"
+                            [ngClass]="{'focused': myForm.get('case_ids').value != '' && myForm.get('case_ids').value != null }">
+                            <label class="form-label" for="case_ids">Case No</label>
+                            <input appOnlyNumeric type="number" id="case_ids" class="form-control form-input"
+                                formControlName="case_ids">
+                    </div>
+                    <div class="form-group">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'created_by_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['created_by_ids']"
+                            [showSelectFieldOnRefresh]="myForm.get('created_by_ids').value" [lableName]="'Created By'"
+                            [bindlable]="'full_name'" [showSelectAll]="true" [showGroupBy]="false" [bindId]="'id'"
+                            [apiPath]="	EnumApiPathFilter.createdByApiPath" [ngSelectShow]="true"
+                            (valueChange)="selectionOnValueChange($event,'created_by_ids')" [multiple]="true">
+                        </app-ng-select-shareable>
+                    </div>
+                    <div class="form-group">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'updated_by_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['updated_by_ids']"
+                            [showSelectFieldOnRefresh]="myForm.get('updated_by_ids').value" [lableName]="'Updated By'"
+                            [bindlable]="'full_name'" [showSelectAll]="true" [showGroupBy]="false" [bindId]="'id'"
+                            [apiPath]="	EnumApiPathFilter.createdByApiPath" [ngSelectShow]="true"
+                            (valueChange)="selectionOnValueChange($event,'updated_by_ids')" [multiple]="true">
+                        </app-ng-select-shareable>
+                    </div>
+                    <div class="form-group"
+                            [ngClass]="{'focused': (myForm.get('created_at').value != '' && myForm.get('created_at').value != null) || myForm.get('created_at').errors?.invalid_date  || myForm.get('created_at').errors?.invalid_date }">
+                            <label class="form-label" for="createdAt">Created At (mm/dd/yyyy)</label>
+                            <input [matDatepicker]="created_at" appInputDateMask [min]="min"
+                                [appMaskDate]="myForm.get('created_at').value" class="form-control form-input" id="createdAt" name="createdAt"
+                                formControlName="created_at">
+                            <mat-datepicker-toggle matSuffix [for]="created_at"></mat-datepicker-toggle>
+                            <mat-datepicker #created_at></mat-datepicker>
+                            <small class="form-text text-muted danger"
+                                *ngIf="myForm.get('created_at').errors?.invalid_date && myForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT  ">Date
+                                format should be accurate</small>
+                    </div>
+                    <div class="form-group"
+                            [ngClass]="{'focused': (myForm.get('updated_at').value != '' && myForm.get('updated_at').value != null) || myForm.get('updated_at').errors?.invalid_date  || myForm.get('updated_at').errors?.invalid_date }">
+                            <label class="form-label" for="dateOfAccidentFrom">Updated At (mm/dd/yyyy)</label>
+                            <input [matDatepicker]="updated_at" appInputDateMask [min]="min"
+                                [appMaskDate]="myForm.get('updated_at').value" class="form-control form-input" id="dueDate"
+                                formControlName="updated_at">
+                            <mat-datepicker-toggle matSuffix [for]="updated_at"></mat-datepicker-toggle>
+                            <mat-datepicker #updated_at></mat-datepicker>
+                            <small class="form-text text-muted danger"
+                                *ngIf="myForm.get('updated_at').errors?.invalid_date && myForm.get('updated_at').errors?.invalid_date?.text != DATEFORMAT  ">Date
+                                format should be accurate</small>
+                    </div>
+                </div>
+                    <div class="collape-btn">
+                        <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+                            [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"
+                            [class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button">
+                            <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+                        </button>
+                    </div>
+                    <div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+                        <button class="btn btn-success" type="submit" (click)="FilterSubmit({ offset: 0 });"
+                            [disabled]="!aclService.hasPermission(userPermissions.schedule_cancelled_appointment_list_filter)">Filter</button>
+                        <button class="btn btn-primary" type="button" type="button" (click)="resetFilter(true)"
+                            [disabled]="checkInputs()">Reset</button>
+                    </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="card data-table p-0 mt-1 mb-0 data-table-btn border-0"
+    *ngIf="aclService.hasPermission(userPermissions.schedule_cancelled_appointment_list_view)">
+    <div class="row">
+        <div class="col-md-6 edit-block">
+            <div class="form-group field option-field mb-2 d-inline-block">
+                <ul>
+                    <li>Show</li>
+                    <li>
+                        <select aria-label="Select" class="custom-select" (change)="PageLimit($event.target.value)"
+                            [(ngModel)]="page.size">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </li>
+                    <li>Entries</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6 text-end mt-2 mb-2">
+            <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+                Customize Columns
+            </button>
+            <a *ngIf="this.deleteAll.length>0 && aclService.hasPermission(userPermissions.cancelled_appointment_delete)" (click)="deleteAllAppointments()" class="btn btn-danger ms-2" href="javascript:void(0)">
+                <span class="icon-remove me-1"></span> Delete [{{this.deleteAll.length}}]
+            </a>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12">
+			<ngx-datatable class="bootstrap custom-scroll-x" (page)="setPage($event)" [count]='page.totalElements' 
+			#cancelledappList [rows]="data" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" 
+			[limit]="page.size" [scrollbarH]="true" [offset]="page.pageNumber" [externalPaging]="true">
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case No." prop="id" [width]="65">
+                    <ng-template let-column="column" ngx-dattable-header-template>
+                        Case No.
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <a class="tooltip-outer underline-hov" tooltipClass="table-custom-tooltip" container="body"
+                            ngbTooltip="{{row?.case_id}}"
+                            [routerLink]="'/front-desk/cases/edit/' + row.case_id +'/patient/patient_summary'">
+                            {{row?.case_id}}
+                        </a>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+                    name="Patient Name" prop="id" [width]="100">
+                    <ng-template let-column="column" ngx-dattable-header-template>
+                        Patient Name
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+                            ngbTooltip="{{row?.patient_first_name}} {{row?.patient_middle_name? row.patient_middle_name:''}} {{row?.patient_last_name}}">
+                            {{row?.patient_first_name}} {{row?.patient_middle_name? row.patient_middle_name:''}}
+                            {{row?.patient_last_name}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+                    name="Appointment Data & Time" prop="scheduled_date_time" [width]="170">
+                    <ng-template let-column="column" ngx-dattable-header-template>
+                        Appointmnet Date & Time
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                            ngbTooltip="{{row?.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy() }}{{datePipeService.signBetweenDateTime()}}{{row?.scheduled_date_time| date: datePipeService.hourMinAmPmTimeFormat()}}">
+                            {{row?.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()
+                            }}{{datePipeService.signBetweenDateTime()}}{{row?.scheduled_date_time| date:
+                            datePipeService.hourMinAmPmTimeFormat()}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+                    name="Cancelled Date & Time " prop="firstName" [width]="150">
+                    <ng-template let-column="column" ngx-dattable-header-template>
+                        Cancelled Date & Time
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                            ngbTooltip="{{row?.updated_at | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}{{datePipeService.signBetweenDateTime()}} {{row?.updated_at| date: datePipeService.hourMinAmPmTimeFormat()}}">
+                            {{row?.updated_at | date:
+                            datePipeService.slashDateFormat_MM_dd_yyyy()}}{{datePipeService.signBetweenDateTime()}}
+                            {{row?.updated_at| date: datePipeService.hourMinAmPmTimeFormat()}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider" prop="lastName" [width]="100">
+                    <ng-template let-column="column" ngx-dattable-header-template>
+                        Provider
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+                            ngbTooltip="{{row?.doctor_first_name}} {{row?.doctor_middle_name? row.doctor_middle_name:''}} {{row?.doctor_last_name}}{{row?.billing_title | AddBillingTitle}}">
+                            {{row?.doctor_first_name}} {{row?.doctor_middle_name? row.doctor_middle_name:''}}
+                            {{row?.doctor_last_name}}{{row?.billing_title | AddBillingTitle}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+                    name="Specialty" prop="lastName" [width]="100">
+                    <ng-template let-column="column" ngx-dattable-header-template>
+                        Specialty
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+                            ngbTooltip="{{row?.speciality_name}}">
+                            {{row?.speciality_qualifier}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+                    name="Practice-Location" prop="lastName" [width]="120">
+                    <ng-template let-column="column" ngx-dattable-header-template>
+                        Practice-Location
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+                            ngbTooltip="{{row?.facility_name}}-{{row?.facility_location_name}}">
+                            {{row?.facility_qualifier}}-{{row.facility_location_qualifier}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+                    name="Cancellation Reason" prop="lastName" [width]="150">
+                    <ng-template let-column="column" ngx-dattable-header-template>
+                        Cancellation Reason
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+                            ngbTooltip="{{row?.cancelled_comments}}">
+                            {{row?.cancelled_comments}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+                    name="Action" prop="id" [width]="110" cellClass="action-icon">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.cancelled_appointment_delete)"
+                            (change)="allSelected($event)" [(ngModel)]="allChecked">
+                        </mat-checkbox>
+                        Actions
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.cancelled_appointment_delete)"
+                            (change)="particularSelected(row,$event)" [(ngModel)]="row.isChecked">
+                        </mat-checkbox>
+                        <button [ngClass]="{
+                            'icon-disabled': row?.canUndo || !row?.is_redo || (WithoutTime(row?.scheduled_date_time) < WithoutTime(todayDate)),
+                            'active': !(WithoutTime(row?.scheduled_date_time) < WithoutTime(todayDate))
+                          }" [disabled]="row?.canUndo || !row?.is_redo || (WithoutTime(row?.scheduled_date_time) < WithoutTime(todayDate))"
+                            (click)="UndoAppointment(row)" class="edit-hov mx-1" role="button">
+                            <span class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip"
+                                ngbTooltip="Undo">
+                                <i class="icon-undo"></i>
+                            </span>
+                        </button>
+                                    <button  (click)="cancelledAppointmentDetails(row)" class="view-hov mx-1" role="button" >
+                                        <span class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="View">
+                                            <i class="icon-eye"></i>
+                                        </span>
+                          
+                        </button>
+                        <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="cancelAppointmentHistoryStats(row)">
+                          <i class="fa fa-history"></i>
+                        </a>
+                        <button *ngIf="aclService.hasPermission(userPermissions.cancelled_appointment_delete)" (click)="deleteParticularAppointment(row.id)" href="javascript:void(0)" [disabled]="row.deleteDisable" class="remove-hov mx-1" role="button" >
+                            <span class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="Delete">
+                                <i class="icon-remove"></i>
+                            </span>
+
+                        </button>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="!aclService.hasPermission(userPermissions.schedule_cancelled_appointment_list_view)">
+    <div class="col-md-12">
+        <h6 class="my-0 color-red">No Access Permission</h6>
+    </div>
+</div>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+		[config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+			  <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+			  <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+			</div>
+			<div class="modal-footer justify-content-center">
+			  <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+			  <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+			</div>
+		  </div>
+		</div>
+	</div>

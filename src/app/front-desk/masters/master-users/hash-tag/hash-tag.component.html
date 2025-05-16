@@ -1,0 +1,587 @@
+<div class="front-desk-block billing-info">
+  <div class="card text-center">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs float-left">
+        <li class="nav-item" *ngIf="aclService.hasPermission('can_access_master_user_tags')">
+          <a class="nav-link active" id="hashtag-tab" data-bs-toggle="tab" href="#hashtag" role="tab"
+            aria-controls="hashtag" aria-selected="true">Hashtag</a>
+        </li>
+        <li class="nav-item" *ngIf="aclService.hasPermission('can_access_master_user_tags_cat')">
+          <a class="nav-link" id="category-tab" data-bs-toggle="tab" href="#category" role="tab" aria-controls="category"
+            aria-selected="false">Category</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-body" style="border-top:none;">
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="hashtag" role="tabpanel" aria-labelledby="hashtag-tab">
+          <div class="card search-filter-block">
+            <div class="d-block">
+              <a *ngIf="aclService.hasPermission('master_user_tags_can_add')" href="javascript:void(0)"
+                data-target="#hashtag-modal" data-bs-toggle="modal" (click)="save(hashTagModal)"
+                class="btn btn-default round-btn float-right">
+                Add New <span class="icon-plus-circle ms-2"></span>
+              </a>
+            </div>
+            <form action="" autocomplete="off">
+              <div class="form">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-xl-10 col-lg-9 col-md-12">
+                      <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                          <div class="form-group field">
+                            <label class="form-label" for="Name">Name</label>
+                            <input type="text" id="Name" class="form-control form-input">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-12">
+                      <div class="row justify-content-center mb-xl-0 mb-lg-0 mb-4">
+                        <div class="col-lg-6 col-md-3 col-sm-4 col-6 align-self-center">
+                          <button class="btn btn-success w-100 me-3"> Filter
+                          </button>
+                        </div>
+                        <div class="col-lg-6 col-md-3 col-sm-4 col-6 align-self-center">
+                          <button class="btn btn-primary w-100">Reset</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="card data-table p-0 mt-2">
+            <div class="row">
+              <div class="col-md-6 edit-block text-start">
+                <div class="form-group field option-field mb-2 d-inline-block">
+                  <ul>
+                    <li>Show</li>
+                    <li>
+                      <select class="custom-select" name="limit" id="limit" (change)="PageLimit($event.target.value)">
+                        <option [value]="10" selected>10</option>
+                        <option [value]="20">20</option>
+                        <option [value]="30">30</option>
+                        <option [value]="40">40</option>
+                        <option [value]="50">50</option>
+                        <option [value]="100">100</option>
+                      </select>
+                    </li>
+                    <li>entries</li>
+                  </ul>
+
+                </div>
+              </div>
+              <div class="col-md-6 text-end mt-2">
+
+              
+
+                <a href="javascript:void(0)" (click)="bulkDelete()" class="btn btn-default round-btn"
+                  *ngIf="selection.selected.length && aclService.hasPermission('master_user_tags_can_delete') && aclService.hasPermission('master_user_tags_cat_can_delete')">
+                  <span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+                </a>
+              </div>
+
+            </div>
+
+            <ngx-datatable [rows]="hashTags" [columnMode]='"force"' class='bootstrap' [footerHeight]="50"
+              [rowHeight]="'auto'" [scrollbarH]="true" [limit]="page.size">
+              <ngx-datatable-column name="Name" [sortable]="false" prop="hash_tag_name">
+
+                <ng-template ngx-datatable-cell-template *ngFor="let data of hashTags">
+                  {{data.hash_tag_name}}
+                </ng-template>
+
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Description" [sortable]="false" prop="description">
+
+                <ng-template ngx-datatable-cell-template *ngFor="let data of hashTags">
+                  {{data.description}}
+                </ng-template>
+
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Actions" [sortable]="false">
+                <ng-template ngx-datatable-header-template name="Actions" let-rowIndex="rowIndex">
+                  <mat-checkbox *ngIf="aclService.hasPermission('master_user_tags_can_delete')"
+                    (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()">
+                  </mat-checkbox>
+                  Actions
+                </ng-template>
+
+                <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+                  <mat-checkbox *ngIf="aclService.hasPermission('master_user_tags_can_delete')"
+                    (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                  </mat-checkbox>
+
+                  <a *ngIf="aclService.hasPermission('master_user_tags_can_edit')" class="pencil-hov mx-2"
+                    (click)="edit(hashTagModal, row)" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                      class="icon-pencil"></i></a>
+
+               
+
+
+                  <a *ngIf="aclService.hasPermission('master_user_tags_can_delete')" class="delete-hov mx-2"
+                    (click)="deleteOne(row.designation_id)" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                      class="icon-remove"></i></a>
+
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+
+          </div>
+
+        </div>
+
+        <div class="tab-pane fade" id="category" role="tabpanel" aria-labelledby="category-tab">
+          <div class="card search-filter-block">
+            <div class="d-block">
+              <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_add')" href="javascript:void(0)"
+                data-target="#category-name" data-bs-toggle="modal" (click)="save(hashTagCategoryModal)"
+                class="btn btn-default round-btn float-right">
+                Add New <span class="icon-plus-circle ms-2"></span>
+              </a>
+            </div>
+            <form action="" autocomplete="off">
+              <div class="form">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-xl-10 col-lg-9 col-md-12">
+                      <div class="row">
+                        <div class="col-lg-12 col-md-12">
+                          <div class="form-group field">
+                            <label class="form-label" for="Name">Category Name</label>
+                            <input type="text" id="Name" class="form-control form-input">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-12">
+                      <div class="row justify-content-center mb-xl-0 mb-lg-0 mb-4">
+                        <div class="col-lg-6 col-md-3 col-sm-4 col-6 align-self-center">
+                          <button class="btn btn-success w-100 me-3"> Filter
+                          </button>
+                        </div>
+                        <div class="col-lg-6 col-md-3 col-sm-4 col-6 align-self-center">
+                          <button class="btn btn-primary w-100">Reset</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+          <div class="card data-table p-0 mt-2">
+            <div class="row">
+              <div class="col-md-6 edit-block text-start">
+                <div class="form-group field option-field mb-2 d-inline-block">
+                  <ul>
+                    <li>Show</li>
+                    <li>
+                      <select class="custom-select" name="limit">
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                      </select>
+                    </li>
+                    <li>entries</li>
+                  </ul>
+
+                </div>
+              </div>
+              <div class="col-md-6 text-end mt-2">
+                <a href="javascript:void(0)" class="btn btn-success round-btn me-2">
+                  <span class="icon-create-task me-2"></span> Create Task
+                </a>
+                <a href="javascript:void(0)" class="btn btn-default round-btn">
+                  <span class="icon-remove me-1"></span> Delete [2]
+                </a>
+              </div>
+            </div>
+
+
+            <div class="card-body" style="border: none; background: transparent;  padding:0px;">
+              <table class="table table-bordered table-striped text-center mb-0">
+                <thead>
+                  <tr>
+                    <th class="border-right" scope="col">Category Name</th>
+                    <th class="border-right" scope="col">Description</th>
+                    <th class="form" scope="col" style="width:15%;">
+                      <label for="" class="chkbox position-relative mt-1">
+                        <input *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" id="" name=""
+                          value="" type="checkbox">
+                        <span class="fake-input position-absolute"></span>
+                      </label> Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td></td>
+                    <td>bla bla bla</td>
+                    <td class="form">
+                      <label for="" class="chkbox position-relative mt-1">
+                        <input *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" id="" name=""
+                          value="" type="checkbox">
+                        <span class="fake-input position-absolute"></span>
+                      </label>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_edit')" class="edit-hov mx-2"
+                        tooltip="Edit" href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+                      <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                          class="icon-create-task"></i></a>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" class="remove-hov mx-2"
+                        tooltip="Delete" href="javascript:void(0)" role="button">
+                        <span class="icon-remove"></span></a>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td></td>
+                    <td>bla bla bla</td>
+                    <td class="form">
+                      <label for="" class="chkbox position-relative mt-1">
+                        <input *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" id="" name=""
+                          value="" type="checkbox">
+                        <span class="fake-input position-absolute"></span>
+                      </label>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_edit')" class="edit-hov mx-2"
+                        tooltip="Edit" href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+                      <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                          class="icon-create-task"></i></a>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" class="remove-hov mx-2"
+                        tooltip="Delete" href="javascript:void(0)" role="button">
+                        <span class="icon-remove"></span></a>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td></td>
+                    <td>bla bla bla</td>
+                    <td class="form">
+                      <label for="" class="chkbox position-relative mt-1">
+                        <input id="" name="" value="" type="checkbox">
+                        <span class="fake-input position-absolute"></span>
+                      </label>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_edit')" class="edit-hov mx-2"
+                        tooltip="Edit" href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+                      <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                          class="icon-create-task"></i></a>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" class="remove-hov mx-2"
+                        tooltip="Delete" href="javascript:void(0)" role="button">
+                        <span class="icon-remove"></span></a>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td></td>
+                    <td>bla bla bla</td>
+                    <td class="form">
+                      <label for="" class="chkbox position-relative mt-1">
+                        <input *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" id="" name=""
+                          value="" type="checkbox">
+                        <span class="fake-input position-absolute"></span>
+                      </label>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_edit')" class="edit-hov mx-2"
+                        tooltip="Edit" href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+                      <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                          class="icon-create-task"></i></a>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" class="remove-hov mx-2"
+                        tooltip="Delete" href="javascript:void(0)" role="button">
+                        <span class="icon-remove"></span></a>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td></td>
+                    <td>bla bla bla</td>
+                    <td class="form">
+                      <label for="" class="chkbox position-relative mt-1">
+                        <input *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" id="" name=""
+                          value="" type="checkbox">
+                        <span class="fake-input position-absolute"></span>
+                      </label>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_edit')" class="edit-hov mx-2"
+                        tooltip="Edit" href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+                      <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                          class="icon-create-task"></i></a>
+                      <a *ngIf="aclService.hasPermission('master_user_tags_cat_can_delete')" class="remove-hov mx-2"
+                        tooltip="Delete" href="javascript:void(0)" role="button">
+                        <span class="icon-remove"></span></a>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+            </div>
+
+            <div class="card-footer text-muted">
+              <div class="row">
+                <div class="col-md-6 text-start">
+                  <p>Showing 1 to 5 of 337 entries</p>
+                </div>
+                <div class="col-md-6 justify-content-end d-flex">
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination mb-0">
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <img src="assets/images/previous.png">
+                        </a>
+
+                      </li>
+
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <img src="assets/images/left.png">
+                        </a>
+
+                      </li>
+
+                      <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                      <li class="page-item"><a class="page-link" href="#">2</a></li>
+                      <li class="page-item"><a class="page-link" href="#">3</a></li>
+                      <li class="page-item"><a class="page-link" href="#">4</a></li>
+                      <li class="page-item"><a class="page-link" href="#">5</a></li>
+
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                          <img src="assets/images/right.png">
+                        </a>
+
+                      </li>
+                      <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                          <img src="assets/images/next.png">
+                        </a>
+
+                      </li>
+
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- Hashtag Modal -->
+<!-- <div class="modal fade" id="hashtag-modal" tabindex="-1" role="dialog" aria-labelledby="hashtag-modal"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Hashtag</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form autocomplete="" [formGroup]="addTagForm" (ngSubmit)="addTagFormSubmit()">
+
+
+          <div class="form-group row mb-2">
+            <div class="col-md-12">
+              <input class="form-control" formControlName="tag" placeholder="Tag Name" type="text">
+            </div>
+          </div>
+          
+          <div class="col-sm-12">
+            <div class="form-group field focused">
+              <label for="catId" class="form-label">Category</label>
+              <select id="role" formControlName="catId" class="custom-select form-input" data-bs-toggle="tooltip"
+                data-trigger="hover" data-placement="top" data-title="Role">
+                <option *ngFor="let item of allCategories" [value]="item['id']">{{item['name']}}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <div class="col-md-12">
+              <textarea class="form-control" placeholder="Description" rows="3" formControlName="description"
+                style="height:60px !important;"></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-8 offset-sm-2">
+              <div class="row mb-0">
+                <div class="col-6">
+                  <button class="btn bg-green w-100" type="submit">Save</button>
+                </div>
+                <div class="col-6">
+                  <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<ng-template #hashTagModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{headerText}}</h5>
+    <button type="button" class="close" data-dismiss="modal" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addTagForm" (ngSubmit)="addTagFormSubmit()">
+
+
+      <div class="form-group row mb-1">
+        <div class="col-md-12">
+          <input class="form-control mb-0" formControlName="tag" placeholder="Tag Name" type="text">
+        </div>
+      </div>
+
+      <div class="form-group field focused">
+        <div class="col-md-12 px-0">
+          <label for="catId" class="form-label">Category</label>
+          <select id="role" formControlName="catId" class="custom-select form-input" data-bs-toggle="tooltip"
+            data-trigger="hover" data-placement="top" data-title="Role">
+            <option *ngFor="let item of allCategories" [value]="item['id']">{{item['name']}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group row mb-2">
+        <div class="col-md-12">
+          <textarea class="form-control" placeholder="Description" rows="3" formControlName="description"
+            style="height:60px !important;"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-8 offset-sm-2">
+          <div class="row mb-0">
+            <div class="col-6">
+              <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button"
+                (click)="modal.dismiss()">Cancel</button>
+            </div>
+            <div class="col-6">
+              <button [disabled]="addTagForm.invalid" class="btn bg-green w-100" type="submit">Save</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</ng-template>
+
+<!-- Hashtag Category Modal -->
+<!-- <div class="modal fade" id="category-name" tabindex="-1" role="dialog" aria-labelledby="category-name"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Category Name</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form autocomplete="" [formGroup]="addNewCategoryForm" (ngSubmit)="newCategoryFormSubmit()">
+
+
+          <div class="form-group row mb-2">
+            <div class="col-md-12">
+              <input class="form-control" placeholder="Category Name" type="text" formControlName="name">
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <div class="col-md-12">
+              <textarea class="form-control" placeholder="Description" rows="3" style="height:60px !important;"
+                formControlName="description"></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-8 offset-sm-2">
+              <div class="row mb-0">
+                <div class="col-6">
+                  <button class="btn bg-green w-100" type="submit">Save</button>
+                </div>
+                <div class="col-6">
+                  <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+<ng-template #hashTagCategoryModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{headerText}}</h5>
+    <button type="button" class="close" data-dismiss="modal" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addNewCategoryForm" (ngSubmit)="newCategoryFormSubmit()">
+
+
+      <div class="form-group row mb-2">
+        <div class="col-md-12">
+          <input class="form-control" placeholder="Category Name" type="text" formControlName="name">
+        </div>
+      </div>
+
+      <div class="form-group row mb-2">
+        <div class="col-md-12">
+          <textarea class="form-control" placeholder="Description" rows="3" style="height:60px !important;"
+            formControlName="description"></textarea>
+        </div>
+      </div>
+
+
+
+
+      <div class="row">
+        <div class="col-sm-8 offset-sm-2">
+          <div class="row mb-0">
+            <div class="col-6">
+              <button [disabled]="addNewCategoryForm.invalid" class="btn bg-green w-100" type="submit">Save</button>
+            </div>
+            <div class="col-6">
+              <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button"
+                (click)="modal.dismiss()">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</ng-template>

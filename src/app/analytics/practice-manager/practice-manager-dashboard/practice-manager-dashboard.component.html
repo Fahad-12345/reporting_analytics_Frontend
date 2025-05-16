@@ -1,0 +1,370 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<div class="container mt-4">
+
+    <div class="header-container-dashboard d-flex align-items-center">
+        <div class="heading">{{pageTitle}}</div>
+        <div *ngIf="isUserAdmin"  class="button-container-dashboard ms-auto">
+        <app-dashboard-switch [checkedButton]="this.dashboard.PracticeManager"></app-dashboard-switch>
+        </div>
+      </div>
+      
+    <app-global-filters (selectedFilterVal)="onCaptureFilterSelectEvent($event)"></app-global-filters>
+
+    <app-summery-stats [filters]="filters" *ngIf="filters != undefined"></app-summery-stats>
+    <div class="row row2 mt-3">
+        <div class="col-6 ">
+            <div class="card practice-manager">
+                <div class="card-body">
+                    <div class="trend-heading">Appointment Trends Analysis
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="The bar graph shows the distribution of appointments across a selected time period, with each color segment representing a particular appointment status: “Completed Appointments”, “Scheduled Appointments” and “Cancelled + No Show Appointments”. The bar shows the total count of these appointments according to the time span selected.  Cancelled and No-Show appointment count are added and shown as one bar in the graph. All the different types of appointments are calculated according to the “Scheduled Date”. Additionally, numerical values display both, the total count and percentage of all the different kinds of appointment status individually, that exist in the system. "
+                        container="body"> <img class="info-graph" src="assets/icons/info.svg" alt=""><img id="csv-icon" (click)="AppointmentExport()"  class="summary-icons" src="assets/icons/share.svg" alt=""></span>
+                    </div>
+
+                    <div class="trend-graph-img">
+                        <canvas id="appointmentTrendsAnalysisCanvas">{{appointmentTrendsAnalysisChart ? appointmentTrendsAnalysisChart : 0}}</canvas>
+                    </div>
+
+                    <div class="trend-group mt-3 mb-1">
+                        <div class="total-apt-text ms-2"> Total Appointments: {{totalAppointments ?
+                            (totalAppointments ): 0}}</div>
+                    </div>
+
+                    <div class="trend-options-display d-flex mt-1 mb-2">
+                        <div class="trend-options">
+                            <div class="trend-wrap d-flex justify-content-between">
+                                <div class="trend-text">
+                                    COMPLETED
+                                </div>
+                                <div class="trend-number">({{completedPercent ? completedPercent : 0 | number : '1.2-2'}}%)
+                                </div>
+                            </div>
+                            <div class="trend-val">
+                                {{completedTotal ?
+                                (completedTotal) : 0}}
+                            </div>
+                        </div>
+                        <div class="trend-options">
+                            <div class="trend-wrap d-flex justify-content-between">
+                                <div class="trend-text">
+                                    SCHEDULED
+                                </div>
+                                <div class="trend-number">({{scheduledPercent ? scheduledPercent : 0 | number : '1.2-2'}}%)
+                                </div>
+                            </div>
+                            <div class="trend-val">
+
+                                {{scheduledTotal ?
+                                scheduledTotal : 0}}
+                            </div>
+                        </div>
+                        <div class="trend-options ">
+                            <div class="trend-wrap d-flex justify-content-between">
+                                <div class="trend-text">
+                                    RESCHEDULED
+                                </div>
+                                <div class="trend-number">({{rescheduledPercent ? rescheduledPercent : 0 | number : '1.2-2'}}%)</div>
+                            </div>
+                            <div class="trend-val">
+                                {{rescheduledTotal ?
+                                (rescheduledTotal) : 0}}
+                            </div>
+                        </div>
+                        <div class="trend-options ">
+                            <div class="trend-wrap d-flex justify-content-between">
+                                <div class="trend-text">
+                                    CANCELLED
+                                </div>
+                                <div class="trend-number">({{cancelledPercent ? cancelledPercent : 0 | number : '1.2-2'}}%) </div>
+                            </div>
+                            <div class="trend-val">
+                                {{cancelledTotal ?
+                                (cancelledTotal) : 0}}
+                            </div>
+                        </div>
+                        <div class="trend-options">
+                            <div class="trend-wr ap d-flex justify-content-between">
+                                <div class="trend-text">
+                                    NO SHOW
+                                </div>
+                                <div class="trend-number">({{noShowPercent ? noShowPercent : 0 | number : '1.2-2'}}%)</div>
+                            </div>
+                            <div class="trend-val">
+                                {{noShowTotal ? (noShowTotal) :
+                                0}}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card practice-manager">
+                <div class="card-body">
+                    <div class="heading-wrap d-flex justify-content-between">
+                        <div class="bill-status-heading">Unfinalized Visit Stats
+                            <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                            ngbTooltip="The bar graph shows the duration, in terms of days, that visits have remained in an “Unfinalized State”, starting from the “Date of their Creation” to the “Current Date”. The number of “Unfinalized Visits” are calculated according to the time span the user has selected. However, the number of days they have been in an unfinalized state is shown according to the difference between its “Visit Date” and the “Current Date”.  Two reference lines, one yellow and one red, show the time thresholds for finalizing visits. The yellow line denotes a critical period of 20 days, indicating the point at which visits should be addressed. The red line represents a deadline of 30 days, signaling the maximum duration for visits to remain unfinalized."
+                            container="body"><img class="info-graph" src="assets/icons/info.svg" alt=""><img id="csv-icon" (click)="UnfianlizedVisitExport()"  class="summary-icons" src="assets/icons/share.svg" alt=""> </span>
+                        </div>
+                        <div class="unfinalized-thresholds">
+                            <div class="threshold1">Critical-20 Days</div>
+                            <div class="threshold2">Deadline-30 Days</div>
+                        </div>
+                        
+                    </div>
+                    <div class="bill-img mt-3 ">
+                        <canvas id="billStatusAnalysisCanvas">{{billStatusAnalysisChart}}</canvas>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <!-- <div class="col-2">
+            <div class="card">
+                <div class="card-body">
+                    <div class="patient-heading mb-4">Patient and <br>Case Stats</div>
+                    <div class="patient-group p-1 mb-4 d-flex">
+                            <div class="patient-icon d-flex align-items-start ms-1">
+                                <img src="assets/icons/petients.svg" alt="">
+                            </div>
+                            <div class="patient-data ms-1 me-2 ">
+                                <div class="new-patients " >New Patients</div>
+                                <div class="patient-number me-1">{{newPatients}}</div>
+                                <div class="patient-value justify-content-center ">
+                                    <div class="card-icon d-flex" [ngClass]="getColorClass(isNewCasesPositive,newCasesChanged)"> <span>
+                                            <i [ngClass]="getIconClass(isNewCasesPositive,newCasesChanged)"></i>{{newPatientsChanged}}%</span>
+                                        </div>
+                                    <div class="patient-val"> from {{newPateintsPrevious}}</div>
+                                </div>
+                            </div>
+                    </div>
+                    <div class="patient-group p-1 mb-4 d-flex">
+                        <div class="patient-icon d-flex align-items-start ms-1">
+                                <img src="assets/icons/returning patients.svg" alt="">
+                        </div>
+                        <div class="patient-data ms-1 me-2 ">
+                            <div class="patient-data-heading">Returning Patients</div>
+                            <div class="patient-number me-1">{{returningPatients}}</div>
+                            <div class="patient-value  justify-content-center ">
+                                 <div class="card-icon d-flex" [ngClass]="getColorClass(isReturningPatientsPositive,returningPatientsChanged)"> <span>
+                                            <i [ngClass]="getIconClass(isReturningPatientsPositive,returningPatientsChanged)"></i>{{returningPatientsChanged}}%</span>
+                                    </div>
+                                   <div class="patient-val"> from {{returningPateintsPrevious}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="patient-group p-1  d-flex">
+                        <div class="patient-icon d-flex align-items-start ms-1">
+                            <img src="assets/icons/add patients.svg" alt="">
+                        </div>
+                        <div class="patient-data ms-2 me-2">
+                            <div class="patient-data-heading">New Cases</div>
+                            <div class="patient-number me-1">{{newCases}}</div>
+                            <div class="patient-value  justify-content-center ">
+                                <div class="card-text d-flex">
+
+                                    <div class="card-icon d-flex" [ngClass]="getColorClass(isNewCasesPositive,newCasesChanged)">
+                                        <div class="card-icon me-1">
+                                            <i [ngClass]="getIconClass(isNewCasesPositive,newCasesChanged)"></i>{{newCasesChanged}}%
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="patient-val"> from {{previous_cases}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="col-2">
+            <div class="card practice-manager">
+                <div class="card-body">
+                    <div class="patient-heading mb-5">Patient and Case Stats
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="The numerical representation provides insights of patients and cases within a healthcare facility. The first card provides an insight into the number of ‘New Patients’ in a facility. The second card shows the number of ‘Returning Patients’, the returning patients count is calculated by checking if patient data already exists in the system. The third and last card shows the number of ‘New Cases’ in a facility, which can be any case created against a new or a returning patient. All the stats are calculated according to the “Created At” date. Each card offers a comparison between its current count and its previous count according to the filters and time span selected by the user. This comparison is shown as a percentage, highlighting the change in the count. The color green is used to signify a positive change, while the color red denotes a negative change."
+                        container="body"><img class="info-graph" src="assets/icons/info.svg" alt=""> </span>
+                    </div>
+
+                    <div class="patient-group pt-2 pb-2 ps-1 pe-1 mb-4 d-flex">
+                        <div class="patient-icon d-flex align-items-start ms-1">
+                            <img src="assets/icons/petients.svg" alt="">
+                        </div>
+                        <div class="patient-data ms-1 me-2 ">
+                            <div class="patient-data-heading">New Patients<img id="csv-icon2" (click)="patientStatus()"  class="info-graph" src="assets/icons/share.svg" alt=""></div>
+                            <div class="patient-number me-1">{{newPatients}}</div>
+                            <div class="patient-value justify-content-center ">
+                                <div [ngClass]="getColorClass(isNewPatientPositive,newPatientsChanged)">
+                                     <span *ngIf="patientDataAssigned">
+                                        <i
+                                            [ngClass]="getIconClass(isNewPatientPositive,newPatientsChanged)"></i>{{newPatientsChanged | number : '1.2-2'}}%</span>
+                                </div>
+                                <div class="patient-val"> from {{newPateintsPrevious}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="patient-group pt-2 pb-2 ps-1 pe-1 mb-4 d-flex">
+                        <div class="patient-icon d-flex align-items-start ms-1">
+                            <img src="assets/icons/returning patients.svg" alt="">
+                        </div>
+                        <div class="patient-data ms-1 me-2 ">
+                            <div class="patient-data-heading">Returning Patients <img id="csv-icon2" (click)="returningPatientStatus()"  class="info-graph" src="assets/icons/share.svg" alt=""></div>
+                            <div class="patient-number me-1">{{returningPatients}}</div>
+                            <div class="patient-value  justify-content-center ">
+                                <div [ngClass]="getColorClass(isReturningPatientsPositive,returningPatientsChanged)">
+                                    <span *ngIf="patientDataAssigned">
+                                        <i
+                                            [ngClass]="getIconClass(isReturningPatientsPositive,returningPatientsChanged)"></i>{{returningPatientsChanged | number : '1.2-2'}}%</span>
+                                </div>
+                                <div class="patient-val"> from {{returningPateintsPrevious}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="patient-group pt-2 pb-2 ps-1 pe-1  d-flex">
+                        <div class="patient-icon d-flex align-items-start ms-1">
+                            <img src="assets/icons/add patients.svg" alt="">
+                        </div>
+                        <div class="patient-data ms-2 me-2">
+                            <div class="patient-data-heading">New Cases  <img id="csv-icon2" (click)="newCasesExport()"  class="info-graph" src="assets/icons/share.svg" alt=""></div>
+                            <div class="patient-number me-1">{{newCases}}</div>
+                            <div class="patient-value  justify-content-center ">
+                                <div [ngClass]="getColorClass(isNewCasesPositive,newCasesChanged)">
+                                    <div *ngIf="patientDataAssigned" class="card-icon me-1">
+                                        <i
+                                            [ngClass]="getIconClass(isNewCasesPositive,newCasesChanged)"></i>{{newCasesChanged | number : '1.2-2'}}%
+                                    </div>
+                                </div>
+                                <div class="patient-val"> from {{previous_cases}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row row3 mt-3">
+        <div class="col-3">
+            <div class="card practice-manager">
+                <div class="card-body">
+                    <div class="denial-title">Denial Type Analysis
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="This section shows the top ten denial types that occur due to certain denial reasons accompanied by the corresponding count for each type. The “Denial Count” is calculated against each ‘Denial Type’ by using the denials according to their “Created At” date. This information is presented in the form of a list in descending order. Additionally, a doughnut chart complements the list by visually showing the distribution of these denial types. "
+                        container="body"><img class="info-graph" src="assets/icons/info.svg" alt="">  <img id="csv-icon" (click)="denialTypeAnalysis()"  class="info-graph" src="assets/icons/share.svg" alt=""></span>
+                    </div>
+                    <div class="denial-subtitle mt-2 ms-3">Top 10 Denial Types</div>
+                    <div class="denial-types">
+                        <div class="denial-circle mb-3 mt-2 mx-auto d-block">
+                            <div class="billed-status-img d-flex justify-content-center ">
+                                <canvas id="denialType">{{denialTypeAnalysisChart}}</canvas>
+                            </div>
+                        </div>
+                        <ul class="list-group billed-list mt-2" *ngIf="denialData?.length > 0">
+
+                            <div class="billed-list-title d-flex justify-content-between ps-3 pe-3 pt-2 pb-2">
+
+                                <li>Denial Type</li>
+                                <li>Total</li>
+                            </div>
+                            <!-- <li *ngFor="let data of denialData" class="list-group-item d-flex tooltip-outer" 
+                             tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{data?.denial_type_name}}"
+                              [disableTooltip]="data?.denial_type_name?.length < 18 "><i   [style.color]="data?.bgColor" 
+                              class="fa fa-solid fa-square  " n></i >{{data?.denial_type_name | truncate : 18 }}<div
+                               class="num justify-content-end"   >{{data?.denial_count ? (data?.denial_count | number:'1.0-0') : 0}}
+                            </div></li> -->
+                            <li *ngFor="let data of denialData"
+                                class="list-group-item d-flex justify-content-between align-items-center tooltip-outer"
+                                tooltipClass="table-custom-tooltip" container="body"
+                                ngbTooltip="{{data?.denial_type_name}}"
+                                [disableTooltip]="false">
+                                <div class="left-content">
+                                    <i [style.color]="data?.bgColor" class="fa fa-solid fa-square" n></i>
+                                    {{data?.denial_type_name | truncate : 22 }}
+                                </div>
+                                <div class="right-content num">
+                                    {{data?.denial_count ? (data?.denial_count | number:'1.0-0') : 0}}
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+        <div *ngIf="heightSet" class="col-3">
+            <div class="card practice-manager">
+                <div class="card-body">
+                    <div class="average-heading">Average Count
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="This section contains two radial graphs. One graph shows the “Average Calculation” of the number of days between the creation of a bill and the date of visit. This gap count is calculated by subtracting the “Visit Date” from the “Billed Date”. The average, minimum and maximum is then calculated from the database according to the time span selected by the user. The other graph shows the average duration of an appointment. "
+                        container="body"><img class="info-graph" src="assets/icons/info.svg" alt="">  <img id="csv-icon" (click)="averageCount()"  class="info-graph" src="assets/icons/share.svg" alt=""></span>
+                    </div>
+                    <div class="average-apt mt-2">Average Gap Between
+                        Visit & Billed Date</div>
+                    <div class="avg-part2  d-flex justify-content-center ">
+                        <canvas id="averageGapChart" [height]="averageGraphHeight" [width]="averageGraphWidth">{{averageGapChartRef}}</canvas>
+                    </div>
+
+                    <div class="circle-num d-flex justify-content-between">
+                        <div class="min-wrap ms-3 mt-1 d-flex">
+                            <div class="min ">Min</div>
+                            <div class="min-num ms-1">{{minGap ? minGap : 0}}</div>
+                        </div>
+                        <div class="max-wrap me-3 mt-1 d-flex">
+                            <div class="max">Max</div>
+                            <div class="max-num ms-1">{{maxGap ? maxGap : 0}}</div>
+                        </div>
+                    </div>
+
+                    <div class="average-apt mt-2 ">Average Appointment
+                        Duration</div>
+                    <div class="avg-part2  d-flex justify-content-center ">
+                        <canvas id="averageAppointmentGapChart" [height]="averageGraphHeight"
+                        [width]="averageGraphWidth">{{averageAppointmentGapChartRef}}</canvas>
+                    </div>
+
+                    <div class="circle-num d-flex justify-content-between">
+                        <div class="min-wrap ms-3 mt-1 d-flex">
+                            <div class="min ">Min</div>
+                            <div class="min-num ms-1">{{minDuration ? minDuration : 0}}</div>
+                        </div>
+                        <div class="max-wrap me-3 mt-1 d-flex">
+                            <div class="max">Max</div>
+                            <div class="max-num ms-1">{{maxDuration ? maxDuration : 0}}</div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-6 ">
+            <div class="card practice-manager">
+                <div class="card-body">
+                    <div class="visit-status-heading ">Visit Status Analysis
+                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="The line curve graph illustrates the fluctuations in the number of visit types over a selected time period. The visit types are categorized into three distinct categories: “Billed Visits”, “Unfinalized Visits”, and “Finalized Visits”. The graph provides an insight of each visit according to its “Visit Date” that exists within the time span selected by the user. Those visits are then segregated into their specific status and their count is displayed on the graph. "
+                        container="body"><img class="info-graph" src="assets/icons/info.svg" alt=""> <img id="csv-icon" (click)="visitStatusAnalysis()"  class="info-graph" src="assets/icons/share.svg" alt=""></span>
+                    </div>
+                    <div class="visit-status-img mt-3">
+                        <canvas id="visitStatusAnalysisCanvas" class="visit-graph-img ">{{visitStatusAnalysisChart}}</canvas>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>

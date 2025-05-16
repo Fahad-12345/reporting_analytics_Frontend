@@ -1,0 +1,80 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div>
+    <div class="modal-header">
+        <h4 class="modal-title">Upload</h4>
+        <button aria-label="Close" class="close" type="button" data-dismiss="modal" (click)="imageModal.close('cancel')"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="px-0">
+                    <div class="file-upload" style="border: 2px dashed #b3aeae; border-radius: 5px">
+                        <div class="d-flex justify-content-center p-4">
+                            <div class="custom-file-upload me-3">
+                                <label for="file-upload" class="btn btn-success"> <i class="icon-upload me-1"></i> Upload </label>
+                                <input id="file-upload" type="file" name="image" accept=".png, .jpg, .jpeg" multiple="true" (change)="onFileChangedMultiple($event, false)" />
+                            </div>
+                            <div class="custom-file-upload">
+                                <label (click)="openImageCapture(captureImage)" class="btn btn-success"> <i class="fas fa-camera me-1"></i> Capture Image </label>
+                            </div>
+                        </div>
+
+                        <div id="jqueryAppend"></div>
+                        <div class="upload-image-scroller">
+                            <div class="row" *ngIf="items.length > 1">
+                                <div class="col-6" *ngFor="let items of items; let i = index">
+                                    <div class="card">
+                                        <button (click)="removeMultipleSelectedFile(i)" class="float-right close">
+											<i class="fas fa-times"></i>
+										</button>
+                                        <div class="upload-img">
+                                            <img [src]="items?.image" class="form-control rounded" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="items.length <= 1">
+                                <div class="col-12" *ngFor="let items of items; let i = index">
+                                    <div class="card">
+                                        <button (click)="removeMultipleSelectedFile(i)" class="float-right close">
+											<i class="fas fa-times"></i>
+										</button>
+                                        <div class="upload-img">
+                                            <img [src]="items?.image" class="form-control rounded" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="image-preview" *ngIf="previewUrl">
+							<img [src]="previewUrl" class="img-fluid" style="height: 100%;" />
+						</div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="temp" hidden> </canvas>
+        <div class="row mt-4">
+            <div class="col-sm-8 offset-sm-2">
+                <div class="row">
+                    <div class="col-6">
+                        <button class="btn btn-success w-100" [disabled]="!items.length" type="submit" (click)="onSubmit()">Save</button>
+                    </div>
+                    <div class="col-6">
+                        <button class="btn btn-primary w-100" data-dismiss="modal" type="button" (click)="imageModal.close('cancel')">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #captureImage let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Capture Image</h4>
+        <button aria-label="Close" class="close" type="button" data-dismiss="modal" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="modal-body">
+        <app-camera (pictureTaken)="handleImage($event)"></app-camera>
+    </div>
+</ng-template>

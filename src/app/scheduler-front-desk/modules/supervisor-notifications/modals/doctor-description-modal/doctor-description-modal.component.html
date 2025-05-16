@@ -1,0 +1,23 @@
+<div class="modal-header" style="background-color: #4b4b4b;color: #fff;padding: 8px 15px;font-size: 18px;">
+  <h4 class="modal-title" style="text-align: center;">Unavailability Information</h4>
+  <button style="background-color: #4b4b4b;color: #fff" type="button" class="close" data-dismiss="modal"
+    (click)="activeModal.close()">&times;</button>
+</div>
+<form>
+  <div class="modal-body pt-2 mt-1">
+    <div class="row">
+      <div class="col-md-12 mb-">
+        <label class="title">Subject</label>
+        <input type="text" class="form-control" value="{{subject}}" [disabled] = "true" [title] = "subject"/>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <label class="title">Description</label>
+        <textarea style="height:60px !important" type="textarea" class="form-control" value="{{description}}"
+          [disabled] = "true"></textarea>
+
+      </div>
+    </div>
+  </div>
+</form>

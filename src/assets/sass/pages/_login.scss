@@ -1,0 +1,235 @@
+/* login page */
+.login {
+	@include media('<tablet') {
+		padding: 1rem !important;
+		background-image: url(../../images/image1.jpg);
+		background-repeat: no-repeat;
+		background-position: center;
+		-webkit-background-size: cover;
+		background-size: cover;
+		position: relative;
+	}
+
+	.container {
+		@include media('<tablet') {
+			z-index: 2;
+		}
+	}
+
+	.login-block {
+		@include media('<tablet') {
+			background: none !important;
+		}
+
+		&:after {
+			z-index: 1;
+			content: "";
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+			background: rgba(255, 255, 255, 0.85);
+		}
+
+		.holder {
+			z-index: 2;
+			@include vertical-align-el;
+			
+			h1 {
+				@include font-size(40px);
+				@include media('<tablet') {
+					@include font-size(22px);
+				}
+			}
+			.logo{
+				display: block;
+				margin: 0 auto 20px;
+				width: 189px;
+				height: auto;
+				transform: translate(0);
+			}
+		}
+
+	}
+	.login-panel {
+		top: 0;
+		right: 0;
+		bottom: 0;
+		height: 100%;
+		position: fixed;
+		overflow: auto;
+		@include box-shadow(2px 5px 5px rgba(0, 0, 0, .25));
+    z-index: 2;
+		@include media('<tablet') {
+			position: relative;
+			background: rgba(250, 248, 248, 0.83);
+			@include box-shadow(0 0 5px 0 rgba(0, 0, 0, 0.15));
+			float: none !important;
+			height: 350px !important;
+			text-align: center;
+			@include padding(0px, 15px, 0px, 15px);
+			@include margin-bottom(15px);
+		}
+
+		h1 {
+			color: $black;
+			text-transform: capitalize;
+			font: 500 22px/24px 'Poppins', Arial, Helvetica, sans-serif;
+			line-height: 24px;
+			@include media('<tablet') {
+				@include margin(15px, 0px, 15px, 0px);
+				@include font-size(18px);
+			}
+	
+			span {
+				top: 2px;
+				@include margin-right(8px);
+				color: $black;
+				position: relative;
+				@include font-size(22px);
+			}
+		}
+
+		.form-group {
+			.form-control {
+				border: 0 !important;
+				@include border-radius(0px);
+				background: none;
+				padding-left: 0px !important;
+				@include padding-right(3px);
+				border-bottom: 1px solid $mantle !important;
+			}
+		
+			.form-text {
+				font: 400 13px/16px 'Poppins', Arial, Helvetica, sans-serif !important;
+				display: block;
+				text-align: left;
+				margin-top: 2px;
+			}
+		}
+
+		.buttons {
+			overflow: hidden;
+			@include margin(0px, 0px, 16px, -10px);
+			@include media('<tablet') {
+				margin: 0;
+			}
+			.btn-holder {
+				width: 50%;
+				float: left;
+				padding: 0 0 0 10px;
+				@include padding(0px, 0px, 0px, 10px);
+				@include media('<tablet') {
+					padding: 0;
+					width: 100%;
+					float: none;
+				}
+	
+				.btn {
+					@include height(35px);
+					@include padding(4px, 15px, 4px, 15px);
+					&:disabled {
+						background: $mantle;
+						border-color: $mantle;
+					}
+				}
+			}
+		}
+
+		.forgot-link {
+			color: $black;
+			text-transform: capitalize;
+			font: 400 16px/18px 'Poppins', Arial, Helvetica, sans-serif;
+	
+			@include media('<tablet') {
+				display: inline-block;
+				vertical-align: top;
+				@include margin(0px, 0px, 20px, 0px);
+			}
+	
+			&:hover {
+				color: $green-haze;
+				text-decoration: none;
+			}
+		}
+
+		.bottom-section {
+			@include media('<tablet') {
+				text-align: center;
+				@include padding(20px, 10px, 5px, 10px);
+			}
+	
+			.social-networks {
+				@include media('<tablet') {
+					display: inline-block;
+					vertical-align: top;
+					margin: 0;
+				}
+	
+				li {
+					a {
+						height: 35px;
+						width: 35px;
+						line-height: 35px;
+						text-align: center;
+						border-radius: 50%;
+						color: #fff;
+						@include font-size(16px);
+						display: block;
+
+						&:hover {
+							opacity: 0.8;
+						}
+
+						span {
+							padding-right: 0;
+						}
+
+						&.facebook {
+							background-color: #355496;
+						}
+						&.twitter {
+							background-color: #00ACEE;
+						}
+						&.instagram {
+							background-color: #bc2a8d;
+						}
+						&.linkedin {
+							background-color: #00629e;
+						}
+					}
+				}
+	
+				.list-inline-item:not(:last-child) {
+					margin-right: 0.8rem;
+				}
+			}
+
+			.f-nav {
+				position: absolute;
+				bottom: 0;
+				left: 50%;
+				margin-left: -118px;
+	
+				@include media('<tablet') {
+					text-align: center;
+				}
+		
+				a {
+					color: $black;
+					margin: 0 10px;
+					@include media('<phone') {
+						font-size: 14px;
+					}
+
+					&:hover {
+						color: $picton-blue;
+					}
+				}
+			}
+		}
+
+
+	}
+}

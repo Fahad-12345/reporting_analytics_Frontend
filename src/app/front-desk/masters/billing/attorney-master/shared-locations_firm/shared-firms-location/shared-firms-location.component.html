@@ -1,0 +1,463 @@
+<div class="row firm-data-table">
+	<div class="col-12">
+		<div class="edit-block">
+			<div class="form-group field option-field mb-0 d-inline-block float-left">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit"
+							(change)="displayLimitLocation($event.target.value , allLocations[0]?.firm_id)">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li class="text-capitalize">entries</li>
+				</ul>
+			</div>
+			
+			<div class="float-right mt-2">
+				<!-- <lib-task-manager *ngIf="this.newAddFirmSelection.selected.length > 0"
+					listCount="{{this.newAddFirmSelection.selected.length}}" selectedProps="{{stringfy(null)}}"
+					type="text" page="AddAttorney">
+				</lib-task-manager> -->
+
+				<!-- <a href="javascript:void(0)" class="btn btn-default round-btn me-2"
+					*ngIf="getCheckedLocations(firms).length > 0" (click)="deleteMultipleLocations(firms)">
+					<span class="icon-remove me-1"></span> Delete [{{getCheckedLocations(firms).length}}]
+				  </a> -->
+				<button *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_location_add)" class="btn btn-primary round-btn ms-2" type="button" [hidden]=btnhide
+					(click)="addLocation(firm_locations)"> <i class="icon-plus-circle"></i> Add
+					Location</button>
+			</div>
+		</div>
+	</div>
+	<div class="col-12">
+		<ngx-datatable class='bootstrap scroll-hide ' [rows]="allLocations" [columnMode]='"force"'
+			[footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false"
+			[externalPaging]="true" [limit]="page.size" [offset]="page.pageNumber"	
+			[count]="totalLocations" (page)="paginateLocation($event ,  allLocations[0]?.firm_id)">
+			<!-- (page)="getAllLocations($event , allLocations[0]?.firm_id)" -->
+
+			<ngx-datatable-column name="Location Name" [sortable]="false" [width]="100" prop="location_name" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.location_name || 'N/A'}}">
+						<span>{{row.location_name || 'N/A'}}</span>
+					</div>
+				</ng-template>
+				<!-- <ng-template *ngFor="let loc of firms.firm_locations">
+                    <span *ngIf="loc.is_main">{{loc.location_name}}</span>
+                  </ng-template> -->
+
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Address" [sortable]="false" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<!-- <ng-template >
+                    <span *ngIf=""></span>
+                    <span *ngIf=""></span>
+                    <span *ngIf=""></span>
+                    <span *ngIf=""></span>
+                  </ng-template> -->
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.street_address?row.street_address : 'N/A' }}">
+						<span>{{row.street_address?row.street_address : 'N/A' }}</span>
+					</div>
+					<div *ngIf="row.apartment_suite" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="
+					,{{row.apartment_suite? ','+row.apartment_suite:'N/A' }}">
+						<span>,{{row.apartment_suite? ','+row.apartment_suite:'N/A' }}</span>
+					</div>
+					<!-- <div *ngIf="row.street_address">
+						{{row.street_address?row.street_address : '' }}
+						{{row.apartment_suite? ','+row.apartment_suite:'' }}
+					</div> -->
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="City" [sortable]="false" prop="city" [width]="80" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.city || 'N/A'}}">
+						<span>{{row.city || 'N/A'}}</span>
+					</div>
+				</ng-template>
+				<!-- <ng-template *ngFor="let loc of firms.firm_locations">
+                    <span *ngIf="loc.is_main">{{loc.location_name}}</span>
+                  </ng-template> -->
+
+			</ngx-datatable-column>
+			<ngx-datatable-column name="State" [sortable]="false" prop="state" [width]="80" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.state || 'N/A'}}">
+						<span>{{row.state || 'N/A'}}</span>
+					</div>
+				</ng-template>
+				<!-- <ng-template *ngFor="let loc of firms.firm_locations">
+                    <span *ngIf="loc.is_main">{{loc.location_name}}</span>
+                  </ng-template> -->
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Zip" [sortable]="false" prop="zip" [width]="50" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.zip || 'N/A'}}">
+						{{row.zip || 'N/A'}}
+					</div>
+				</ng-template>
+				<!-- <ng-template *ngFor="let loc of firms.firm_locations">
+                    <span *ngIf="loc.is_main">{{loc.location_name}}</span>
+                  </ng-template> -->
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Phone No" [sortable]="false" prop="phone" [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A' | phoneFormatPipe}}">
+						{{value || 'N/A' | phoneFormatPipe}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Fax" [sortable]="false" prop="fax" [width]="60" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value || 'N/A' | phoneFormatPipe}}">
+						{{value || 'N/A' | phoneFormatPipe}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Email" [sortable]="false" prop="email" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.email || 'N/A'}}">
+						<span>{{row.email || 'N/A'}}</span>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			  
+			<ngx-datatable-column name="Actions" [width]="80" [sortable]="false" cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-header-template name="Actions">
+
+					<!-- <mat-checkbox (change)="selectAllFirmLocations($event,firms)"
+                      [checked]="getCheckedLocations(firms).length ==firms.firm_locations.length && firms.firm_locations.length!=0">
+					</mat-checkbox> -->
+
+					<mat-checkbox  *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_location_edit)" (change)="$event ? newAddfirmMasterToggle() : null"
+						[checked]="newAddFirmSelection.hasValue() && isNewaddFIrmAllSelected()"
+						[indeterminate]="newAddFirmSelection.hasValue() && !isNewaddFIrmAllSelected()" disabled>
+					</mat-checkbox>
+					Actions
+				</ng-template>
+
+				<ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_location_edit)"  (click)="$event.stopPropagation()"
+						(change)="$event ? newAddFirmSelection.toggle(row) : null"
+						[checked]="newAddFirmSelection.isSelected(row)" disabled>
+					</mat-checkbox>
+
+					<!-- <mat-checkbox (change)="checkLocation($event,row)" [checked]="row.checked">
+                    </mat-checkbox> -->
+
+					<a class="edit-hov mx-1"  *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_location_edit)" tooltip="Edit" (click)="editLocation(firm_locations , rowIndex , row)"
+						href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+					
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="firmHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+
+					<!-- <lib-task-manager selectedProps="{{stringfy([row])}}" type="icon" id="{{row.id}}" page="Attorney">
+                    </lib-task-manager> -->
+
+					<!-- <a class="remove-hov mx-1" tooltip="Delete" href="javascript:void(0)" role="button"
+                                (click)="deleteOneLocation(row.id)">
+                                <span class="icon-remove"></span></a> -->
+
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+	</div>
+
+</div>
+<!--  pop up starts from here -->
+<ng-template #firm_locations let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">{{headerText}}</h5>
+		<button type="button" class="close" data-dismiss="modal" (click)="closeModal()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<!-- (ngSubmit)="onLocationSubmit(locationForm.value) -->
+	<div class="modal-body modal-pt-15">
+		<form autocomplete="" [formGroup]="locationForm" (ngSubmit)="locationSubmit(locationForm.value)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="custom-control custom-checkbox my-1 me-sm-2">
+						<input type="checkbox" class="custom-control-input" id="is_main" name="is_main"
+							formControlName="is_main" (click)="setPrimaryLocation($event)" type="checkbox">
+						<label class="custom-control-label" for="is_main"><span style="position: relative;
+					   top: 2px;">Set as Primary Location</span></label>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group mb-1">
+						<!-- <div>
+							<input type="checkbox" formControlName="primaryLocationChecked" (click)="setPrimaryLocation(locationForm.get('primaryLocationChecked').value)" value="true">
+							<label  class="form-label" for="primaryLocationChecked">Set as primary location</label>
+						  </div> -->
+
+						<label class="form-label">Location Name*</label>
+						<input type="text" class="form-control mb-0" formControlName="location_name" notFirstCharactorSpace>
+						 <small class="form-text text-muted danger"
+							*ngIf="locationForm.get('location_name').errors?.required && (locationForm.get('location_name').dirty || locationForm.get('location_name').touched)">
+							This field is required</small> 
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<!-- <input type="text" class="form-control" placeholder="Street Address" formControlName="street_address"> -->
+						<div class="form-group field mb-0"
+							[ngClass]="{'focused': locationForm.get('street_address').value != ''}">
+							<label class="form-label" for="Street">Street Address<span *ngIf="requriedTrue">*</span></label>
+							<input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+							<input ngx-google-places-autocomplete [options]="{
+													types: [],
+													componentRestrictions: { country: 'US' }
+													}" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'location')"
+								formControlName="street_address" type="text" id="address"
+								class="form-control form-input mb-0">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Suite / Floor</label>
+						<input type="text" class="form-control mb-0" formControlName="apartment_suite">
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">City<span *ngIf="requriedTrue">*</span></label>
+						<input type="text" class="form-control mb-0" formControlName="city">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">State<span *ngIf="requriedTrue">*</span>
+						</label>
+						<!-- <input type="text" class="form-control mb-0" formControlName="state"> -->
+						<ng-select formControlName="state" class="ng-value-label border-0 tooltip-outer"  ngbTooltip="{{selectedState}}" (change)="stateChange($event)" tooltipClass="table-custom-tooltip" [items]="allStates" container="body" bindLabel="name" bindValue="name">
+							<ng-template ng-option-tmp let-item="item">
+							  <span class="ng-value-label border-0 tooltip-outer"  tooltipClass="table-custom-tooltip" ngbTooltip="{{item.fullName}}" container="body">{{item.name}}</span>
+							</ng-template>
+						  </ng-select>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<!-- <div class="form-group mb-1">
+						<label class="form-label" for="Street">Zip</label>
+
+						<input type="text" class="form-control mb-0" formControlName="zip" appOnlyNumeric maxlength="5"
+							minlength="2" notFirstCharactorSpace>
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('zip').value?.length > 0 && locationForm.get('zip').value?.length < 5 || locationForm.get('zip').errors?.minlength">
+							Invalid Format: 00000
+						</label>
+					</div> -->
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Zip<span *ngIf="requriedTrue">*</span></label>
+
+						<input type="text" class="form-control mb-0" formControlName="zip" 
+							 notFirstCharactorSpace>
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('zip').value?.length > 0 && locationForm.get('zip').errors?.pattern ">
+							{{zipFormatMessage.format_usa}}
+						</label>
+					</div>
+				</div>
+			</div>
+
+
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Phone No</label>
+						<input type="text" class="form-control mb-0" formControlName="phone" mask='000-000-0000'
+							[dropSpecialCharacters]="true">
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('phone').value?.length > 0 && locationForm.get('phone').value?.length < 10 ">
+							Invalid Format: 000-000-0000
+						</label>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Extension</label>
+						<input type="text" class="form-control mb-0" formControlName="ext" appOnlyNumeric
+							maxlength="10">
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('ext').value?.length > 0 && locationForm.get('ext').value?.length < 1">
+
+						</label>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Cell No.</label>
+						<input type="text" class="form-control mb-0" formControlName="cell" mask='000-000-0000'
+							[dropSpecialCharacters]="true" [clearIfNotMatch]="false">
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('cell').value?.length > 0 && locationForm.get('cell').value?.length < 10">
+							Invalid Format: 000-000-0000</label>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Fax</label>
+						<input type="text" class="form-control mb-0" formControlName="fax" mask='000-000-0000'
+							[dropSpecialCharacters]="true" [clearIfNotMatch]="false">
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('fax').value?.length > 0 && locationForm.get('fax').value?.length < 10">
+							Invalid Format: 000-000-0000</label>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Email</label>
+						<input type="text" class="form-control mb-0" formControlName="email">
+						<small class="form-text text-muted danger"
+							*ngIf="locationForm.get('email').errors?.email && (locationForm.get('email').dirty || locationForm.get('email').touched)">
+							Invalid email address.</small>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-12">
+					<h6 class="color-green mb-0 mt-1">Contact Person Information</h6>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">First Name</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_first_name">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Middle Name</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_middle_name">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Last Name</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_last_name">
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Phone No</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_phone"
+							mask='000-000-0000' [dropSpecialCharacters]="true" [clearIfNotMatch]="false">
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('contact_person_phone').value && locationForm.get('contact_person_phone').value.length > 0 && locationForm.get('contact_person_phone').value.length < 10 ">
+							Invalid Format: 000-000-0000
+						</label>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Extension</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_ext" appOnlyNumeric
+							maxlength="10">
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('contact_person_ext').value && locationForm.get('contact_person_ext').value.length > 0 && locationForm.get('contact_person_ext').value.length < 1">
+
+						</label>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Cell No</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_cell"
+							mask='000-000-0000' [dropSpecialCharacters]="true" [clearIfNotMatch]="false">
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('contact_person_cell').value && locationForm.get('contact_person_cell').value.length > 0 && locationForm.get('contact_person_cell').value.length < 10">
+							Invalid Format: 000-000-0000</label>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Fax</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_fax"
+							mask='000-000-0000' [dropSpecialCharacters]="true" [clearIfNotMatch]="false">
+						<label class="form-text text-muted danger"
+							*ngIf="locationForm.get('contact_person_fax').value && locationForm.get('contact_person_fax').value.length > 0 && locationForm.get('contact_person_fax').value.length < 10">
+							Invalid Format: 000-000-0000</label>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label mb-0" for="Street">Email</label>
+						<input type="text" class="form-control" formControlName="contact_person_email">
+						<small class="form-text text-muted danger"
+							*ngIf="locationForm.get('contact_person_email').errors?.email && (locationForm.get('contact_person_email').dirty || locationForm.get('contact_person_email').touched)">
+							Invalid email address.</small>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div class="col-md-12">
+				<div class="form-group row mb-2">
+					<label class="form-label" for="Street">Comments</label>
+					<textarea style="height: 70px !important;" class="form-control" rows="5"
+						formControlName="comments"></textarea>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12 modal-btn-width text-center">
+					<button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+						(click)="closeModal()">Cancel</button>
+					<button type="submit" [disabled]='!locationForm.valid || loadSpinner'
+						class="btn btn-success">{{saveData}}</button>
+
+				</div>
+			</div>
+
+		</form>
+	</div>
+</ng-template>
+
+<!-- location pop up ends here -->
+

@@ -1,0 +1,95 @@
+<div class="row">
+  <div class="col-12 bg-white">
+    <div class="front-desk-block referrals-info nav-tab-block">
+
+      <ul class="nav nav-tabs mt-1 text-center" id="myTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="body-parts-tab" data-bs-toggle="tab" href="#body-parts" role="tab"
+            aria-controls="body-parts" aria-selected="false">Body Parts</a>
+        </li>
+      </ul>
+
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade  show active" id="body-parts" role="tabpanel" aria-labelledby="body-parts-tab">
+          <div class="card">
+            <div class="pull-right edit-block">
+              <h6 class="color-blue align-items-end align-items-sm-center">Body Parts Information </h6>
+              <a *ngIf="aclService.hasPermission('patient-body-parts-edit')" href="javascript:void(0)"
+                class="success float-right" routerLink="edit">Add new Body Part</a>
+            </div>
+            <form action="">
+              <div class="form">
+                <div class="card-body">
+                  <div class="row fields-holder data-table">
+                    <div class="col-md-12 text-end">
+                      <!-- <a class="btn add-info mb-3" href="javascript:void(0)" data-original-title="Edit" title="Edit" routerLink="edit"><i class="icon-plus me-2"></i>Add New</a> -->
+                   
+                      <a href="javascript:void(0)" class="btn btn-default round-btn ms-2"
+                        *ngIf="selection.selected.length && aclService.hasPermission('patient-body-parts-delete')"
+                        (click)="confirmDel()">
+                        <span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+                      </a>
+                    </div>
+                    <div class="col-md-12">
+                      <table class="table table-bordered table-striped text-center mb-0">
+                        <thead>
+                          <tr>
+                            <th class="border-right" scope="col">Bodypart</th>
+                            <th class="border-right" scope="col">Sensation</th>
+                            <th class="border-right" scope="col">Pain Level</th>
+                            <th scope="col">
+                              <mat-checkbox *ngIf="aclService.hasPermission('patient-body-parts-delete')"
+                                (change)="$event ? masterToggle($event) : null"
+                                [checked]="selection.hasValue() && isAllSelected()"
+                                [indeterminate]="selection.hasValue() && !isAllSelected()">
+                              </mat-checkbox> Actions
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let bodypart of bodyParts">
+                            <td>{{ bodypart.name }}</td>
+                            <td>
+                              <ng-container *ngFor="let sensation of bodypart.sensations; let idx = index">
+                                <ng-container *ngIf="idx > 0">, </ng-container>
+                                {{sensation.name}}
+                              </ng-container>
+                            </td>
+                            <td>{{ bodypart.level }}</td>
+                            <td class="form">
+                              <mat-checkbox *ngIf="aclService.hasPermission('patient-body-parts-delete')"
+                                (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(bodypart) : null"
+                                [checked]="selection.isSelected(bodypart)">
+                              </mat-checkbox>
+                              <a *ngIf="aclService.hasPermission('patient-body-parts-edit')" class="edit-hov mx-2"
+                                (click)="onEdit(bodypart.id)" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                  class="icon-pencil"></i></a>
+                            
+                              <a *ngIf="aclService.hasPermission('patient-body-parts-delete')" class="remove-hov mx-1"
+                                (click)="confirmDel(bodypart.bodyPartId)" tooltip="Delete" href="javascript:void(0)"
+                                role="button"><i class="icon-remove"></i></a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="row">
+                      <div class="col-lg-3 col-sm-6 col-5 offset-lg-3 text-center">
+                        <a href="javascript:void(0)" class="btn btn-primary"><img src="assets/images/back-arrow.png" alt="back-arrow"> Back</a>
+                      </div>
+                      <div class="col-lg-3 col-sm-6 col-7 text-center">
+                        <button class="btn btn-success"><img src="assets/images/continue.png" alt="continue"> Save & Continue</button>
+                      </div>
+                    </div> -->
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+</div>

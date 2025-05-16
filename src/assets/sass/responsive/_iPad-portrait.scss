@@ -1,0 +1,21 @@
+@include responsive(portrait_all) {
+    #wrapper {
+        overflow-y: hidden;
+        #main {
+            height: calc(100% - 65px);
+            .ps-content {
+                height: calc(100% - 48px);
+                .main-container {
+                    border: 20px solid $light-alabaster;
+                    border-top: none;
+                }
+                footer {
+                    p {
+                        border: 20px solid $light-alabaster;
+                        border-top: none;
+                    }
+                }
+            }
+        }
+    }
+}

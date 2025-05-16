@@ -1,0 +1,55 @@
+<div class="modal-header">
+  <h5 *ngIf="!editMode" class="modal-title">Add New User Group</h5>
+  <h5 *ngIf="editMode" class="modal-title">Edit User Group</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body modal-pt-15">
+  <form [formGroup]="groupForm">
+    <div class="form-group row mb-1">
+      <div class="col-md-12">
+        <label class="form-label" for="name">Name</label>
+        <input class="form-control" [disabled]="editMode" placeholder="Group Name" type="text" formControlName="name"
+          required>
+      </div>
+    </div>
+    <!-- <perfect-scrollbar> -->
+    <div class="form-group row mb-2">
+      <div class="col-md-12">
+        <!-- <input class="form-control" placeholder="Group Member" type="text" formControlName="members"> -->
+        <!-- <input (keyup)="searchUser($event)" class="form-control" placeholder="Group Members"
+          formControlName="group_members" list="lstResults">
+
+        <datalist zid="lstResults">
+          <option *ngFor="let user of lstUsers">
+            {{user.user_basic_info.first_name}} {{ user.user_basic_info.middle_name}}
+            {{ user.user_basic_info.last_name}}</option>
+
+        </datalist> -->
+
+
+        <ng-select (keyup)="searchUser($event)" [searchable]="true" formControlName="group_members" [items]="lstUsers"
+          [multiple]="true" bindLabel="fullName" bindValue="id" [closeOnSelect]="false">
+        </ng-select>
+
+
+        <!-- <ng-multiselect-dropdown [placeholder]="'Select Affiliated Facilities'" [data]="lstUsers"
+          formControlName="group_members" [settings]="dropdownSettings" (onSelect)="onItemSelect($event)">
+        </ng-multiselect-dropdown> -->
+      </div>
+    </div>
+    <!-- </perfect-scrollbar> -->
+
+  </form>
+  <div class="row">
+    <div class="col-12 modal-btn-width text-center mt-3">
+      <button class="btn btn-outline-secondary me-3" (click)="close()">Cancel</button>
+      <button class="btn btn-success" [disabled]="groupForm?.invalid || groupForm.value.group_members>2"
+        (click)="addGroup(groupForm.value)">Save</button>
+
+    </div>
+  </div>
+
+</div>

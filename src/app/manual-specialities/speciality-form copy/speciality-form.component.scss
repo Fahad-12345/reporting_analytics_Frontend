@@ -1,0 +1,36 @@
+
+.form label {
+    margin-bottom: 3px;
+    font-weight: 500;
+}
+
+.file-upload {
+    border: 2px dashed #acacac;
+    border-radius: 6px;
+    min-height: 40px;
+
+    p {
+        font-size: 20px;
+        margin-bottom: 6px;
+        font-weight: 400;
+        color: #7e7e7e;
+    }
+
+    .upload-btn {
+        label {
+            color: #fff !important;
+        }
+    }
+}
+
+
+.md-provider-sign {
+	::ng-deep .signature-pad canvas, ::ng-deep .signature-img {
+		height: 140px !important;
+	}
+}
+
+
+.paging-bar .btn {
+    width: 180px;
+}

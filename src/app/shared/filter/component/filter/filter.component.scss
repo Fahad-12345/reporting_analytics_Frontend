@@ -1,0 +1,47 @@
+
+@import './../../../../../assets/sass/components/new-search-filters';
+.currency {
+	
+	.fa-dollar-sign {
+		position: absolute;
+		bottom: 9px;
+		left: 10px;
+		font-size: 14px;
+		color: #5e5b5b;
+	}
+
+	.form-label {
+		left: 1.5rem;
+	}
+
+	&.focused {
+		.form-label {
+			margin-left: -1.5rem !important;
+		}
+	}
+
+	.form-control {
+		padding-left: 20px !important;
+	}
+}
+.date-cross-icon {
+    top: 10px;
+    right: 30px;
+}
+
+.form-label {
+	pointer-events: none;
+}
+
+.mat-datepicker-toggle {
+	pointer-events: auto !important;
+}
+
+.overflow-unset {
+	overflow: unset !important;
+}
+
+.date-field{
+	background-color: white !important;
+}
+

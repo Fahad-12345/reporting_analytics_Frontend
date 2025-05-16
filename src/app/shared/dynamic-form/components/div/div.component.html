@@ -1,0 +1,18 @@
+<div [ngClass]="field.classes" [formGroup]="group">
+	<h6 class="col-12 color-green mb-3" *ngIf="field.values">{{field.values}}</h6>
+
+	<!-- In case of nested forms -->
+	<ng-container *ngIf="field.configs?.formControlName">
+		<ng-container *ngFor="let field of field.children" dynamicField [field]="field" [formGroupName]="formGroupName"
+			[group]="group.controls[formGroupName]" [ngStyle]="field.style">
+		</ng-container>
+	</ng-container>
+
+	<!-- in case there is no nested form -->
+	<ng-container *ngIf="!field.configs?.formControlName">
+		<ng-container *ngFor="let field of field.children" dynamicField [field]="field" [group]="group"
+			[ngStyle]="field.style">
+		</ng-container>
+	</ng-container>
+
+</div>

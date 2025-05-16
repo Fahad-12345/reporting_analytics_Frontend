@@ -1,0 +1,174 @@
+<div class="position-relative">
+    <app-shimmer-loader class="d-block" [ngClass]="{'shimer-control': loaderSpin}" [loaderSpin]="loaderSpin">
+    </app-shimmer-loader>
+    <div class="row" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_view)">
+    <div class="col-lg-12">
+        <div class="card card-bg w-100">
+            <a *ngIf="caseData?.is_finalize && aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_edit)"
+                class="success float-right" tooltip="Edit" (click)="toggleForm()">
+                <i class="icon-pencil"></i>
+            </a>
+            <app-injury-information-form [title]="'Accident/Injury Information'" (onSaved)="onSavedEvent($event)"
+                [caseId]="caseId" [patientId]="patientId" [caseData]="caseData" (getCase)="getCase()">
+            </app-injury-information-form>
+
+            <app-object-involved-form *ngIf="shouldShowObjectInvolved()" (onSaved)="onSavedEvent($event)"
+                [title]="'Object Involved Information'" [caseId]="caseId" [caseData]="caseData" (getCase)="getCase()">
+            </app-object-involved-form>
+
+            <div *ngIf="shouldShowObjectInvolved()">
+                <div class="edit-block" *ngIf="this.showTitle">
+                    <h6 class="pull-left color-blue d-inline-block mb-3">Witness to the Accident
+                    </h6>
+                </div>
+                <div class="pb-0">
+                    <dynamic-form *ngIf="showWitnessForm" #witness_form [fields]="witnessFieldConfig"
+                        (onReady)="onWitnessFormReady($event)">
+                    </dynamic-form>
+                </div>
+                <div *ngIf="witnessesRows && witnessesRows.length > 0" class="mt-3">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="color-green">Witness Detail</h6>
+                        </div>
+                        <div class="col-md-6 text-end">
+                        
+                            <!-- <a href="javascript:void(0)" class="btn btn-default round-btn ms-2" (click)="confirmDel()">
+                                <span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+                            </a> -->
+                            <a  *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_edit)" class="btn btn-primary round-btn" (click)="addWitnessModal(addWitness)"
+                                href="javascript:void(0)">Add More Witnesses</a>
+                        </div>
+                    </div>
+
+                    <div class="data-table mb-3">
+
+                        <ngx-datatable class="text-center mb-0 bootstrap scroll-hide" [rows]="witnessesRows"
+                            [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+                            [rowHeight]="'auto'" [limit]="10">
+
+                            <!-- <ngx-datatable-column name="First Name" prop="first_name"></ngx-datatable-column> -->
+                            <!-- <ngx-datatable-column name="Middle Name" prop="middle_name"></ngx-datatable-column>
+                            <ngx-datatable-column name="Last Name" prop="last_name"></ngx-datatable-column> -->
+                            <ngx-datatable-column name="Witness Name" prop="cell_phone">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    Witness Name
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{row.first_name}} {{row.middle_name}} {{row.last_name}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Cell Phone" prop="cell_phone">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    Cell Phone
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{row.cell_phone | phoneFormatPipe}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Address">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    Address
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{row.mail_address?.street}} <span *ngIf="row.mail_address?.apartment">,</span>
+                                    {{row.mail_address?.apartment}}
+                                    <!-- {{row.mail_address.city}} {{row.mail_address.state}}
+                                    {{row.mail_address.zip}} -->
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="City">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    City
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{row.mail_address?.city}}
+                                    <!-- {{row.mail_address.city}} {{row.mail_address.state}}
+                                    {{row.mail_address.zip}} -->
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="City">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    State
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{row.mail_address?.state}}
+                                    <!-- {{row.mail_address.city}} {{row.mail_address.state}}
+                                    {{row.mail_address.zip}} -->
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="City">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    Zip
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{row.mail_address?.zip}}
+                                    <!-- {{row.mail_address.city}} {{row.mail_address.state}}
+                                    {{row.mail_address.zip}} -->
+                                </ng-template>
+                            </ngx-datatable-column>
+
+                            <!-- <ngx-datatable-column name="City" prop="city"></ngx-datatable-column>
+                            <ngx-datatable-column name="State" prop="state"></ngx-datatable-column>
+                            <ngx-datatable-column name="Zip" prop="zip"></ngx-datatable-column> -->
+
+                            <ngx-datatable-column name="Action" prop="id" sortable="false">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_edit)" (change)="$event ? masterToggle($event) : null"
+                                        [checked]="selection.hasValue() && isAllSelected()"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                                    </mat-checkbox>
+                                    Actions
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_edit)" (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)">
+                                    </mat-checkbox>
+                                    <a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_edit)" class="edit-hov mx-1" tooltip="Edit" (click)="addWitnessModal(addWitness, row)"
+                                        href="javascript:void(0)" role="button"><span class="icon-pencil"></span></a>
+                               
+                                    <a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_edit)" class="remove-hov mx-1" tooltip="Delete" (click)="confirmDel(row.id)"
+                                        href="javascript:void(0)" role="button"><span class="icon-remove"></span></a>
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <div class="row form-btn justify-content-center" *ngIf="!isFormDisabled">
+                <button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_edit)" (click)="goBack()" class="btn btn-primary w-100 mt-0 mb-3 mb-sm-0"><i class="icon-left-arrow me-2"></i>
+                    Back
+                </button>
+                <button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_edit)" (click)="save($event)" class="btn btn-success w-100 mt-0 mb-3 mb-sm-0">
+                    <i class="icon-save-continue me-2"></i>
+                    Save & Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- {{isFormDisabled}} -->
+
+
+<ng-template #addWitness let-modal style="max-width: 500px;">
+    <div class="modal-header">
+        <h5 class="modal-title">{{editMode? 'Edit' : 'Add'}} Witness</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <dynamic-form #add_witness_form [fields]="fieldConfig" (onReady)="onWitnessReady($event)"
+            (submit)="onSubmit($event)">
+        </dynamic-form>
+
+    </div>
+</ng-template>

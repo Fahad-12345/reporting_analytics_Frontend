@@ -1,0 +1,62 @@
+ngx-datatable {
+  max-height: 70vh !important;
+  // overflow-y: scroll !important;
+  // overflow-x: scroll !important;
+}
+  .text-bold {
+    font-weight: bold;
+  }
+  .bold-row {
+    font-weight: bold;
+  }
+
+
+  :host ::ng-deep .ngx-datatable {
+    max-height: 70vh !important;
+    .datatable-body {
+      max-height: 70vh !important;
+      .datatable-scroll {
+        overflow-x: hidden !important;
+        cursor: pointer;
+      }
+    }
+  }
+
+  
+  // .summary-footer {
+  //   display: flex;
+  //   padding: 30px;
+  //   background-color: #dceced; 
+  // }
+  .summary-footer1 {
+    display: flex;
+    padding-bottom: 30px;
+    padding-inline: 30px;
+    background-color: #DCECED;
+  }
+.summary-footer {
+    display: flex;
+    padding-top: 30px;
+    margin-top: -1%;
+    padding-inline: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #BBCBBB;
+    background-color: #DCECED;
+  }
+  .summary-column  {
+    font-weight: bold;
+    font-size: 12px;
+    // margin-top: -12px;
+    position: absolute;
+  }
+  .top {
+    margin-top: -17px !important;
+  }
+  .bottom {
+    margin-top: 4px !important;
+    
+  }
+  .cell-content:hover{
+    color: blue !important;
+    text-decoration: underline;
+  }

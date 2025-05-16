@@ -1,0 +1,184 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<!-- <div class="search-filter">
+	<div class="d-block">
+		<a href="javascript:void(0)" class="btn btn-default round-btn float-right">
+			<span class="icon-plus-circle"></span> Add New
+		</a>
+	</div> -->
+<!-- <form [formGroup]="reactionDetailForm">
+	<div class="form">
+		<div class="search-filter-body" [class.pb-3]="!isCollapsed">
+			<div class="row px-2">
+				<div class="col-xl-10">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="form-group field"
+								[ngClass]="{'focused': reactionDetailForm.get('snomed_concept_id').value != '' && reactionDetailForm.get('snomed_concept_id').value != null }">
+								<label class="form-label" for="snomed_concept_id">Snomed Concept Id</label>
+								<input type="text" id="snomed_concept_id" class="form-control form-input"
+									notFirstCharactorSpace formControlName="snomed_concept_id">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group field"
+								[ngClass]="{'focused': reactionDetailForm.get('snomed_term_desc_id').value != '' && reactionDetailForm.get('snomed_term_desc_id').value != null }">
+								<label class="form-label" for="snomed_term_desc_id">Snomed Term Desc ID</label>
+								<input type="text" id="snomed_term_desc_id" class="form-control form-input"
+									notFirstCharactorSpace formControlName="snomed_term_desc_id">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group field"
+								[ngClass]="{'focused': reactionDetailForm.get('term_type_desc').value != '' && reactionDetailForm.get('term_type_desc').value != null }">
+								<label class="form-label" for="term_type_desc">Term Type Desc</label>
+								<input type="text" id="term_type_desc" class="form-control form-input"
+									notFirstCharactorSpace formControlName="term_type_desc">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group field"
+								[ngClass]="{'focused': reactionDetailForm.get('concept_type').value != '' && reactionDetailForm.get('concept_type').value != null }">
+								<label class="form-label" for="concept_type">Concept Type</label>
+								<input type="text" id="concept_type" class="form-control form-input"
+									notFirstCharactorSpace formControlName="concept_type">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group field"
+								[ngClass]="{'focused': reactionDetailForm.get('value_set_type_description').value != '' && reactionDetailForm.get('value_set_type_description').value != null }">
+								<label class="form-label" for="value_set_type_description">Value Set Type
+									Description</label>
+								<input type="text" id="value_set_type_description" class="form-control form-input"
+									notFirstCharactorSpace formControlName="value_set_type_description">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group field"
+								[ngClass]="{'focused': reactionDetailForm.get('hl7_object_identifier').value != '' && reactionDetailForm.get('hl7_object_identifier').value != null }">
+								<label class="form-label" for="hl7_object_identifier">H17 Object Identifier</label>
+								<input type="text" id="hl7_object_identifier" class="form-control form-input"
+									notFirstCharactorSpace formControlName="hl7_object_identifier">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group field"
+								[ngClass]="{'focused': reactionDetailForm.get('hl7_object_identifier_type').value != '' && reactionDetailForm.get('hl7_object_identifier_type').value != null }">
+								<label class="form-label" for="hl7_object_identifier_type">H17 Object Identifier
+									Type</label>
+								<input type="text" id="hl7_object_identifier_type" class="form-control form-input"
+									notFirstCharactorSpace formControlName="hl7_object_identifier_type">
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+				<div class="col-xl-2">
+					<div class="row justify-content-center mb-3 mb-xl-0">
+						<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+							<button class="btn btn-success w-100 me-3" (click)="filterReaction()">
+								Filter</button>
+						</div>
+						<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+							<button class="btn btn-primary w-100" (click)="resetReactionList() "
+								[disabled]="reactionFilterResetDisabledCheck()">Reset</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form> -->
+<div class="row">
+	<div class="col-md-12">
+		<div class="card search-filter-block border-0 mt-3">
+			<form autocomplete="off" [formGroup]="reactionDetailForm">
+				<div class="form">
+					<div class="card-body mb-3">
+						<div class="row mx-0">
+							<div class="field-block">
+								<div class="row" [class.dynamic-collapse]="!isCollapsed">
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': reactionDetailForm.get('snomed_concept_id').value != '' && reactionDetailForm.get('snomed_concept_id').value != null }">
+											<label class="form-label" for="snomed_concept_id">Snomed Concept Id</label>
+											<input type="text" id="snomed_concept_id" class="form-control form-input"
+												notFirstCharactorSpace formControlName="snomed_concept_id">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': reactionDetailForm.get('snomed_term_desc_id').value != '' && reactionDetailForm.get('snomed_term_desc_id').value != null }">
+											<label class="form-label" for="snomed_term_desc_id">Snomed Term Desc ID</label>
+											<input type="text" id="snomed_term_desc_id" class="form-control form-input"
+												notFirstCharactorSpace formControlName="snomed_term_desc_id">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': reactionDetailForm.get('term_type_desc').value != '' && reactionDetailForm.get('term_type_desc').value != null }">
+											<label class="form-label" for="term_type_desc">Term Type Desc</label>
+											<input type="text" id="term_type_desc" class="form-control form-input"
+												notFirstCharactorSpace formControlName="term_type_desc">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': reactionDetailForm.get('concept_type').value != '' && reactionDetailForm.get('concept_type').value != null }">
+											<label class="form-label" for="concept_type">Concept Type</label>
+											<input type="text" id="concept_type" class="form-control form-input"
+												notFirstCharactorSpace formControlName="concept_type">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': reactionDetailForm.get('value_set_type_description').value != '' && reactionDetailForm.get('value_set_type_description').value != null }">
+											<label class="form-label" for="value_set_type_description">Value Set Type
+												Description</label>
+											<input type="text" id="value_set_type_description" class="form-control form-input"
+												notFirstCharactorSpace formControlName="value_set_type_description">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': reactionDetailForm.get('hl7_object_identifier').value != '' && reactionDetailForm.get('hl7_object_identifier').value != null }">
+											<label class="form-label" for="hl7_object_identifier">H17 Object Identifier</label>
+											<input type="text" id="hl7_object_identifier" class="form-control form-input"
+												notFirstCharactorSpace formControlName="hl7_object_identifier">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': reactionDetailForm.get('hl7_object_identifier_type').value != '' && reactionDetailForm.get('hl7_object_identifier_type').value != null }">
+											<label class="form-label" for="hl7_object_identifier_type">H17 Object Identifier
+												Type</label>
+											<input type="text" id="hl7_object_identifier_type" class="form-control form-input"
+												notFirstCharactorSpace formControlName="hl7_object_identifier_type">
+										</div>
+									</div>
+
+									<div class="col-md-12 text-center search-filter-btn float-left mb-3">
+										<button class="btn btn-success mt-0 me-3" (click)="filterReaction({})"> Filter </button>
+										<button class="btn btn-primary mt-0" (click)="resetReactionList() "
+										[disabled]="reactionFilterResetDisabledCheck()"> Reset</button>
+									</div>
+
+								</div>
+							</div>
+							<div class="colps-btn-block">
+								<button class="btn plus-btn position-relative float-right mt-0" style="right: 0;"
+									(click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+									aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+									[class.btn-success]="isCollapsed" type="button">
+									<span [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- ======================================== -->
+<!-- </div> -->

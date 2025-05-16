@@ -1,0 +1,286 @@
+#best select.default {
+    color: black;
+    background-color: white;
+    border-color: black;
+    border-radius: 2px;
+ }
+ #best select.default:hover
+ {
+    color : white;
+    background-color: black;
+ }
+
+ #manual select.default {
+    color: black;
+    background-color: white;
+    border-color: black;
+ }
+ #manual select.default:hover
+ {
+    color : white;
+    background-color: black;
+ }
+
+
+.ngx-datatable.fixed-row .datatable-scroll .datatable-body-row .datatable-body-cell {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding: 0px !important;
+}
+.me-2, .mx-2 {
+    margin-right: .5rem!important;
+}
+.mb-2, .my-2 {
+    margin-bottom: .5rem!important;
+}
+.d-inline-block {
+    display: inline-block!important;
+}
+.datatable-header{
+    background: #34c3ee !important;
+}
+.mat-checkbox-layout{
+    margin-bottom: 6px!important;
+}
+.chkbox {
+    margin-right: 9px;
+    margin-left: 6px;
+}
+.delete-hov:hover {
+    color: #f51010 !important;
+}
+.plus-btn:hover {
+    background: #34c3ee;
+    color: #fff;
+}
+.clock:hover{
+	color:#34c3ee !important
+}
+.pencil-hov:hover{
+	color:#00a650 !important;
+}
+.color-green {
+    color: #00a650;
+}
+.mt-1{
+    margin-top: .25rem!important;
+}
+.plus-icon{
+    font-size: 30px
+}
+.card-body {
+    border-width: 1px;
+    border-color: #c3c4c3;
+    background: #f7f7f7;
+    border-radius: 0 !important;
+    padding-bottom:0px;
+}
+.card-footer {
+    background: #4b4b4b;
+    border-radius: 0;
+    padding: 6px 15px;
+}
+.datatable-header-cell
+{
+    color: #fff;
+    background: #34c3ee;
+}
+.mb-0, .my-0 {
+    margin-bottom: 0!important;
+}
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+}
+.data-table table thead {
+    color: #fff;
+    background: #34c3ee;
+}
+.d-flex {
+    display: flex!important;
+}
+.justify-content-end {
+    justify-content: flex-end!important;
+}
+.table-striped tbody tr:nth-of-type(even) {
+    background-color:white
+}
+.table-bordered td, .data-table table.table-bordered th {
+    border: 1px solid #bbcbbb !important;
+    font-size: 14px !important;
+}
+.table-bordered th {
+    font-weight: 500 !important;
+}
+.delete-hov:hover {
+    color: #f51010 !important;
+}
+td{
+    padding: 0 !important;
+}
+.t-row {
+	margin: 0;
+	border: 1px solid #00000054;
+    width: 100%;
+    margin-top: 3px;
+    color: #6d6969!important;
+    font-weight: 400 !important;
+}
+@media only screen and (min-width: 750px) and (max-width: 899px) {
+    .header-date{
+        max-width: 16% !important;
+        flex: 0 0 16%!important;
+    }
+    .patient_img{
+        height: 59px!important;
+        margin-top: 3px!important;
+        width: 59px;
+        border-radius: 5px;
+        border: 2px solid #34c3ee !important;
+        margin-top: 3px!important;
+    }
+    .patient-data{
+        padding:8px;
+    }
+    .head-cell{
+        padding:5px;
+    }
+    .pag{
+        width: 122% !important;
+        margin-left: 10px !important;
+    }
+}
+@media only screen and (min-width: 900px) and (max-width: 1365px){
+    .patient_img{
+        height: 59px!important;
+        margin-top: 3px!important;
+        width: 59px;
+        border-radius: 5px;
+        border: 2px solid #34c3ee !important;
+        margin-top: 3px!important;
+    }
+    .pag{
+        width: 99.5% ;
+        margin-left: 10px !important;
+    }
+    .header-date{
+        max-width: 12% !important;
+        flex: 0 0 20%!important ;
+    }
+   
+
+}
+@media only screen and (min-width: 1366px) {
+    .patient_img{
+        height: 59px!important;
+        margin-top: 3px!important;
+        width: 59px;
+        border-radius: 5px;
+        border: 2px solid #34c3ee !important;
+        margin-top: 3px!important;
+    }
+    .pag{
+        width: 99.5%;
+        margin-left: 10px !important;
+    }
+    .header-date{
+        max-width: 12% !important;
+        flex: 0 0 20%!important; 
+    }
+}
+table {
+    width: 100%;
+  }
+tr.mat-footer-row, tr.mat-row {
+    height: 79px !important;
+}
+.table th, .table td {
+    padding: 0.75rem;
+    vertical-align: top;
+
+}
+.find-best-btn{
+   .button--wayra{
+    margin-right: 15px;
+    &.active {
+        button {
+            background: #34c3ee !important;
+            border: 1px solid #34c3ee !important;
+        }   
+    }
+   }
+}
+.curser{
+    cursor: pointer;
+}
+.waiting-slot{
+    padding-left: 15px !important;
+}
+.waitin-list{
+    border: 1px solid #c3c4c3;
+    padding: 15px;
+    border-radius: 0;
+    margin: 0 !important;
+}
+.left-div{
+    border-width: 1px;
+    border-color: #c3c4c3;
+    background: #f7f7f7;
+    padding: 6px 20px 0;
+}
+.main-card{
+    font-size:large; 
+    background-color: white; 
+    height: 100% !important;
+}
+.body-card{
+    border: 1px solid #c3c4c3;
+    padding: 15px;
+    border-radius: 0;
+    margin: 18px 0 8px;
+    max-height: 59%;
+}
+.case-color{
+    color: #6d6969;
+}
+.manual-click{
+    margin-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.title {
+    margin-bottom: 3px;
+    font-size: 13px;
+    margin-top: 5px;
+}
+.waiting-list-form {
+    [class^="col-"], .col, .col-auto {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .row {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+}
+.large-calendar .clinic-list-hidden {
+    height: calc(100vh - 270px) !important;
+}
+
+.manual-click {
+    ::ng-deep .clinic-list-hidden {
+        height: calc(100vh - 280px) !important;
+    }
+}
+
+::ng-deep.history-modal{
+    .modal-dialog{
+        @media screen and (max-width:768px){
+            max-width: 715px;
+        }
+    }
+}

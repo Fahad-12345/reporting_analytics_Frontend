@@ -1,0 +1,230 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<app-filter [fieldShow]="packetFiled" [formFiledValue]="formFiledValue" [formFiledListOfValue]="formFiledListOfValue" (searchFilterData)="filterResponseData($event)" ></app-filter>
+<div class="row mb-3 mt-3">
+	<div class="col-3 col-sm-3 edit-block text-start">
+		<div class="form-group field option-field mb-2 d-inline-block">
+			<ul class="text-capitalize">
+				<li>Show</li>
+				<li>
+					<select class="custom-select" id="limit" name="limit"  [(ngModel)]="page.size"
+					(change)="pageLimit($event.target.value)">
+						<option selected="" value="10">10</option>
+						<option value="20">20</option>
+						<option value="30">30</option>
+						<option value="40">40</option>
+						<option value="50">50</option>
+						<option value="100">100</option>
+					</select>
+				</li>
+				<li>Entries</li>
+			</ul>
+		</div>
+	</div>
+	<div class="col-9 text-sm-end btn-train">
+		<button type="button" [disabled]="packetSelection.selected.length==0"
+          (click)="packetListEvents('generate-pom')"
+          class="btn btn-warning text-white me-0 mb-2 mb-sm-0">
+          Generate POM <span *ngIf="packetSelection.selected.length!=0"> [{{packetSelection.selected.length}}]</span>
+        </button>
+		<button type="button" [disabled]="packetSelection.selected.length==0" (click)="packetListEvents('delete-packet')" class="btn btn-danger text-white ms-2 me-0 mb-2 mb-sm-0">
+		<i class="icon-remove"></i>	Delete Packets <span *ngIf="packetSelection.selected.length!=0" > [{{packetSelection.selected.length}}]</span>
+		</button>
+		<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+			Customize Columns
+		 </button>
+	</div>
+</div>
+	<ngx-datatable class="bootstrap"  [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'"
+		[scrollbarH]="true" [virtualization]="false"  [externalPaging]="true"  #packetsList [rows]="packetLists"
+		[count]="page.totalElements" [offset]="page.offset" [limit]="page.size"
+		(page)='onPageChange($event)' [externalPaging]="true">
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Packet ID"
+		prop="id" [width]="70" [sortable]="false">
+		<ng-template let-value="value" ngx-datatable-cell-template>
+		  <a class="underline-hov success p-0" data-original-title="Packet Detail" title="Packet Detail" (click)="getPacketDetail(value,packetDetails)">
+			{{value}}
+		  </a>
+		</ng-template>
+	  </ngx-datatable-column>
+
+    <ngx-datatable-column name="Specialty" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="specialty" [width]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.speciality?.name}}" container="body">
+					{{row?.speciality?.qualifier}}
+				</div>
+			</ng-template>
+	</ngx-datatable-column>
+
+    <ngx-datatable-column name="Practice-Location" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="facility_location" [width]="110">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.packet_bill?.[0]?.facility_location_name}}" container="body">
+				{{row?.packet_bill?.[0]?.facility_location_qualifier}}
+			</div>
+		</ng-template>
+	</ngx-datatable-column>
+
+    <ngx-datatable-column name="Case Type" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="case_type" [width]="100">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.packet_bill?.[0]?.case_type_name}}" container="body">
+					{{row?.packet_bill?.[0]?.case_type_name}}
+				</div>
+			</ng-template>
+	</ngx-datatable-column>
+
+    <ngx-datatable-column name="Total Bills"  [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="total_bills" [width]="100">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				{{row?.bill_ids?.length || 0}}
+		</ng-template>
+	</ngx-datatable-column>
+
+
+    <ngx-datatable-column name="Job Status" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="status" [width]="130">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.packet_status}}" container="body">
+					{{row?.packet_status}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		
+		<ngx-datatable-column name="Actions" [width]="230" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" [sortable]="false" cellClass="action-icon count-hold">
+			<ng-template ngx-datatable-header-template name="Actions">
+				<mat-checkbox (change)="$event ? packetmasterToggle() : null"
+					[checked]="packetSelection.hasValue() && isPacketListAllSelected()"
+					[indeterminate]="packetSelection.hasValue() && !isPacketListAllSelected()">
+				</mat-checkbox>
+				Actions
+			</ng-template>
+			<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+				<mat-checkbox 
+				(click)="$event.stopPropagation()" (change)="$event ? packetSelection.toggle(row) : null"
+				[checked]="packetSelection.isSelected(row)">
+				</mat-checkbox>
+				<a class="download-hov mx-1"  [class.not-active]="getStatusPacketAction(row)" href="javascript:void(0)" (click) = "downloadPacket(row)" ngbTooltip="Downlaod Packet" container="body">
+					<i class="fa fa-download text-primary" aria-hidden="true" (click) = "downloadPacket(row)"></i>
+					</a>	
+				<a class="task-hov mx-1 rePacket"  href="javascript:void(0)" (click) = "rePacket(row)" ngbTooltip="Re Packet" container="body">
+					<i class="fa fa-file text-golden" aria-hidden="true"></i>
+				</a>
+					<a class="view-hov mx-1"   [class.not-active]="getStatusPacketAction(row)" href="javascript:void(0)" (click) = "generteEnvelope(row)" ngbTooltip="Generate Envelope" container="body">
+				<i class="fa fa-envelope text-success" aria-hidden="true"></i>
+					</a>	
+					<a class="printer-hov mx-1"   [class.not-active]="getStatusPacketAction(row)" href="javascript:void(0)" (click) = "genertePOM(row)" ngbTooltip="Generate POM" container="body">
+						<i class="fa fa-id-card text-purple" aria-hidden="true"></i>
+					</a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="historyStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+					<a class="remove-hov mx-1" ngbTooltip="Delete" container="body" (click)="onDeletePacket({ids:[row?.id]})">
+						<i class="icon-remove"></i>
+					  </a>
+
+			</ng-template>
+			</ngx-datatable-column>
+
+	</ngx-datatable>
+
+
+<ng-template #packetDetails let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left">Packet Details</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body">
+		<ngx-datatable class="bootstrap" [rows]="billingPacketData" [columnMode]='"force"'
+		[footerHeight]="50" [rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true">
+
+		<ngx-datatable-column name="Bill No" [sortable]="false" prop="bill_id" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.label_id}}" container="body">
+					{{row?.label_id}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Case ID" [sortable]="false" prop="case_id" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.case_id}}" container="body">
+					{{row?.case_id}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Patient Name" [sortable]="false" prop="patient" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer text-capitalize" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.kiosk_case?.patient?.first_name}} {{row?.kiosk_case?.patient?.middle_name}} {{row?.kiosk_case?.patient?.last_name}}" container="body">
+					{{row?.kiosk_case?.patient?.first_name}} {{row?.kiosk_case?.patient?.middle_name}}  {{row?.kiosk_case?.patient?.last_name}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Billed Amount" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_amount">
+			<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+				<span>
+				{{(value || 0 )| currency}}
+				</span>
+			</ng-template>
+		</ngx-datatable-column>
+
+			<ngx-datatable-column name="Paid Amount" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="paid_amount">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span>
+					{{(value || 0 )| currency}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Outstanding Amount" [width]="150" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="outstanding_amount">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span>
+					{{(value || 0 )| currency}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Write-off" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="write_off_amount">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span>
+					{{(value || 0 )| currency}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="OverPayment" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="over_amount">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span>
+					{{(value || 0 )| currency}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Interest" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="interest_amount">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span>
+					{{(value || 0 )| currency}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+	</ngx-datatable>
+	</div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+		[config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+			  <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+			  <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+			</div>
+			<div class="modal-footer justify-content-center">
+			  <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+			  <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+			</div>
+		  </div>
+		</div>
+	</div>

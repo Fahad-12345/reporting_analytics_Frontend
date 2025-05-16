@@ -1,0 +1,208 @@
+.search-filter{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    .search-filter-body{
+        @include border(1px, solid, #c3c4c3);
+        background: #f7f7f7;
+        @include px-to-rem(padding, 20px 20px 0px 20px, false);
+        flex: 1 1 auto;
+        .field-block{
+            width: 95%;
+            float: left;
+            @media (max-width: 991.98px){
+                width: 92%;
+            }
+            @media (max-width: 575.98px){
+                width: 88%;
+            }
+            @media (max-width: 414.98px){
+                width: 84%;
+            }
+            .search-filter-btn{
+                @include px-to-rem(margin-bottom, 20px, false);
+                flex-wrap: wrap;
+                @media (max-width: 414.98px){
+                    @include px-to-rem(margin-bottom, 0px, false);
+                }
+                .btn{
+                    @include size(7.5rem !important, 1.875rem);
+                    color: #fff;
+                    @media (max-width: 414.98px){
+                        width: 11.25rem !important;
+                        margin: 0 0 1.25rem !important;
+                    }
+                }
+            }
+        }
+        .colps-btn-block{
+            width: 5%;
+            @media (max-width: 991.98px){
+                width: 8%;
+            }
+            @media (max-width: 575.98px){
+                width: 12%;
+            }
+            @media (max-width: 414.98px){
+                width: 16%;
+            }
+            .plus-btn{
+                position: absolute;
+                right: -3.4375rem;
+                @include size(2rem, 1.875rem);
+                border-radius: 4px;
+                @include px-to-rem(padding, 0px, true);
+                @media (max-width: 1249px){
+                    right: -1.875rem;
+                }
+                span{
+                    @include px-to-rem(font-size, 18px, false);
+                    line-height: 1.4375rem;
+                }
+            }
+        }
+    }
+    .col-width-20{
+        .col-lg-2{
+            @media (min-width: 991.98px){
+                flex: 0 0 20%;
+                max-width: 20%;
+            }
+        }
+    }
+}
+
+.document-manager,
+.billing-info{
+    .search-filter{
+        .search-filter-btn{
+            .btn{
+                &:last-child{
+                    margin: 0 !important;
+                }
+            }
+        }
+        .colps-btn-block{
+            .plus-btn{
+                right: 20px;
+            }
+        }
+    }
+}
+
+.dynamic-collapse{
+    div{
+        &:not(:nth-child(-n+4)){
+            display: none;
+		}
+	}
+}
+
+// Search Filter 
+.search-filter-block {
+    border: none;
+    .card-body {
+        padding: 1.25rem 1.25rem 0px !important;
+        border-radius: 0px;
+        background: $light-alabaster !important;
+        border: 1px solid #c3c4c3 !important;
+        &.card-pb-20 {
+            padding-bottom: 1.25rem !important;
+        }
+        @include media('<xs-phone') {
+            padding: 0.9375rem 0.9375rem 0px !important;
+        }
+    }
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    .mb-sm-15 {
+        @include media('<tablet') {
+            margin-bottom: 1.25rem !important;
+        }
+    }
+    .mb-sm-20 {
+        padding-bottom: 1.25rem !important;
+    }
+    .plus-btn {
+        @include size(2rem, 1.875rem);
+        border-radius: 4px;
+        padding: 0px !important;
+        span {
+            font-size: 1.125rem;
+            line-height: 1.4375rem;
+        }
+        @include media('>xxl-widescreen') {
+            @include size(2rem, 2rem);
+        }
+    }
+    .search-filter-btn {
+        margin-bottom: 20px;
+        .btn {
+            @include size(7.5rem !important, 1.875rem);
+            padding: 0.1875rem 0.9375rem;
+            color: $white !important;
+            font-size: 0.875rem;
+            @include media('<xs-phone') {
+                width: 100% !important;
+            }
+        }
+        .ma-add-practice-btn {
+            @include media('<xs-phone') {
+                margin-bottom: 0.9375rem !important;
+            }
+        }
+    }
+    #collapseBasic {
+        .btn-success {
+            @include media('<xs-phone') {
+                margin-bottom: 15px
+            }
+        }
+    }
+    .collpase-mt-20 {
+        padding-top: 20px;
+    }
+    .form-mb-0 {
+        .form-group {
+            margin-bottom: 0px !important;
+        }
+    }
+    .collapse-basic {
+        padding-top: 1.25rem !important;
+    }
+    .field-block {
+        width: 95%;
+        float: left;
+        @include media('<desktop') {
+            width: 92%;
+        }
+        @include media('<phone') {
+            width: 88%;
+        }
+        @include media('<xs-phone') {
+            width: 84%;
+        }
+    }
+    .colps-btn-block {
+        width: 5%;
+        @include media('<desktop') {
+            width: 8%;
+        }
+        @include media('<phone') {
+            width: 12%;
+        }
+        @include media('<xs-phone') {
+            width: 16%;
+        }
+    }
+    .col-width-20 {
+        .col-lg-2 {
+            @media (min-width: 991.98px) {
+                flex: 0 0 20%;
+                max-width: 20%;
+            }
+        }
+    }
+}

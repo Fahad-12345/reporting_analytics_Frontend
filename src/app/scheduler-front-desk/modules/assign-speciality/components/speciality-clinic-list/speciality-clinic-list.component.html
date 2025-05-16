@@ -1,0 +1,128 @@
+<div class="row d-flex justify-content-center">
+    <div class="col-md-5 col-sm-5 text-center btn-filter cursor-point" (click)="clinicClicked()" [ngClass]="{'btn-filter-selected' : isClinicClicked}">
+        Practice-Location
+    </div>
+    <div class="col-md-5 col-sm-5 text-center btn-filter cursor-point" (click)="specialityClicked()" [ngClass]="{'btn-filter-selected' : click}">
+        Specialty
+    </div>
+</div>
+
+<div *ngIf="isClinicClicked" class="row assignment-modal text-center mt-2 mb-1">
+    <div class="col-md-5 offset-md-1 form">
+        <label class="d-inline-block chkbox position-relative m-0 mb-2 mt-1">
+      <input [(ngModel)]="isClinicCheck" type="checkbox" id="test1" (click)="showClinicFilter($event)">
+      <span class="fake-input position-absolute"></span>
+      <label class="fake-label d-block mb-0 py-0" for="test1">Add filter</label>
+        </label>
+    </div>
+</div>
+<div *ngIf="isShowFilter">
+    <form (ngSubmit)="onSearchClinic(f)" #f="ngForm" class="row mb-3">
+        <!-- <div class="col-md-6 pe-2">
+            <input type="search" class="form-control" placeholder="Location Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicName" (keypress)="searchClinicByName()" (input)="searchClinicByName()" (keydown)="searchClinicByName()" (change)="searchClinicByName()"
+                (keyup)="searchClinicByName()" />
+        </div>
+        <div class="col-md-6 ps-2">
+            <input type="search" class="form-control" placeholder="Location Address" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicAddress" (keypress)="searchClinicByAddress()" (input)="searchClinicByAddress()" (change)="searchClinicByAddress()" (keydown)="searchClinicByAddress()"
+                (keyup)="searchClinicByAddress()" />
+            <br />
+        </div> -->
+        <div class="col-md-6 pe-2">
+            <input type="search" class="form-control place" placeholder="Practice-Location Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicName"   (ngModelChange)="searchClinicByNameByAddress()"
+                (keyup)="searchClinicByNameByAddress()" />
+        </div>
+        <div class="col-md-6 ps-2">
+            <input type="search" class="form-control place" placeholder="Practice-Location Address" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicAddress"   (ngModelChange)="searchClinicByNameByAddress()" 
+                 />
+        </div>
+    </form>
+</div>
+
+<div *ngIf="!isSpecialityClicked" class="row assignment-modal text-center mt-2 mb-1">
+    <div class="col-md-5 offset-md-1 form">
+        <label class="d-inline-block chkbox position-relative m-0 mb-2 mt-1">
+      <input [(ngModel)]="isShowSpecialityFilter" type="checkbox" id="test1" value='true' (ngModelChange)="showSpecialtyFilter($event)">
+      <span class="fake-input position-absolute"></span>
+      <label class="fake-label d-block mb-0 py-0" for="test1">Add filter</label>
+        </label>
+    </div>
+</div>
+<div *ngIf="isShowSpecialityFilter">
+    <form  #f="ngForm" class="row mb-3">
+        <!-- <div class="col-md-6 pe-2">
+            <input type="search" class="form-control" placeholder="Location Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicName" (keypress)="searchClinicByName()" (input)="searchClinicByName()" (keydown)="searchClinicByName()" (change)="searchClinicByName()"
+                (keyup)="searchClinicByName()" />
+        </div>
+        <div class="col-md-6 ps-2">
+            <input type="search" class="form-control" placeholder="Location Address" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicAddress" (keypress)="searchClinicByAddress()" (input)="searchClinicByAddress()" (change)="searchClinicByAddress()" (keydown)="searchClinicByAddress()"
+                (keyup)="searchClinicByAddress()" />
+            <br />
+        </div> -->
+        <div class="col-md-12 pe-2">
+            <!-- <input type="search" class="form-control place" placeholder="Speciality Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="specName" (keypress)="searchSpecialityByNameByAddress()" (input)="searchSpecialityByNameByAddress()" (keydown)="searchSpecialityByNameByAddress()" (change)="searchSpecialityByNameByAddress()"
+                (keyup)="searchSpecialityByNameByAddress()" /> -->
+
+				<input type="search" class="form-control place" placeholder="Speciality Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="specName"  (ngModelChange)="searchSpecialityByNameByAddress()"
+             />
+        </div>
+        <!-- <div class="col-md-6 ps-2">
+            <input type="search" class="form-control place" placeholder="Practice-Location Address" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicAddress" (keypress)="searchClinicByNameByAddress()" (input)="searchClinicByNameByAddress()" (change)="searchClinicByNameByAddress()" (keydown)="searchClinicByNameByAddress()"
+                (keyup)="searchClinicByNameByAddress()" />
+        </div> -->
+    </form>
+</div>
+
+<!-- Clinics List -->
+
+<div [hidden]="isShowAllClinicList" class="clinic-list">
+	<ul class="list-group">
+		<li class="list-group-item" (click)="selectClinic.emit(clinic);false" [ngStyle]="{'border-left-color': clinic.color}" *ngFor="let clinic of filterClinic; let i = index">  
+			<p class="clinic-name text-truncate" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinic.facility_name}}-{{clinic.name}}">{{clinic?.facility?.qualifier}}-{{clinic.qualifier}}</p>
+			
+			<span class="clinic-address text-truncate tooltip-outer"
+			tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinic.address}} {{clinic.floor}}, {{clinic.city}}, {{clinic.state}} {{clinic.zip}}"
+			>{{clinic.address}} {{clinic.floor}}, {{clinic.city}}, {{clinic.state}} {{clinic.zip}} </span>
+		
+			<label class="customcheck">
+				<input id="selected-Specialty" type="checkbox" 
+				 [checked]="clinic.isChecked"
+				(change)="selectClinic.emit(clinic)" />
+				<span class="checkmark checkmark1"></span>
+			</label>
+		</li>
+	</ul>
+</div>
+
+<!-- <div [hidden]="isShowFilterClinicList" class="clinic-list">
+	<ul class="list-group">
+		<li class="list-group-item" (click)="selectClinic.emit(filterdoc);false" [ngStyle]="{'border-left-color': filterdoc.color}" *ngFor="let filterdoc of searchedClinics; let i = index">  
+			<p class="clinic-name text-truncate">{{filterdoc.name}}</p>
+			
+			<span class="clinic-address text-truncate tooltip-outer"
+			tooltipClass="table-custom-tooltip" ngbTooltip="{{filterdoc.address}}" container="body"
+			>{{filterdoc.address}}</span>
+
+			<label class="customcheck">
+                <input id="selected-Specialty" type="checkbox" [checked]="filterdoc.isChecked"
+                  (change)="selectClinic.emit(filterdoc)" />
+                <span class="checkmark checkmark1"></span>
+              </label>
+		</li>
+	</ul>
+</div> -->
+
+<!-- Specailty List -->
+<div [hidden]="isSpecialityClicked" class="clinic-list mt-3">
+	<ul class="list-group">
+		<li class="list-group-item py-3" (click)="onSpecialtyChange(spec);false" [ngStyle]="{'border-left-color': spec.color}" *ngFor="let spec of filterSpeciality; let i=index"> 
+			<p class="clinic-name text-truncate mb-0" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{spec.name}}" >{{spec.qualifier}}</p>
+			<label class="customcheck">
+                <input id="selected-Clinic" type="checkbox" [checked]="spec.isChecked"
+                  (change)="onSpecialtyChange(spec)" />
+                <span class="checkmark checkmark-spec"></span>
+              </label>
+		</li>
+	</ul>
+</div>
+
+

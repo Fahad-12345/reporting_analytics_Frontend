@@ -1,0 +1,43 @@
+<div class="row text-center">
+  <!-- <div class="col-md-1 col-sm-1"></div> -->
+  <div class="col-md-4 col-sm-4 ">
+    <div class="btn-group">
+      <div style="font-size:25px; margin-right:7px;margin-top: 2px;cursor:pointer;" mwlCalendarPreviousView
+        [view]="view" [(viewDate)]="viewDate" (click)="sendDataPrev(viewDate)"
+        (viewDateChange)="viewDateChange.emit(viewDate)" title="Previous Month">
+        <i class="fa fa-caret-left"></i> </div>
+      <div style="margin-right:7px; margin-top: 10px;font-size:14px;" class="date-font" mwlCalendarToday>
+        {{ viewDate | calendarDate:(view + 'ViewTitle'):locale }}
+      </div>
+      <div style="font-size:25px;margin-top: 2px;cursor:pointer;" mwlCalendarNextView [view]="view"
+        [(viewDate)]="viewDate" (click)="sendDataNext(viewDate)" (viewDateChange)="viewDateChange.next(viewDate)"
+        title="Next Month">
+        <i class="fa fa-caret-right"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-3" style=" margin-top: 5px;">
+    <select class="form-select" (change)="swap.emit($event)" [(ngModel)]="swaps" style="cursor: pointer;">
+      <option value="true">Provider/Rooms</option>
+      <option value="false">Room/Provider</option>
+    </select>
+  </div>
+
+  <!-- <div class="col-md-1 offset"></div> -->
+  <div class="col-md-4 col-sm-4 btn-group" style=" margin-left: 4%;">
+    <nav class="left-nav p-0 mt-2">
+      <ul class="list-unstyled">
+        <li class="button--wayra " (click)="viewChangeFun('month')" [class.active]="view === 'month'">
+          <a class="d-block">Month</a>
+        </li>
+        <li class="button--wayra" (click)="viewChangeFun('week')" [class.active]="view === 'week'">
+          <a class="d-block">Week</a>
+        </li>
+        <li class="button--wayra" (click)="viewChangeFun('day')" [class.active]="view === 'day'">
+          <a class="d-block">Day</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+<br>

@@ -1,0 +1,54 @@
+<div class="modal-header" style="background-color: #4b4b4b;color: #fff;padding: 8px 15px;font-size: 18px;">
+    <h4 class="modal-title" style="text-align: center;">Appointment Notes </h4>
+    <button style="background-color: #4b4b4b;color: #fff" type="button" class="close" data-dismiss="modal" (click)="activeModal.dismiss('Cross click')">&times;</button>
+</div>
+<form style="height:100%" [formGroup]="myForm">
+    <div class="modal-body" style="padding: 25px">
+        <div class="row">
+            <div class="col-md-4">
+                <label label class="title">Practice Location</label>
+                <select class="form-select" formControlName="clinicname" (ngModelChange)="changeClinic()" disabled>
+					<option *ngFor="let clinic of assignClinics; let i=index" value={{clinic.id}} title="{{clinic.facility_name}}-{{clinic.name}}">
+                        {{clinic?.facility?.qualifier}}-{{clinic?.qualifier}}
+					</option>
+				</select>
+            </div>
+            <div class="col-md-4">
+                <label label class="title">Provider</label>
+                <input style="background-color:#e9ecef!important;" type="text" [(value)]="doctorName" disabled class="form-control" formControlName="doctor" />
+            </div>
+            <div class="col-md-4" >
+                <!-- <label class="title">Date</label> -->
+                <!-- <ejs-datepicker placeholder='Start Date' [(value)]='startDate' [enabled]="false">
+                </ejs-datepicker> -->
+				<app-mat-date-picker-sharedable [classesName]="['form-group', 'vertical-label-cross']" [lableName]="'Date'"  [(defaultDate)]="startDate"  [placeholder]="'Start Date (mm/dd/yyyy)'" [disabled]="true" ></app-mat-date-picker-sharedable>
+
+                <!-- <p class ="required" *ngIf = "apt_date_check" style = "margin-top: 4px;">This feild is required </p> -->
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <label class="title" for="notes">Notes</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <textarea style="height: 100px!important;background-color:#e9ecef!important;" disabled type="text" class="form-control" formControlName="comments"></textarea>
+            </div>
+
+        </div>
+        <br>
+    </div>
+
+    <div class="modal-footer col-md-12 pt-0" style="padding: 25px;border: none;">
+        <div class="col-md-4 offset"></div>
+        <div class="col-md-2" style="max-width: 20%;flex: 0 0 20%;">
+            <!--<button class="btn bg-green w-100" type="submit" (click)="activeModal.close()">Add</button>-->
+        </div>
+        <div class="col-md-2" *ngIf = "false">
+            <button class="btn btn-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+        </div>
+        <div class="col-md-4 offset center"></div>
+    </div>
+</form>

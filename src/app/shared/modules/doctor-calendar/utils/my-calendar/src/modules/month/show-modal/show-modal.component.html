@@ -1,0 +1,51 @@
+<div class="modal-header" style="background-color: #4b4b4b;color: #fff;padding: 8px 15px;font-size: 18px;">
+	<h4 class="modal-title" style="text-align: center;">Reports</h4>
+	<button style="background-color: #4b4b4b;color: #fff" type="button" class="close" data-dismiss="modal"
+		(click)="currentModal.close()">&times;</button>
+</div>
+
+<div class="modal-body data-table">
+    <div class="col-md-12 text-end mt-2" style = "margin-top: 4px;">
+        <a [hidden]="numSelected == 0" (click) = "showMultiple()" class="btn btn-default round-btn ms-2" >
+            <span class="icon-eye me-1"></span> View [{{numSelected}}]
+        </a>
+    </div>
+  <div class="row">
+      <div class="col-md-12">
+          <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="data" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+              <ngx-datatable-column [canAutoResize]="true" name="Name" prop="id" [width]="90">
+                  <ng-template let-column="column" ngx-datatable-header-template>
+                      Name
+                  </ng-template>
+                  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      <div *ngIf="row.file_title" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.file_title}}">
+                          {{row.file_title}}</div>
+                      <div *ngIf="!row.file_title" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="N/A">
+                          N/A</div>
+                  </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column [canAutoResize]="true" name="Actions" prop="id" [width]="130">
+              
+                  <ng-template let-column="column" ngx-datatable-header-template>
+                    <label class="checkbox-inline"><input type="checkbox"  style="cursor: pointer;" (change) = "checkAll($event)" [checked] = "actionCheck"> </label> Actions
+                  </ng-template>
+                  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      <!-- <button *ngIf="row.updateApp" (click)="edit(row)" class="edit-hov mx-1" role="button" type=button ngbTooltip="Edit">
+                          <i class="icon-pencil"></i>
+                      </button> -->
+                      <label class="checkbox-inline"><input type="checkbox"  style="cursor: pointer;" (change) = "boxChecker(row, $event)" [checked] = "allTrue"> </label>
+                      <button (click)="openInWindow(row)" class="view-hov mx-2" role="button" ngbTooltip="View">
+                          <i class="icon-eye"></i>
+                      </button>
+                      <!-- <button *ngIf="row.deleteApp" (click)="deleteFile(row)" class="remove-hov mx-1" role="button" type=button ngbTooltip="Delete">
+                          <i class="icon-remove"></i>
+                      </button> -->
+                  </ng-template>
+
+              </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+      
+</div>

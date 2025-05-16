@@ -1,0 +1,50 @@
+	<div class="side-height" *ngIf="links">
+		<div class="sidebar-frame h-100">
+			<perfect-scrollbar>
+				<!-- widget -->
+				<section class="widget" *ngIf="links.search">
+					<form action="#" class="form-search">
+						<input type="search" class="form-control no-border" placeholder="Search...">
+						<button type="submit" class="p-0 position-absolute mt-0"><span class="icon-search"></span></button>
+					</form>
+				</section>
+				<!-- widget -->
+				<section class="widget" *ngIf="links && links.links && links.links.length>0">
+					<ul class="menu-list list-unstyled">
+						<li class="dropdown" *ngFor="let link of links.links"
+							[class.dropdown]="link && link.subLinks && link.subLinks.length>0">
+							<a *ngIf="link && link.subLinks && link.subLinks.length>0" class="d-block dropdown-toggle"
+								href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+								aria-expanded="false"><span [class]="link.icon"></span> {{link.name}} </a>
+							<a *ngIf="!(link && link.subLinks && link.subLinks.length>0)" class="d-block" target="_blank"
+								href="{{link.link}}"><span [class]="link.icon"></span>{{link.name}}</a>
+							<ul class="dropdown-menu p-0 m-0 w-100" aria-labelledby="navbarDropdownMenuLink"
+									*ngIf="link && link.subLinks && link.subLinks.length>0">
+								<li *ngFor="let subLinks of link.subLinks"
+									[class.dropdown]="subLinks && subLinks.subLinks && subLinks.subLinks.length>0">
+									<a *ngIf="subLinks && subLinks.subLinks && subLinks.subLinks.length>0"
+										class="d-block dropdown-toggle" href="#"><span [class]="subLinks.icon"></span>
+										{{subLinks.name}}</a>
+									<a *ngIf="!(subLinks && subLinks.subLinks && subLinks.subLinks.length>0)"
+										class="d-block" target="_blank" href="{{subLinks.link}}"><span
+											[class]="subLinks.icon"></span> {{subLinks.name}}</a>
+									<ul class="dropdown-menu p-0 m-0 w-100 mCustomScrollbar">
+										<li *ngFor="let thirdLinks of subLinks.subLinks"><a class="d-block" target="_blank"
+												href="{{thirdLinks.link}}">{{thirdLinks.name}}</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<!-- <li><a class="d-block" href="#"><span class="icon-ct-scans position-absolute"></span> CT Scans</a></li>
+						<li><a class="d-block" href="#"><span class="icon-xray position-absolute"></span>X-Ray</a></li> -->
+					</ul>
+				</section>
+				<!-- widget -->
+				<section class="widget info-block text-center">
+					<div class="icon me-auto ms-auto" *ngIf="links.class"><span [class.icon-Help-svg]="links.class"></span>
+					</div>
+					<p>{{links.text}}</p>
+				</section>
+			</perfect-scrollbar>
+		</div>
+	</div>

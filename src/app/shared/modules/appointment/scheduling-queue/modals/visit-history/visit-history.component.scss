@@ -1,0 +1,122 @@
+.center{
+  flex: 0 0 31.333333% !important;
+  max-width: 31.333333% !important;
+
+}
+
+input, select{
+  height: 30px !important;
+}
+.title{
+color: #212529;
+font-size: 13px;
+font-weight: 500;
+margin-bottom: 0rem !important;
+
+}
+
+
+.row
+{
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+.select,
+input,textarea {
+font-size: 13px;
+ font-weight: 500;
+height: 30px !important;
+border-radius: .26rem;
+padding: 4px 10px;
+border: 1px solid #c6c4c4;
+color: #525252;
+background-color: #faf8f9;
+
+}
+
+.modal-header .close {
+  padding: 0rem !important;
+margin: 0rem 0rem 0rem auto !important;
+font-size: 18px;
+  padding: 8px 15px;
+}
+@mixin toltip-top {
+  top: -20px;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  padding: 10px 20px;
+  color: #444444;
+  background-color: #EEEEEE;
+  font-weight: normal;
+  font-size: 13px;
+  border-radius: 8px;
+  position: absolute;
+  z-index: 99999999;
+  box-sizing: border-box;
+  border: 1px solid #34c3ee;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  display: none;
+  }
+.custom-btn-tooltip {
+position: relative;
+margin: 0px 0px 0px 5px;
+
+.btn-tooltip-top {
+  @include toltip-top();
+  min-width: 200px;
+
+  .btn {
+    margin-right: 5px;
+  }
+}
+&:hover .btn-tooltip-top {
+  display: block;
+}
+.btn-tooltip-top i {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -12px;
+  width: 24px;
+  height: 12px;
+  overflow: hidden;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    background-color: #EEEEEE;
+    border: 1px solid #34c3ee;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  }
+}
+}
+
+
+.btn {
+	width: 75px;
+}
+.checkboxes{
+	margin: 23px 0 0;
+}
+
+.checkboxes label {
+	display: inline-block !important;
+	padding-right: 10px !important;
+	white-space: nowrap !important;
+	
+  }
+  .checkboxes input {
+	vertical-align: middle;
+	margin-right: 5px;
+  }
+  .checkboxes label input[type="checkbox"]:checked {
+	// border-color: red;
+	background: #fff;
+    border-color: #00a650;
+  }
+  .checkboxes label span {
+	vertical-align: middle;
+  }

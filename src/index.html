@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
+  <title>Ovada</title>
+  <base href="/">
+  <script>
+    window.onload = function () {
+        function loadStyle(styleheadbody,styleUrl) {
+            const style = document.createElement('link');
+            style.rel = "stylesheet";
+            style.href = styleUrl;
+            if(styleheadbody){
+                document.head.appendChild(style);
+            }else{
+                document.body.appendChild(style);
+            }
+        }
+        // loadStyle(true, 'assets/css/newStyle.css');
+        loadStyle(false, 'assets/css/popover.css');
+        loadStyle(false, 'indigo-pink.css');
+        loadStyle(false, 'datatable-index.css');
+        loadStyle(false, 'datatable-icons.css');
+        loadStyle(false, 'bs-datepicker.css');
+        loadStyle(false, 'open-iconic-bootstrap.css');
+        loadStyle(false, 'angular-calendar.css');
+        loadStyle(true, 'toastr.css');
+        // loadStyle(false, 'lightbox.css');
+   }
+   function closeSideBar(){
+       if(screen.width > 992){
+        document.getElementById('ovada-body').classList.remove('nav-open');
+       }
+   }
+</script>
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicons/favicon.png">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdn.syncfusion.com/ej2/material.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.15.0/themes/prism.css" />
+</head>
+<body  class="right-panel-open" id="ovada-body" onresize="closeSideBar()">
+  <app-root></app-root>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTi8kL83VygXogxcLOTdJI-VFwXWoo8u8&libraries=places&language=en">
+  </script>
+  <script type="text/javascript" src="assets/js/pdf-viewer/pdfobject.min.js"></script>
+  <script src="https://use.fontawesome.com/releases/v5.3.1/js/all.js" data-auto-a11y="true"></script>
+
+</body>
+</html>

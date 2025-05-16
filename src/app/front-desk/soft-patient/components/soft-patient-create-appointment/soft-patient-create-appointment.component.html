@@ -1,0 +1,304 @@
+<div class="card board border-0 w-100 mb-0 mt-2 p-0">
+	<div class="card-body form">
+		<form [formGroup]="myForm">
+			<div class="row">
+				<div class="col-lg-2 col-md-2">
+					<label class="title"> Patient<em>*</em></label>
+					<input type="text" style="height: 30px !important;" class="form-control"
+						formControlName="patient" />
+				</div>
+				<div class="col-lg-2 col-md-2">
+					<label class="title"> Chart ID<em>*</em></label>
+					<input type="text" style="height: 30px !important;" class="form-control"
+						formControlName="chart_str" />
+				</div>
+				<div class="col-lg-2 col-md-2">
+					<label class="title"> Case No.<em>*</em> </label>
+					<input type="text" style="height: 30px !important;" class="form-control"
+						formControlName="case_str" />
+				</div>
+				<div class="col-md-2">
+					<app-mat-date-picker-sharedable [classesName]="['form-group soft-cross-icon horizontal-label']"
+						[lableName]="'Apt.Date*'" (valueChange)="onChangeAptDate($event)"
+						[defaultDate]="startDate"></app-mat-date-picker-sharedable>
+
+					<small class="text-muted danger" *ngIf="!startDate">This field is required </small>
+				</div>
+
+				<div class="col-md-2">
+					<label class="title"> Apt. Time<em>*</em></label>
+					<ejs-timepicker [step]='interval' #ejsTimePicker [min]="timeRange.start" [max]="timeRange.end"
+						[(value)]="timeRange.startTime" (change)=" changeStartTime()"
+						placeholder="Apt. Time"></ejs-timepicker>
+					<p class="text-muted danger" *ngIf="!timeRange.startTime">This field is required </p>
+				</div>
+
+				<div class="col-md-2">
+					<label class="title"> Duration<em>*</em></label>
+					<select class="form-select" formControlName="time_slot">
+						<option value="">Duration</option>
+						<option *ngFor="let duration of durations" value={{duration}}>{{duration}}
+
+						</option>
+					</select>
+					<small class="text-muted danger" *ngIf="myForm.get('time_slot').errors?.required && btnSubmit">This
+						field is required </small>
+				</div>
+
+				<div class="col-md-2">
+					<div class="">
+						<label class="title">Practice-Location<em>*</em></label>
+						<select class="form-select mb-0" style="width: 100%;color: #6d6969; "
+							formControlName="facility_location_id" (change)="clinicChange($event)">
+							<option value="" selected>N/A</option>
+							<option *ngFor="let clinic of practiceLocations;; trackBy:identify" value={{clinic.id}}
+								title="{{clinic?.facility?.name}}-{{clinic?.name?clinic.name:'N/A'}}">
+								{{clinic?.facility?.qualifier}}-{{clinic?.name?clinic.qualifier:'N/A'}}
+							</option>
+						</select>
+						<small class="text-muted danger"
+							*ngIf="myForm.get('facility_location_id').errors?.required && btnSubmit">This field is
+							required</small>
+					</div>
+				</div>
+
+				<div class="col-md-2">
+					<div class="">
+						<label class="title"> Specialty<em>*</em></label>
+						<select class="form-select mb-0" style="width: 100%;color: #6d6969; "
+							formControlName="speciality_id" (change)="specialityChange($event)">
+							<option value="" selected>N/A</option>
+							<option *ngFor="let spec of specialities; trackBy:identify" title="{{spec.name}}"
+								value={{spec.id}}>
+								{{spec.qualifier}}</option>
+						</select>
+						<small class="text-muted danger"
+							*ngIf="myForm.get('speciality_id').errors?.required && btnSubmit ">This field is required
+						</small>
+					</div>
+				</div>
+				<div class="col-md-2">
+					<label class="title"> Provider</label>
+					<select class="form-select" style="width: 100%;color: #6d6969; " formControlName="doctor_id"
+						(change)="getFacilityAndSpeciality(true)">
+						<option value="" selected>N/A</option>
+						<!-- <option *ngFor="let doc of doctors; trackBy:identify" [value]="doc.id">
+							{{doc?.userBasicInfo?.first_name+(doc?.userBasicInfo?.middle_name?'
+							'+doc?.userBasicInfo?.middle_name:'')+" "+doc?.userBasicInfo?.last_name}}
+						</option> -->
+						<option *ngFor="let doc of doctors; trackBy:identify" value={{doc.doctor_id}}>
+							{{doc.doctor?.userBasicInfo?.first_name}} {{doc.doctor?.userBasicInfo?.middle_name}}
+							{{doc.doctor?.userBasicInfo?.last_name}}{{doc?.doctor && doc?.doctor?.medicalIdentifiers &&
+							doc?.doctor?.medicalIdentifiers?.billingTitle &&
+							doc?.doctor?.medicalIdentifiers?.billingTitle?.name?
+							", "+doc?.doctor?.medicalIdentifiers?.billingTitle?.name :''}}
+						</option>
+					</select>
+				</div>
+				<div class="col-md-2 text-truncate">
+					<label class="title">Visit Type <em>*</em></label>
+					<select class="col-md-12 form-select" (change)="getAppointmentType($event)"
+						formControlName="appointment_type_id" [(ngModel)]="typeForAppointment">
+						<option *ngFor="let aP of AppointmentType; trackBy:identify" value={{aP.id}}
+							title="{{aP.name}}">{{aP?.qualifier}}</option>
+					</select>
+					<small class="text-muted danger"
+						*ngIf="myForm.get('appointment_type_id').errors?.required  && btnSubmit">This field is required
+					</small>
+				</div>
+				<div class="col-md-2 text-truncate">
+					<label class="title">Apt. Priority <em>*</em></label>
+					<select class="col-md-12 form-select" formControlName="priority_id">
+						<option *ngFor="let aP of AppointmentPriorities" [value]="aP.id">{{aP.name}}</option>
+					</select>
+					<small class="text-muted danger"
+						*ngIf="myForm.get('priority_id').errors?.required  && btnSubmit">This field is required </small>
+
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group field mt-4 cpt-plc-hold search-label">
+						<app-ng-select-shareable #readingPhysicianControl
+							[events]="eventsSubjectPhysicians.asObservable()" [filterFieldName]="'physician_id'"
+							[maxLengthName]="95" [ngSelectShow]="true" (touched)="getTouched($event,'physician_id')"
+							[showSelectFieldOnRefresh]="myForm.get('physician_id').value"
+							[lableName]="selectedSpecialtyKey == 'diagnostic' ? 'Referring Physician*':'Referring Physician'" [bindlable]="'refferingOfficeName'"
+							[searchLableName]="'physician_id'" [bindId]="'id'"
+							[apiPath]="ReferringPhysician_LocationListing" [forceApiHitonOpen]="hitAPIonEdit"
+							(valueChange)="selectionOnValueChange($event,myForm,'physician_id')"
+							[multiple]="false"></app-ng-select-shareable>
+							<small class ="text-muted danger" *ngIf = "(selectedSpecialtyKey == 'diagnostic' && !myForm.get('physician_id').value)">This field is required </small>
+					</div>
+				</div>
+				<div class="col-lg-6" *ngIf="enableCptCodes">
+					<div class="form-group field mb-0 mt-4 cpt-plc-hold search-label">
+						<app-ng-select-shareable #cptCodeControl [events]="eventsSubjectCpt.asObservable()"
+							[filterFieldName]="'cpt_codes_ids'"
+							[showSelectFieldList]="selectedMultipleFieldFiter['cpt_codes_ids']"
+							[showSelectFieldOnRefresh]="myForm.get('cpt_codes_ids').value" [lableName]="'CPT Codes'"
+							[bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'" [bindId]="'id'"
+							[apiPath]="EnumApiPath.getCptListByVisitType"
+							[conditionalExtraApiParams]="{'visit_type_id':typeForAppointment}" [maxLengthName]="95"
+							[ngSelectShow]="true" (valueChange)="selectionOnValueChange($event,myForm,'cpt_codes_ids')"
+							(touched)="getTouched($event,'cpt_codes_ids')" [multiple]="allowMultiCPTs"
+							[forceApiHitonOpen]="apidefaulthit || hitAPIonEdit" [closeOnSelect]='false'
+							[disableField]="typeForAppointment?false:true"></app-ng-select-shareable>
+					</div>
+				</div>
+				<div class="col-lg-3" *ngIf="enableReadingProvider">
+					<div class="form-group field mb-1 mt-1 cpt-plc-hold search-label">
+						<app-ng-select-shareable #readingProviderControl
+							[events]="eventsSubjectReadingProvider.asObservable()"
+							[filterFieldName]="'reading_provider_id'"
+							[showSelectFieldList]="selectedMultipleFieldFiter['reading_provider_id']"
+							(touched)="getTouched($event,'reading_provider_id')"
+							[showSelectFieldOnRefresh]="myForm.get('reading_provider_id').value" [ngSelectShow]="true"
+							[lableName]="'Reading Provider'" [bindlable]="'full_name'"
+							[searchLableName]="'reading_provider_id'" [bindId]="'id'"
+							[apiPath]="EnumApiPath.getProviders"
+							[conditionalExtraApiParams]="{'reading_provider':1,'order': OrderEnum.ASC}"
+							(valueChange)="selectionOnValueChange($event,myForm,'reading_provider_id')"
+							[multiple]="false" [closeOnSelect]='false' [forceApiHitonOpen]="hitAPIonEdit"
+							[disableField]="typeForAppointment?false:true"></app-ng-select-shareable>
+					</div>
+				</div>
+				<div class="col-md-12 mb-3">
+					<label class="title">Comments</label>
+					<textarea class="form-control" style="height:100px !important;color: #6d6969;"
+						formControlName="comments" placeholder="No Comment Yet">
+
+			</textarea>
+				</div>
+
+			</div>
+			<div *ngIf="!isEditAppointment">
+				<div class="row">
+					<div class='col-md-2 recurrence-tab form ps-0'>
+						<label class="d-inline-block chkbox position-relative mt-2 mb-3 pt-1">
+							<input id="recurrenceAfter" type="checkbox" name="recurrenceAfter"
+								(click)="RecurrenceDoc($event)">
+							<span class="fake-input position-absolute"></span>
+							<label class="fake-label d-block py-0 mb-0" for="recurrenceAfter">
+								Recurrence
+							</label>
+						</label>
+					</div>
+				</div>
+				<div class="row d-flex align-items-center">
+					<div class="col-sm-4 mb-3" [hidden]="isShowRecuurenceBefore">
+						<div class="row">
+							<div class="col-md-5">
+								<label class="title"> Repeat every </label>
+							</div>
+							<div class="col-md-6 ps-0">
+								<select class="form-select" formControlName="dailyMontlyWeeklyOpt"
+									(ngModelChange)="changeRepeatEvery()" style="margin-bottom:0px !important">
+									<option *ngFor="let opt of option; trackBy:identify" value={{opt.id}}>
+										{{opt.value}}
+									</option>
+								</select>
+							</div>
+							<div class="col-md-1 ps-1">
+								<label class="title">on</label>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-8">
+						<div [hidden]="isShowRecuurenceBefore" class="row">
+							<div [hidden]="isDisableOption" class="col-md-12 px-0">
+								<ul class="list-unstyled form d-flex justify-content-around mb-0">
+									<li class="d-inline-block" *ngFor="let days of weekDay;let i=index"
+										style="line-height: 10px;">
+										<label class="d-inline-block chkbox position-relative m-0">
+											<input id="Mon" type="checkbox" (click)="changeWeek($event,days[0])"
+												[(checked)]="days[0].isChecked" name="week">
+											<span class="fake-input position-absolute"></span>
+											<label class="fake-label d-block font-weight-normal py-0 mb-0"
+												(click)="changeWeek($event,days[0])">
+												{{days[0].name}}
+											</label>
+										</label>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2 recurrence-tab form ps-0" [hidden]="isShowRecuurenceBefore">
+						<label class="d-inline-block chkbox position-relative m-0">
+							<input id="rangeRecurrence" type="checkbox" formControlName="rangeRecurrence"
+								name="rangeRecurrence" (click)="rangeRecuurence($event)">
+							<span class="fake-input position-absolute"></span>
+							<label class="fake-label d-block" for="rangeRecurrence">
+								*Range of Recurrence
+							</label>
+						</label>
+					</div>
+					<div class="col-md-10 radio-button-sch mb-3" [hidden]="hideRangeRec"
+						[ngStyle]="{'color':isRangeRec ? 'grey' : 'black'}">
+						<ul class="list-unstyled form d-flex justify-content-between mb-0">
+							<li class="d-inline-block">
+								<label class="fake-label-frame chkbox position-relative m-0" for="rangeRecOption1">
+									<input name="rangeRecOption" [checked]="myForm.controls['rangeRecOption1'].value"
+										formControlName="rangeRecOption1" (click)="endAfter($event)"
+										id="rangeRecOption1" type="radio">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block font-weight-normal">End
+										after</span>
+								</label>
+							</li>
+							<li class="d-inline-block col-md-2 px-2" (click)="endAfterClickChange()">
+								<input formControlName="noOfOccurence" class="form-control mb-0" type="number" min=1
+									oninput="validity.valid||(value='')" style="margin-bottom: 0px !important;">
+							</li>
+							<li class="d-inline-block">
+								<label>Recurrence</label>
+							</li>
+							<li class="d-inline-block">
+								<label class="fake-label-frame chkbox position-relative m-0" for="rangeRecOption2">
+									<input type="radio" (click)="endBy($event)" name="rangeRecOption"
+										formControlName="rangeRecOption2" id="rangeRecOption2">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block font-weight-normal">End
+										by</span>
+								</label>
+							</li>
+							<li class="d-inline-block col-md-3 px-0 top-y-50" (click)="endbyClickChange()">
+								<app-mat-date-picker-sharedable
+									[classesName]="['form-group','field', 'horizontal-label']" [lableName]="''"
+									(valueChange)="onChangeEndByDate($event)" [defaultDate]="endByDate" [min]='enddate'
+									[placeholder]="'Enter date'"
+									[disabled]='!endByCheck'></app-mat-date-picker-sharedable>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="row ">
+				<div class='col-md-2 recurrence-tab form ps-0'>
+					<label class="d-inline-block chkbox position-relative mt-2 mb-3 pt-1">
+						<input id="is_transportation" type="checkbox" formControlName="is_transportation">
+						<span class="fake-input position-absolute"></span>
+						<label class="fake-label d-block py-0 mb-0" for="is_transportation">
+							Transportation
+						</label>
+					</label>
+				</div>
+				<app-transportation-modal #transportationComponent [openFrom]="'softPatient'"
+					[hidden]="!(myForm.get('is_transportation').value)" class="col-12 for-soft-registration"
+					[patientId]='chart' [physician_id]="this.myForm.get('physician_id').value"
+					[clinic_location_id]="clinic_location_id" [openAsModal]="false"></app-transportation-modal>
+			</div>
+			<div class="row d-flex justify-content-center mt-2">
+				<div class="col-md-2">
+					<button class="btn btn-primary w-100 float-right mt-2 mt-sm-0" data-dismiss="modal" type="button"
+						(click)="Back()">Back</button>
+				</div>
+				<div class="col-md-3">
+					<button class="btn btn-success w-100 mt-2 mt-sm-0" type="submit"
+						[disabled]=" (btnSubmit && myForm.invalid  )" (click)="submit()"> Save & Continue</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

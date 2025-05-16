@@ -1,0 +1,174 @@
+ul.list-inline li.list-inline-item {
+    display: block !important;
+    margin-bottom: 10px;
+  }
+  .third-child.mat-tree-node {
+    &.parent-node {
+      width: 100% !important;
+      margin-left: 0px !important;
+      padding-left: 0px !important;
+    }
+  }
+  .tree-accordion .panel .permission-type li.list-inline-item {
+    position: relative;
+  }
+  .mat-mdc-icon-button .mat-mdc-icon,
+  .mat-mdc-icon-button i {
+    line-height: 16px;
+  }
+  .mat-tree-node {
+    min-height: 35px;
+    margin: 7px 0px;
+    float: left;
+    width: 100%;
+    background-color: #f7f7f7;
+    border: 1px solid #b0b1b1;
+    border-radius: 5px;
+  }
+  .mat-tree-node:first-child {
+    border-radius: 5px;
+  }
+  .mat-tree-node:last-child {
+    border-radius: 5px;
+  }
+  
+  .mat-tree-node:nth-child(odd) {
+    background-color: #f7f7f7;
+  }
+  .mat-tree-node:nth-child(odd) > .third-child {
+    background-color: #f7f7f7;
+  }
+  
+  ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+  ::ng-deep .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #00a650;
+  }
+  .mat-tree {
+    display: block;
+    border: none;
+    padding: 0px;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+  .third-child.mat-tree-node {
+    padding-left: 34px !important;
+    width: 48.6%;
+    margin: 6px 8px 6px 8px;
+    float: left;
+    border: 1px solid #d8d6d6;
+  }
+  
+  ::ng-deep .third-child.mat-tree-node:last-child {
+    border-bottom: 1px solid #b0b1b1 !important;
+  }
+  .third-child .checklist-leaf-node {
+    position: relative;
+  }
+  
+  .second-child .mat-mdc-icon-button {
+    position: relative;
+  }
+  .mat-checkbox {
+    z-index: 1;
+  }
+  .third-child .mat-mdc-icon-button {
+    display: none;
+  }
+  ::ng-deep .third-child .checklist-leaf-node .mat-checkbox-layout {
+    z-index: 1;
+    position: relative;
+  }
+  .btn.btn-default {
+    background: #00a650;
+  }
+  .btn.btn-default:hover {
+    background: #066a36;
+  }
+  ::ng-deep .mat-checkbox-frame {
+    border-width: 1px !important;
+  }
+  ul.list-inline li.list-inline-item {
+    display: block !important;
+    margin-bottom: 10px;
+  }
+  .tree-accordion .panel .permission-type:after {
+    top: 11px;
+    left: -20px;
+    content: "";
+    width: 20px;
+    position: absolute;
+    border-bottom: 1px dashed #b0b1b1;
+  }
+  .tree-accordion .panel .permission-type li.list-inline-item {
+    position: relative;
+  }
+  .tree-accordion .panel .permission-type li.list-inline-item::before {
+    position: absolute;
+    content: "";
+    width: 20px;
+    border-bottom: 1px dashed #b0b1b1;
+    left: -20px;
+    top: 11px;
+  }
+  .mat-mdc-icon-button .mat-mdc-icon,
+  .mat-mdc-icon-button i {
+    line-height: 16px;
+  }
+  
+  ::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+  ::ng-deep .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+    background-color: #05a853;
+  }
+  
+  ::ng-deep .third-child.mat-tree-node:last-child {
+    border-bottom: 1px solid #b0b1b1 !important;
+  }
+  .third-child .checklist-leaf-node {
+    position: relative;
+  }
+  
+  .second-child .mat-mdc-icon-button {
+    position: relative;
+  }
+  .mat-checkbox {
+    z-index: 1;
+  }
+  .third-child .mat-mdc-icon-button {
+    display: none;
+  }
+  ::ng-deep .third-child .checklist-leaf-node .mat-checkbox-layout {
+    z-index: 1;
+    position: relative;
+  }
+  .btn.btn-default {
+    background: #00a650;
+  }
+  .btn.btn-default:hover {
+    background: #066a36;
+  }
+  ::ng-deep .mat-checkbox-frame {
+    border-width: 1px !important;
+  }
+  .icon-plus-um {
+    border-radius: 0px 3px 3px 0px;
+    right: 11px;
+    float: right;
+    position: absolute !important;
+    text-align: center;
+    width: 40px;
+    height: 33px;
+    overflow: hidden;
+    line-height: 33px;
+  }
+  .mat-mdc-icon {
+    color: #00a650;
+  }
+  .mat-button .mat-button-focus-overlay,
+  .mat-mdc-icon-button .mat-button-focus-overlay {
+    opacity: 1;
+  }
+  svg {
+    width: 30% !important;
+    color: #444242 !important;
+  }
+  

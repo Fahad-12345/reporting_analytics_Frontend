@@ -1,0 +1,38 @@
+<div class="text-center">
+	<div class="row">
+		<div class="col-12">
+			<div class="web-cam">
+				<webcam [height]="450" [width]="450" [trigger]="triggerObservable" (imageCapture)="handleImage($event)" *ngIf="showWebcam"
+				[allowCameraSwitch]="allowCameraSwitch" [switchCamera]="nextWebcamObservable" [videoOptions]="videoOptions" (cameraSwitched)="cameraWasSwitched($event)"
+				(initError)="handleInitError($event)"></webcam>
+			</div>
+			<br/>
+			<div class="d-flex justify-content-center">
+				<!-- <div class="actionBtn me-5" (click)="triggerSnapshot();" title="Take Picture">
+					📸
+					<i class="icon2-camera-outline"></i>
+					<h6 class="mt-2">Take Picture</h6>
+				</div>
+				<div class="actionBtn" (click)="showNextWebcam(true);" title="Switch Camera">
+					🔁
+					<i class="icon2-swap_horiz"></i>
+					<h6 class="mt-2">Rotate Picture</h6>
+				</div> -->
+
+				<button class="btn btn-success" (click)="triggerSnapshot();" title="Take Picture">
+					<i class="icon2-camera-outline fs-18 me-2"></i>
+					Take Picture
+				</button>
+				<button class="btn btn-success ms-3" (click)="showNextWebcam(true);" title="Switch Camera">
+					<i class="icon2-swap_horiz fs-20 me-2"></i>
+					Rotate Picture
+				</button>
+			</div>
+		</div>	
+	</div>
+</div>
+
+<!-- <h4 *ngIf="errors.length > 0">Messages:</h4>
+<ul *ngFor="let error of errors">
+	<li>{{error | json}}</li>
+</ul> -->

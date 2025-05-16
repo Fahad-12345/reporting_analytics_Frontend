@@ -1,0 +1,5 @@
+.disabled-image{
+    pointer-events: none;
+    cursor: default;
+
+}

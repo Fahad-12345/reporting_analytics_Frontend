@@ -1,0 +1,49 @@
+<!-- <div class="modal-body"> -->
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<form [formGroup]="proofingLicenseDetailForm" *ngIf="proofingLicenseDetailForm">
+	<div class="row">
+		<div class="col-12">
+			<div class="form-group mb-1">
+				<label class="form-label" for="proof_order_id">Order ID</label>
+				<input type="text" class="form-control form-input mb-0" id="proof_order_id" formControlName="order_id"
+					[disableControl]="isReadOnlyproofingLicenseDetailFormControls">
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': proofingLicenseDetailForm.get('license_key').value != '' && proofingLicenseDetailForm.get('license_key').value != null }">
+				<label class="form-label" for="proof_key">Key</label>
+				<input type="text" class="form-control form-input mb-0" id="proof_key" formControlName="license_key"
+					[disableControl]="isReadOnlyproofingLicenseDetailFormControls">
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="form-group field mb-1"
+				[ngClass]="{'focused': proofingLicenseDetailForm.get('expiry_date').value != '' && proofingLicenseDetailForm.get('expiry_date').value != null }">
+				<label class="form-label" for="dob">Expiry Date (mm/dd/yyyy)</label>
+				<input appDateOnly [matDatepicker]="expiry_date" type="text" id="date_of_birth"
+					formControlName="expiry_date" class="form-control form-input mb-0"
+					[disableControl]="isReadOnlyproofingLicenseDetailFormControls">
+				<mat-datepicker-toggle [for]="expiry_date"></mat-datepicker-toggle>
+				<mat-datepicker #expiry_date></mat-datepicker>
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="form-group mb-3">
+				<label class="form-label" for="proof_assign_user">Assign User*</label>
+				<ng-select (keyup)="searchMedicalDoctor($event)" (open)="medicalDoctorsListsEmtpy()" (change)="SelectDoctor($event)" [closeOnSelect]="false">
+					<ng-option  *ngFor="let doctor of medicalDoctorsLists" [value]="doctor.id">
+						{{doctor.first_name}} {{doctor.middle_name}} {{doctor.last_name}}
+					</ng-option>
+				</ng-select>
+			</div>
+		</div>
+	</div>
+</form>
+<div class="col-md-12 modal-btn-width text-center">
+	<button class="btn btn-primary me-3" type="button" (click)="closeModal()">Cancel</button>
+	<button [disabled]="proofingLicenseDetailForm.invalid" (click)="saveAndContinue()" class="btn btn-success"
+		type="submit">Save &amp;
+		Continue </button>
+</div>
+<!-- </div> -->

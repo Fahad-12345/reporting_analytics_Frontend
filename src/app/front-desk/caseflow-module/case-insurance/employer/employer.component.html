@@ -1,0 +1,196 @@
+<div class="card card-bg" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_view)">
+    <div class="data-table pb-0">
+        <!-- {{form?.value | json}} -->
+        <h6 class="pull-left color-blue d-inline-block mb-3"> Employer Information </h6>
+
+        <dynamic-form [class.hide]="!caseData" *ngIf="fieldConfig" [fields]="fieldConfig" (onReady)="onReady($event)"
+            (submit)="onSubmit($event)"></dynamic-form>
+
+        <div *ngIf="hasPrimaryEmployer()" class="col-xl-12 text-end pe-0">
+
+            <button *ngIf="showAddEmployee && aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_edit)" class="btn btn-primary round-btn w-auto ms-2" (click)="openForm(id);">Add
+                Employer's Information</button>
+        </div>
+        <ngx-datatable *ngIf="hasPrimaryEmployer()" class="bootstrap scroll-hide custom-scroll-x header-text-wrap mb-3"
+            [rows]="caseData?.employer.case_employers" [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50"
+            [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+
+            <ngx-datatable-column name="Employer's Type" prop="type" [width]="120">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    Employer's Type
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip=" {{ row.employer_type_id == 1 ? 'Primary' : row.employer_type_id == 2 ? 'Secondary' : row.employer_type_id == 3 ? 'Yearly' : ''}}" container="body">
+                        {{ row.employer_type_id == 1 ? 'Primary' : row.employer_type_id == 2 ? 'Secondary' : row.employer_type_id == 3 ? 'Yearly' : ''}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Employer's Name" prop="name" [width]="120">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    Employer's Name
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{ row.employer_name}}" container="body"> {{ row.employer_name}} </div>
+                </ng-template>
+            </ngx-datatable-column>
+
+			<ngx-datatable-column name="Patient's Occupation" prop="occupation" [width]="120">
+				<ng-template let-column="column" ngx-datatable-header-template>
+                   Patient's Occupation
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.occupation}}" container="body"> {{row.occupation}} </div>
+                </ng-template>
+			</ngx-datatable-column>
+
+            <ngx-datatable-column name="Date Hired" prop="hiringDate" [width]="100">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    Hiring Date
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.date_hired | date:datePipeService.slashDateFormat_MM_dd_yyyy()}}" container="body"> {{row.date_hired | date:datePipeService.slashDateFormat_MM_dd_yyyy()}} </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Phone No" prop="phone_no" [width]="100">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    Phone No
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <span>{{(row.phone_no ?row.phone_no : 'N/A')|phoneFormatPipe}}</span>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Date Hired" prop="hiringDate" [width]="120">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    Street
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.street_address}} {{row.apartment_suite}}" container="body">  {{row.street_address}} <span *ngIf="row.apartment_suite">,</span> {{row.apartment_suite}} </div>
+                </ng-template>
+            </ngx-datatable-column>
+
+			<ngx-datatable-column name="City" prop="city" [width]="120">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					City
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.city}}" container="body"> {{row.city}} </div>
+                </ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="State" prop="state" [width]="120">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					State
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.state}}" container="body"> {{row.state}} </div>
+                </ng-template>
+			</ngx-datatable-column>
+
+            <ngx-datatable-column name="Zip" prop="zip" [width]="60"></ngx-datatable-column>
+
+            <ngx-datatable-column name="Supervisor Name" prop="name" [width]="100">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    Supervisor's Name
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.contact_information?.first_name}} {{row.contact_information?.middle_name}}
+					{{row.contact_information?.last_name}}" container="body">
+					{{row.contact_information?.first_name}} {{row.contact_information?.middle_name}}
+
+					{{row.contact_information?.last_name}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+            <!-- <ngx-datatable-column name="Supervisor's First Name" prop="contact_information.first_name" [width]="150">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Supervisor's Last Name" prop="contact_information.last_name" [width]="150">
+            </ngx-datatable-column> -->
+            <ngx-datatable-column name="Actions" sortable="false" prop="id" [width]="100">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_edit)" (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                    Actions
+
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_edit)" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                    <button class="edit-hov p-0 mx-1" ngbTooltip="Edit" triggers="mouseenter:mouseleave" container="body" (click)="openForm(row.id)"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_edit)">
+                        <i class="icon-pencil"></i>
+                    </button>
+            
+                    <a class="remove-hov mx-2"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_delete)"
+                        ngbTooltip="Delete" (click)="confirmDel(row)" triggers="mouseenter:mouseleave" container="body" href="javascript:void(0)" role="button"><span
+                            class="icon-remove"></span></a>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+
+    <div *ngIf="!shouldShowEmploymentInfoForm()" class="col-md-12">
+        <div class="row form-btn justify-content-center">
+            <button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_edit)"(click)="goBack()" class="btn btn-primary w-100 mt-0 mb-3 mb-sm-0"><i class="icon-left-arrow me-2"></i> Back
+            </button>
+            <button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_edit)"(click)="saveForm($event)" class="btn btn-success w-100 mt-0 mb-3 mb-sm-0"><i
+                class="icon-save-continue me-2"></i>
+            Save &
+            Continue</button>
+        </div>
+    </div>
+
+
+
+
+    <div [class.hide]="!shouldShowEmploymentInfoForm()" class="row">
+        <div class="col-lg-12">
+            <a *ngIf='caseData?.is_finalize' class="success float-right" tooltip="Edit" (click)="toggleForm()">
+                <i class="icon-pencil"></i>
+            </a>
+            <div class="col-xl-12 col-lg-12 px-0">
+                <app-employment-info-form  (submit)="onEmploymentFormSubmit($event)" [title]="'Employment'"
+                    [caseId]="caseId" [case]='caseData' [employmentInfo]="employmentInfo" [patientId]="patientId" (getCase)="getCase()">
+                </app-employment-info-form>
+            </div>
+            <div class="col-xl-12 col-lg-12 px-0">
+                <app-return-to-work-form [title]="'Return to Work Information'" (getCase)="getCase()" [caseId]="caseId"
+                    [caseData]="caseData"></app-return-to-work-form>
+            </div>
+
+            <div *ngIf="!isFormDisabled" class="col-md-12">
+                <div class="row form-btn justify-content-center">
+                    <button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_edit)" (click)="goBack()" class="btn btn-primary w-100"><i
+                        class="icon-left-arrow me-2"></i> Back </button>
+                    <button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_edit)" (click)="save($event)" class="btn btn-success w-100 mt-0"><i
+                        class="icon-save-continue me-2"></i> Save &
+                    Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<ng-template #addemployee let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">{{title}} Employer's Information</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+
+
+</ng-template>

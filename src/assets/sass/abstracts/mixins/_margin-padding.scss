@@ -1,0 +1,69 @@
+// Padding mixin px to rem
+@mixin padding($top, $right, $bottom, $left) {
+    padding-top: calc($top / $base-px-value) + rem;
+    padding-right: calc($right / $base-px-value) + rem;
+    padding-bottom: calc($bottom / $base-px-value) + rem;
+    padding-left: calc($left / $base-px-value) + rem;
+}
+
+@mixin padding-top($top) {
+    padding-top: calc($top / $base-px-value) + rem;
+}
+
+@mixin padding-right($right) {
+    padding-right: calc($right / $base-px-value) + rem;
+}
+
+@mixin padding-bottom($bottom) {
+    padding-bottom: calc($bottom / $base-px-value) + rem;
+}
+
+@mixin padding-left($left) {
+    padding-left: calc($left / $base-px-value) + rem;
+}
+
+@mixin padding-same ($padding) {
+    padding: calc($padding / $base-px-value) + rem;
+}
+
+@mixin padding-tb-lr ($padd-top-bott, $padd-lt-rt) {
+    padding-top: calc($padd-top-bott / $base-px-value) + rem;
+    padding-right: calc($padd-lt-rt / $base-px-value) + rem;
+    padding-bottom: calc($padd-top-bott / $base-px-value) + rem;
+    padding-left: calc($padd-lt-rt / $base-px-value) + rem;
+}
+
+//Margin mixin px to rem
+@mixin margin($top, $right, $bottom, $left) {
+    margin-top: calc($top / $base-px-value) + rem;
+    margin-right: calc($right / $base-px-value) + rem;
+    margin-bottom: calc($bottom / $base-px-value) + rem;
+    margin-left: calc($left / $base-px-value) + rem;
+}
+
+@mixin margin-top($top) {
+    margin-top: calc($top / $base-px-value) + rem;
+}
+
+@mixin margin-right($right) {
+    margin-right: calc($right / $base-px-value) + rem;
+}
+
+@mixin margin-bottom($bottom) {
+    margin-bottom: calc($bottom / $base-px-value) + rem;
+}
+
+@mixin margin-left($left) {
+    margin-left: calc($left / $base-px-value) + rem;
+}
+
+@mixin margin-same ($margin) {
+    margin: calc($margin / $base-px-value) + rem;
+}
+
+@mixin margin-tb-lr ($margin-top-bott, $margin-lt-rt) {
+    margin-top: calc($margin-top-bott / $base-px-value) + rem;
+    margin-right: calc($margin-lt-rt / $base-px-value) + rem;
+    margin-bottom: calc($margin-top-bott / $base-px-value) + rem;
+    margin-left: calc($margin-lt-rt / $base-px-value) + rem;
+}

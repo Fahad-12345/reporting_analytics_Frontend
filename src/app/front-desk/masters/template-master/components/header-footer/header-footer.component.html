@@ -1,0 +1,257 @@
+ <!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div *ngIf="!layoutService.openTemplate">
+
+    <div class="py-2">
+        <div class="d-block text-end" (click)="openManager()">
+            <a class="btn btn-default round-btn" data-target="#speciality-name" data-bs-toggle="modal" href="javascript:void(0)">
+                <i class="icon-group-users me-2"></i> Add New <span class="icon-plus-circle ms-2"></span>
+            </a>
+        </div>
+
+        <div class="search-filter-block">
+            <form action="" autocomplete="off">
+                <div class="form">
+                    <div class="card-body" style="border-top: 1px solid #b0b1b1;">
+                        <div class="row">
+                            <div class="col-xl-10 col-lg-6 col-md-12">
+                                <div class="form-group field">
+                                    <label class="form-label" for="Roles">Template Name</label>
+                                    <input type="text" id="Roles" class="form-control form-input" [(ngModel)]="searchParam" [ngModelOptions]="{standalone: true}">
+                                </div>
+                            </div>
+
+                            <div class="col-xl-2 col-lg-3 col-md-12 text-center">
+                                <div class="row justify-content-center mb-xl-0 mb-lg-0 mb-4">
+                                    <div class="col-lg-6 col-md-3 col-sm-4 col-6 align-self-center">
+                                        <button class="btn btn-success w-100 me-3" (click)="getHeaderFooter(1)">
+											Filter
+										</button>
+                                    </div>
+                                    <div class="col-lg-6 col-md-3 col-sm-4 col-6 align-self-center">
+                                        <button class="btn btn-primary w-100" (click)="getHeaderFooter(0)" [disabled]="checkInputs()">
+											Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+     <div class="card data-table p-0 mt-1 mb-0 data-table-btn border-0 tamplate-custom-header">
+        <div class="row">
+            <div class="col-md-6 edit-block header-set">
+                <div class="form-group field option-field mb-0 d-inline-block">
+                    <ul>
+                        <li>Show</li>
+                        <li>
+                            <select [(ngModel)]="this.page.size" (change)="pageLimit($event.target.value)" class="custom-select" name="limit">
+								<option value="10" >10</option>
+								<option value="20">20</option>
+								<option value="30">30</option>
+								<option value="40">40</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+							</select>
+                        </li>
+                        <li>entries</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row ">
+            <div class="document-content-area mt-2 col-md-12" style="padding-left: 0;padding-right: 0;">
+                <div class="card mb-0 ma-body-list col-md-6" style="float: left;padding-left: 11px;">
+                    <div class="card-header card-header-custom">
+                        <div class="row align-items-center">
+                            <div class="col-2 pe-0 form">
+                                <p class="mb-0 pt-1 ps-2">
+                                
+                                    <span class="text-white ps-1 justify-content-center position-relative">Name</span>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card-body card-body-custom pb-0 " style="border-radius: 0;    border: 1px solid #b0b1b1;">
+                        <div class="card mb-3" *ngFor="let search of searchSections;let i=index ">
+                            <div class="col-md-12 template-header">
+                            
+                                {{search.section_title}}
+
+                                <div style="width:5%;float: right;margin-left: 20px;">
+
+                                    <button *ngIf="isOpenFilters[i]" class="btn plus-btn float-right mt-0 btn-primary" (click)="openAndCloseFilters(i)">
+										<span class="icon-plus"></span>
+									</button>
+                                    <button *ngIf="!isOpenFilters[i]" class="btn plus-btn float-right mt-0 btn-success" (click)="openAndCloseFilters(i)">
+										<span class="icon-minus"></span>
+									</button>
+                                </div>
+                                <div class="colps-btn-block" style="float: right;">
+                                    <button aria-controls="collapseBasic" (click)="deleteHeaderFooter(search?.section_id)" class="btn plus-btn btn-primary float-right mt-0" tooltip="Delete" type="button" style="background-color: #f7f7f7 !important;
+									border: navajowhite;padding-left: 0 !important;">
+										<span _ngcontent-c5="" class="icon-remove"
+											style="color: #afafaf !important;"></span>
+									</button>
+                                </div>
+                                <div class="colps-btn-block" style="float: right;">
+                                    <button aria-controls="collapseBasic" (click)="editTemplate(search)" class="btn plus-btn btn-primary float-right mt-0 edit-hov mx-1" tooltip="Edit" type="button" style="background-color: #f7f7f7 !important;border: navajowhite;padding-left: 0 !important;">
+										<span _ngcontent-c5="" class="icon-pencil"
+											style="color: #afafaf !important;"></span>
+									</button>
+                                </div>
+                                <div class="colps-btn-block" style="float: right;">
+                                    <button aria-controls="collapseBasic" (click)="viewTemplate(search)" class="btn plus-btn btn-primary float-right mt-0 " tooltip="View" type="button" style="background-color: #f7f7f7 !important;
+									border: navajowhite;">
+										<span _ngcontent-c5="" class="icon-eye"
+											style="color: #afafaf !important;"></span>
+									</button>
+                                </div>
+                            </div>
+
+                            <div *ngIf="!isOpenFilters[i]" class="header-footer-tab-content">
+
+                                <ngx-datatable class="bootstrap custom-scroll-x table-border" (page)="changePage($event)" [count]="counter" [rows]="tags[i]" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="counter" [scrollbarH]="true" [offset]="pageNumber-1">
+
+                                    <ngx-datatable-column [attr.canAutoResize]="true" name="Location Name" prop="id" [width]="100" [sortable]="false">
+                                        <ng-template let-column="column" ngx-dattable-header-template>
+                                            Location Name
+                                        </ng-template>
+                                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.location_name}}">
+                                                {{row.location_name}}
+                                            </div>
+
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column name="Specialty" prop="Comments" [width]="150" [sortable]="false">
+                                        <ng-template let-column="column" ngx-dattable-header-template>
+                                            Specialty
+                                        </ng-template>
+                                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.speciality_name}}">
+                                                {{row.speciality_name}}
+                                            </div>
+
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column name="Visit Type" prop="Comments" [width]="150" [sortable]="false">
+                                        <ng-template let-column="column" ngx-dattable-header-template>
+                                            Visit Type
+                                        </ng-template>
+                                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                            <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.visit_type_name}}">
+                                                {{row.visit_type_name}}
+                                            </div>
+
+
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column [attr.canAutoResize]="true" name="Action" prop="id" [width]="110" cellClass="action-icon">
+                                        <ng-template let-column="column" ngx-datatable-header-template>
+                                        
+                                            Actions
+                                        </ng-template>
+                                        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                       
+
+                                            <button (click)="editHFPermissions(i)" class="view-hov mx-1" role="button" title="View">
+												<i class="icon-pencil"></i>
+											</button>
+                                            <button href="javascript:void(0)" (click)="deletePermissions(row.id, i)" class="remove-hov mx-1" role="button" title="Delete">
+												<i class="icon-remove"></i>
+											</button>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                </ngx-datatable>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="custom-pagination" *ngIf="searchSections?.length > 0">
+                        <span>{{page.totalElements}} total</span>
+                        <ng-container *ngIf="searchSections?.length &&( page.totalElements>page.size)">
+                            <pagination [boundaryLinks]=" true" [totalItems]="page.totalElements" previousText="" nextText="" [itemsPerPage]="page.size" firstText="" lastText="" (pageChanged)="setPage({offset:$event.page - 1})">
+                            </pagination>
+                        </ng-container>
+                    </div>
+                </div>
+
+               <div class="col-md-6 col-xl-6 preview-details" style="float: right">
+                  <div class="card" style="position: -webkit-sticky; position: sticky; top: 20px;">
+                           <div class="template_master_header border-0">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <p class="mb-0">Preview</p>
+                                </div>
+                                <div class="col-md-9 text-end">
+
+                                    <button *ngIf="isOpenFilters[i]" class="input-group-text template_master_header_slide_btn slide-btn float-righ d-inline-flex btn-primary" (click)="openAndCloseFilters(i)">
+										<span class="icon-plus"></span>
+									</button>
+                                    <button *ngIf="!isOpenFilters[i]" class="input-group-text template_master_header_slide_btn slide-btn float-righ d-inline-flex btn-success" (click)="openAndCloseFilters(i)">
+										<span class="icon-minus"></span>
+									</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="!isOpenFilters[i]">
+                            <div class="preview-scroll" style="visibility: visible;border: 1px solid #b0b1b1; border-bottom: 1px solid #b0b1b1;" *ngIf="viewTemplateCheck">
+                                <div class="card-body border-0 header-footer-preview-strip">
+                                    <div class="card-header section-header">
+                                        <h5 class="card-section-title mb-0">
+                                            <div class="card-title mb-0 text-white">
+                                                <span id="sectionName" title="{{layoutService.section?.section_title}}">
+												{{layoutService.section?.section_title}}
+											</span>
+                                            </div>
+                                        </h5>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div id="section" class="collapse show">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-11" style="flex: 0 0 calc(100% - 20px);max-width: calc(100% - 20px);padding-right: 0 !important;">
+                                                    <!-- <gridster *ngIf="layoutService.section?.options" [options]="layoutService.section?.options">
+                                                        <gridster-item *ngFor="let item of  layoutService.section?.dashboard;let k=index" [item]="item" [ngStyle]="item.isClick && item.hover ? {'background': '#f7fcfd'} :
+																											item.isClick ? {'background': '#f7fcfd'} : item.hover?  {'background': '#fff2f2'} : {'background': 'white'}">
+                                                            <ng-container appLayoutItem [(object)]="item.obj" [(item)]="item" [componentRef]="getComponentRef(item.id)">
+                                                            </ng-container>
+                                                            <div class="column-action dropup">
+                                                                <a class="listover">
+                                                                    <i *ngIf="item?.isClick" title="" class="icon2-delete" data-original-title="Delete"></i>
+                                                                </a>
+                                                            </div>
+                                                        </gridster-item>
+                                                    </gridster> -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="preview-scroll" style="visibility: visible;border: 1px solid #b0b1b1; border-bottom: 1px solid #b0b1b1;" *ngIf="!viewTemplateCheck">
+                                <div class="card-body border-0">
+                                    <div style="background-image:url(assets/images/preview.jpg); height:650px; background-position: top center;
+						  background-size: cover;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<app-home-internel *ngIf="layoutService.openTemplate"></app-home-internel>

@@ -1,0 +1,181 @@
+@import "../../../../assets/sass/abstracts/mixins/grid";
+
+.bill-detail-list li {
+  display: inline;
+  padding: 5px 20px 6px;
+  color: #00a650;
+  border-radius: 3px;
+  background: #f5f5f5;
+  margin: 5px 10px;
+
+  &:first-child {
+      margin-left: 0px;
+  }
+}
+$green-haze: #00a650;
+$alizarincrimson: #d10101;
+$shiraz: #c50e24;
+$monza: #d0021b;
+$danger: #dc3545;
+
+::ng-deep .datatable-body-cell-label {
+  white-space: nowrap;
+  width: 95%;
+  overflow: hidden;
+  // z-index: 99999;
+  text-overflow: ellipsis;
+  .tooltip-outer {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+  }
+}
+
+.edit-hov svg {
+	// color:#5c5959;
+	&:hover {
+		// color: #34c3ee;
+	}
+}
+
+
+.currency {
+	
+	.fa-dollar-sign {
+		position: absolute;
+		bottom: 9px;
+		left: 10px;
+		font-size: 14px;
+		color: #5e5b5b;
+	}
+
+	.form-label {
+		left: 1.5rem;
+	}
+
+	&.focused {
+		.form-label {
+			margin-left: -1.5rem !important;
+		}
+	}
+
+	.form-control {
+		padding-left: 20px !important;
+	}
+}
+
+::ng-deep .modal-lg-package-generate{
+	.modal-dialog{
+		max-width: 52% !important;
+	}
+}
+
+%gap-between {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+   
+   
+::ng-deep tabset {
+  &.generic-gap {
+    @extend %gap-between;
+    & > .nav-tabs {
+      margin-top: 0.5rem;
+    }
+    .tab-content {
+      .tab-pane {
+        &.active {
+          @extend %gap-between;
+        }
+      }
+    }
+  }
+}
+
+.btn-wrapper {
+  @include flex(flex, $justify-content: flex-end);
+  gap: 1rem;
+  .btn {
+    min-width: 120px;
+  }
+}
+
+.bill-listing-table {
+  .checkbox-btn {
+    .fake-label {
+      line-height: normal;
+    }
+    .fake-input {
+      margin-top: 3px;
+    }
+    input[type="checkbox"]{
+      &:checked {
+        & + .fake-input {
+          &:after {
+            left: 3.5px;
+            top: 0.5px;
+            border-width: 0 2px 2px 0;
+            border-radius: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.bill-listing-table {
+  .custom-checkbox {
+    height: 15px;
+    margin: 0 !important;
+    vertical-align: middle;
+    @media only screen and (max-width: 1398.99px) {
+      height: 35px;
+    }
+    input[type="checkbox"] {
+      background: url(../../../../assets/images/unchecked.png) no-repeat left center;
+      background-size: 14px;
+      width: 15px;
+      height: 15px;
+      -webkit-appearance: none;
+      appearance: none;
+      &:checked {
+        background: url(../../../../assets/images/checked.png) no-repeat left center;
+        background-size: 14px;
+        width: 15px;
+        height: 15px;
+      }
+    }
+  }
+}
+.paper-icon-sent{
+  .svg-inline--fa {
+    color: $green-haze;
+  }
+}
+.paper-icon-disabled{
+  .svg-inline--fa {
+    color: #78676a;
+  }
+}
+.paper-icon-not-sent{
+  .svg-inline--fa {
+    color: $alizarincrimson;
+  }
+}
+
+.payment-modal {
+  ::ng-deep &.modal {
+    .ng-option {
+      :where(.checkbox-btn){
+        .fake-input {
+          top: 16px !important;
+        }
+      }
+    }
+  }
+}
+
+.move-bill-icon{
+  width: 0.75rem;
+}

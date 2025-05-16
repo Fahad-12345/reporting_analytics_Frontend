@@ -1,0 +1,56 @@
+Test
+
+<ngx-datatable class="bootstrap scroll-hide custom-scroll-x table documentmanagerclass" [rows]="folder.files"
+  [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [limit]="page.size"
+  [count]="page.totalElements" [offset]="page.pageNumber-1" [virtualization]="false" [externalPaging]="true">
+  <ngx-datatable-column [width]="120" name="Document Name">
+    <ng-template ngx-datatable-cell-template let-row="row" class="asdfasdf">
+      <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.file_title}}">
+        <a href="{{openInWindow(row.link)}}" target="_blank">{{row.file_title}}</a>
+      </div>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [width]="70" name="Created At">
+    <ng-template ngx-datatable-cell-template let-row="row">
+      <span>{{row.created_at | utcTime |date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column [width]="20" name="Tags">
+    <ng-template style="color:black" ngx-datatable-cell-template let-row="row">
+
+      <button (click)="addTagModal(row, addTag)" class="btn btn-success add-tag-btn custom-btn-tooltip list-unstyled"
+        tooltipClass="table-custom-tooltip" ngbTooltip="{{row.tags}}">
+        <i class="fa fa-plus"></i>
+      </button>
+
+
+
+    </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="Actions" [width]="100">
+    <ng-template ngx-datatable-header-template name="Actions">
+      <mat-checkbox type="checkbox"
+        [checked]="(folder.selection.selected.length > 0 && folder.selection.selected.length == folder.files.length && folder.files.length > 0) || folder.isFolderSelected"
+        (change)="$event ? onActionChange(folder.selection, folder.files,$event) : null"
+        [disabled]="folder.isFolderSelected">
+      </mat-checkbox>
+      Actions
+    </ng-template>
+
+    <ng-template style="color:black" ngx-datatable-cell-template let-row="row">
+      <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleRows(row)" [disabled]="folder.isFolderSelected"
+        [checked]="folder.selection.isSelected(row) || folder.isFolderSelected">
+      </mat-checkbox>
+      <a class="mx-1 view-hov" tooltip="View" href="javascript:void(0)" role="button" (click)="viewDocFile(row)"><i
+          class="icon-eye"></i></a>
+      <a class="mx-1 edit-hov" tooltip="Edit" href="javascript:void(0)" role="button" (click)="editDocModal(row)"><i
+          class="icon-pencil"></i></a>
+      <a class="mx-1 printer-hov" tooltip="Print" href="{{getLinkwithAuthToken(row.link)}}" target="_blank"
+        role="button"><i class="icon-printer"></i></a>
+      <a class="mx-1 remove-hov me-1" tooltip="Delete" href="javascript:void(0)" role="button"
+        (click)="confirmDel(row)"><i class="icon-remove"></i></a>
+    </ng-template>
+  </ngx-datatable-column>
+
+</ngx-datatable>

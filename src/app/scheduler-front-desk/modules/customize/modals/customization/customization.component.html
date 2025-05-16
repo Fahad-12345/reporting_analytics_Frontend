@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h4 class="modal-title">Customize Details</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+<form>
+    <div class="modal-body pb-2 pt-2" *ngIf="!isClinic">
+        <div class="row">
+            <div class="col-md-12">
+                <label class="title">Name</label>
+                <input disabled type="text" class="form-control" [(value)]="title" />
+            </div>
+            <div class="col-md-12">
+                <label class="title">Color</label>
+                <input [disabled]="editSpecialityColor" type="color" class="form-control" (change)="changeSpecColor($event)" [(value)]="chart" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="title">OverBooking</label>
+                <input disabled type="number" min="0" class="form-control" (change)="changeSpecOverBooking($event)" [(value)]="patientlast" />
+            </div>
+            <div class="col-md-6">
+                <label class="title">Timeslot</label>
+                <input disabled type="number" class="form-control" (change)="changeSpecTimeSlot($event)" [(value)]="patientfirst" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center w-100 m-0 pb-3 mt-1" *ngIf="!isClinic">
+
+        <div class="col-md-5 col-sm-6">
+            <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+        </div>
+        <div class="col-md-5 col-sm-6">
+            <button class="btn btn-success w-100" type="button" (click)="submitSpec()">Save</button>
+        </div>
+    </div>
+    <div class="modal-body pb-2 pt-2" *ngIf="isClinic">
+        <div class="row">
+            <div class="col-md-12">
+                <label class="title">Name</label>
+                <input disabled type="text" class="form-control" [(value)]="title" />
+            </div>
+            <div class="col-md-12">
+                <label class="title">Color</label>
+                <input [disabled]="facilityColorEdit" type="color" class="form-control" (change)="changeClinicColor($event)" [(value)]="chart" />
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center w-100 m-0 pb-3 mt-1" *ngIf="isClinic">
+        <div class="col-md-5 col-sm-6">
+            <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+        </div>
+        <div class="col-md-5 col-sm-6">
+            <button class="btn btn-success w-100" type="button" (click)="submitClinic()">Save</button>
+        </div>
+
+    </div>
+</form>

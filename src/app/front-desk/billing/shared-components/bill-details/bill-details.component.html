@@ -1,0 +1,166 @@
+<div class="mt-1">
+  <div class="data-table">
+    <ngx-datatable #myTable class="bootstrap scroll-hide custom-scroll-x" [rows]="billingDetails" [scrollbarH]="true"
+      [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [externalPaging]="true"
+      [count]="BillDetailpage.totalElements" [offset]="BillDetailpage.pageNumber-1" [limit]="BillDetailpage.size"
+      (page)="onPageChange($event)">
+      <ngx-datatable-column name="Visit Date" prop="visit_date" [width]="80">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+            <span> {{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Visit Type" prop="appointment_type" [width]="100">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name}}">
+            <span> {{value.name}}</span>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Duration" [width]="80" prop="duration">
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Attorney Name" [width]="100" prop="kiosk_case" [width]="120">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <span *ngFor="let item of value.case_attorneys; let x = index">{{item.first_name}} {{item.middle_name}}
+            {{item.last_name}} </span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="No Of Days" [width]="100" prop="no_of_days">
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Specialty" prop="speciality" [width]="100">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name}}">
+            <span> {{value.name}}</span>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <!-- <ngx-datatable-column name="Insurance Name" prop="kiosk_case" [width]="120">
+          <ng-template ngx-datatable-cell-template let-value="value">
+            <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+              ngbTooltip="{{primaryInsurances?.insurance_name}}">
+              {{primaryInsurances && primaryInsurances?.insurance_name}}
+            </div>
+          </ng-template>
+        </ngx-datatable-column> -->
+      <ngx-datatable-column name="Provider Name" [sortable]="false" prop="doctor" [width]="130">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value?.first_name}} {{value?.middle_name}}
+              {{value?.last_name}}">
+            {{value?.first_name}} {{value?.middle_name}}
+            {{value?.last_name}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Facility Name" [width]="150" prop="facility_location">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{value && value.facility && value.facility_full_name?value.facility_full_name:''}}">
+            {{value && value.facility && value.facility_full_name?value.facility_full_name:null}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Total Amount" [width]="100" prop="visit_charges">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <span>
+            {{(row.visit_charges || 0 )| currency}}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-row-detail rowHeight="auto" #myDetailRow (toggle)="onDetailToggle($event)">
+
+        <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+          <div style="margin:8px; overflow: hidden;">
+            <ngx-datatable #Table class="bootstrap child-datatable scroll-hide custom-scroll-x" [scrollbarH]="false"
+              [columnMode]="'force'" [headerHeight]="50" [footerHeight]="0" [rowHeight]="30"
+              [rows]="row?.cpt_fee_schedules" style="width: 100% !important;">
+              <ngx-datatable-column name="CPT Code Description" prop="cpt_code" [width]="280">
+                <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+                  <span>
+                    {{value.name}}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Fee Schedule" [width]="100" prop="base_price">
+                <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+                  <span>
+                    {{(row.base_price || 0 )| currency}}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Units" [width]="100" prop="units">
+                <ng-template let-row="row" let-Index='rowIndex' ngx-datatable-cell-template let-value="value">
+                  <span>
+                    {{row.units}}
+                    <!-- <input autofocus appOnlyNumeric [(ngModel)]='row.units' maxlength=5
+                        [disabled]='isBillingDetail?true:false' (keyup)="updateUnitValue($event,row, rowIndex)"
+                        [type]="number" class="form-control" /> -->
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Per Unit Price" [width]="100" prop="per_unit_price">
+                <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+                  <span>
+                    {{(row.per_unit_price || 0 )| currency}}
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Modifiers" [width]="250" prop="modifiers">
+                <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+                  <div class="d-inline-block tags-block">
+                    <span *ngFor="let item of value; let x = index">
+                      <label class="form-label tags-btn">
+                        {{item.name}}
+                        <!-- <span class="fa fa-times" [class.disabled]='isBillingDetail?true:false'></span> -->
+                      </label>
+                    </span>
+                  </div>
+                  <!-- <button (click)="addModal(add,row, 'modifiers')" [disabled]='isBillingDetail?true:false'
+                      [class.disabled]='isBillingDetail?true:false' class="btn btn-success add-tag-btn ms-2">
+                      <i class="icon-plus text-white"></i>
+                    </button> -->
+
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Total Charges" [width]="100" prop="total_charges">
+                <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+                  <span>
+                    {{(row.per_unit_price*row.units || 0 )| currency}}
+
+                  </span>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        </ng-template>
+
+      </ngx-datatable-row-detail>
+      <ngx-datatable-column name="Actions" sortable="false" prop="id" [width]="100">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          Actions
+        </ng-template>
+        <ng-template let-row="row" let-rowIndex="rowIndex" let-expanded="expanded" ngx-datatable-cell-template>
+          <a href="javascript:void(0)" ngbTooltip="Expand Treatment Codes" (click)="toggleExpandRow(row)">
+            <span class="angle-left" [class.icon-down-arrow]="!expanded"></span>
+            <span class="angle-right" [class.icon-down-arrow]="expanded"></span>
+          </a>
+          <!-- <a class="edit-hov mx-2" ngbTooltip="Delete" [class.disabled]='isBillingDetail?true:false'
+              (click)="!isBillingDetail?deleteVisitList(row):''" href="javascript:void(0)" role="button"><i
+                class="icon-remove"></i></a> -->
+        </ng-template>
+        <!-- <ng-template let-row="subrow" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+            <a class="edit-hov mx-1" ngbTooltip="Delete" [class.disabled]='isBillingDetail?true:false'
+              (click)="!isBillingDetail?deleteVisitList(subrow):''" href="javascript:void(0)" role="button"><i
+                class="icon-remove"></i></a>
+            <a class="view-hov mx-1" ngbTooltip="Refresh" [class.disabled]='isBillingDetail?true:false'
+              (click)="!isBillingDetail?SubmitListing(subrow,rowIndex,row):''" href="javascript:void(0)"
+              role="button">
+              <span class="icon-save-continue"></span></a>
+          </ng-template> -->
+      </ngx-datatable-column>
+    </ngx-datatable>
+
+  </div>
+</div>

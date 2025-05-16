@@ -1,0 +1,33 @@
+<div id="test{{object.uicomponent_name}}" class="column-content" [ngClass]="{ 'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <div *ngIf="object.is_required" class="required-box"></div>
+    <div class="ui-slection-box">
+        <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [hidden]="object.isStatement == false || layoutService.editorView == false" (click)="textClick()" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+        </p>
+        <angular-editor [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)" *ngIf="object.isStatement == true && layoutService.editorView == false" class="ui-component-editor gridster-item-content "
+            id="{{object.uicomponent_name}}Editor" [(obj)]="object" [(ngModel)]="object.statement" (ngModelChange)="statementUpdate()">
+        </angular-editor>
+        <div class="select-ui-items" *ngIf="!object.noOptions">
+            <ng-select class="table-dropdown-ng-select" [items]="object.options" [multiple]="true" appendTo="body" [clearable]="false" (open)="refreshCheck()" [closeOnSelect]="false" [(ngModel)]="object.selectedItems" (add)="optionSelect(object.options, $event)"
+                (remove)="optionSelect(object.options, $event)" (close)="closeDropdown()">
+                <ng-template ng-label-tmp let-item="item">
+                    <span *ngIf="layoutService.editorView == false" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.label)"></span>
+                    <span *ngIf="layoutService.editorView == true" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.instanceLabel)"></span>
+                </ng-template>
+                <ng-template ng-option-tmp let-item="item" let-search="searchTerm" let-index="index">
+                    <span *ngIf="layoutService.editorView == false" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.textLabel)"></span>
+                    <span *ngIf="layoutService.editorView == true" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.textLabel)"></span>
+                </ng-template>
+            </ng-select>
+            <!-- <ng-select
+			(keyup)="optionSelect(object.options, $event, 1 )" (remove)="optionSelect(object.options, $event, 1 )"
+			(add)="optionSelect(object.options, $event, 1 )" [items]="object.options"
+			[trackByFn]="trackByFn" (open)="refreshCheck()" (keydown.enter)="addOption($event)"
+			[placeholder]="'Select Multiple Options'" [multiple]="true" appendTo="body" [closeOnSelect]="false"
+			[(ngModel)]="object.selectedItems" (clear)="resetCalculations(object.options)">
+		</ng-select> -->
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+
+</div>

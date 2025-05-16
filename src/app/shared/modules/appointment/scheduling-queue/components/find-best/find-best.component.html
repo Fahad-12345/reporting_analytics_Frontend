@@ -1,0 +1,230 @@
+<!-- <h6 class="color-blue">Find Best</h6> -->
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<form [formGroup]="myForm">
+    <div class="row field-top">       
+        <div class="col-md-6 col-lg-3">
+            <div class="form-group">
+				<label class="title">Practice-Location*</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip" [ngbTooltip]="selectedClinicName">
+                    <select class="form-select" formControlName="clinicName" (change)="getSpecialityAndProvider($event)" >
+                        <option value='' selected  hidden></option>
+                        <option *ngFor="let clinic of assignClinics; trackBy:identify" title="{{clinic.facility?.name}}-{{clinic.name?clinic.name:'N/A'}}" [value]=clinic.id>
+                            {{clinic.facility?.qualifier}}-{{clinic.name?clinic.qualifier:'N/A'}}
+                        </option>
+                    </select>
+                </span>
+			<span (click)="removeData('clinicName')" *ngIf="myForm.controls['clinicName'].value != '' && myForm.controls['clinicName'].value != null"
+			 class="icon-plus select-cross-icon" style="top: 37px;"></span>
+             <div>
+                <p class = "required" *ngIf  = "myForm.controls['clinicName'].errors?.required && (myForm.get('clinicName').dirty || myForm.get('clinicName').touched || btnSubmit)">This field is required</p>
+            </div>
+			</div>
+            
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+            <div class="form-group">
+				<label class="title">Specialty*</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip" [ngbTooltip]="selectedSpecialityName">
+                    <select class="form-select" formControlName="specialityName"  (change)="onchangeSpecialty($event)" >
+                        <option value='' selected  hidden></option>
+                        <option *ngFor="let spec of assignSpecialities; trackBy:identify" title="{{spec.name}}" [value]="spec.id">
+                            {{spec.qualifier}}
+                            
+                        </option>
+                    </select>
+                </span>
+				<span (click)="removeData('specialityName')" *ngIf="myForm.controls['specialityName'].value != '' && myForm.controls['specialityName'].value != null"
+			 	class="icon-plus select-cross-icon" style="top: 37px;"></span>
+                 <div>
+					<p class = "required" *ngIf  = "myForm.controls['specialityName'].errors?.required && (myForm.get('specialityName').dirty || myForm.get('specialityName').touched || btnSubmit)">This field is required</p>
+
+                </div>
+			</div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+			<div class="form-group">
+				<label class="title">Provider</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip">
+                    <select class="form-select" formControlName="doctorName" (change)="getFacilityAndSpeciality()">
+                        <option value='' selected  hidden></option>
+                        <option *ngFor="let doc of assignDoctor; trackBy:identify" [value]="doc.id">
+                            {{doc.userBasicInfo?.first_name+(doc.userBasicInfo?.middle_name?' '+doc.userBasicInfo?.middle_name:'')+" "+doc.userBasicInfo?.last_name}}
+                            </option>
+                    </select>
+                </span>
+				<span (click)="removeData('doctorName')" *ngIf="myForm.controls['doctorName'].value != '' && myForm.controls['doctorName'].value != null"
+			 	class="icon-plus select-cross-icon" style="top: 37px;"></span>
+			</div>
+			<div>
+                <p class = "required" *ngIf = "btnSubmit &&  myForm.controls['doctorName'].errors?.required">This field is required</p>
+            </div>
+            
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <label class="title">Visit Type</label>
+            <span class="tooltip-outer" tooltipClass="table-custom-tooltip" [ngbTooltip]="selectedVisitType?.name">
+                <select class="form-select" [(ngModel)]="typeForAppointment" [ngModelOptions]="{standalone: true}" (change)="getAppointmentType($event)">
+                    <option *ngFor="let aP of appointmentType" [title] = "aP.name" value={{aP.id}}>
+                        {{aP.qualifier}}</option>
+                </select>
+            </span>
+        </div>
+		
+
+    </div>
+
+
+
+
+
+
+
+
+    
+    <div class="row">
+		
+        <div class=" col-xl-6  col-md-12 col-lg-12 top-margin">
+            <div class="row">
+                <label class="title col-md-3 mt-1" for="startdate">Date Range*</label>
+                <label class="title col-md-2 mt-1" for="startdate">From</label>
+                <div class="col-md-3">
+                    <!-- <ejs-datepicker strictMode=true  [(value)]="startDate" placeholder='Start Date' (change)="changeStartDate()">
+                    </ejs-datepicker> -->
+					<app-mat-date-picker-sharedable [classesName]="['form-group','field', 'calIcon', 'margin-bottom']" [lableName]="''" (valueChange)="onChangeStartDate($event)" [defaultDate]="startDate"  [placeholder]="'Start Date'" ></app-mat-date-picker-sharedable>
+
+                    <span *ngIf="startDateError" class="required ">
+						This field is required
+                    </span>
+                </div>
+
+                <label class="col-md-1 title text-center px-0 mt-1" for="startdate">To</label>
+                <div class="col-md-3">
+                    <!-- <ejs-datepicker strictMode=true  [min]="minDate" [(value)]="endDate" placeholder='End Date' (change)="changeEndDate()"></ejs-datepicker> -->
+					<app-mat-date-picker-sharedable [classesName]="['form-group','field', 'calIcon', 'margin-bottom']" [lableName]="''" [min]="minDate" (valueChange)="onChangeEndDate($event)" [defaultDate]="endDate"  [placeholder]="'End Date'" ></app-mat-date-picker-sharedable>
+
+					<span *ngIf="endDateError" class="required ">
+                        This field is required
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-xl-6  col-md-12 col-lg-12 top-margin">
+            <div class="row">
+                <label class="title col-md-3 text-truncate mt-1" for="startdate">Time Range*</label>
+                <label class="title col-md-2 mt-1" for="startdate">From</label>
+                <div class="col-md-3">
+                    <ejs-timepicker strictMode=true [step]='interval' [(value)]="startTime" placeholder='Start Time' (change)="changeStartTime()"></ejs-timepicker>
+                    <span *ngIf="startTimeError" class="required ">
+                        This field is required
+                    </span>
+                </div>
+
+                <label class="col-md-1 title text-center px-0 mt-1" for="startdate">To</label>
+                <div class="col-md-3">
+                    <ejs-timepicker strictMode=true [min]="minTime" [step]='interval' [(value)]="endTime" placeholder='End Time' (change)="changeEndTime()"></ejs-timepicker>
+                    <span *ngIf="endTimeError" class="required ">
+                        This field is required
+                    </span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+	<div class="row align-items-center mt-3 ">
+		<div class="col-3 label-title">
+			<div class="form-group field mb-1 cpt-plc-hold search-label">
+				<app-ng-select-shareable [events]="eventsSubjectCpt.asObservable()"  [filterFieldName]="'cpt_codes_ids'"
+									[showSelectFieldList]="selectedMultipleFieldFiter['cpt_codes_ids']"
+									 [showSelectFieldOnRefresh]="myForm.get('cpt_codes_ids').value"  [ngSelectShow]="true"
+									 [lableName]="'CPT Codes'" [bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'"
+									 [bindId]="'id'" [apiPath]="EnumApiPath.getCptListByVisitType"  [conditionalExtraApiParams]="{'visit_type_id':typeForAppointment}"
+									 (valueChange)="selectionOnValueChange($event,myForm,'cpt_codes_ids')" 
+									 [multiple]="true"  ></app-ng-select-shareable> 
+				</div>	
+		</div>
+		<div class="col-md-6  label-title ">
+			<div class="form-group field mb-1 cpt-plc-hold search-label">
+				<app-ng-select-shareable [events]="eventsSubjectPhysicians.asObservable()"  [filterFieldName]="'physician_id'"
+									[showSelectFieldList]="selectedMultipleFieldFiter['physician_id']"
+									 [showSelectFieldOnRefresh]="myForm.get('physician_id').value" 
+									 [maxLengthName] = "95" [ngSelectShow]="true"
+									 [lableName]="'Referring Physician'" [bindlable]="'refferingOfficeName'" [searchLableName]="'physician_id'"
+									 [bindId]="'id'" [apiPath]="ReferringPhysician_LocationListing" 
+									 (valueChange)="selectionOnValueChange($event,myForm,'physician_id')" 
+									 [multiple]="false"  ></app-ng-select-shareable> 
+				</div>	
+		</div>
+		<!-- <div  class="col-md-3 col-lg-2 mt-2"><button  class="btn btn-secondary w-100" (click)="openTransportation()" type="button">Transportation </button></div> -->
+	</div>
+
+
+    <div class="row">
+        <div class="col-xl-8 top-margin">
+            <div class="row align-items-center justify-content-between justify-content-xl-start">
+                <label class="title col-md-3 col-lg-3 text-truncate dayrestri restrictin">Day
+                    Restrictions</label>
+
+
+                <div class="col-md-9 col-lg-9">
+                    <div class="row justify-content-between justify-content-xl-start">
+                        <button class="col-md-1 btn me-1 day-name" *ngFor="let days of weekDay;let i=index" (click)="selectDays(days[0])" [ngStyle]="days[0].isColor===true ?{'background-color': '#A9A9A9','color':'white'} : {'background-color': 'white','color':'black'}">
+                            {{days[0].name}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-xl-4 top-margin">
+            <div class="row align-items-center">
+                <div class="col-md-3 col-lg-5">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 col-lg-2">
+                            <input class="ckeck-overbook mt-1" type="checkbox" name="data" id="overBooking" (click)="noOfBooking($event)" [checked]="isChecked">
+                        </div>
+                        <div class="col-md-9 col-lg-9 d-flex">
+                            <label class="title text-truncate mt-0" for="overBooking">Over Booking No.</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9 col-lg-6">
+                    <input class="input-no-book" type="number" min=1 max=999 oninput="validity.valid||(value='')"  class="form-control" formControlName="noOfOverBookings" notFirstCharactorSpace />
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="row">
+		<div class='col-md-2 recurrence-tab form ps-0'>
+			<label class="d-inline-block chkbox position-relative mt-2 mb-3 pt-1">
+				<input id="is_transportation" type="checkbox" formControlName="is_transportation" (change)="onTransportationChange($event)">
+				<span class="fake-input position-absolute"></span>
+				<label class="fake-label d-block py-0 mb-0" for="is_transportation">
+				   Transportation
+				</label>
+			</label>
+		</div>
+		<app-transportation-modal *ngIf="myForm.get('is_transportation').value" #transportationComponent class="col-12" [patientId]='chartNo' [physician_id]="this.myForm.get('physician_id').value" [openAsModal]="false"></app-transportation-modal>
+	</div>
+	
+
+
+    <div class="row open-filter justify-content-center search-filter-btn mb-0 mt-3 pt-1" [hidden]="isOpenFilters">
+        <div class="col-sm-4 col-lg-3 col-xl-2 pe-2">
+            <button class="btn btn-primary w-100" [disabled]="disabledResetBtn" type="button" (click)="resetForm()"> Reset</button>
+        </div>
+        <div class="col-sm-4 col-lg-3 col-xl-2 ps-2">
+            <button class="btn btn-success w-100" type="submit"  (click)="suggestAppointment()"> Suggest
+            </button>
+        </div>
+
+    </div>
+
+    <div *ngIf="isStart" class="row">
+        <div class="col-md-12 col-lg-12">
+            <app-datatable [(data)]="selectedData" *ngIf="!check"></app-datatable>
+        </div>
+    </div>
+</form>

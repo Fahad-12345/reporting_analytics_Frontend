@@ -1,0 +1,652 @@
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="edit-block align-items-end align-items-sm-center">
+                            <h6 class="float-left color-blue">{{title}} </h6>
+                        
+                        <div class="float-right custom-tooltip-hov">
+                            <a href="javascript:void(0)" data-original-title="Edit" tooltip="Edit" (click)="enableForm(enableflag)">
+                                <i class="icon-pencil"></i>
+                            </a>
+                        </div>
+                    </div>
+                        <div class="card-body">
+                        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                            <div class="form" action="#">
+
+                                <div class="row fields-holder">
+                                    <div class="col-12 col-xl-9">
+                                        <div class="form-group radio-block in-stop-work in-md-radio in-md-injury mb-3">
+                                            <span class="float-lg-left">Have you had an injury to the eye involving a metallic object or fragment (e.g. Metallic Shavings)? *</span>
+                                            <ul class="list-inline float-lg-right">
+                                                <li class="list-inline-item">
+                                                    <label for="eyeInvolvedObject_yes" class="d-block position-relative m-0">
+                                                        <input id="eyeInvolvedObject_yes" checked="checked" type="radio" [value]="true" formControlName="eyeInvolvedObject">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="eyeInvolvedObject_no" class="d-block position-relative m-0">
+                                                        <input id="eyeInvolvedObject_no" checked="checked" type="radio" [value]="false" formControlName="eyeInvolvedObject" (click)="clearDescriptions('describeInjuries')">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('eyeInvolvedObject').valid && (form.get('eyeInvolvedObject').dirty || form.get('eyeInvolvedObject').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+         
+                                <ng-container *ngIf="form.get('eyeInvolvedObject').value == true">
+                                    <div class="mb-3 bordered pb-0 bg-white">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row fields-holder mb-0">
+                                                    <div class="col-12 col-sm-8 col-md-9 col-lg-10">
+                                                        <div class="form-group field"  [ngClass]="{'focused': form.get('injuryDescription').value != '' && form.get('injuryDescription').value != null }">
+                                                            <label for="injuryDescription" class="form-label">Describe Your Injuries</label>
+                                                            <input type="text" id="injuryDescription" class="form-control form-input" formControlName="injuryDescription">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+                                                        <a (click)="addDescription('injuryDescription', 'describeInjuries')" class="btn btn-primary color-white">
+                                                            <i class="icon-plus me-2"></i> Add New
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="form['controls'].describeInjuries['controls'].length > 0">
+                                                    <div class="col-12">
+                                                        <ul class="types-list list-inline description-lists mb-3">
+                                                            <li href="javascript:void(0);" class="list-inline-item" *ngFor="let description of form['controls'].describeInjuries['controls']; let i=index">{{ description.value }}   <a class="float-right remove-desription-btn" (click)="removeDescription(i, 'describeInjuries')"><i class="icon-remove ms-2"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <div class="row fields-holder">
+                                    <div class="col-12 col-xl-9">
+                                        <div class="form-group radio-block in-stop-work in-md-radio mb-3">
+                                            <span class="float-md-left">Have ever been injured by a metallic object or foreign body (e.g., bb , bullet , etc.)? *</span>
+                                            <ul class="list-inline float-md-right">
+                                                <li class="list-inline-item">
+                                                    <label for="metallicObjectInvolved_yes" class="d-block position-relative m-0">
+                                                        <input id="metallicObjectInvolved_yes" checked="checked" type="radio" [value]="true" formControlName="metallicObjectInvolved">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="metallicObjectInvolved_no" class="d-block position-relative m-0">
+                                                        <input id="metallicObjectInvolved_no" checked="checked" type="radio" [value]="false" formControlName="metallicObjectInvolved" (click)="clearDescriptions('describeObjects')">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('metallicObjectInvolved').valid && (form.get('metallicObjectInvolved').dirty || form.get('metallicObjectInvolved').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+         
+                                <ng-container *ngIf="form.get('metallicObjectInvolved').value == true">
+                                    <div class="mb-3 bordered pb-0 bg-white">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row fields-holder mb-0">
+                                                    <div class="col-12 col-sm-8 col-md-9 col-lg-10">
+                                                        <div class="form-group field"  [ngClass]="{'focused': form.get('objecDescription').value != '' && form.get('objecDescription').value != null }">
+                                                            <label for="objecDescription" class="form-label">Describe Objects</label>
+                                                            <input type="text" id="objecDescription" class="form-control form-input" formControlName="objecDescription">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+                                                        <a (click)="addDescription('objecDescription', 'describeObjects')" class="btn btn-primary color-white">
+                                                            <i class="icon-plus me-2"></i> Add New
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="form['controls'].describeObjects['controls'].length > 0">
+                                                    <div class="col-12">
+                                                        <ul class="types-list list-inline description-lists mb-3">
+                                                            <li class="list-inline-item" *ngFor="let description of form['controls'].describeObjects['controls']; let i=index">{{ description.value }}   <a class="float-right remove-desription-btn" (click)="removeDescription(i, 'describeObjects')"><i class="icon-remove ms-2"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                
+
+                                <div class="row fields-holder">
+                                    <div class="col-12 col-xl-9">
+                                        <div class="form-group radio-block in-stop-work in-md-radio mb-3">
+                                            <span class="float-md-left">Currently or have you recently taken any medication or drug?  *</span>
+                                            <ul class="list-inline float-md-right">
+                                                <li class="list-inline-item">
+                                                    <label for="takenAnyDrug_yes" class="d-block position-relative m-0">
+                                                        <input id="takenAnyDrug_yes" checked="checked" type="radio" [value]="true" formControlName="takenAnyDrug">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="takenAnyDrug_no" class="d-block position-relative m-0">
+                                                        <input id="takenAnyDrug_no" checked="checked" type="radio" [value]="false" formControlName="takenAnyDrug" (click)="clearDescriptions('medication')">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('takenAnyDrug').valid && (form.get('takenAnyDrug').dirty || form.get('takenAnyDrug').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+         
+                                <ng-container *ngIf="form.get('takenAnyDrug').value == true">
+                                    <div class="mb-3 bordered pb-0 bg-white">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row fields-holder mb-0">
+                                                    <div class="col-12 col-sm-8 col-md-9 col-lg-10">
+                                                        <div class="form-group field"  [ngClass]="{'focused': form.get('medicationDescription').value != '' && form.get('medicationDescription').value != null }">
+                                                            <label for="medicationDescription" class="form-label">Describe medications</label>
+                                                            <input type="text" id="medicationDescription" class="form-control form-input" formControlName="medicationDescription">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+                                                        <a (click)="addDescription('medicationDescription', 'medication')" class="btn btn-primary color-white">
+                                                            <i class="icon-plus me-2"></i> Add New
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="form['controls'].medication['controls'].length > 0">
+                                                    <div class="col-12">
+                                                        <ul class="types-list list-inline description-lists mb-3">
+                                                            <li class="list-inline-item" *ngFor="let description of form['controls'].medication['controls']; let i=index">{{ description.value }}   <a class="float-right remove-desription-btn" (click)="removeDescription(i, 'medication')"><i class="icon-remove ms-2"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <div class="row fields-holder">
+                                    <div class="col-12 col-xl-9">
+                                        <div class="form-group radio-block in-stop-work in-md-radio mb-3">
+                                            <span class="float-md-left">Allergic to any food/medication? *</span>
+                                            <ul class="list-inline float-md-right">
+                                                <li class="list-inline-item">
+                                                    <label for="allergicToFood_yes" class="d-block position-relative m-0">
+                                                        <input id="allergicToFood_yes" checked="checked" type="radio" [value]="true" formControlName="allergicToFood" (change)="toggleMRIIntke3($event)">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="allergicToFood_no" class="d-block position-relative m-0">
+                                                        <input id="allergicToFood_no" checked="checked" type="radio" [value]="false" formControlName="allergicToFood"(change)="toggleMRIIntke3($event)">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('allergicToFood').valid && (form.get('allergicToFood').dirty || form.get('allergicToFood').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+         
+                                <ng-container *ngIf="form.get('allergicToFood').value == true">
+                                    <div class="mb-3 bordered pb-0 bg-white">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6 col-xl-4">
+                                                <div class="form-group radio-block in-stop-work in-md-radio mb-3">
+                                                    <span class="float-md-left">Iodine contrast (dye injection)? *</span>
+                                                    <ul class="list-inline float-md-right">
+                                                        <li class="list-inline-item">
+                                                            <label for="iodineContrast_yes" class="d-block position-relative m-0">
+                                                                <input id="iodineContrast_yes" checked="checked" type="radio" [value]="true" formControlName="iodineContrast">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">Yes</span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <label for="iodineContrast_no" class="d-block position-relative m-0">
+                                                                <input id="iodineContrast_no" checked="checked" type="radio" [value]="false" formControlName="iodineContrast">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">No</span>
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                    <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('iodineContrast').valid && (form.get('iodineContrast').dirty || form.get('iodineContrast').touched)">Please any on option!</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-lg-6 col-xl-3">
+                                                <div class="form-group radio-block in-stop-work in-md-radio mb-3">
+                                                    <span class="float-md-left">Latex allergy *</span>
+                                                    <ul class="list-inline float-md-right">
+                                                        <li class="list-inline-item">
+                                                            <label for="latexAllergies_yes" class="d-block position-relative m-0">
+                                                                <input id="latexAllergies_yes" checked="checked" type="radio" [value]="true" formControlName="latexAllergies">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">Yes</span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <label for="latexAllergies_no" class="d-block position-relative m-0">
+                                                                <input id="latexAllergies_no" checked="checked" type="radio" [value]="false" formControlName="latexAllergies">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">No</span>
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                    <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('latexAllergies').valid && (form.get('latexAllergies').dirty || form.get('latexAllergies').touched)">Please any on option!</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-xl-5">
+                                                <div class="form-group radio-block in-stop-work in-md-food mb-3">
+                                                    <span class="float-md-left">Medication/Food allergies? *</span>
+                                                    <ul class="list-inline float-md-right w-50">
+                                                        <li class="list-inline-item">
+                                                            <label for="foodAllergies_yes" class="d-block position-relative m-0">
+                                                                <input id="foodAllergies_yes" checked="checked" type="radio" value="Yes" formControlName="foodAllergies">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">Yes</span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <label for="foodAllergies_no" class="d-block position-relative m-0">
+                                                                <input id="foodAllergies_no" checked="checked" type="radio" value="No" formControlName="foodAllergies">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">No</span>
+                                                            </label>
+                                                        </li>
+                                                        <li class="list-inline-item">
+                                                            <label for="foodAllergies_other" class="d-block position-relative m-0">
+                                                                <input id="foodAllergies_other" checked="checked" type="radio" value="Other" formControlName="foodAllergies">
+                                                                <span class="fake-input position-absolute"></span>
+                                                                <span class="fake-label d-block">Other</span>
+                                                            </label>
+                                                        </li>
+                                                    </ul>
+                                                    <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('foodAllergies').valid && (form.get('foodAllergies').dirty || form.get('foodAllergies').touched)">Please any on option!</small>
+                                                </div>
+                                            </div>
+
+                                            {{allergy|json}}
+                                            <div class="col-12" *ngIf="form.get('foodAllergies').value == 'Other'">
+                                                <div class="row fields-holder">
+                                                    <div class="col-12 col-sm-8 col-md-9 col-lg-10">
+                                                        <div class="form-group field"  [ngClass]="{'focused': form.get('alergyDescription').value != '' && form.get('alergyDescription').value != null }">
+                                                            <label for="alergyDescription" class="form-label">Please list down your allergies *</label>
+                                                            <input type="text" id="alergyDescription" class="form-control form-input" formControlName="alergyDescription">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+                                                        <a (click)="addDescription('alergyDescription', 'allergy')" class="btn btn-primary color-white">
+                                                            <i class="icon-plus me-2"></i> Add New
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="form['controls'].allergy['controls'].length > 0">
+                                                    <div class="col-12">
+                                                        <ul class="types-list list-inline description-lists mb-3">
+                                                            <li class="list-inline-item" *ngFor="let description of form['controls'].allergy['controls']; let i=index">{{ description.value }}   <a class="float-right remove-desription-btn" (click)="removeDescription(i, 'allergy')"><i class="icon-remove ms-2"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <div class="row fields-holder">
+                                    <div class="col-12 col-xl-12">
+                                        <div class="form-group radio-block in-stop-work in-md-radio in-md-history mb-3">
+                                            <span class="float-xl-left">Have history of asthma , allergic reaction , respiratory disease , or reaction to a contrast medium or dye used for an MRI , CT , X-Ray examination? *</span>
+                                            <ul class="list-inline float-xl-right">
+                                                <li class="list-inline-item">
+                                                    <label for="historyOfDisease_yes" class="d-block position-relative m-0">
+                                                        <input id="historyO 	fDisease_yes" checked="checked" type="radio" [value]="true" formControlName="historyOfDisease">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="historyOfDisease_no" class="d-block position-relative m-0">
+                                                        <input id="historyOfDisease_no" checked="checked" type="radio" [value]="false" formControlName="historyOfDisease">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('historyOfDisease').valid && (form.get('historyOfDisease').dirty || form.get('historyOfDisease').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fields-holder">
+                                    <div class="col-12 col-lg-6 col-xl-6">
+                                        <div class="form-group radio-block in-stop-work in-md-radio mb-3">
+                                            <span class="float-md-left">Have you ever had chemotherapy ? *</span>
+                                            <ul class="list-inline float-md-right">
+                                                <li class="list-inline-item">
+                                                    <label for="hadChemotherapy_yes" class="d-block position-relative m-0">
+                                                        <input id="hadChemotherapy_yes" checked="checked" type="radio" [value]="true" formControlName="hadChemotherapy">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="hadChemotherapy_no" class="d-block position-relative m-0">
+                                                        <input id="hadChemotherapy_no" checked="checked" type="radio" [value]="false" formControlName="hadChemotherapy">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('hadChemotherapy').valid && (form.get('hadChemotherapy').dirty || form.get('hadChemotherapy').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group radio-block mb-3">
+                                            <span class="float-md-left">Have you ever had radiation therapy ? *</span>
+                                            <ul class="list-inline float-right">
+                                                <li class="list-inline-item" style="width:50%;">
+                                                    <label for="hadRadiation_yes" class="d-block position-relative m-0">
+                                                        <input id="hadRadiation_yes" checked="checked" type="radio" [value]="true" formControlName="hadRadiation">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item" style="width:40%;">
+                                                    <label for="hadRadiation_no" class="d-block position-relative m-0">
+                                                        <input id="hadRadiation_no" checked="checked" type="radio" [value]="false" formControlName="hadRadiation">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger" *ngIf="!form.get('hadRadiation').valid && (form.get('hadRadiation').dirty || form.get('hadRadiation').touched)">Please any on option!</small>
+                                        </div>
+                                    </div> -->
+
+                                    <div class="col-12 col-lg-6 col-xl-6">
+                                        <div class="form-group radio-block in-stop-work in-md-radio mb-3">
+                                            <span class="float-md-left">Have you ever had radiation therapy ? *</span>
+                                            <ul class="list-inline float-md-right">
+                                                <li class="list-inline-item">
+                                                    <label for="hadAnemia_yes" class="d-block position-relative m-0">
+                                                        <input id="hadAnemia_yes" checked="checked" type="radio" [value]="true" formControlName="hadAnemia">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="hadAnemia_no" class="d-block position-relative m-0">
+                                                        <input id="hadAnemia_no" checked="checked" type="radio" [value]="false" formControlName="hadAnemia">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('hadAnemia').valid && (form.get('hadAnemia').dirty || form.get('hadAnemia').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row fields-holder">
+                                    <div class="col-12 col-xl-12">
+                                        <div class="form-group radio-block in-stop-work in-md-radio in-md-history mb-0">
+                                            <span class="float-xl-left">Have anemia or any disease(s) that affects your blood, a history of renal(kidney) disease, high blood pressure, liver disease, a history of diabetes or seizures? *</span>
+                                            <ul class="list-inline float-xl-right">
+                                                <li class="list-inline-item">
+                                                    <label for="hadAnemia_yes" class="d-block position-relative m-0">
+                                                        <input id="hadAnemia_yes" checked="checked" type="radio" [value]="true" formControlName="hadAnemia">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="hadAnemia_no" class="d-block position-relative m-0">
+                                                        <input id="hadAnemia_no" checked="checked" type="radio" [value]="false" formControlName="hadAnemia">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="alert-text form-text text-muted danger position-absolute" *ngIf="!form.get('hadAnemia').valid && (form.get('hadAnemia').dirty || form.get('hadAnemia').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <ng-container *ngIf="form.get('hadAnemia').value == true">
+                                    <div class="mb-0 mt-3 bordered pb-0 bg-white">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row fields-holder mb-0">
+                                                    <div class="col-12 col-sm-8 col-md-9 col-lg-10">
+                                                        <div class="form-group field"  [ngClass]="{'focused': form.get('describeDiseasesField').value != '' && form.get('describeDiseasesField').value != null }">
+                                                            <label for="describeDiseasesField" class="form-label">Describe diseases</label>
+                                                            <input type="text" id="describeDiseasesField" class="form-control form-input" formControlName="describeDiseasesField">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+                                                        <a (click)="addDescription('describeDiseasesField', 'describeDiseases')" class="btn btn-primary color-white">
+                                                            <i class="icon-plus me-2"></i> Add New
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="form['controls'].describeDiseases['controls'].length > 0">
+                                                    <div class="col-12">
+                                                        <ul class="types-list list-inline description-lists mb-3">
+                                                            <li class="list-inline-item" *ngFor="let description of form['controls'].describeDiseases['controls']; let i=index">{{ description.value }}   <a class="float-right remove-desription-btn" (click)="removeDescription(i, 'describeDiseases')"><i class="icon-remove ms-2"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <div class="row fields-holder mt-3" *ngIf="caseData?.patient?.gender == 'female'">
+                                    <div class="col-xl-3 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('dateOfLastPeriod').value != '' && form.get('dateOfLastPeriod').value != null }">
+                                            <label for="dateOfLastPeriod" class="form-label">Date Of last menstrual period *</label>
+                                            <input [matDatepicker]="dateOfLastPeriod" type="text" id="dateOfLastPeriod" formControlName="dateOfLastPeriod"  class="form-control form-input" [max]="2099-01-01" max="2099-01-01">
+                                            <mat-datepicker-toggle [for]="dateOfLastPeriod"></mat-datepicker-toggle>
+                                            <mat-datepicker #dateOfLastPeriod></mat-datepicker>
+                                            <small class="form-text text-muted danger" *ngIf="form.get('dateOfLastPeriod').errors?.required && (form.get('dateOfLastPeriod').dirty || form.get('dateOfLastPeriod').touched)">Please enter Date of last  Period!</small>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="col-xl-3 col-lg-12">
+                                        <div class="form-group radio-block in-stop-work mb-3">
+                                            <span class="float-md-left">Post-Menopausal? *</span>
+                                            <ul class="list-inline float-right">
+                                                <li class="list-inline-item">
+                                                    <label for="postMenopausal_yes" class="d-block position-relative m-0">
+                                                        <input id="postMenopausal_yes" checked="checked" type="radio" [value]="true" formControlName="postMenopausal">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="postMenopausal_no" class="d-block position-relative m-0">
+                                                        <input id="postMenopausal_no" checked="checked" type="radio" [value]="false" formControlName="postMenopausal">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger" *ngIf="!form.get('postMenopausal').valid && (form.get('postMenopausal').dirty || form.get('postMenopausal').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group radio-block mb-3">
+                                            <span class="float-md-left">Pregnant or experiencing a late menstrual period? *</span>
+                                            <ul class="list-inline float-right">
+                                                <li class="list-inline-item" style="width:22%;">
+                                                    <label for="pregnantOrLatePeriod_yes" class="d-block position-relative m-0">
+                                                        <input id="pregnantOrLatePeriod_yes" checked="checked" type="radio" value="Yes" formControlName="pregnantOrLatePeriod">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item" style="width:28%;">
+                                                    <label for="pregnantOrLatePeriod_no" class="d-block position-relative m-0">
+                                                        <input id="pregnantOrLatePeriod_no" checked="checked" type="radio" value="No" formControlName="pregnantOrLatePeriod">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item" style="width:42%;">
+                                                    <label for="pregnantOrLatePeriod_notsure" class="d-block position-relative m-0">
+                                                        <input id="pregnantOrLatePeriod_notsure" checked="checked" type="radio" value="Not Sure" formControlName="pregnantOrLatePeriod">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Not Sure</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger" *ngIf="!form.get('pregnantOrLatePeriod').valid && (form.get('pregnantOrLatePeriod').dirty || form.get('pregnantOrLatePeriod').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fields-holder"  *ngIf="caseData?.patient?.gender == 'female'">
+                                    <div class="col-xl-8 col-lg-12">
+                                        <div class="form-group radio-block in-stop-work mb-3">
+                                            <span class="float-md-left">Taking oral contraceptives or receiving hormonal treatment? *</span>
+                                            <ul class="float-right">
+                                                <li class="list-inline-item">
+                                                    <label for="harmonalTreatment_yes" class="d-block position-relative m-0">
+                                                        <input id="harmonalTreatment_yes" checked="checked" type="radio" [value]="true" formControlName="harmonalTreatment">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="harmonalTreatment_no" class="d-block position-relative m-0">
+                                                        <input id="harmonalTreatment_no" checked="checked" type="radio" [value]="false" formControlName="harmonalTreatment">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger" *ngIf="!form.get('harmonalTreatment').valid && (form.get('harmonalTreatment').dirty || form.get('harmonalTreatment').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group radio-block in-stop-work mb-3">
+                                            <span class="float-md-left">Currently breastfeeding? *</span>
+                                            <ul class="list-inline float-right">
+                                                <li class="list-inline-item">
+                                                    <label for="breastfeeding_yes" class="d-block position-relative m-0">
+                                                        <input id="breastfeeding_yes" checked="checked" type="radio" [value]="true" formControlName="breastfeeding">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="breastfeeding_no" class="d-block position-relative m-0">
+                                                        <input id="breastfeeding_no" checked="checked" type="radio" [value]="false" formControlName="breastfeeding">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger" *ngIf="!form.get('breastfeeding').valid && (form.get('breastfeeding').dirty || form.get('breastfeeding').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-8 col-lg-12">
+                                        <div class="form-group radio-block in-stop-work mb-1">
+                                            <span class="float-md-left">Taking any type of fertility medication or having fertility treatments? *</span>
+                                            <ul class="list-inline float-right">
+                                                <li class="list-inline-item">
+                                                    <label for="fertilityTreatments_yes" class="d-block position-relative m-0">
+                                                        <input id="fertilityTreatments_yes" checked="checked" type="radio" [value]="true" formControlName="fertilityTreatments">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="fertilityTreatments_no" class="d-block position-relative m-0">
+                                                        <input id="fertilityTreatments_no" checked="checked" type="radio" [value]="false" formControlName="fertilityTreatments">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger" *ngIf="!form.get('fertilityTreatments').valid && (form.get('fertilityTreatments').dirty || form.get('fertilityTreatments').touched)">Please any on option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <ng-container *ngIf="form.get('fertilityTreatments').value == true && caseData?.patient?.gender == 'female'">
+                                    <div class="mb-1 mt-3 bordered pb-0 bg-white">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row fields-holder mb-0">
+                                                    <div class="col-12 col-sm-8 col-md-9 col-lg-10">
+                                                        <div class="form-group field"  [ngClass]="{'focused': form.get('fertilityDescriptionField').value != '' && form.get('fertilityDescriptionField').value != null }">
+                                                            <label for="fertilityDescriptionField_yes" class="form-label">Describe Fertilities</label>
+                                                            <input type="text" id="fertilityDescriptionField_yes" class="form-control form-input" formControlName="fertilityDescriptionField">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+                                                        <a (click)="addDescription('fertilityDescriptionField', 'fertilityTreatmentsArr')" class="btn btn-primary color-white">
+                                                            <i class="icon-plus me-2"></i> Add New
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="form['controls'].fertilityTreatmentsArr['controls'].length > 0">
+                                                    <div class="col-12">
+                                                        <ul class="types-list list-inline description-lists mb-3">
+                                                            <li class="list-inline-item" *ngFor="let description of form['controls'].fertilityTreatmentsArr['controls']; let i=index">{{ description.value }}   <a class="float-right remove-desription-btn" (click)="removeDescription(i, 'fertilityTreatmentsArr')"><i class="icon-remove ms-2"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <div class="row form-btn justify-content-center" *ngIf="formEnabled">
+                                    <div class="col-9 col-sm-5 col-md-4 col-lg-3 col-xl-2 text-center">
+                                        <a href="javascript:void(0)" class="btn btn-primary w-100" (click)="disableForm()"><span
+                                                class="icon-left-arrow me-1"></span> Back</a>
+                                    </div>
+                                    <div class="col-9 col-sm-5 col-md-4 col-lg-3 col-xl-2 text-center">
+                                        <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                                                class="icon-save-continue me-1"></span>
+                                            {{ disableBtn == false ? 'Save & Continue' : 'Please Wait...' }}</button>
+                                    </div>
+                                </div>   
+                                <!-- <div class="row form-btn">
+                                    <div class="col-lg-2 col-sm-6 col-5 offset-lg-4 text-center">
+                                        <button type="button" class="btn btn-primary w-100" (click)="goBack()"> <span class="icon-left-arrow me-1"></span> Back</button>
+
+                                    </div>
+                                    <div class="col-lg-2 col-sm-6 col-7 text-center">
+                                        <button type="submit" class="btn btn-success w-100" [disabled]="disableBtn"> <span class="icon-save-continue me-1"></span> {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+
+                                    </div>
+                                    
+                                </div> -->
+                              </div>    
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       

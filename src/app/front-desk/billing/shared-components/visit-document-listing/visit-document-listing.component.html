@@ -1,0 +1,211 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="modal-body" style="padding-left: 0 !important; padding-right: 0 !important;">
+    <div class="col-md-12 data-table">
+        <div class="row align-items-center doc-action-btn" *ngIf='Selection.selected.length'>
+          <div class="col-12 text-end pb-2">
+            <button type="button" (click)="printMultipleFiles()" class="btn btn-outline-secondary">
+              View <span class="text-success">
+                [{{Selection.selected.length}}]
+              </span>
+            </button>
+            <button type="button" (click)="openEmailModal(emailModal)" class="btn btn-outline-secondary">
+              Email <span class="text-success">
+                [{{Selection.selected.length}}]
+              </span>
+            </button>
+
+			<button type="button" (click)="deleteDocuments()" class="btn btn-outline-secondary">
+				Delete <span class="text-success">
+				  [{{Selection.selected.length}}]
+				</span>
+			  </button>
+
+            <!-- <button type="button" (click)="printMultipleFiles()" class="btn btn-outline-secondary">
+              Print <span class="text-success">
+                [{{Selection.selected.length}}]
+              </span>
+            </button> -->
+          </div>
+        </div>
+        <ngx-datatable class="bootstrap custom-scroll-x mb-0" 
+        [rows]="files" 
+        [columnMode]="'force'"
+        [scrollbarH]="true" 
+        [headerHeight]="50" 
+        [footerHeight]="50" 
+        [rowHeight]="'auto'" 
+        [limit]="page.size" 
+        [externalPaging]="true" 
+        [virtualization]="false" 
+        [count]="page.totalElements" 
+        [offset]="page.pageNumber-1" 
+        (page)="changeDocumentPageNumber($event.offset)">
+          <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="120" name="Document Name">
+            <ng-template ngx-datatable-cell-template let-row="row" class="asdfasdf">
+              <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.file_title}}">
+              {{row.file_title}}
+              </div>
+            </ng-template>
+          </ngx-datatable-column>
+          <!-- <ngx-datatable-column [width]="80" name="Created At">
+            <ng-template ngx-datatable-cell-template let-row="row">
+              <span>{{row.created_at | utcTime |date: 'LLL. dd, yyyy'}}</span>
+            </ng-template>
+          </ngx-datatable-column> -->
+          <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100" name="Tags">
+            <ng-template style="color:black" ngx-datatable-cell-template let-row="row">
+              <div class="d-inline-block" style="min-width:60px;">
+                <button *ngIf="row.tags" type="button"
+                  class="btn btn-outline-dark w-100"
+				 
+				  >{{row &&  row.tags.split(',')[0] &&  row.tags.split(',')[0].length > 10 ?  row.tags.split(',')[0].substring(0, 10)+'...' :  row.tags.split(',')[0]}}
+                </button>
+              </div>
+              <button (click)="addTagModal(row, addTag)"
+                class="btn btn-success add-tag-btn custom-btn-tooltip list-unstyled"
+				tooltipClass="table-custom-tooltip"
+				ngbTooltip="{{row.tags}}"
+				container="body" >
+                <ul><i class="fa fa-plus"></i>
+                  <!-- <li *ngIf="row.tags" class="btn-tooltip-top mb-1" style="padding: 12px 8px 8px 14px !important;">
+                    <span style="max-height: 48px;">
+                      <ng-container *ngFor="let tag of row.tags.split(',')" >
+
+                        <button type="button" class="btn btn-outline-dark mb-1"
+                          style="width:auto;">{{tag &&  tag.length > 10 ?  tag.substring(0, 10)+'...' :  tag}}</button>
+                      </ng-container>
+                    </span>
+                    <i style="top:100% !important;"></i>
+                  </li> -->
+                </ul>
+              </button>
+
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Actions" [width]="100">
+            <ng-template ngx-datatable-header-template name="Actions">
+              <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="Selection.hasValue() && isSelected()"
+                [indeterminate]="Selection.hasValue() && !isSelected()">
+              </mat-checkbox>
+              Actions
+              <ng-select class="width-auto" appendTo="body" [items]="[10,20,30,40,50,100]" [clearable]="false" [ngModel]="10"
+              [closeOnSelect]="false" [searchable]='false' (change)="changeDocumentPageSize($event)">
+              </ng-select>
+            </ng-template>
+
+            <ng-template style="color:black" ngx-datatable-cell-template let-row="row">
+              <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? Selection.toggle(row) : null"
+                [checked]="Selection.isSelected(row)">
+              </mat-checkbox>
+              <a class="mx-1 view-hov" ngbTooltip="View" container="body" (click)="viewPdf(row)" target="_blank"
+                role="button"><i class="icon-eye text-success"></i></a>
+              <a class="file-hov mx-2" ngbTooltip="Email" container="body" href="javascript:void(0)" role="button"
+                (click)="openEmailModal(emailModal,row)"><span class="icon-envelope"></span></a>
+				<a class="mx-1 remove-hov me-1"  ngbTooltip="Delete" container="body" href="javascript:void(0)" role="button"
+				(click)="deletesinglVistDoc(row,true)"><i class="icon-remove"></i></a>
+              <!-- <a class="mx-1 edit-hov" tooltip="Edit" href="javascript:void(0)" role="button"
+                (click)="editDocModal(row, editContent)"><i class="icon-pencil"></i></a> -->
+              <!-- <a class="mx-1 printer-hov" tooltip="Print" href="{{getLinkwithAuthToken(row.link)}}" target="_blank"
+                role="button"><i class="icon-printer"></i></a> -->
+              <!-- <a class="mx-1 remove-hov me-1" tooltip="Delete" href="javascript:void(0)" role="button"
+                (click)="confirmDel(row)"><i class="icon-remove"></i></a> -->
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+   
+    </div>
+</div>
+<ng-template #addTag let-modal style="max-width: 500px;">
+  <div class="modal-header">
+    <h5 class="modal-title">Add Tags</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form [formGroup]="addTagForm" (ngSubmit)="onSubmitAddTag(addTagForm.value)">
+      <div class="form-group row">
+        <label class="col-sm-12 col-form-label pt-0">Please type tags and press enter to add them.</label>
+        <div class="col-sm-12">
+          <tag-input formControlName="tags" [addOnBlur]='true' [addOnPaste]='true' [blinkIfDupe]='true'
+            (onBlur)=onTextChange($event) theme='bootstrap3-info' [separatorKeyCodes]='[32]'>
+          </tag-input>
+          <!-- <textarea class="form-control w-100" rows="5" formControlName="tags"
+          style="height: 60px !important;"></textarea> -->
+        </div>
+      </div>
+
+      <div class="form-group row mb-0">
+            <div class="col-12 modal-btn-width text-center">
+              <button type="button" (click)="modal.dismiss('Cross click')"
+                class="btn btn-primary me-3">Cancel</button>
+              <button class="btn btn-success" type="submit" [disabled]="disableBtn">
+                {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+              </div>
+      </div>
+    </form>
+  </div>
+
+</ng-template>
+
+<!-- Email Modal -->
+<ng-template #emailModal let-modal>
+
+  <div class="modal-header">
+    <h5 class="modal-title">Send as Email</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="emailForm" (ngSubmit)="onSubmitEmailForm(emailForm.value)">
+
+      <div class="form-group align-items-center row">
+        <label for="to" class="col-sm-3 col-form-label">From </label>
+        <div class="col-sm-9">
+          <input id="to" type="text" class="form-control w-100 mb-0" disabled='disabled' value="{{userEmail}}"
+            placeholder="">
+        </div>
+      </div>
+      <div class="form-group align-items-center row">
+        <label for="to" class="col-sm-3 col-form-label">To * </label>
+        <div class="col-sm-9">
+          <input id="to" type="text" class="form-control w-100 mb-0" formControlName="to" placeholder="">
+        </div>
+        <small class="form-text text-muted danger offset-md-3 ps-2"
+          *ngIf="emailForm.get('to').errors?.required && (emailForm.get('to').dirty || emailForm.get('to').touched)">Please
+          enter recipient email!</small>
+        <small class="form-text text-muted danger offset-md-3 ps-2"
+          *ngIf="emailForm.controls.to.errors && !emailForm.controls.to.errors.required"> Invalid
+          Email!</small>
+      </div>
+      <div class="form-group align-items-center row">
+        <label for="message" class="col-sm-3 col-form-label pe-1">Email Message *</label>
+        <div class="col-sm-9">
+          <textarea id="message" class="form-control mb-1" formControlName="message"></textarea>
+        </div>
+        <small class="form-text text-muted danger offset-md-3 ps-2"
+          *ngIf="emailForm.get('message').errors?.minlength?.requiredLength==10 && (emailForm.get('message').dirty || emailForm.get('message').touched)">Minimum
+          message size should
+          be of 10 characters!</small>
+      </div>
+
+      <div class="col-sm-9 offset-sm-3 ps-1 pe-0">
+        <div class="row">
+          <div class="col-4">
+            <button type="button" (click)="modal.dismiss('Cross click')"
+              class="btn btn-outline-secondary w-100">Close</button>
+          </div>
+          <div class="col-8">
+            <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn || emailForm.invalid"><span
+                class="icon-save-continue me-2"></span>
+              {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+          </div>
+         
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+</ng-template>

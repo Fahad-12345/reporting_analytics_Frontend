@@ -1,0 +1,23 @@
+<div class="front-desk-block document-manager billing-info add-user master-tabs">
+  <div class="card text-center">
+    <div class="card-header border-0">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_tab)">
+          <a routerLinkActive="active" class="nav-link" routerLink="/front-desk/masters/billing/attorney/firm">Firm </a>
+        </li>
+        <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_tab)">
+          <a routerLinkActive="active" class="nav-link"
+            routerLink="/front-desk/masters/billing/attorney/attorney">Attorney</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-body bill-border border-top-0">
+      <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="firm" role="tabpanel" aria-labelledby="firm-tab">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

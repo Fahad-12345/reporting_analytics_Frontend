@@ -1,0 +1,370 @@
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-6  edit-block text-start">
+				<div class="form-group field option-field mb-3 d-inline-block">
+					<ul class="text-capitalize">
+						<li>Show</li>
+						<li>
+							<select class="custom-select" id="limit" (change)="pageLimit($event.target.value)" [(ngModel)]="page.size"
+								name="limit">
+								<option [value]="10" selected>10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>entries</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-6 text-sm-end">
+				<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+					Customize Columns
+				 </button>
+
+				<button  type="button" (click)="generateExcel()" class="btn btn-success mb-2 mb-sm-0 ms-2">
+					<i class="fa fa-file-excel"></i> Export To CSV
+				</button>
+			</div>
+		</div>
+		<!-- Datatable -->
+		<ngx-datatable class="bootstrap" [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'" 
+			[scrollbarH]="true" [virtualization]="false" [externalPaging]="true" #denialList [rows]="denialData"
+			(sort)="sorting($event)"  [externalSorting]="true" [sortType]="'single'"
+			[count]="page.totalElements" [offset]="page.offset" [limit]="page.size" (page)='onPageChange($event)'
+			[externalPaging]="true">
+
+			<ngx-datatable-column *ngIf="denialColumnHide" name="Bill ID" [sortable]="false" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false" prop="bill_label" [width]="120">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+						ngbTooltip="{{row?.label_id}}">
+						{{row?.label_id}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="adminBilling && denialColumnHide" name="Bill Date" [sortable]="false" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false" prop="bill_date" [width]="100">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+						ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+						{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Case ID" *ngIf="adminBilling && denialColumnHide" [sortable]="false" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false" prop="case_id" [width]="80">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<a  class="tooltip-outer underline-hov" container="body" tooltipClass="table-custom-tooltip"
+					  ngbTooltip="{{value}}"  [routerLink]="['/front-desk/cases/edit/'+row?.case_id+'/patient/patient_summary']">
+					  {{value}} 
+					</a>
+				  </ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="DOA Date" *ngIf="adminBilling && denialColumnHide" prop="accident_date" [sortable]="false"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="80">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+						ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+						{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Case Type" *ngIf="adminBilling && denialColumnHide" prop="case_type" [sortable]="false"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+						ngbTooltip="{{row?.case_type_name}}">
+						{{row?.case_type_name}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<!-- <ngx-datatable-column name="Patient ID" *ngIf="denialColumnHide" prop="patient_id" [sortable]="false"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body">
+						{{value}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column> -->
+
+
+			<ngx-datatable-column name="Patient Name" *ngIf="adminBilling && denialColumnHide" [width]="100" [sortable]="false"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="patient_name">
+				<ng-template let-row="row" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.patient_first_name}} {{row?.patient_middle_name?row.patient_middle_name:''}}
+						{{row?.patient_last_name}}">
+						{{row?.patient_first_name}}
+						{{row?.patient_middle_name?row.patient_middle_name:''}}
+						{{row?.patient_last_name}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column *ngIf="denialColumnHide" name="DOS (From & To)" [sortable]="false"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="date_of_service" [width]="135">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row?.from_date | date:commonService.slashDateFormat_MM_dd_yyyy()}}{{commonService.signBetweenDates()}}{{row?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}"
+						container="body">
+						{{row?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}{{commonService.signBetweenDates()}}{{row?.to_date | date:
+						commonService.slashDateFormat_MM_dd_yyyy()}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<!-- <ngx-datatable-column *ngIf="denialColumnHide" name="Specialty" [sortable]="false" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false" prop="speciality_name" [width]="100">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.speciality_name}}"
+						container="body">
+						{{row.speciality_name}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column> -->
+			<ngx-datatable-column *ngIf="denialColumnHide" name="Provider" [sortable]="false" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false" prop="provider_name" [width]="100">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.doctor_name}}{{row?.billing_title | AddBillingTitle}}"
+						container="body">
+						{{row?.doctor_name}}{{row?.billing_title | AddBillingTitle}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="denialColumnHide" name="Practice-Location" [sortable]="false"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="facility_location_name" [width]="140">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row?.facility_location_name}}" container="body">
+						{{row?.facility_location_qualifier}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Bill To" *ngIf="denialColumnHide" [width]="120" [sortable]="false" [canAutoResize]="true" prop="bill_to" [draggable]="false" [resizeable]="false" [sortable]="false" cellClass="action-icon count-hold">
+				<ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+					<div  *ngIf="row?.bill.bill_recipients?.length>0" class="tooltip-outer" popoverClass="visit-bill-popover" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
+					{{getRecipatentName(row?.bill.bill_recipients[0],row)}}<span *ngIf="row?.bill?.bill_recipients?.length>1">...</span>
+					</div>
+					<ng-template #popContent>
+					  <table class="w-100 text-start">
+						<tbody>
+							<tr>
+								<td class="border-right"><span class="font-bold"> Recipient Type Name </span></td>
+								<td><span class="font-bold"> Recipient Name </span></td>
+							</tr>
+							<tr *ngFor="let item of row?.bill.bill_recipients; let x = index">
+								<td class="border-right"> {{item.recipient_type_name | titlecase}}</td>
+								<td> {{getRecipatentName(item,row)}}</td>
+							</tr>
+						</tbody>
+					  </table>
+					</ng-template>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="denialColumnHide" name="Billed Amount" [sortable]="false"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_amount" [width]="120">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					{{value | currency}}
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Posted Date" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="posted_date" [width]="100">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					{{value| date: commonService.slashDateFormat_MM_dd_yyyy()}}
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Denial Date" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="denial_date" [width]="100">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					{{value| date: commonService.slashDateFormat_MM_dd_yyyy()}}
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="No. of Days" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="no_of_days" [width]="100">
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Denial Type" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="denial_type" cellClass="action-icon" [width]="130">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<span *ngFor="let type of value" class="badge bg-info modal-name">{{type?.name}}</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Denial Status" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="denial_status" [width]="130">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.status_name}}"
+						container="body">
+						{{row?.status_name}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Denial Reason" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="denial_reason" [width]="150">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.reason}}"
+						container="body">
+						{{row?.reason}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Denial Comments" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="denial_comments" [width]="165">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.comments}}"
+						container="body">
+						{{row?.comments}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="denialColumnHide" name="Paid Amount" [sortable]="false" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false" prop="paid_amount" [width]="120">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					{{value | currency}}
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="denialColumnHide" name="OverPayment" [sortable]="false" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false" prop="over_amount" [width]="120">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					{{value | currency}}
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="denialColumnHide" name="Outstanding Amount" [sortable]="false"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="outstanding_amount" [width]="160">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					{{value | currency}}
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="denialColumnHide" name="Write Off" [sortable]="false" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false" prop="write_off_amount" [width]="120">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					{{value | currency}}
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Actions" prop="actions" [width]="120" [sortable]="false" cellClass="action-icon">
+				<ng-template ngx-datatable-header-template name="Actions">
+					Actions
+				</ng-template>
+				<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+					<a class="mx-1 view-hov" ngbTooltip="View File" container="body" href="javascript:void(0)"
+						role="button" (click)="viewDocFile(row)" [class.not-active]="!row?.media"><i
+							class="icon-eye"></i></a>
+
+					<a class="edit-hov mx-1" ngbTooltip="Edit" container="body" (click)="onDenialEdit(row)"
+						href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="denialHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					</a>
+					<a class="remove-hov mx-1" ngbTooltip="Delete" container="body" (click)="onDeleteDeinal(row)">
+						<i class="icon-remove"></i>
+					</a>
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+
+
+	</div>
+</div>
+
+
+<!-- Add Payment -->
+<div bsModal #lgModal="bs-modal" class="modal fade payment-modal" tabindex="-1" role="dialog"
+	aria-labelledby="dialog-sizes-name1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 id="dialog-sizes-name1" class="modal-title pull-left">Bills</h4>
+				<button type="button" class="close pull-right" (click)="lgModal.hide()" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-container *ngIf="denialFormSplit">
+	<ng-template #denialEditContent let-modal>
+		<div class="modal-header">
+			<h4 id="dialog-static-name" class="modal-title text-capitalize">Edit Denial</h4>
+			<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body body-scroll">
+			<app-denial-form-split [billId]="billId" [denialMediaFile]="true"></app-denial-form-split>
+		</div>
+	</ng-template>
+
+</ng-container>
+
+
+<ng-template #reciptentModal let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left">Recipient Details</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<ngx-datatable class="bootstrap" [rows]="billingReciptentdata" [columnMode]='"force"' [footerHeight]="50"
+			[rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true">
+
+			<ngx-datatable-column name="Bill No" [sortable]="false" prop="bill_id" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{currentBill?.label_id}}" container="body">
+						{{currentBill?.label_id}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Recipient Type Name" [sortable]="false" prop="recipient_type_name"
+				[canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer text-capitalize" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row.recipient_type_name}}" container="body">
+						{{row.recipient_type_name}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Recipient Name" [sortable]="false" prop="recipient" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{getRecipatentName(row,row)}}" container="body">
+						{{getRecipatentName(row,row)}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+
+	</div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

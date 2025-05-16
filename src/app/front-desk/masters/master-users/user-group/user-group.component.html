@@ -1,0 +1,322 @@
+<!-- <div *ngIf="loading" class="lds-roller">
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+</div> -->
+<div class="card search-filter-block" *ngIf="aclService.hasPermission(userPermissions.master_groups_view)">
+	<div class="d-block">
+		<a *ngIf="aclService.hasPermission(userPermissions.master_groups_add)" href="javascript:void(0)"
+			(click)="addGroup()" data-bs-toggle="modal" class="btn btn-default round-btn float-right">
+			Add New <span class="icon-plus-circle ms-2"></span>
+		</a>
+	</div>
+	<form action="" *ngIf="aclService.hasPermission(userPermissions.master_groups_filter)"
+		[formGroup]="userGroupSearchForm" autocomplete="off">
+		<div class="form">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-sm-8 col-md-8 col-lg-9 col-xl-10">
+						<div class="row">
+							<div class="col-sm-12 col-md-12 col-lg-12">
+								<div class="form-group field"
+									[ngClass]="{'focused': userGroupSearchForm.get('name').value != '' && userGroupSearchForm.get('name').value != null }">
+									<label class="form-label" for="GroupName"> Group Name</label>
+									<input formControlName="name" type="text" id="GroupName"
+										class="form-control form-input">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4 col-md-4 col-lg-3 col-xl-2">
+						<div class="row justify-content-center mb-xl-0 mb-lg-0 mb-4">
+							<div class="col-4 col-sm-6 col-md-6 col-lg-6 align-self-center">
+								<button (click)="setPage({ offset: 0 });" class="btn btn-success w-100 me-3">
+									Filter
+								</button>
+							</div>
+							<div class="col-4 col-sm-6 col-md-6 col-lg-6 align-self-center">
+								<button (click)="reset()" class="btn btn-primary w-100">Reset</button>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</form>
+</div>
+
+<div class="card data-table p-0 mt-2" *ngIf="aclService.hasPermission(userPermissions.master_groups_view)">
+	<div class="row">
+		<div class="col-md-6 edit-block">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select (change)="setPageLimit($event.target.value)" class="custom-select" name="limit">
+							<option value="10" selected>10</option>
+							<option value="20">20</option>
+							<option value="30">30</option>
+							<option value="40">40</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+						</select>
+					</li>
+					<li>entries</li>
+				</ul>
+
+			</div>
+		</div>
+		<div *ngIf="getCheckedGroups().length > 0" class="col-md-6 text-end mt-2">
+			<!-- <lib-task-manager listCount="{{getCheckedGroups().length}}" selectedProps="{{getCheckedGroups()}}"
+				type="text" page="Patient">
+			</lib-task-manager> -->
+			<!-- <a (click)="deleteMultipleGroups()" class="btn btn-default round-btn">
+		  <span class="icon-remove me-1"></span> Delete [{{getCheckedGroups().length}}]
+		</a> -->
+		</div>
+
+	</div>
+
+	<div class="card-body p-0 border-0">
+		<ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="lstGroups" [columnMode]="'force'"
+			[columnMode]='"force"' [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true"
+			[count]='page.totalElements' (page)="setPage($event)" [offset]="page.pageNumber" [limit]="page.size"
+			[externalPaging]="true" [virtualization]="false">
+
+			<ngx-datatable-column name="Group Name" [width]="150" [sortable]="false" prop="name">
+
+			</ngx-datatable-column>
+
+
+			<ngx-datatable-column name="Total Members" [width]="150" [sortable]="false" prop="users_count">
+
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Created By" [width]="150" [sortable]="false" prop="created_by">
+
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Created At" [width]="150" [sortable]="false" prop="created_at">
+
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Actions" [width]="150" [sortable]="false">
+				<ng-template ngx-datatable-header-template name="Actions">
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)"
+						(change)="checkAllGroups($event)"
+						[checked]="getCheckedGroups().length == lstGroups.length && lstGroups.length > 0">
+					</mat-checkbox>
+					<!-- <label>
+							 <input id="intake4" name="" value="" type="checkbox">
+							 <span class="fake-input position-absolute"></span>
+						   </label> -->
+					Actions
+
+				</ng-template>
+
+				<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+					<!-- <label for="intake4" class="chkbox position-relative mt-1">
+							 <input id="intake4" name="" value="" type="checkbox">
+							 <span class="fake-input position-absolute"></span>
+						   </label> -->
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)"
+						(change)=" checkUserGroup($event,row)" [checked]="row.isChecked">
+					</mat-checkbox>
+
+					<a *ngIf="aclService.hasPermission(userPermissions.master_groups_edit)" (click)="updateGroup(row)"
+						class="edit-hov mx-1" tooltip="Edit" href="javascript:void(0)" role="button"><i
+							class="icon-pencil"></i></a>
+					<!-- 
+					<lib-task-manager selectedProps="{{stringfy([row])}}" type="icon" id="{{row.id}}" page="PlanType">
+					</lib-task-manager> -->
+					<!-- <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i class="fa fa-tasks"></i></a> -->
+
+					<!-- <a *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)" class="remove-hov mx-1"
+			  tooltip="Delete" href="javascript:void(0)" (click)="deleteGroup(row)" role="button">
+			  <span class="icon-remove"></span></a> -->
+
+
+
+				</ng-template>
+			</ngx-datatable-column>
+
+
+
+		</ngx-datatable>
+
+
+
+		<!-- <table class="table table-bordered table-striped text-center mb-0">
+							  <thead>
+								<tr>
+								  <th class="border-right" scope="col">Group Name</th>
+								  <th class="border-right" scope="col">Total Members</th>
+								  <th class="border-right" scope="col">Created by</th>
+								  <th class="border-right" scope="col">Created at</th>
+								  <th class="form" scope="col" style="width:15%;"> 
+									<label for="" class="chkbox position-relative mt-1">
+										  <input *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)" id="" name="" value="" type="checkbox">
+										  <span class="fake-input position-absolute"></span>
+										</label> Actions</th>
+								</tr> 
+							  </thead>
+							  <tbody>
+								<tr>
+								  <td>Friend</td>
+								  <td>15</td>
+								  <td>John</td>
+								  <td>3-4-2019</td>
+								  <td class="form">
+									  <label for="" class="chkbox position-relative mt-1">
+										<input *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)" id="" name="" value="" type="checkbox">
+										<span class="fake-input position-absolute"></span>
+									  </label>
+									  <a class="edit-hov mx-1" tooltip="Edit" href="javascript:void(0)" role="button"><i
+										class="icon-pencil"></i></a>
+											  <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+												  class="icon-create-task"></i></a>    
+										<a class="remove-hov mx-1" tooltip="Delete" href="javascript:void(0)" role="button">
+											  <span class="icon-remove"></span></a>    
+									</td>
+								</tr>
+  
+								<tr>
+									<td>Friend</td>
+									<td>15</td>
+									<td>John</td>
+									<td>3-4-2019</td>
+									<td class="form">
+										<label for="" class="chkbox position-relative mt-1">
+										  <input *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)" id="" name="" value="" type="checkbox">
+										  <span class="fake-input position-absolute"></span>
+										</label>
+										<a class="edit-hov mx-1" tooltip="Edit" href="javascript:void(0)" role="button"><i
+										  class="icon-pencil"></i></a>
+												<a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+													class="icon-create-task"></i></a>    
+										  <a class="remove-hov mx-1" tooltip="Delete" href="javascript:void(0)" role="button">
+												<span class="icon-remove"></span></a>    
+									  </td>
+								  </tr>
+								  <tr>
+									  <td>Friend</td>
+									  <td>15</td>
+									  <td>John</td>
+									  <td>3-4-2019</td>
+									  <td class="form">
+										  <label for="" class="chkbox position-relative mt-1">
+											<input *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)" id="" name="" value="" type="checkbox">
+											<span class="fake-input position-absolute"></span>
+										  </label>
+										  <a class="edit-hov mx-1" tooltip="Edit" href="javascript:void(0)" role="button"><i
+											class="icon-pencil"></i></a>
+												  <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+													  class="icon-create-task"></i></a>    
+											<a class="remove-hov mx-1" tooltip="Delete" href="javascript:void(0)" role="button">
+												  <span class="icon-remove"></span></a>    
+										</td>
+									</tr>
+									<tr>
+										<td>Friend</td>
+										<td>15</td>
+										<td>John</td>
+										<td>3-4-2019</td>
+										<td class="form">
+											<label for="" class="chkbox position-relative mt-1">
+											  <input *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)" id="" name="" value="" type="checkbox">
+											  <span class="fake-input position-absolute"></span>
+											</label>
+											<a class="edit-hov mx-1" tooltip="Edit" href="javascript:void(0)" role="button"><i
+											  class="icon-pencil"></i></a>
+													<a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+														class="icon-create-task"></i></a>    
+											  <a class="remove-hov mx-1" tooltip="Delete" href="javascript:void(0)" role="button">
+													<span class="icon-remove"></span></a>    
+										  </td>
+									  </tr>
+									  <tr>
+										  <td>Friend</td>
+										  <td>15</td>
+										  <td>John</td>
+										  <td>3-4-2019</td>
+										  <td class="form">
+											  <label for="" class="chkbox position-relative mt-1">
+												<input *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)" id="" name="" value="" type="checkbox">
+												<span class="fake-input position-absolute"></span>
+											  </label>
+											  <a *ngIf="aclService.hasPermission(userPermissions.master_groups_edit)" class="edit-hov mx-1" tooltip="Edit" href="javascript:void(0)" role="button"><i
+												class="icon-pencil"></i></a>
+												<a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+												  class="icon-create-task"></i></a>
+											  
+												<a *ngIf="aclService.hasPermission(userPermissions.master_groups_delete)" class="remove-hov mx-1" tooltip="Delete" href="javascript:void(0)" role="button">
+													  <span class="icon-remove"></span></a>    
+											</td>
+										</tr>
+  
+							  
+							  </tbody>
+							</table> -->
+	</div>
+
+
+</div>
+
+<!-- User Group Modal -->
+<!-- <div class="modal fade" id="user-group" tabindex="-1" role="dialog" aria-labelledby="user-group" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+					  <div class="modal-content"> -->
+<!-- <ng-template #user let-modal>
+						<div class="modal-header">
+						  <h5 class="modal-title">Add User Group</h5>
+						  <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+						  (click)="modal.dismiss('Cross click')">
+							<span aria-hidden="true">&times;</span>
+						  </button>
+						</div>
+						<div class="modal-body">
+							<form autocomplete="" [formGroup]="addGroup">
+							
+								
+								<div class="form-group row mb-2">
+									<div class="col-md-12">
+										<input class="form-control" placeholder="Group Name" type="text"
+										formControlName="name">
+									  </div>
+								</div>
+  
+								<div class="form-group row mb-2">
+									<div class="col-md-12">
+										<input class="form-control" placeholder="Group Member" type="text"
+										formControlName="members">
+									  </div>
+								</div>
+			  
+								<div class="row">
+								  <div class="col-sm-8 offset-sm-2">
+									<div class="row mb-0">
+									  <div class="col-6">
+										<button class="btn bg-green w-100" type="submit">Save</button>
+									  </div>
+									  <div class="col-6">
+										<button class="btn btn-outline-secondary w-100" data-dismiss="modal"
+										 type="button" 	(click)="modal.dismiss()">Cancel</button>
+									  </div>
+									</div>
+								  </div>
+								</div>
+				
+							  </form>
+						</div>
+					  </ng-template> -->
+<!-- </div>
+					</div>
+				  </div> -->

@@ -1,0 +1,44 @@
+export enum AssignSpecialityUrlsEnum {
+	Speciality_list = '/users/getSpecialities', // Get specialities
+	// FtechFacilites_List = '/users/get-user-info-by-facilities',
+	Facility_list_Post = '/users/getFacilities', //Get facilities
+	Facility_list_dropdown_GET ='facilities_locations',
+	getUserInfobyFacility='/users/get-user-info-by-facilities',
+	Speciality_Assignments = '/available-specialities/get-assignments', //Speciality Assignments
+	Default_Comments = '/appointment-cancellation-comments', //Get Default Comments
+	Delete_Spec_Assign = '/available-specialities?', //Delete Spec Assignment
+	Cancel_Appointment = '/appointments/cancelAppointment', //Cancel Appointment
+	Cancel_Appointment_new = '/appointments/cancel-appointments', //Cancel Appointment
+	Forward_Appointments_FD = '/appointments/forwardAppointmentsToFD', //Forward_Appointments_FD
+	Forward_Appointments_FD_new = '/appointments/forward-appointments-fd', //schedulerRevamp Forward_Appointments_FD
+	resolveAppointmentForSpecAssign = '/appointments/resolveAppointmentForSpecAssign',
+	resolveSpecialityAppointment='/appointments/resolve-speciality-appointments',
+	getAppointmentsForAssignment = '/appointments/getAppointmentsForAssignment',
+	getAppointmentsForAssignment_new = '/appointments/appointments-against-availablities',
+ 	getProviderSpecificAppointment='/available-doctors/specific-appointments',
+	postSpecAssignmentObject = '/specAssigns/postSpecAssignmentObject',
+	getManualDoctorsList = '/available-doctors/get-maunal-doctors-list',
+	resolveAssignedDocs = '/specAssigns/resolveAssignedDocs',
+	preChecksForSpecialityAssignmentUpdation = '/specAssigns/preChecksForSpecialityAssignmentUpdation',
+	preChecksForSpecialityAssignmentUpdation_new = '/available-specialities/pre-updation-check',
+
+	updateSpecAssignment = '/specAssigns/updateSpecAssignment',
+	updateAvailableSpeciality = "/available-specialities",
+	// fetchFacilites = '/users/get-user-info-by-facilities',
+	getSpecialityFiles = 'dm/v1/get-speciality-files',
+	mergeFiles = "dm/print-files",
+	mergeFilesBulk = "dm/merge-pdf",
+	updateColour = '/color-codes',
+	// fetchSpecialities = '/users/get-user-info-by-specialities',
+	ActionPreferencesTypes = '/action-preferences-types',
+	GetUserInfoBySpecialities = '/users/get-user-info-by-specialities-v1',
+	AddSpecialityAvailble = '/available-specialities',
+	Speciality_list_Get = 'specialities',
+	get_master_specialities="/master/specialities",
+	unavailable_doctors_appointments='/unavailable-doctors/appointments',
+	get_assign_provider_types='/assign-provider-types',
+	get_supervisor_technicians = 'get-supervisor-technician',
+	get_providers = 'providers',
+	get_providers_for_technicion_loggedIn = 'get-technician-supervisor',
+	getCptListByVisitType="get/visit_type/cpt_codes",
+}

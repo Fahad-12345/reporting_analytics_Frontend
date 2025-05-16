@@ -1,0 +1,45 @@
+<!-- <div class="modal-body"> -->
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<form [formGroup]="deaSchedulerCodeDetailForm">
+	<div class="row">
+		<div class="col-md-6 col-lg-4">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': deaSchedulerCodeDetailForm.get('federal_dea_class_code').value != '' && deaSchedulerCodeDetailForm.get('federal_dea_class_code').value != null }">
+				<label class="form-label" for="federal_dea_class_code">Concept Type</label>
+				<input type="text" class="form-control form-input mb-0" id="federal_dea_class_code"
+					formControlName="federal_dea_class_code">
+			</div>
+		</div>
+		<div class="col-md-6 col-lg-4">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': deaSchedulerCodeDetailForm.get('ncit_code').value != '' && deaSchedulerCodeDetailForm.get('ncit_code').value != null }">
+				<label class="form-label" for="ncit_code">H17 Object Identifier</label>
+				<input type="text" class="form-control form-input mb-0" id="ncit_code" formControlName="ncit_code">
+			</div>
+		</div>
+		<div class="col-md-6 col-lg-4">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': deaSchedulerCodeDetailForm.get('ncpdp_preferred_term').value != '' && deaSchedulerCodeDetailForm.get('ncpdp_preferred_term').value != null }">
+				<label class="form-label" for="ncit_code">ncpdp_preferred_term</label>
+				<input type="text" class="form-control form-input mb-0" id="ncpdp_preferred_term"
+					formControlName="ncpdp_preferred_term">
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': deaSchedulerCodeDetailForm.get('federal_dea_class_code_desc').value != '' && deaSchedulerCodeDetailForm.get('federal_dea_class_code_desc').value != null }">
+				<label class="form-label" for="federal_dea_class_code_desc">Value Set Comment</label>
+				<textarea class="form-control form-input" formControlName="federal_dea_class_code_desc"></textarea>
+			</div>
+		</div>
+	</div>
+</form>
+<div *ngIf="deaSchedulerCodeDetail.action == action.EDIT || deaSchedulerCodeDetail.action == action.ADD"
+	class="col-md-12 modal-btn-width text-center">
+	<button class="btn btn-primary me-3" type="button" (click)="closeModal()">Cancel</button>
+	<button [disabled]="deaSchedulerCodeDetailForm.invalid" (click)="saveContinue()" class="btn btn-success"
+		type="submit">Save
+		&amp;
+		Continue </button>
+</div>
+<!-- </div> -->

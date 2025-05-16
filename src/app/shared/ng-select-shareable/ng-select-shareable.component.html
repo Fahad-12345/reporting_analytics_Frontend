@@ -1,0 +1,92 @@
+
+<form [formGroup]="searchForm">
+  <div id="ngSelectDropdown" #ngSelectOuter class="form-group field ng-check"
+    [ngClass]="{'focused': (searchForm.get('common_ids').value != '' && searchForm.get('common_ids').value != null) || labelCheck}"
+    class={{spacingName}}>
+    <label class="form-label" for="bill_id"> {{lableName}} {{isRequiredField ? '*' : ''}}</label>
+    <ng-select 
+      id="common_ids" class="ng-label ng-select-field"
+      [ngClass]="classes" 
+      [appendTo]="appendTo" 
+      [notFoundText]="' No Result Found'"
+      formControlName="common_ids" 
+      [items]="lists" 
+      [clearSearchOnAdd]="false" 
+      [multiple]="multiple"
+      (open)="getFieldAction(true); getRecordOnDropdownClick($event)" 
+      (close)="getFieldAction(false)" [virtualScroll]="true"
+      [loading]="loading" 
+      bindLabel="name" 
+      bindValue="id" 
+      [groupBy]="showGroupBy ? 'is_select' : null" 
+      [selectableGroup]="true"
+      [selectableGroupAsModel]="false" 
+      [closeOnSelect]="closeOnSelect" 
+      (change)="getChange($event, filterFieldName)"
+      (clear)="getChange($event, filterFieldName);clearSelection($event,filterFieldName)"
+      (scrollToEnd)="fetchRecordOnScroll()" 
+      (remove)="removeItem($event);remove($event);" 
+      [typeahead]="commonSearch$"
+      (add)="add($event)" 
+      [trackByFn]="trackByFn" 
+      [placeholder]="placeholder" 
+      [clearOnBackspace]="false"
+      [searchable]="false" #ngSelectComponent>
+
+      <!-- <div #ngSelectDropdown> -->
+      <ng-template ng-header-tmp>
+        <div class=" has-feedback">
+                 <input
+                 class="form-control"
+                 type="text"
+                 placeholder="Search"
+                 formControlName="textSearch"
+                 (input)="ngSelectComponent.filter($event.target.value)"
+                />
+        </div>
+      </ng-template>
+
+      <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+        <div class="checkbox-btn">
+          <input type="checkbox" [checked]="item$.selected">
+          <span  class="fake-input"></span>
+          <span  class="fake-label">Select All</span>
+        </div>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index" let-search="searchTerm">
+        <div class="checkbox-btn">
+          <input id="item-{{index}}" type="checkbox" [checked]="item$.selected" />
+          <span  class="fake-input"></span>
+          <span  class="fake-label">
+              <span [ngClass]="{'conditional-color-change': (customFontColor && item?.realObj?.isLinked)}"
+                class="ng-option-label border-0 tooltip-outer " tooltipClass="table-custom-tooltip" [ngbTooltip]="concateRoleQualifier ?  item?.['realObj']?.roleQualifierName : item?.name || item['realObj']?.name"
+                container="body" [ngOptionHighlight]="search">
+                {{ qulifierShown ? item[bindQualifierLabel]? item[bindQualifierLabel] : item['realObj'][bindQualifierLabel] : item.name }}
+              </span>
+           </span>
+        </div>
+      </ng-template>
+
+      
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+            <div class=" ng-tags ng-value ng-label" *ngFor="let item of (appendIcon ? items.slice(0, appendCounter) : items)">
+              <span class="ng-option-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip"
+                [ngbTooltip]="concateRoleQualifier ?  item?.['realObj']?.roleQualifierName : item?.name || item['realObj']?.name" container="body">
+                {{ qulifierShown?item[bindQualifierLabel]? item[bindQualifierLabel] : item['realObj'][bindQualifierLabel]: charaterLimit?item.name.length > maxLengthName ?
+                item.name.slice(0,maxLengthName) +'...':item.name : item.name }}
+              </span>
+              <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+            </div>
+            <div class="ng-value bg-none ng-numbers" *ngIf="appendIcon && (items?.length - appendCounter) > 0">
+              <span class="ng-value-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip"
+                ngbTooltip="{{selectedItemDisplay}}" container="body">+{{items?.length - appendCounter }}
+              </span>
+            </div>
+        </ng-template>
+      
+
+      <!-- </div> -->
+
+    </ng-select>
+  </div>
+</form>

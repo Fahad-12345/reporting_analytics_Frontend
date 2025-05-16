@@ -1,0 +1,260 @@
+// tooltip for datatables and allover the system background and color
+.table-custom-tooltip{
+	opacity: 1 !important;
+	.tooltip-inner {
+    @include px-to-rem(font-size, 13px, false);
+	  margin: 0  auto;
+	  border-radius: 2px;
+		opacity: 1 !important;
+	  box-shadow:0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+}
+//patient-summary-custom-tooltip
+.custom-tooltip{
+    display: inline-block;
+    position: relative;
+    text-align: left;
+    white-space: unset;
+    span{
+        @include px-to-rem(font-size, 13px, true);
+        @include px-to-rem(margin, 0px, false);
+        @include px-to-rem(padding, 5px 0px, false);
+        white-space: unset;
+        &:last-child{
+            border-bottom: none;
+        }
+        &.font-500{
+            @include px-to-rem(font-weight, 500px, false);
+        }
+        @include media('<desktop') {
+            @include px-to-rem(font-size, 13px, true);
+        }
+    }
+    hr{
+        margin: 0 auto;
+    }
+    .custom-tooltip-bottom{
+        @include px-to-rem(min-width, 220px, false);
+        top: 30px;
+        text-align: center;
+        left: 50%;
+        transform: translate(-50%, 0);
+        @include px-to-rem(padding, 6px 15px 15px, false);
+        font-weight: normal;
+        @include px-to-rem(font-size, 13px, false);
+        border-radius: 8px;
+        position: absolute;
+        z-index: 99999999;
+        box-sizing: border-box;
+        border: 1px solid transparent;
+        @include box-shadow(0 3px 8px rgba(0, 0, 0, 0.31));
+        display: none;
+        @include media('<phone'){
+            transform: translate(-13%, 0);
+        }
+    }
+    &:hover .custom-tooltip-bottom{
+        display: block;
+    }
+    .custom-tooltip-bottom i{
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        @include px-to-rem(margin-left, -12px, false);
+        @include px-to-rem(width, 24px, false);
+        @include px-to-rem(height, 12, false);
+        overflow: hidden;
+        @include media('<phone'){
+            left: 10%;
+        }
+        &::after{
+            content: '';
+            position: absolute;
+            @include px-to-rem(width, 12px, false);
+            @include px-to-rem(height, 12px, false);
+            left: 50%;
+            transform: translate(-50%, 50%) rotate(45deg);
+        }
+    }
+    .last-tooltip{
+        .custom-tooltip-bottom{
+            left: 20% !important;
+        }
+    }
+    span{
+        margin-top: 0.625rem;
+        @include px-to-rem(margin-left, 0px, true);
+        display: block;
+        @include media('<xxl-widescreen'){
+            margin-top: 0.5rem;
+        }
+        @include media('<desktop'){
+            font-size: 0.9375rem !important;
+        }
+    }
+}
+// tooltip for datatables and allover the system background and color
+.tooltip{
+    &.table-custom-tooltip{
+        &.bs-tooltip-top{
+            .tooltip-arrow {
+                &:before{
+                    border-top-color: $custom-tooltip-arrow-border-color !important;
+                }
+            }
+        }
+        &.bs-tooltip-start{
+            .tooltip-arrow {
+                &:before{
+                    border-left-color: $custom-tooltip-arrow-border-color !important;
+                }
+            }
+        }
+        &.bs-tooltip-bottom{
+            .tooltip-arrow {
+                &:before{
+                    border-bottom-color: $custom-tooltip-arrow-border-color !important;
+                }
+            }
+        }
+        &.bs-tooltip-end{
+            .tooltip-arrow {
+                &:before{
+                    border-right-color: $custom-tooltip-arrow-border-color !important;
+                }
+            }
+        }
+        .tooltip-inner{
+            background: $custom-tooltip-body-bg-color !important;
+            color: $custom-tooltip-body-text-color !important;
+        }
+    }
+}
+.custom-tooltip{
+    .custom-tooltip-bottom{
+        background: $summary-tooltip-bg-color!important;
+        color: $summary-tooltip-text-color !important;
+        border-color: $picton-blue$summary-tooltip-border-color !important;
+        hr{
+            border-top: 1px solid rgba(0,0,0,.1) !important;
+        }
+        i{
+            &::after {
+                background: $summary-tooltip-icon-bg-color !important;
+                border: 1px solid $summary-tooltip-icon-border-color !important;
+            }
+        }
+    }
+}
+.custom-btn-tooltip {
+	position: relative;
+	margin: 0px 0px 0px 5px;
+	.btn-tooltip-top {
+		@include toltip-top();
+		min-width: 200px;
+		.btn {
+			margin-right: 5px;
+		}
+        i {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -12px;
+            width: 24px;
+            height: 12px;
+            overflow: hidden;
+            &::after {
+                content: '';
+                position: absolute;
+                width: 12px;
+                height: 12px;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(45deg);
+                background-color: #EEEEEE;
+                border: 1px solid #34c3ee;
+                box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+            }
+        }
+	}
+	&:hover{
+        .btn-tooltip-top {
+            display: block;
+        }
+    }
+}
+// tooltip use for patient character nuimbers background and color
+.custom-btn-tooltip{
+    .btn-tooltip-top{
+        background: $boots-tooltip-background-color !important;
+        border: 1px solid $boots-tooltip-border-color !important;
+        span, p{
+            color: $boots-tooltip-text-color !important;
+        }
+    }
+}
+// tooltip use for icons and tooltip color black
+.custom-tooltip-hov{
+    [tooltip]::after{
+        background: $pdf-view-tooltip-background-color !important;
+    }
+    [tooltip]::before
+    {
+        border-top-color: $pdf-view-tooltip-border-color !important;
+    }
+}
+.tooltip{
+    &.bs-tooltip-top{
+        .arrow{
+            &:before{
+                border-top-color: $pdf-view-tooltip-border-color !important;
+            }
+        }
+    }
+    &.bs-tooltip-left{
+        .arrow{
+            &:before{
+                border-left-color: $pdf-view-tooltip-border-color !important;
+            }
+        }
+    }
+    &.bs-tooltip-bottom{
+        .arrow{
+            &:before{
+                border-bottom-color: $pdf-view-tooltip-border-color !important;
+            }
+        }
+    }
+    &.bs-tooltip-right{
+        .arrow{
+            &:before{
+                border-right-color: $pdf-view-tooltip-border-color !important;
+            }
+        }
+    }
+    .tooltip-inner{
+        background: $pdf-view-tooltip-background-color !important;
+        color: $pdf-view-tooltip-text-color !important;
+    }
+}
+// tooltip popover
+.popover{
+    &.visit-bill-popover{
+        background: $popover-tooltip-bg-color !important;
+        .popover-body{
+            table{
+                tr{
+                    .border-right{
+                        border-right: 1px solid $popover-tooltip-body-row-border-right-color !important;
+                    }
+                }
+            }
+        }
+        &.bs-popover-top{
+            .arrow{
+                &:after{
+                    border-top-color: $popover-tooltip-arrow-border-color !important;
+                }
+            }
+        }
+    }
+}

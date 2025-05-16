@@ -1,0 +1,39 @@
+<!-- <app-document-form></app-document-form> -->
+<div class="row mt-2">
+  <div class="col-md-12">
+    <ul class="nav nav-tabs" style="border-bottom: 1px solid #dee2e6;" id="myTab" role="tablist">
+      <li class="nav-item"
+        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_scheduler_appointment_list_tab)">
+        <a class="nav-link active" id="personal-info-tab" data-bs-toggle="tab" (click)="Appointment()"
+          [class.active]="patientScheduler" role="tab" aria-controls="personal-info" aria-selected="true">Appointment
+          List</a>
+
+
+      </li>
+      <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_Scheduler_scheduler_tab)">
+        <a class="nav-link" id="basic-contact-info-tab" data-bs-toggle="tab" 
+          [class.active]="scheduler" (click)="Schedule()" role="tab" aria-controls="basic-contact-info"
+          aria-selected="false">Schedule</a>
+      </li>
+    </ul>
+  </div>
+</div>
+<div *ngIf="patientScheduler && aclService.hasPermission(userPermissions.patient_case_list_Scheduler_scheduler_tab)"
+  class="row">
+  <div class="col-md-12">
+    <div class="card mt-1 border-0">
+      <app-particular-patient></app-particular-patient>
+    </div>
+
+
+
+  </div>
+</div>
+<div *ngIf="!patientScheduler && aclService.hasPermission(userPermissions.patient_case_list_scheduler_view)" class="row"
+  style="background-color: white">
+  <div class="col-md-12">
+    <app-scheduler-front-desk-home></app-scheduler-front-desk-home>
+
+
+  </div>
+</div>

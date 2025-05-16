@@ -1,0 +1,186 @@
+<ng-template #defaultTemplate let-day="day" let-openDay="openDay" let-locale="locale"
+	let-tooltipPlacement="tooltipPlacement" let-highlightDay="highlightDay" let-unhighlightDay="unhighlightDay"
+	let-eventClicked="eventClicked" let-tooltipTemplate="tooltipTemplate" let-tooltipAppendToBody="tooltipAppendToBody">
+	<div (dblclick)="addRoomAssignment(day.date)" [style.background-color]="disable? 'lightgrey' : 'white'">
+
+		<div *ngIf="eventCount===0" class="cal-cell-top add-assignment"
+			[style.background-color]="disable? 'lightgrey' : 'white'" [ngClass]="{'dateMargin':  eventCount == 0}">
+
+
+			<span [ngClass]="{'selectedCell': day.date.toString() == selectCurrentDate}"
+				style="margin-top: 75px;    margin-right: 5px;" class="cal-day-number">
+
+				{{ day.date | calendarDate:'monthViewDayNumber':locale }}
+
+			</span>
+		</div>
+
+		<ng-template #popTemplateOne>
+			<div class="popover-top custom-popover-style">
+				<div class="popover-header" [ngStyle]="swaps==='false' ?
+    {'background-color': 'lightblue'} : {'background-color': eventOne.color}">
+					<span *ngIf="swaps==='true'">
+						{{docName }}
+					</span>
+					<span *ngIf="swaps==='false'">
+						{{eventOne.title }}
+					</span>
+					<span class="popover-icon d-inline-flex float-right">
+						<a class="popover-icon-remove" href="javascript:void(0)" *ngIf="roomDelete"
+							(click)="EventClicked(eventOne)"><i class="icon-remove"></i></a>
+					</span>
+					<a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+				</div>
+				<div class="popover-desc">
+					<ul class="list-unstyled mb-0">
+						<li>{{eventOne.startTime}} - {{eventOne.endTime}}</li>
+						<li><span class="font-bold">Room:</span> {{eventOne.room.name}}</li>
+					</ul>
+				</div>
+			</div>
+
+		</ng-template>
+		<ng-template #popTemplateTwo>
+			<div class="popover-top custom-popover-style">
+				<div class="popover-header" [ngStyle]="swaps==='false' ?
+    {'background-color': 'lightblue'} : {'background-color': eventTwo.color}">
+					<span *ngIf="swaps==='true'"> {{docName }} </span>
+					<span *ngIf="swaps==='false'">{{eventTwo.title }} </span>
+					<span class="popover-icon d-inline-flex float-right">
+						<a class="popover-icon-remove" href="javascript:void(0)" *ngIf="roomDelete"
+							(click)="EventClicked(eventTwo)"><i class="icon-remove"></i></a>
+					</span>
+					<a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+				</div>
+				<div class="popover-desc">
+					<ul class="list-unstyled mb-0">
+						<li>{{eventTwo.startTime}} - {{eventTwo.endTime}}</li>
+						<li><span class="font-bold">Room:</span> {{eventTwo.room.name}}</li>
+					</ul>
+				</div>
+			</div>
+		</ng-template>
+
+
+		<div class=" row" *ngIf="eventCount>=1" style="text-align:left; margin-left:0; margin-right: 0;"
+			[style.background-color]="disable? 'lightgrey' : 'white'" [ngClass]="{'bg-none': eventCount == 2}">
+			<div class="doc-label col-md-12">
+				<div class="doc-label col-md-12" [ngStyle]="swaps==='false' ?
+          {'background-color': 'lightblue'} : {'background-color': eventOne.color}" type="button"
+					style="width:100%;background-color: lightcyan" [ngbPopover]="popTemplateOne" data-container="body"
+					placement="top">
+					<div class="row" style="margin-right: 0;">
+						<div class="col-md-12 text-truncate" style="color: white">{{eventOne.startTime}} -
+							{{eventOne.endTime}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class=" row" *ngIf="eventCount>=2" style="text-align:left; margin-left:0; margin-right: 0;"
+			[style.background-color]="disable? 'lightgrey' : 'white'" [ngClass]="{'bg-none': eventCount == 2}">
+			<div class="doc-label col-md-12">
+				<div class="doc-label col-md-12" [ngStyle]="swaps==='false' ?
+          {'background-color': 'lightblue'} : {'background-color': eventTwo.color}" type="button"
+					style="width:100%;background-color: lightcyan" [ngbPopover]="popTemplateTwo" data-container="body"
+					placement="top">
+					<div class="row" style="margin-right: 0;">
+						<div class="col-md-12 text-truncate" style="color: white">{{eventTwo.startTime}} -
+							{{eventTwo.endTime}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div *ngIf="eventCount>2" class=" row" style="text-align:left; margin-left:0; margin-right: 0;"
+			[style.background-color]="disable? 'lightgrey' : 'white'" [ngClass]="{'bg-none': eventCount == 2}">
+			<div>
+				<ng-template #popContent>
+					<h5 class="row" style="margin: 0;">
+						<div class="col-md-10">Assignments</div>
+						<span class="col-md-2" style="text-align: right;" (click)="popmore.close()"><i
+								class="fa fa-times"></i></span>
+					</h5>
+					<div style="overflow-y:scroll; height: 100px;">
+						<div *ngFor="let events of CurrDateApp;let i = index; trackBy:trackByEventId;"
+							style="margin-left: 25px; margin-top: 5px;">
+							<div class="doc-label col-md-12 text-truncate" [ngbPopover]="popTemplatemore"
+								data-container="body" placement="top" [ngStyle]="swaps==='false' ?
+          {'background-color': 'lightblue'} : {'background-color': events.color}" type="button"
+								style="width:100%;background-color: transparent">
+								<span style="color: white;    font-size: 13px;">
+									{{events.startTime}} - {{events.endTime}}
+								</span>
+							</div>
+							<ng-template #popTemplatemore>
+								<div class="popover-top custom-popover-style">
+									<div class="popover-header" [ngStyle]="swaps==='false' ?
+          {'background-color': 'lightblue'} : {'background-color': events.color}">
+										<span *ngIf="swaps==='true'">
+											{{docName }}
+										</span>
+										<span *ngIf="swaps==='false'">
+											{{events.title }}
+										</span>
+										<span class="popover-icon d-inline-flex float-right">
+											<a class="popover-icon-remove" href="javascript:void(0)" *ngIf="roomDelete"
+												(click)="EventClicked(events)"><i class="icon-remove"></i></a>
+										</span>
+										<a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+									</div>
+									<div class="popover-desc">
+										<ul class="list-unstyled mb-0">
+											<li>{{events.startTime}} - {{events.endTime}}</li>
+											<li><span class="font-bold">Room:</span> {{events.room.name}}</li>
+										</ul>
+									</div>
+								</div>
+							</ng-template>
+
+						</div>
+					</div>
+
+					<div style="width: 100%; height: 5px;"></div>
+
+				</ng-template>
+				<div class="waves-light" style="height:100%;background-color: transparent;margin-top: -3px;"
+					[autoClose]="false" [ngbPopover]="popContent" #popmore="ngbPopover"
+					(click)="openPop(popmore)" [placement]="eventOne.placement">
+					{{eventCount - 2}} more
+				</div>
+			</div>
+		</div>
+
+		<div class="cal-cell-top" *ngIf="eventCount >= 2" [style.background-color]="disable? 'lightgrey' : 'white'"
+			[ngClass]="{'dateMargin': eventCount == 0}">
+
+			<span [ngClass]="{'selectedCell': day.date.toString() == selectCurrentDate}" style="margin-top: 75px"
+				class="cal-day-number" [style.margin-top]="eventCount >2 ? '8px' : '28px' "
+				[style.margin-right]="eventCount >2 ? '5px' : '5px' ">
+
+				{{ day.date |
+      calendarDate:'monthViewDayNumber':locale }}</span>
+		</div>
+		<div class="cal-cell-top" *ngIf="eventCount === 1" [style.background-color]="disable? 'lightgrey' : 'white'"
+			[ngClass]="{'dateMargin': eventCount == 0}">
+
+			<span [ngClass]="{'selectedCell': day.date.toString() == selectCurrentDate}" class="cal-day-number"
+				style="margin-top: 52px;    margin-right: 5px;">
+				{{
+      day.date |
+      calendarDate:'monthViewDayNumber':locale }}</span>
+		</div>
+
+
+	</div>
+</ng-template>
+
+<ng-template [ngTemplateOutlet]="customTemplate || defaultTemplate" [ngTemplateOutletContext]="{
+          day: day,
+          openDay: openDay,
+          locale: locale,
+          tooltipPlacement: tooltipPlacement,
+          highlightDay: highlightDay,
+          unhighlightDay: unhighlightDay,
+          eventClicked: eventClicked,
+          tooltipTemplate: tooltipTemplate,
+          tooltipAppendToBody: tooltipAppendToBody
+        }"></ng-template>

@@ -1,0 +1,19 @@
+%d-flex-center{
+	display: flex;
+	align-items: center;
+}
+
+::ng-deep .g-pom-listing {
+  &.fixed-header {
+    .datatable-header {
+      .datatable-header-cell {
+        white-space: pre-wrap !important;
+        @extend %d-flex-center;
+        justify-content: center;
+        .datatable-header-cell-label {
+          line-height: normal;
+        }
+      }
+    }
+  }
+}

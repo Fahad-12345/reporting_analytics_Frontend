@@ -1,0 +1,476 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="row align-items-center doc-action-btn" *ngIf="folder">
+  <div class="col-12 text-end pb-2">
+    <button *ngIf="getCount(folder)>1 && aclService.hasPermission(userPermissions.patient_case_list_docs_merge)" type="button" (click)="openMergeModal(mergeModal, folder?.selection?._selected)"
+      class="btn btn-outline-secondary">
+      Merge <span class="badge">
+        [{{getCount(folder)}}]
+      </span>
+    </button>
+    <button type="button" *ngIf="getCount(folder) && aclService.hasPermission(userPermissions.patient_case_list_docs_download)" (click)="downloadFile(true)" class="btn btn-outline-secondary">
+      Download Zip File <span class="badge">
+        [{{getCount(folder)}}]
+      </span>
+    </button>
+    <button type="button" *ngIf="getCount(folder) && aclService.hasPermission(userPermissions.patient_case_list_docs_download)" (click)="downloadFile()" class="btn btn-outline-secondary">
+      Download <span class="badge">
+        [{{getCount(folder)}}]
+      </span>
+    </button>
+    <button type="button" *ngIf="getCount(folder) && aclService.hasPermission(userPermissions.patient_case_list_docs_print)" (click)="printMultipleFiles()" class="btn btn-outline-secondary">
+      Print <span class="badge">
+        [{{getCount(folder)}}]
+      </span>
+    </button>
+    <!-- <lib-task-manager *ngIf="getCount(folder)" listCount="{{getCount(folder)}}"
+      selectedProps="{{folder.selection.selected}}" type="text" page="Patient">
+    </lib-task-manager> -->
+    <button type="button" *ngIf="getCount(folder) && aclService.hasPermission(userPermissions.patient_case_list_docs_mail)" (click)="openEmailModal(emailModal )"
+      class="btn btn-outline-secondary">
+      Email <span class="badge">
+        [{{getCount(folder)}}]
+      </span>
+    </button>
+    <button type="button" *ngIf="(folder.selection.selected.length  || folder.isFolderSelected) && aclService.
+	hasPermission(userPermissions.patient_case_list_docs_delete) && folder.folder_type_id!=13 && getChildArchiveFolder().length==0" (click)="confirmDel()"
+      class="btn btn-outline-secondary">
+      Delete <span class="badge" *ngIf="getCount(folder)">
+        [{{getCount(folder)}}]
+      </span>
+    </button>
+
+    <!-- <button type="button" class="close" aria-label="Close" (click)="removeFolder(folder)">
+      <span aria-hidden="true">&times;</span>
+    </button> -->
+  </div>
+</div>
+<!-- {{foldersData|json}} -->
+<ng-container *ngIf="foldersData && foldersData.length">
+  <li *ngIf="aclService.hasPermission(userPermissions.patient_case_list_docs_merge) && (finalCount > 1)">
+    <button class="btn" (click)="openMergeModal(mergeModal, selectedFilesList)" type="button">Merge
+      <span *ngIf="finalCount">[{{finalCount}}]</span></button>
+  </li>
+  <li *ngIf="aclService.hasPermission(userPermissions.patient_case_list_docs_download) && (finalCount)">
+    <button class="btn" (click)="downloadFile(true)" type="button">Download Zip File <span
+        *ngIf="finalCount">[{{finalCount}}]</span></button>
+  </li>
+  <li *ngIf="aclService.hasPermission(userPermissions.patient_case_list_docs_download) && (finalCount)">
+    <button class="btn" (click)="downloadFile()" type="button">Download <span
+        *ngIf="finalCount">[{{finalCount}}]</span></button>
+  </li>
+  <!-- <li *ngIf="aclService.hasPermission(userPermissions.patient_docs_add_task) && finalCount">
+  <button class="btn" type="button">Create Task</button>
+</li> -->
+  <!-- <lib-task-manager *ngIf="finalCount" listCount="{{finalCount}}" selectedProps="{{selectedFiles}}" type="text"
+    page="Patient">
+  </lib-task-manager> -->
+  <li>
+    <button type="button" *ngIf="finalCount > 0 && aclService.hasPermission(userPermissions.patient_case_list_docs_print)" (click)="printMultipleFiles()" class="btn">
+      Print <span *ngIf="finalCount">[{{finalCount}}]</span>
+    </button>
+  </li>
+
+  <li *ngIf=" aclService.hasPermission(userPermissions.patient_case_list_docs_mail) && (finalCount )">
+    <button class="btn" type="button" (click)="openEmailModal(emailModal )">Email
+      <span *ngIf="finalCount">[{{finalCount}}]</span></button>
+  </li>
+  <!-- <li
+  *ngIf="aclService.hasPermission(userPermissions.patient_docs_fax)  && (finalCount || selectedFoldersId.length>0)">
+  <button disabled class="btn" type="button" (click)="openModal(faxModal)">Fax <span
+      *ngIf="finalCount > 0">[{{finalCount}}]</span></button>
+</li> -->
+  <li
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_docs_delete)  && (finalCount|| selectedFoldersId.length>0 ) &&  getChildArchiveFolder().length==0">
+    <button class="btn" (click)="confirmDel()" type="button">Delete <span
+        *ngIf="finalCount">[{{finalCount}}]
+	</span></button>
+  </li>
+  <li *ngIf="finalCount && aclService.hasPermission(userPermissions.patient_case_list_docs_copy)" >
+    <button class="btn" type="button" (click)="copyDocModal(file, copyFile)">Copy
+      <span *ngIf="finalCount">[{{finalCount}}]</span></button>
+  </li>
+  <li *ngIf="finalCount && aclService.hasPermission(userPermissions.patient_case_list_docs_move)">
+    <button class="btn" type="button" (click)="movDocModal(file, moveFile)">Move
+      <span *ngIf="finalCount">[{{finalCount}}]</span></button>
+  </li>
+  <li *ngIf="selectedFiles.length && aclService.hasPermission(userPermissions.patient_case_list_docs_push_to_kiosk)">
+    <button class="btn" type="button" (click)="pushToKiosk(kioskModal)">Push to
+      KIOSK <span *ngIf="selectedFiles.length">[{{selectedFiles.length}}]</span></button>
+  </li>
+</ng-container>
+
+<ng-template #emailModal let-modal>
+
+  <div class="modal-header">
+    <h5 class="modal-title">Send as Email</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form [formGroup]="emailForm" (ngSubmit)="onSubmitEmailForm(emailForm.value)">
+      <div class="form-group align-items-center row mb-3">
+        <label for="to" class="col-sm-3 col-form-label">From </label>
+        <div class="col-sm-9">
+          <input id="to" type="text" class="form-control w-100 mb-0" disabled='disabled' value="{{userEmail}}"
+            placeholder="">
+        </div>
+      </div>
+
+      <div class="form-group align-items-center row mb-3">
+        <label for="to" class="col-sm-3 col-form-label">To * </label>
+        <div class="col-sm-9">
+          <input id="to" type="text" class="form-control w-100 mb-0" formControlName="to" placeholder="">
+        </div>
+        <small class="form-text text-muted danger offset-md-3 ps-2"
+          *ngIf="emailForm.get('to').errors?.required && (emailForm.get('to').dirty || emailForm.get('to').touched)">Please
+          enter recipient email!</small>
+        <small class="form-text text-muted danger offset-md-3 ps-2"
+          *ngIf="emailForm.controls.to.errors && !emailForm.controls.to.errors.required"> Invalid
+          Email!</small>
+      </div>
+      <div class="form-group align-items-center row mb-3">
+        <label for="message" class="col-sm-3 col-form-label pe-1">Email Message *</label>
+        <div class="col-sm-9">
+          <textarea id="message" class="form-control mb-1" formControlName="message"></textarea>
+        </div>
+        <small class="form-text text-muted danger offset-md-3 ps-2"
+          *ngIf="emailForm.get('message').errors?.minlength?.requiredLength==10 && (emailForm.get('message').dirty || emailForm.get('message').touched)">Minimum
+          message size should
+          be of 10 characters!</small>
+      </div>
+
+      <div class="col-sm-9 offset-sm-3 ps-1 pe-0">
+        <div class="row">
+          <div class="col-5">
+            <button type="button" (click)="modal.dismiss('Cross click')"
+              class="btn btn-outline-secondary w-100">Close</button>
+          </div>
+          <div class="col-7">
+            <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn || emailForm.invalid"><span
+                class="icon-save-continue me-2"></span>
+              {{ disableBtn == false ? 'Send' : 'Please Wait...' }}</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+</ng-template>
+
+<ng-template #faxModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Send as Fax</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group mb-1">
+          <label class="form-label" for="Street">Fax</label>
+          <input type="text" class="form-control mb-0" formControlName="fax" mask='000-000-0000'>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 modal-btn-width text-center">
+        <button class="btn btn-success me-3" (click)="modal.dismiss()">Save</button>
+        <button type=" button" class="btn btn-outline-secondary" data-dismiss="modal"
+          (click)="modal.dismiss()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #mergeModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Select Folder To Upload</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="mergeForm" (ngSubmit)="onSubmitMergeForm(mergeForm.value)">
+    <div class="modal-body">
+      <div class="row fields-holder">
+
+        <div class="col-12">
+          <div class="form-group row fields-holder align-items-center mb-3"
+            [ngClass]="{'focused': mergeForm.get('fileName').value != ''}">
+            <label for="filename" class="form-label col-md-3" style="padding-left:10px !important;">File
+              Name *</label>
+            <div class="col-md-9">
+              <input type="text" id="filename" class="form-control form-input mb-0" formControlName="fileName"
+                placeholder="Enter File Name">
+
+            </div>
+            <small class="form-text text-muted danger offset-md-3 ps-2"
+              *ngIf="mergeForm.get('fileName').errors?.required && (mergeForm.get('fileName').dirty || mergeForm.get('fileName').touched)">Please
+              enter File Name!</small>
+            <small class="form-text text-muted danger offset-md-3 ps-2"
+              *ngIf="mergeForm.get('fileName').errors?.maxLength?.requiredLength==100">Maximum
+              characters should be 100!</small>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group  row align-items-center mb-3">
+            <!-- [ngClass]="{'focused': mergeForm.get('parentId').value != ''}" -->
+            <label for="parentId" class="col-sm-3 form-label">Select Folder *</label>
+            <div class="col-sm-9">
+              <!-- <select class="custom-select mb-1" (change)="getSubfolders($event.target.value)"
+                formControlName="parentId" id="parentId">
+                <option [value]=""> </option>
+                <ng-container *ngFor="let folder of folderList">
+                  <option [value]="folder.id"> {{ folder.folder_name }}</option>
+                </ng-container>
+              </select> -->
+              <ng-select formControlName="parentId" id="folder_name" [closeOnSelect]="false" (change)="getChildrenFolders($event)"
+                [items]="folderList" [multiple]="false" bindLabel="folder_name" bindValue="id">
+              </ng-select>
+            </div>
+            <small class="form-text text-muted danger offset-md-3 ps-2"
+              *ngIf="mergeForm.get('parentId').errors?.required && (mergeForm.get('parentId').dirty || mergeForm.get('parentId').touched)">Please
+              select folder!</small>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="form-group row align-items-center" *ngIf="subfolders?.length > 0">
+            <!-- [ngClass]="{'focused': mergeForm.get('sfolderId').value != ''}" -->
+            <label for="sfolderId" class="col-sm-3 form-label">Subfolders *</label>
+            <div class="col-sm-8">
+              <select class="custom-select" formControlName="sfolderId" id="sfolderId">
+                <option [value]=""> </option>
+                <ng-container *ngFor="let sfolder of subfolders">
+                  <option [value]="sfolder.id"> {{ sfolder.folder_name }}</option>
+                </ng-container>
+              </select>
+            </div>
+            <small class="form-text text-muted danger offset-md-3 ps-2"
+              *ngIf="mergeForm.get('sfolderId').errors?.required && (mergeForm.get('sfolderId').dirty || mergeForm.get('sfolderId').touched)">
+              This field is required</small>
+          </div>
+        </div>
+        <div class="col-12 mb-0 px-0">
+          <div class="col-sm-9 offset-sm-3">
+            <div class="row">
+              <div class="col-8 pe-1">
+                <button class="btn btn-success w-100" type="submit"
+                  [disabled]="disableBtn || mergeForm.invalid"><span class="icon-save-continue me-1"></span>
+                  {{ disableBtn == false ? 'Save Merged Documents' : 'Please Wait...' }}</button>
+              </div>
+              <div class="col-4">
+                <button type="button" (click)="modal.dismiss('Cross click');mergeForm.reset()"
+                  class="btn btn-outline-secondary w-100">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+  </form>
+</ng-template>
+
+<!-- Create Folder Modal -->
+<!-- <ng-template #newFolder let-modal>
+
+  <div class="modal-header">
+    <h5 class="modal-title">Create Folder</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addFolderForm" (ngSubmit)="onSubmitAddFolder(addFolderForm.value)">
+      <div class="form-group align-items-center row mb-2">
+        <label class="col-sm-4">Name :</label>
+        <div class="col-sm-8 ps-0">
+          <input type="text" class="form-control w-100 mb-0" formControlName="folder" placeholder="">
+          <small style="color:red"
+            *ngIf="!testRegex(addFolderForm.get('folder').value)  && addFolderForm.get('folder').touched">Invalid
+            format</small>
+        </div>
+      </div>
+      <div class="form-group align-items-center row mb-3" *ngIf="folderList.length">
+        <label class="col-sm-4 pt-3">Select Folder :</label>
+        <div class="col-sm-8 ps-0">
+          <small style="font-size: 11.5px !important;">Choose an existing folder to create a
+            subfolder!</small>
+          <select class="custom-select" formControlName="parentId" id="parentId">
+            <option [value]=""> </option>
+            <ng-container *ngFor="let folder of folderList">
+              <option [value]="folder.id"> {{ folder.folder_name }}</option>
+            </ng-container>
+          </select>
+        </div>
+        <small class="form-text text-muted danger offset-md-4 ps-2"
+          *ngIf="addFolderForm.get('parentId').errors?.required && (addFolderForm.get('parentId').dirty || addFolderForm.get('parentId').touched)">Please
+          select folder!</small>
+      </div>
+      <div>
+        <button class="btn create-folder" (click)="creatFolderModal()"><i class="fa fa-folder me-2"></i>
+          Create New Folder</button>
+      </div>
+      <div class="form-group row mb-0">
+        <div class="col-sm-8 offset-sm-4 mt-3">
+          <div class="row">
+            <div class="col-7 ps-0">
+              <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                  class="icon-save-continue me-2"></span>
+                {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+            </div>
+            <div class="col-5">
+              <button type="button" (click)="modal.dismiss('Cross click')"
+                class="btn btn-outline-secondary w-100">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+</ng-template> -->
+
+<ng-template #copyFile let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Copy File</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="copyFileForm" (ngSubmit)="onSubmitCopyFile(copyFileForm.value)">
+      <div class="form-group align-items-center row mb-3"
+        [ngClass]="{'focused': copyFileForm.get('parentId').value != ''}">
+        <label for="parentId" class="col-sm-3 form-label">Select Folder *</label>
+        <div class="col-sm-9">
+          <ng-select formControlName="parentId" id="folder_name" (change)="getChildrenFolders($event)"
+            [items]="folderList" [multiple]="false" [closeOnSelect]="false" bindLabel="folder_name" bindValue="id">
+          </ng-select>
+        </div>
+        <small class="form-text text-muted danger offset-md-3 ps-2"
+          *ngIf="copyFileForm.get('parentId').errors?.required && (copyFileForm.get('parentId').dirty || copyFileForm.get('parentId').touched)">
+          This field is required</small>
+      </div>
+      <div class="form-group align-items-center row mb-3" *ngIf="copyFileForm.get('parentId').value"
+        [ngClass]="{'focused': copyFileForm.get('sfolderId').value != ''}">
+        <label for="sfolderId" class="col-sm-3 form-label">Subfolders</label>
+        <div class="col-sm-9">
+          <ng-select formControlName="sfolderId" id="sfolderId" [items]="selectedFolder" [multiple]="false"
+            bindLabel="folder_name" [closeOnSelect]="false" bindValue="id">
+          </ng-select>
+          <label *ngIf="!selectedFolder" class="form-label">No subfolders</label>
+        </div>
+      </div>
+      <div class="form-group row mb-0">
+        <div class="col-sm-9 offset-sm-3 mt-1">
+          <div class="row">
+            <div class="col-7">
+              <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                  class="icon-save-continue me-2"></span>
+                {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+            </div>
+            <div class="col-5">
+              <button type="button" (click)="modal.dismiss('Cross click')"
+                class="btn btn-outline-secondary w-100">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Move File Modal -->
+<ng-template #moveFile let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Move File</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="moveFileForm" (ngSubmit)="onSubmitMoveFile(moveFileForm.value)">
+      <div class="form-group align-items-center row mb-3"
+        [ngClass]="{'focused': moveFileForm.get('parentId').value != ''}">
+        <label for="parentId" class="col-sm-3 form-label">Select Folder *</label>
+        <div class="col-sm-9">
+          <!-- <select class="custom-select" (change)="getChildrenFolders($event.target.value)" formControlName="parentId"
+            id="parentId">
+            <ng-container *ngFor="let folder of folderList">
+              <option [value]="folder.id"> {{ folder.folder_name }}</option>
+            </ng-container>
+          </select> -->
+          <ng-select formControlName="parentId" id="folder_name" (change)="getChildrenFolders($event)"
+            [items]="folderList" [multiple]="false" [closeOnSelect]="false" bindLabel="folder_name" bindValue="id">
+          </ng-select>
+        </div>
+        <small class="form-text text-muted danger offset-md-3 ps-2"
+          *ngIf="moveFileForm.get('parentId').errors?.required && (moveFileForm.get('parentId').dirty || moveFileForm.get('parentId').touched)">Please
+          select folder!</small>
+      </div>
+
+      <div class="form-group align-items-center row mb-3" *ngIf="moveFileForm.get('parentId').value"
+        [ngClass]="{'focused': moveFileForm.get('sfolderId').value != ''}">
+        <label for="sfolderId" class="col-sm-3 form-label">Subfolders</label>
+        <div class="col-sm-9">
+
+          <!-- <select class="custom-select" *ngIf="selectedFolder" formControlName="sfolderId" id="sfolderId">
+            <option [value]=""> </option>
+            <ng-container *ngFor="let sfolder of selectedFolder">
+              <option [value]="sfolder.id"> {{ sfolder.folder_name }}</option>
+            </ng-container>
+          </select> -->
+          <ng-select formControlName="sfolderId" id="sfolderId" [items]="selectedFolder" [multiple]="false"
+            bindLabel="folder_name" [closeOnSelect]="false" bindValue="id">
+          </ng-select>
+          <label *ngIf="!selectedFolder" class="form-label">No subfolders</label>
+        </div>
+      </div>
+      <div class="form-group row mb-0">
+        <div class="col-sm-9 offset-sm-3 mt-1">
+          <div class="row">
+            <div class="col-7">
+              <button class="btn btn-success w-100" type="submit" [disabled]="moveFileForm.invalid || disableBtn"><span
+                  class="icon-save-continue me-2"></span>
+                {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+            </div>
+            <div class="col-5">
+              <button type="button" (click)="modal.dismiss('Cross click')"
+                class="btn btn-outline-secondary w-100">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #kioskModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Document Pin</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row fields-holder text-center">
+      <div class="col-12">
+        Successfully pushed document(s) KIOSK. Paste below PIN in KIOSK to access document(s) for signature.
+      </div>
+      <div class="col-12 pt-1 mt-3 mb-2">
+        <span class="pin-number">{{kioskPin}}</span>
+      </div>
+      <div class="col-12 mt-3">
+        <button type="button" (click)="modal.dismiss('Cross click')" class="btn btn-outline-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+

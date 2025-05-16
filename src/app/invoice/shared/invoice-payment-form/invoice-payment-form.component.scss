@@ -1,0 +1,81 @@
+
+.bills-section {
+	::ng-deep .nav-tabs {
+		margin-bottom: 15px;
+	}
+}
+
+.asterisk {
+    color: red;
+    font-size: 0.75rem;
+    top: 0;
+}
+.bill_modal_hold {
+    .form-group {
+        .currency {
+            .currency-hold {
+                padding-left: 25px !important;
+            }
+            .fa-dollar-sign {
+                position: absolute;
+                top: 6px;
+				left: 10px;
+				color: #4b4b4b;
+            }
+        }
+        textarea {
+            &.form-control {
+                min-height: 100px;
+                max-height: 100px;
+                resize: none;
+            }
+        }
+    }
+    .upload-btn {
+        .btn {
+            height: auto !important;
+        }
+    }
+    .bill-title {
+        font: 500 1rem/19px Poppins,Arial,Helvetica,sans-serif;
+        text-transform: capitalize;
+    }
+    .search-filter-block {
+        .search-filter-btn {
+            .btn {
+                &:first-child {
+                    @media only screen and (max-width: 1323.98px) and (min-width: 991.98px){
+                        margin-bottom: 12px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+::ng-deep .action-type{
+    .example-chip-list{
+        ::ng-deep .mat-mdc-text-field-wrapper{
+            padding-bottom: 0 !important;
+        }
+    }
+}
+
+::ng-deep .mat-mdc-form-field-should-float{
+    ::ng-deep .mat-mdc-form-field-infix{
+        ::ng-deep .mat-mdc-form-field-label{
+            font-size: 16px !important;
+        }
+    }
+}
+
+::ng-deep .ngx-datatable{
+    .datatable-body{
+        .empty-row{
+            border: 1px solid #bbcbbb;
+            margin-top: -1px;
+            margin-bottom: 1px;
+        }
+    }
+}
+

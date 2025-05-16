@@ -1,0 +1,101 @@
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Adjust as needed */
+  }
+  
+  button {
+    margin-bottom: 10px; /* Adjust as needed */
+  }
+
+  .bold-row {
+    font-weight: bold;
+  }
+  :host ::ng-deep .ngx-datatable {
+    max-height: 70vh !important;
+
+    .datatable-body {
+
+      .datatable-scroll {
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        cursor: pointer;
+      }
+    } 
+  }
+
+.back-arrows {
+  display: inline-block;
+}
+
+.round-button {
+  width: 26px; /* Adjust width as needed */
+  height: 26px; /* Adjust height as needed */
+  border-radius: 50%; /* Make it a circle */
+  background-color: #07cd22be; /* Set background color */
+  padding-right: 3px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer; /* Add cursor pointer to indicate it's clickable */
+}
+
+.arrow-dark {
+  width: 6px;
+  height: 6px;
+  border-style: solid;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent #eeeef6 transparent transparent;
+  position: center;
+   left: -8px; /* Adjust for positioning */
+}
+.arrow-line {
+  position: absolute;
+  top: 50%;
+  left: 12px; /* Adjust for positioning */
+  width: 24px; /* Adjust width as needed */
+  height: 2px; /* Adjust height as needed */
+  background-color:transparent; /* Match the color of the arrow */
+  transform: translateY(-50%) rotate(45deg); /* Rotate line to match arrow angle */
+}
+
+
+
+
+
+////////////////////////////New button //////////////////////
+
+
+.back-button {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px; /* Adjust padding as needed */
+  background-color: #00a650; /* Light green color */
+  color: white; /* Text color */
+  border: 1px solid #00a650; /* Define a solid border */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
+  background-color: #008a4c; /* Slightly darker green on hover */
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+}
+
+.button-text {
+  font-size: 16px; /* Adjust font size as needed */
+  font-weight: 450;
+}
+
+
+
+
+

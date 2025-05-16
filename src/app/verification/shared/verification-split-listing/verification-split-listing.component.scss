@@ -1,0 +1,18 @@
+
+.bg-info{
+    padding: 4px 10px 5px;
+    margin: 2px;
+    background: #34c3ee !important;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.not-active {
+	pointer-events: none;
+	text-decoration: none;
+	color: black;
+	opacity: 0.5;
+}
+  

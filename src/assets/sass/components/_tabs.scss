@@ -1,0 +1,123 @@
+.nav-tabs {
+	@include border(1px, solid, $transparent);
+	@include media('>tablet'){
+	  border: none;
+	  border-bottom: 1px solid $transparent !important;
+	}
+	.nav-item{
+	  width: 100%;
+	  @include media('>tablet'){
+		width: unset;
+	  }
+	  .nav-link{
+		@include font-size(13px);
+		border-top: none;
+		font-family: Poppins,Arial,Helvetica,sans-serif;
+		@include all-border-radius(5px, 5px, 0px, 0px);
+		letter-spacing: 0.5px;
+		font-weight: 500;
+		border-bottom: 1px solid $transparent;
+		@include padding-tb-lr(4px, 7px);
+		@include media('>tablet'){
+		  border-bottom: none;
+		}
+		@include media('>sm-widescreen'){
+		@include padding-tb-lr(6px, 14px);
+		}
+		@include media('>widescreen-min'){
+		@include padding-tb-lr(6px, 15px);
+		}
+		@include media('>widescreen'){
+		@include padding-tb-lr(5px, 13px);
+		}
+		&.active, 
+		&:hover{
+		  @include all-border-radius(0px, 0px, 0px, 0px);
+		  border-bottom: 1px solid $transparent;
+		  @include media('>tablet'){
+			@include all-border-radius(5px, 5px, 0px, 0px);
+			border-width: 1px;
+			border-style: solid;
+		  }
+		}
+		&.active {
+			&:hover {
+				@include media('>tablet'){
+					@include all-border-radius(5px, 5px, 0px, 0px);
+				  }
+			}
+		}
+		&:hover{ 
+			@media (max-width: 769.98px){
+				@include px-to-rem(margin-top, 1px, false);
+				border-left: 0;
+				border-right: 0;
+			}
+		}
+		// &.tab-with-icon {
+		// 	display: flex;
+		// 	align-items: center;
+		// 	justify-content: center;
+		// 	padding: 0 !important;
+		// 	&.active, 
+		// 	&:hover {
+		// 		padding: 0 !important;
+		// 	}
+		// 	.tab-label {
+		// 		padding: 0.3125rem 0.8125rem;
+		// 		display: block;
+		// 	}
+		// 	.tab-icon {
+		// 		padding: 0.3125rem 0.5rem 0.3125rem;
+		// 		&:hover {
+		// 			background-color: #c1272d;
+		// 			border-top-right-radius: 3px;
+		// 			cursor: pointer;
+		// 			.icon-remove {
+		// 				color: #fff !important;
+		// 			}
+		// 		}
+		// 	}
+		// }
+	  }
+
+	}
+  }
+
+.billing-info {
+	.card-header {
+		@include px-to-rem(margin, 0px 0px 10px, false);
+		@include media('>tablet') {
+			margin: 0;
+		}
+		.nav-tabs {
+			border-bottom: 1px solid $transparent;
+		}
+		.card-header-tabs {
+			@include px-to-rem(margin-right, -4.8px, false);
+			@include px-to-rem(margin-bottom, -10px, false);
+		}
+	}
+	.card-body {
+		border-top: 1px solid $transparent !important;
+		@include media('>tablet') {
+			border-top: 0 !important;
+		}
+	}
+}
+
+.master-tabs{
+    .nav-tabs{
+        .nav-item{
+            .nav-link{
+                &.active, 
+                &:hover{
+					@media (max-width: 769.98px){
+						border-bottom: 1px solid $transparent !important;
+						@include px-to-rem(margin, 1px 0px 0px, false);
+					}
+                }
+            }
+        }
+    }
+}

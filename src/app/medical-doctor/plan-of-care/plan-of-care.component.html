@@ -1,0 +1,6 @@
+<app-md-sub-tab [tabLinks]="tabLinks" [currentScreen]='currentScreen'></app-md-sub-tab>
+<app-shared-plan-of-care [icdCodes]='icdCodes' [data]="data" [devices]='devices' [planeOfCareSeeds]="planeOfCareSeeds"
+    [specialities]='specialities' [visitType]="visitType" [gender]="patientGender" [bodyParts]="bodyParts"
+    [referralSeeds]="referralSeeds" [referringSpecialties]="referringSpecialties" (nextPage)="nextPage()"
+    (previousPage)="previousPage()">
+</app-shared-plan-of-care>

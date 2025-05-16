@@ -1,0 +1,191 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+
+<div class="modal-header">
+    <h4 class="modal-title">Appointment(View-Only)</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="myForm" class="appointment-app-form">
+        
+        <div class="row">
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Patient Name<em >*</em></label>
+                <input type="text" style="background-color:#e9ecef!important;"  disabled class="form-control" formControlName="patient" />
+                
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Chart ID<em >*</em></label>
+                <input type="text" style="background-color:#e9ecef!important;"  disabled class="form-control" formControlName="chart" />
+                
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Case No.<em >*</em></label>
+                <input type="text" style="background-color:#e9ecef!important;" disabled class="form-control"  formControlName="caseId" />
+                
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              
+				<app-mat-date-picker-sharedable [classesName]="['form-group','form-gaps', 'vertical-label-cross']"  [lableName]="'Apt.Date'" [defaultDate]="startDate" [disabled]="true" [placeholder]="'Start Date'" ></app-mat-date-picker-sharedable>
+
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Apt.Time<em >*</em></label>
+                <ejs-timepicker [step]='interval' [enabled]='false'
+				[(value)]='startTime' disabled placeholder="Start Time" >
+                </ejs-timepicker>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Duration<em >*</em></label>
+                <select class="form-select" formControlName="duration"  (change)="changeDuration()" disabled>
+					<option *ngFor="let timeSlot of timeSlot" value={{timeSlot}}>{{timeSlot}}
+					</option>
+                </select>
+                
+            </div>
+        <!-- </div> -->
+       
+        <!-- <div class="row"> -->
+
+           
+            <div class="col-sm-6 col-lg-3">
+			
+                <label class="title">Practice-Location<em >*</em></label>   
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="practice_location_name">
+					<input type="text" style="background-color:#e9ecef!important;"  disabled class="form-control" formControlName="practice_location_qualifier" />
+				</span>
+
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Specialty<em >*</em></label>   
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="specialtyName">          
+                <input type="text" style="background-color:#e9ecef!important;"  disabled class="form-control" formControlName="specality_qualifier" />
+				</span>
+
+                
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Provider</label>              
+				 <input type="text" style="background-color:#e9ecef!important;"  disabled class="form-control" formControlName="doctor_name" />
+
+               
+            </div>		
+			<div class="col-sm-6 col-lg-3"  >
+                <label class="title">Visit Type<em >*</em></label>
+				<span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left"
+				
+				[ngbTooltip]="visit_type">
+                <select class="form-select"   formControlName="visit_type_id"   
+					disabled
+				 >
+					
+                    <ng-container *ngFor="let visit of lstvisitType">
+                        <option value={{visit.id}}>{{visit?.qualifier}}</option>
+                    </ng-container>
+				</select>
+				</span>
+            </div>
+           
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Apt. Priority<em >*</em></label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                    <select style="background-color:#e9ecef!important;" class="form-control" disabled formControlName="priority_id" >
+                        <option *ngFor="let priority of lstpriority" [value]="priority.id">{{priority.name}} </option>
+                    </select>
+                </span>
+                
+            </div>
+			<div class="col-md-3">
+                <label class="title">Apt. Status<em >*</em></label>
+                <input type="text" style="background-color:#e9ecef!important;"  disabled class="form-control" formControlName="appointment_status" />
+
+            </div>
+			<div class="col-md-3">
+                <label class="title">Reading Provider</label>
+                <input type="text" style="background-color:#e9ecef!important;"  disabled class="form-control" formControlName="reading_provider" />
+
+            </div>
+
+			<div class="col-md-3">
+				<label class="title">CD(Image)</label>
+				<mat-checkbox formControlName="cd_image" class="col-md-12 form-control"  [disabled]="true">CD(Image)</mat-checkbox>
+            </div>
+			<div class="col-md-6">
+				<div class="form-group field mb-1 cpt-plc-hold search-label">
+					<app-ng-select-shareable [events]="eventsSubjectPhysicians.asObservable()"  [filterFieldName]="'physician_id'"
+										[showSelectFieldList]="showSelectFieldList['physician_id']"
+										  [maxLengthName] = "95" [ngSelectShow]="true"
+										 [showSelectFieldOnRefresh]="myForm.get('physician_id').value" 
+										 [lableName]="'Referring Physician'" [bindlable]="'refferingOfficeName'" [searchLableName]="'physician_id'"
+										 [bindId]="'id'" [apiPath]="ReferringPhysician_Listing" 
+										 (valueChange)="selectionOnValueChange($event,myForm,'physician_id')" 
+										 [multiple]="false" [disableField]='true'  ></app-ng-select-shareable> 
+					</div>	
+			</div>
+
+			<div class="col-md-3 ">
+				<div class="form-group field mb-1 cpt-plc-hold cpt-text search-label">
+					<app-ng-select-shareable [events]="eventsSubjectCpt.asObservable()"  [filterFieldName]="'cpt_codes_ids'"
+										[showSelectFieldList]="showSelectFieldList['cpt_codes_ids']" [ngSelectShow]="true"
+										 [showSelectFieldOnRefresh]="myForm.get('cpt_codes_ids').value" 
+										 [lableName]="'CPT Codes'" [bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'" 
+										 [bindId]="'id'" [apiPath]="EnumApiPath.getCptListByVisitType"  [conditionalExtraApiParams]="{'visit_type_id':myForm.get('visit_type_id').value}"
+										 (valueChange)="selectionOnValueChange($event,myForm,'cpt_codes_ids')" 
+										 [multiple]="true"  [disableField]='true' ></app-ng-select-shareable> 
+					</div>	
+			</div>
+
+      
+
+          
+
+            <div class="col-sm-4 col-lg-3">
+                <label class="title">Visit Status<em >*</em></label>
+                <input type="text" style="background-color:#e9ecef!important;"  disabled class="form-control" formControlName="visit_status" />
+
+            </div>
+
+			<div class="col-sm-6 col-lg-3" *ngIf="isCancelled">
+                <label class="title">Cancellation Reason<em ></em></label>
+                <input type="text" style="background-color:#e9ecef!important;" disabled class="form-control"  formControlName="cancelled_comments" />
+                
+            </div>
+			<div class="col-12">
+                <label class="title">Comments</label>
+                <textarea style="height:60px !important" class="form-control" disabled  formControlName="comment">
+        		</textarea>
+            </div>
+
+			
+			
+			
+
+        <!-- </div> -->
+		</div>
+		<div class=" mt-1 mb-1 transportation-view-modal">
+            <div class="row">
+                <h6 class="main-title mb-2">Transportation</h6>
+              </div>
+			<!-- <div  class="col-md-3"><button  class="btn btn-secondary w-100" (click)="openTransportation()" type="button">Transportation </button></div> -->
+			<app-transportation-modal [transportationFormObj]="transportationForm" [onlyView]='true' [physician_id]="physicianId" [patientId]='patientId' >
+                
+            </app-transportation-modal>
+		</div>
+        <!-- <div class="row">
+            <div class="col-12">
+                <label class="title">Comments</label>
+                <textarea style="height:60px !important" class="form-control" disabled  formControlName="comment">
+        		</textarea>
+            </div>
+        </div> -->
+        <div class="row d-flex justify-content-center mt-3" >
+
+            <div class="col-md-2" >
+                <button class="btn btn-secondary w-100" type="button" data-dismiss="modal" (click)="activeModal.close()">
+					Close
+				</button>
+            </div>
+            
+        </div>
+    </form>
+</div>

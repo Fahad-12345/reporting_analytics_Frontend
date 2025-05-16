@@ -1,0 +1,594 @@
+//Ngx-datatable row default height
+:root {
+  --datatableRowDefaultHeight: calc(30px - 12px);
+}
+// Default Theme Color variable
+$body-background-bg-color: $white;
+$main-container-bg-color: $light-alabaster;
+// Text color variables
+$text-primary: $picton-blue;
+$text-success: $green-haze;
+$text-purple: $print-color;
+$text-golden: $lucky;
+// data table color variables
+$datatable-checkbox-border-color: $dark-pumice;
+$datatable-checkbox-bg-color: $white;
+$datatable-checkbox-disabled-bg-color: $light-alabaster;
+$datatable-header-bg-color: $picton-blue;
+$datatable-header-text-color: $white;
+$datatable-header-border-color: $white;
+$datatable-header-border-first-last-color: $picton-blue;
+$datatable-body-row-bg-even-color: $light-alabaster;
+$datatable-body-row-bg-odd-color: $white;
+$datatable-body-text-color: $thunder;
+$datatable-body-border-right-color: $powder-ash;
+$datatable-body-border-left-color: $powder-ash;
+$datatable-body-border-bottom-color: $powder-ash;
+$datatable-body-empty-border-color: $iron;
+$datatable-body-anchor-text-color: $picton-blue;
+$datatable-body-anchor-text-hover-color: $thunder;
+$datatable-body-anchor-icon-color: $tundora;
+$datatable-icons-color: $tundora;
+$datatable-add-tag-icons-bg-color: $green-haze;
+$datatable-add-tag-icons-border-color: $green-haze;
+$datatable-add-tag-icons-hover-bg-color: $picton-blue;
+$datatable-add-tag-icons-hover-border-color: $picton-blue;
+$datatable-add-tag-icons-svg-color: $white;
+$datatable-pharmacy-icons-color: $black-light;
+$datatable-pharmacy-icon-hover-color: $picton-blue;
+$datatable-edit-icons-hover-color: $picton-blue;
+$datatable-view-icons-hover-color: $green-haze;
+$datatable-printer-icons-hover-color: $printer-color;
+$datatable-remove-icons-hover-color: $remove-color;
+$datatable-delete-icons-hover-color: $wild-watermelon;
+$datatable-task-icons-hover-color: $lucky;
+$datatable-footer-bg-color: $emperor;
+$datatable-footer-text-color: $white;
+$datatable-pagination-text-color: $emperor;
+$datatable-pagination-text-hover-color: $white;
+$datatable-pagination-bg-color: $white;
+$datatable-pagination-bg-hover-color: $picton-blue;
+// datatable btn dropdown colors, backgrounds, borders
+$datatable-btn-dropdown-bg-color: $white;
+$datatable-btn-dropdown-border-color: $bon-jour;
+$datatable-btn-dropdown-text-color: $dove-gray;
+$datatable-btn-dropdown-bg-hover-color: $athens-gray;
+$datatable-btn-dropdown-text-hover-color: $green-haze;
+// tooltip for datatables and allover the system background and color
+$custom-tooltip-arrow-border-color: $light-goldenrod-yellow;
+$custom-tooltip-body-bg-color: $light-goldenrod-yellow;
+$custom-tooltip-body-text-color: $thunder;
+// tooltip use for patient character nuimbers background and color
+$boots-tooltip-background-color: $whisper;
+$boots-tooltip-border-color: $picton-blue;
+$boots-tooltip-text-color: $tundora;
+// Custom pdf view Tooltip background and color
+$pdf-view-tooltip-background-color: $mine-shaft;
+$pdf-view-tooltip-border-color: $mine-shaft;
+$pdf-view-tooltip-text-color: $white;
+//patient-summary-tooltip
+$summary-tooltip-bg-color: $light-alabaster;
+$summary-tooltip-text-color: $black-light;
+$summary-tooltip-border-color: $picton-blue;
+$summary-tooltip-icon-bg-color: $whisper;
+$summary-tooltip-icon-border-color: $picton-blue;
+// popover tooltip use for double data
+$popover-tooltip-arrow-border-color: $light-goldenrod-yellow;
+$popover-tooltip-bg-color: $light-goldenrod-yellow;
+// $popover-tooltip-body-row-border-top-color: $geyser;
+$popover-tooltip-body-row-border-right-color: $geyser;
+// menu btn background and colors
+$menu-btn-text-color: $tundora;
+$menu-btn-background-color: $white;
+$menu-btn-border-color: $dark-silver-chalice;
+$menu-btn-hover-text-color: $white;
+$menu-btn-hover-background-color: $green-haze;
+$menu-btn-hover-border-color: $green-haze;
+// menu btn-default background and colors
+$menu-btn-default-text-color: $white;
+$menu-btn-default-background-color: $picton-blue;
+$menu-btn-default-border-color: $picton-blue;
+$menu-btn-default-hover-text-color: $white;
+$menu-btn-default-hover-background-color: $green-haze;
+$menu-btn-default-hover-border-color: $green-haze;
+$menu-btn-carry-farword-bg-color: $picton-blue;
+$menu-btn-carry-farword-border-color: $picton-blue;
+$menu-btn-carry-farword-text-color: $white;
+// Search filter backgroung, colors
+$search-filter-background-color: $light-alabaster;
+$search-filter-border-color: $pumice;
+// fax btn color variables
+$fax-btn-text-color: $picton-blue;
+$fax-btn-bg-color: $white;
+$fax-btn-border-color: $picton-blue;
+$fax-btn-bg-hover-color: $boston-blue;
+$fax-btn-text-hover-color: $white;
+$fax-btn-border-hover-color: $boston-blue;
+// btn success colors variables
+$btn-success-bg-color: $green-haze;
+$btn-success-border-color: $green-haze;
+$btn-success-text-color: $white;
+//btn-success-hover-color-variables
+$btn-success-bg-hover-color: $light-green-haze;
+$btn-success-border-hover-color: $light-green-haze;
+$btn-success-text-hover-color: $white;
+// btn primary colors variables
+$btn-primary-bg-color: $nandor;
+$btn-primary-border-color: $nandor;
+$btn-primary-text-color: $white;
+//btn-primary-hover-color-variables
+$btn-primary-bg-hover-color: $picton-blue;
+$btn-primary-border-hover-color: $picton-blue;
+$btn-primary-text-hover-color: $white;
+// btn white colors variables
+$btn-white-bg-color: $white;
+$btn-white-border-color: $pumice;
+$btn-white-text-color: $black;
+//btn-white-hover-color-variables
+$btn-white-bg-hover-color: $green-haze;
+$btn-white-border-hover-color: $green-haze;
+$btn-white-text-hover-color: $white;
+// btn default colors variables
+$btn-default-bg-color: $picton-blue;
+$btn-default-border-color: $picton-blue;
+$btn-default-text-color: $white;
+//btn-default-hover-color-variables
+$btn-default-bg-hover-color: $black-light;
+$btn-default-border-hover-color: $black-light;
+$btn-default-text-hover-color: $white;
+// btn-outline-secondary-color variables
+$btn-outline-secondary-bg-color: $alabaster;
+$btn-outline-secondary-border-color: $cod-light-gray;
+$btn-outline-secondary-text-color: $black-light;
+// btn-outline-secondary-hover-color variables
+$btn-outline-secondary-bg-hover-color: $white;
+$btn-outline-secondary-border-hover-color: $green-haze;
+$btn-outline-secondary-text-hover-color: $green-haze;
+// btn-outline-success-sch-color variables
+$btn-outline-success-sch-bg-color: $white;
+$btn-outline-success-sch-text-color: $black-light;
+$btn-outline-success-sch-border-color: $dark-silver-chalice;
+// btn-outline-success-sch-hover-color variables
+$btn-outline-success-sch-bg-hover-color: $green-haze;
+$btn-outline-success-sch-text-hover-color: $white;
+$btn-outline-success-sch-border-hover-color: $green-haze;
+// btn warning colors variables
+$btn-warning-bg-color: $warning;
+$btn-warning-border-color: $warning;
+$btn-warning-text-color: $white;
+//btn-warning-hover-color-variables
+$btn-warning-bg-hover-color: $corn;
+$btn-warning-border-hover-color: $buddha-gold;
+$btn-warning-text-hover-color: $white;
+// btn info colors variables
+$btn-info-bg-color: $eastern-blue;
+$btn-info-border-color: $eastern-blue;
+$btn-info-text-color: $white;
+//btn-info-hover-color-variables
+$btn-info-bg-hover-color: $blue-chill;
+$btn-info-border-hover-color: $blue-chill;
+$btn-info-text-hover-color: $white;
+// btn secondary colors variables
+$btn-secondary-bg-color: $pale-sky;
+$btn-secondary-border-color: $pale-sky;
+$btn-secondary-text-color: $white;
+//btn-secondary-hover-color-variables
+$btn-secondary-bg-hover-color: $shulter-gray;
+$btn-secondary-border-hover-color: $shulter-gray;
+$btn-secondary-text-hover-color: $white;
+// mat-date-picker icon background and color
+$mat-date-picker-icon-text-color: $black;
+// mat-date-picker icon hover background and color
+$mat-date-picker-icon-text-hover-color: $picton-blue;
+// badge background, color
+$badge-bg-color: $picton-blue;
+$badge-text-color: $white;
+$badge-danger-bg-color: $light-pink-wild-watermelon;
+$badge-danger-text-color: $white;
+// badge tag btn and cross icon
+$badge-tag-btn-bg-color: $picton-blue;
+$badge-tag-btn-border-color: $picton-blue;
+$badge-tag-btn-text-color: $white;
+$badge-tag-cross-icon-bg-color: $white;
+$badge-tag-cross-icon-color: $light-pink-wild-watermelon;
+$badge-tag-cross-icon-hover-bg-color: $light-pink-wild-watermelon;
+$badge-tag-cross-icon-hover-color: $white;
+//modal background,color
+$modal-backdrop-bg-color: $black;
+$modal-header-bg-color: $tundora;
+$modalbox-head-text-color:$white;
+$modal-header-title-text-color: $white;
+$modal-header-close-color: $white;
+$modalbox-body-bg-color: $white;
+$modalbox-body-text-color: $dark-shark;
+$modalbox-footer-bg-color: $white;
+$modalbox-footer-border-color: $geyser;
+$confirm-modal-footer-border-top-color: $silverchalice;
+//jaspero confirmation body,text color
+$jaspero-confirmation-dialogue-box-bg-color: $white;
+$jaspero-confirmation-dialogue-box-text-color: $black;
+$jaspero-confirmation-dialog-header-bg-color: $white;
+$jaspero-confirmation-dialog-header-text-color: $black;
+$jaspero-confirmation-dialog-footer-bg-color: $white;
+$jaspero-confirmation-dialog-action-border-color: $silverchalice;
+$jaspero-confirmation-dialog-btn-default-bg-color:$white;
+$jaspero-confirmation-dialog-btn-default-text-color: $darksilver;
+$jaspero-confirmation-dialog-btn-default-border-right-color: $silverchalice;
+$jaspero-confirmation-dialog-btn-default-border-color: $transparent;
+$jaspero-confirmation-dialog-btn-default-bg-hover-color: $darksilver;
+$jaspero-confirmation-dialog-btn-default-text-hover-color: $white;
+$jaspero-confirmation-dialog-btn-primary-bg-color: $white;
+$jaspero-confirmation-dialog-btn-primary-text-color: $alizarincrimson;
+$jaspero-confirmation-dialog-btn-primary-text-hover-color: $white;
+$jaspero-confirmation-dialog-btn-primary-bg-hover-color: $alizarincrimson;
+
+$jaspero-confirmation-dialog-btn-success-bg-color: $white;
+$jaspero-confirmation-dialog-btn-success-text-color: $green-haze;
+$jaspero-confirmation-dialog-btn-success-text-hover-color: $white;
+$jaspero-confirmation-dialog-btn-success-bg-hover-color: $green-haze;
+
+//navtabs mobile backgrounds, colors, borders
+$nav-tabs-mobile-border-color: $pumice;
+//navtabs desktop backgrounds, colors, borders
+$nav-tabs-desktop-border-top-color: $none;
+$nav-tabs-desktop-border-right-color: $none;
+$nav-tabs-desktop-border-left-color: $none;
+//nav links mobile backgrounds, colors, borders
+$nav-links-mobile-text-color: $black-light;
+$nav-links-mobile-border-bottom-color: $pumice;
+//navlink mobile hover & active backgrounds, colors, borders
+$nav-links-mobile-text-active-hover-color: $green-haze; 
+$nav-links-mobile-bg-active-hover-color: $light-alabaster;
+$nav-links-mobile-border-active-hover-color: $pumice;
+//nav links desktop backgrounds, colors, borders
+$nav-links-desktop-border-color: $transparent;
+$nav-links-desktop-text-color: $black-light;
+$nav-links-desktop-bg-color: $transparent;
+//navlink desktop hover & active backgrounds, colors, borders
+$nav-links-desktop-text-active-hover-color: $green-haze; 
+$nav-links-desktop-bg-active-hover-color: $transparent;
+$nav-links-desktop-border-active-hover-color: $pumice $pumice $white;
+//ng-progess-bar
+$ng-progress-bar-bg-color: $picton-blue;
+$ng-progress-bar-shadow-color: $picton-blue;
+// error-messages text-color
+$error-messages-text-color: $danger;
+//mat-chip bg,color,border
+$mat-chip-bg-color: $zumthor;
+$mat-chip-shadow-color: $cadet-grey;
+$mat-chip-text-color: $black;
+$mat-chip-bg-hover-color:$wild-sand;
+$mat-chip-text-hover-color: $black;
+$mat-chip-icon-color: $black;
+// ng-multiselect bg,color,border
+$multiselect-dropdown-btn-bg-color: $hint-of-red;
+$multiselect-dropdown-btn-text-color: $tundora;
+$multiselect-dropdown-btn-border-color: $ghost;
+$multiselect-selected-item-bg-color: $picton-blue;
+$multiselect-selected-item-border-color: $picton-blue;
+$multiselect-cross-icon-color: $white;
+$multiselect-item--checkbox-border-bottom-color: $abbey;
+//comments bg, border, text-color, input field
+$comments-modal-inbox-border-color: $silver;
+$comments-modal-inbox-background-color:$white;
+$comments-modal-time-date-color:$boulder;
+$comments-modal-light-blue-class-text-color: $curious-blue;
+$comments-modal-light-blue-class-bg-color: $athens-gray;
+$comments-modal-sent-msg-bg-color: $picton-blue;
+$comments-modal-sent-msg-text-color: $white;
+$comments-modal-sent-badge-bg-color: $light-pink-wild-watermelon ;
+$comments-modal-mat-select-border-color:  $swiss-coffee;
+$comments-modal-mat-select-arrow-color:  $black;
+$comments-modal-type-msg-border-top-color: $silver;
+$comments-modal-msg-send-btn-bg-color: $green-haze;
+$comments-modal-msg-send-disable-bg-color: $porcelain;
+$comments-modal-msg-send-disable-text-color: $gray ;
+$comments-modal-mat-form-field-color:$rolling-stone;
+//signature area bg and border color
+$signature-area-canvas-bg-color:$concrete;
+$signature-area-canvas-border-color:$pumice;
+$signature-area-signature-img-border-color:$pumice;
+//ng select styling
+$ng-select-border-color: $abbey;
+$ng-select-text-color:  $mine-shaft;
+$ng-select-bg-color:  $white;
+$ng-select-bg-light-color: $hint-of-red;
+$ng-select-placeholder-text-color: $dark-dusty-gray;
+$ng-select-value-bg-color:  $zumthor;
+$ng-value-label-border-left-color: $french-pass;
+$ng-value-label-color: $mine-shaft;
+$ng-select-value-icon-border-left-color: $french-pass;
+$ng-select-value-icon-bg-hover-color: $onahau;
+$ng-value-label-number-color:  $mine-shaft;
+$ng-select-clear-wrapper-text-color: $dark-dusty-gray;
+$ng-select-clear-wrapper-text-hover-color: $monza;
+$ng-select-arrow-wrapper-text-color: $scorpion;
+$ng-select-arrow-wrapper-text-hover-color: $scorpion;
+$ng-select-arrow-border-color: $dark-dusty-gray;
+$ng-select-arrow-border-hover-color: $darksilver;
+$ng-select-dropdown-panel-bg-color: $white;
+$ng-select-dropdown-panel-border-color:$abbey;
+$ng-select-dropdown-panel-option-bg-color:$white;
+$ng-select-dropdown-panel-option-text-color: $black;
+$ng-select-dropdown-panel-option-marked-bg-color:$alice-blue;
+$ng-select-dropdown-panel-option-marked-text-color: $mine-shaft;
+// patient profile information colors, bg colors
+$user-image-border-color: $picton-blue;
+$media-body-head-color: $thunder;
+$media-body-small-color: $green-haze;
+// Toaster
+$toast-bg-color: $white;
+$toast-border-color: $silver;
+$toast-title-text-color: $green-haze;
+$toast-message-text-color: $tundora;
+$toast-error-color: $wild-watermelon;
+$toast-success-color: $picton-blue;
+$toast-info-color: $toaster-warning;
+// Patient Profile Styling colors, background, border-color, image styling
+$patient-profile-block-border-color: $pumice;
+$patient-profile-image-border-color: $pumice;
+$patient-profile-image-bg-color: $dark-alabaster;
+$patient-profile-block-heading-color: $green-haze;
+$patient-profile-block-heading-brackets-color: $thunder;
+$patient-profile-chart-id-color: $emperor;
+$patient-profile-info-box-text-color: $black-light;
+$patient-info-first-child-bg-color: $dark-alabaster;
+$patient-info-second-child-bg-color: $white;
+$patient-profile-form-input-bg-color: $light-alabaster;
+$patient-profile-form-alert-icon-color: $red;
+// Case Flow Patient Summary text
+$patient-info-card-border-color: $pumice;
+$patient-info-bg-color: $light-alabaster;
+$patient-info-card-bg-color: $light-alabaster;
+$patient-info-card-body-bg-color: $white;
+$patient-info-card-nav-bar-bg-color: $dark-alabaster;
+$patient-info-card-nav-bar-border-color: $alto;
+$patient-info-card-nav-item-color: $tundora;
+$patient-info-card-nav-item-text-color: $gray;
+// patient profile information colors, bg colors
+$patient-user-image-border-color: $picton-blue;
+$patient-user-header-text-color: $thunder;
+$patient-user-info-text-color: $green-haze;
+$patient-user-line-space-color: $thunder;
+$patient-user-id-color: $thunder;
+$patient-user-id-hover-color: $picton-blue;
+$patient-user-icon-color: $dark-shark;
+$patient-basic-info-text-color: $black-light;
+//header tablet styling
+$header-tablet-bg-color: $white;
+$header-main-nav-tablet-bg-color: $emperor;
+$header-tablet-user-img-border-color: $edward;
+$header-tablet-user-img-color: $transparent;
+// header mobile styling
+$header-mobile-bg-color: $light-alabaster;
+$header-nav-bar-bg-color: $black;
+// $header-burger-menu-bars-bg-color: $black-light;
+$header-burger-menu-bars-open-bg-color: $white;
+$header-burger-menu-bg-color: $transparent;
+$header-burger-menu-border-color: $transparent;
+$header-burger-menu-bars-bg-color: $tundora;
+$header-burger-menu-user-img-border-color: $edward;
+$header-burger-menu-user-img-color: $transparent;
+$header-menu-title-color: $white;
+$header-nav-search-bar-border-color: $dark-silver;
+$header-nav-search-bar-color: $dark-silver;
+$header-nav-search-bar-bg-color: $white;
+$header-nav-search-bar-placeholder-color: $black;
+$header-nav-search-icon-bg-color: $transparent;
+$header-nav-search-icon-text-color: $dark-silver-chalice;
+$header-nav-item-text-color: $white;
+$header-nav-item-text-hover-color: $white;
+$header-nav-item-bg-hover-color: $green-haze;
+$header-nav-item-border-hover-color: $green-haze;
+$header-nav-item-dropdown-bg-hover-color: $light-alabaster;
+$header-nav-item-dropdown-border-hover-color: $bon-jour;
+$header-nav-item-dropdown-icon-bg-hover-color: $green-haze;
+$header-nav-text-hover-color: $green-haze;
+$header-nav-first-child-border-top-color: $bon-jour;
+$header-nav-text-color: $dove-gray;
+$header-nav-bar-icon-color: $tundora;
+$header-nav-bar-icon-hover-color: $green-haze;
+$header-nav-bar-badge-bg-color: $wild-watermelon;
+$header-nav-bar-badge-color: $white;
+$header-dropdown-menu-bg-color : $white;
+$header-dropdown-menu-border-color: $bon-jour;
+$header-dropdown-menu-upper-line-color: $dark-green-haze;
+$header-dropdown-checkbox-border-color: $picton-blue;
+$header-dropdown-checkbox-bg-color: $white;
+$header-dropdown-checkbox-tick-icon-color: $green-haze;
+$header-dropdown-checkbox-inputs-border-color : $dark-pumice;
+$header-dropdown-checkbox-inputs-bg-color :$white;
+$header-dropdown-label-bg-color : $white;
+$header-dropdown-label-color : $dove-gray;
+$header-dropdown-label-bg-hover-color : $white;
+$header-dropdown-label-hover-color : $green-haze;
+$header-dropdown-border-top-color: $black;
+$header-dropdown-btn-bg-color:  $green-haze;
+$header-dropdown-btn-color: $white;
+$header-dropdown-btn-border-color: $green-haze;
+$header-dropdown-btn-bg-hover-color: $light-green-haze;
+$header-dropdown-btn-hover-color: $white;
+$header-dropdown-btn-border-hover-color: $light-green-haze;
+$header-notification-menu-color: $dove-gray;
+$header-notification-menu-img-border-color: $dusty-gray;
+$header-notification-menu-success-badge-bg-color:  $green-haze;
+$header-notification-menu-success-badge-color: $white;
+$header-notification-menu-success-badge-border-color: $white;
+$header-notification-menu-light-badge-bg-color: $alabaster;
+$header-notification-menu-light-badge-color: $dark-shark;
+$header-notification-menu-light-badge-border-color:$dusty-gray;
+$header-notification-menu-time-text-color: $silver;
+// collapse card background, colors, borders
+// collapse card main header
+$collapse-card-header-bg-color: $picton-blue;
+$collapse-card-header-text-color: $white;
+$collapse-card-header-border-color: $edward;
+// collapse card main body
+$collapse-card-body-bg-color: $white;
+$collapse-card-body-border-color: $edward;
+// collapse card inner header
+$collapse-card-inner-header-bg-color: $light-alabaster;
+$collapse-card-inner-header-text-color: $black-light;
+$collapse-card-inner-header-border-color: $edward;
+// collapse card inner body
+$collapse-card-inner-body-bg-color: $white;
+$collapse-card-inner-body-border-color: $edward;
+$collapse-card-inner-body-header-bg-color: $transparent;
+// collapse card footer
+$collapse-card-footer-bg-color: $emperor;
+$collapse-card-footer-text-color: $white;
+$collapse-card-footer-pagination-bg-color: $white;
+$collapse-card-footer-pagination-bg-hover-color: $picton-blue;
+$collapse-card-footer-pagination-text-color: $black;
+$collapse-card-footer-pagination-text-hover-color: $white;
+$collapse-card-footer-pagination-border-color: $white;
+$collapse-card-footer-pagination-bg-hover-color: $picton-blue;
+$collapse-card-footer-pagination-text-hover-color: $white;
+$collapse-card-footer-pagination-border-hover-color: $picton-blue;
+// mat-tree background, colors, borders
+$mat-tree-bg-color: $white;
+$mat-tree-border-color: $edward;
+$mat-tree-border-bottom-color: $edward;
+$mat-tree-odd-bg-color: $light-alabaster;
+$mat-tree-even-bg-color: $white;
+$mat-tree-text-color: $dark-shark;
+$mat-tree-line-border-color: $green-haze;
+// custom scroll bar background colors
+$webkit-scrollbar-bg-color: $wild-sand;
+$webkit-scrollbar-track-bg-color: $seashell;
+$webkit-scrollbar-thumb-bg-color: $picton-blue;
+$webkit-scrollbar-thumb-bg-hover-color: $green-haze;
+// case flow Document manager Side bar mat tree background, color, borders
+$document-manager-side-bar-bg-color: $white;
+$document-manager-side-bar-border-color: $dusty-gray;
+$document-manager-side-bar-card-header-bg-color: $ebb;
+$document-manager-side-bar-card-header-border-color: $edward;
+$document-manager-side-bar-card-header-text-color: $black-light;
+$document-manager-side-bar-mat-tree-border-color: $edward;
+$document-manager-side-bar-mat-tree-border-bottom-color: $edward;
+$document-manager-side-bar-mat-tree-text-color: $dark-shark;
+$document-manager-side-bar-mat-tree-odd-bg-color: $light-alabaster;
+$document-manager-side-bar-mat-tree-even-bg-color: $light-alabaster;
+$document-manager-side-bar-mat-tree-line-color: $green-haze;
+// case flow Document manager collapse card background, color, borders
+// collapse card Main header
+$document-manager-collapse-card-header-bg-color: $light-alabaster;
+$document-manager-collapse-card-header-border-color: $edward;
+$document-manager-collapse-card-header-text-color: $black-light;
+// collapse card Main Body
+$document-manager-collapse-card-body-bg-color: $white;
+$document-manager-collapse-card-body-border-color: $edward;
+// collapse card Main Inner header
+$document-manager-collapse-card-header-inner-bg-color: $light-alabaster;
+$document-manager-collapse-card-header-inner-border-color: $edward;
+$document-manager-collapse-card-header-inner-text-color: $black-light;
+$document-manager-collapse-card-header-inner-close-icon-color: $black;
+// collapse card Main Inner Body
+$document-manager-collapse-card-body-inner-bg-color: $white;
+$document-manager-collapse-card-body-inner-border-color: $edward;
+// case flow Document manager PDF View card background, color, borders
+// PDF View card Header
+$document-manager-pdf-view-card-header-bg-color: $black-light;
+$document-manager-pdf-view-card-header-text-color: $white;
+// PDF View card Body
+$document-manager-pdf-view-card-body-bg-color: $white;
+$document-manager-pdf-view-card-body-border-color: $edward;
+// Scheduler Month main calendar bg color, colors, borders
+$cal-month-header-row-bg-color: $alabaster;
+$cal-month-header-days-bg-color: $gallery;
+$cal-month-header-text-color: $dark-shark;
+$cal-month-body-border-color: $mercury;
+$cal-month-body-bg-color: $white;
+$cal-month-body-text-color: $dark-shark;
+// Medical Doctor Backgrounds, Text Colors, Border Colors
+$medical-doc-main-bg-color: $light-alabaster;
+$medical-doc-main-border-color: $mantle;
+// Medical Doctor Tabs
+$medical-doc-tab-main-border-color: $none;
+$medical-doc-tab-main-border-bottom-color: $none;
+$medical-doc-tab-bg-color: $white;
+$medical-doc-tab-border-color: $mantle;
+// Medical Doctor Tabs Hover
+$medical-doc-tab-bg-hover-color: $light-alabaster;
+$medical-doc-tab-text-hover-color: $green-haze;
+$medical-doc-tab-border-hover-color: $green-haze;
+// Medical Doctor Tabs Active
+$medical-doc-tab-bg-active-color: $green-haze;
+$medical-doc-tab-text-active-color: $white;
+$medical-doc-tab-border-active-color: $green-haze;
+// Radio Buttons & Checkbox without background and radio color green
+// Fake Label Without background for checkbox & Rdio Button Label
+$checkbox-radio-bg-none-label-checkbox-label-bg-color: $transparent;
+$checkbox-radio-bg-none-label-checkbox-label-text-color: $scorpion;
+// Fake Label Checked Without background for checkbox & Rdio Button Label
+$checkbox-radio-bg-none-label-checkbox-label-check-bg-color: $transparent;
+$checkbox-radio-bg-none-label-checkbox-label-check-text-color: $scorpion;
+// Radio Button Color and background green
+$radio-bg-none-label-radio-green-radio-bg-color: $white;
+$radio-bg-none-label-radio-green-radio-border-color: $green-haze;
+// Radio Checked style
+$radio-bg-none-label-radio-green-radio-check-bg-color: $green-haze;
+$radio-bg-none-label-radio-green-radio-check-border-color: $green-haze;
+// Checkbox Checked style
+$checkbox-bg-none-label-check-green-checkbox-check-outer-border-color: $stack;
+$checkbox-bg-none-label-check-green-checkbox-check-border-color: $green-haze;
+$checkbox-bg-none-label-check-border-blue-check-outer-border-color: $picton-blue;
+// Radio Buttons & Checkbox with white background
+$checkbox-radio-bg-white-label-checkbox-label-bg-color: $white;
+$checkbox-radio-bg-white-label-checkbox-label-border-color: $edward;
+// Radio Buttons & Checkbox with white background & Green Border
+$checkbox-border-green-label-checkbox-label-bg-color: $transparent;
+$checkbox-border-green-label-checkbox-label-text-color: $black-light;
+$checkbox-border-green-label-checkbox-label-border-color: $green-haze;
+// Checked Labe
+$checkbox-border-green-label-checkbox-label-check-bg-color: $transparent;
+$checkbox-border-green-label-checkbox-label-check-text-color: $black-light;
+$checkbox-border-green-label-checkbox-check-outer-bg-color: $green-haze;
+$checkbox-border-green-label-checkbox-check-outer-border-color: $cornflower-blue;
+$checkbox-border-green-label-checkbox-check-border-color: $white;
+// Radio Buttons & Checkbox with Light Gray background
+$checkbox-radio-bg-light-label-checkbox-bg-color: $white;
+$checkbox-radio-bg-light-label-checkbox-border-color: $dark-pumice;
+// Fake Label light bg gray for Radio Button & Checkbox
+$checkbox-radio-bg-light-label-checkbox-label-bg-color: $light-bon-jour;
+$checkbox-radio-bg-light-label-checkbox-label-text-color: $black-light;
+// Fake Label Checked light bg gray for Radio Button & Checkbox
+$checkbox-radio-bg-light-label-checkbox-label-check-bg-color: $green-haze;
+$checkbox-radio-bg-light-label-checkbox-label-check-text-color: $white;
+// Radio Button Style
+$radio-bg-light-label-radio-border-color: $black-light;
+// Radio Checked style
+$radio-bg-light-label-radio-check-bg-color: $white;
+$radio-bg-light-label-radio-check-border-color: $white;
+// Radio Button Label Checked Style
+$radio-bg-light-label-radio-label-check-bg-color: $green-haze;
+$radio-bg-light-label-radio-label-check-text-color: $white;
+// Checkbox Checked style
+$checkbox-bg-light-label-checkbox-check-bg-color: $white;
+$checkbox-bg-light-label-checkbox-check-outer-border-color: $cornflower-blue;
+$checkbox-bg-light-label-checkbox-check-border-color: $black;
+$checkbox-radio-bg-blue-label-bg-color: $picton-blue;
+$checkbox-radio-bg-blue-label-checkbox-bg-color: $white;
+$checkbox-radio-bg-blue-label-checkbox-border-color: $dark-pumice;
+$checkbox-radio-bg-blue-label-checkbox-label-bg-color: $transparent;
+$checkbox-radio-bg-blue-label-checkbox-label-text-color: $white;
+$checkbox-radio-bg-blue-label-checkbox-check-bg-color: $white;
+$checkbox-radio-bg-blue-label-checkbox-check-outer-border-color: $cornflower-blue;
+$checkbox-radio-bg-blue-label-checkbox-check-border-color: $green-haze;
+$checkbox-radio-bg-blue-label-checkbox-check-label-bg-color: $transparent;
+$checkbox-radio-bg-blue-label-checkbox-check-label-text-color: $white;
+// Case flow injury body parts background, colors, borders
+$injury-body-parts-header-bg-color: $picton-blue;
+$injury-body-parts-header-text-color: $white;
+$injury-body-parts-body-text-color: $black;
+$injury-body-parts-other-body-text-bg-color: $transparent;
+$injury-body-parts-cross-color: $white;
+$bg-gray: $light-alabaster;
+// Form inputs label background, borders, colors
+$label-text-color: $dusty-gray;
+$focused-label-text-color: $cod-gray;
+$input-bg-white: $white;
+$input-text-color: $emperor;
+$input-border-color: $dark-silver;
+$focused-input-border-blue: $picton-blue;
+$diable-input-bg-color: $athens-gray;

@@ -1,0 +1,21 @@
+<div [ngClass]="side =='left'? leftClass : rightClass" [class.hide-sidebar]="!showContent">
+
+
+       <!-- <button (click)="onClose()" class="opener left-opener doc-open position-absolute p-0"
+type="button"><span class="icon-down-arrow"></span></button> -->
+
+       <button aria-label="Toggle Open Close" [ngClass]="side =='left'? 'left-btn' : 'right-btn'"
+              [class.toggle-btn-close]="!showContent && side =='left'"
+              [class.toggle-btn-close-right]="!showContent && side =='right'" class="toggle-btn opener left-opener"
+              (click)="showContent =!showContent; change.emit(showContent)"><span
+                     class="icon-down-arrow"></span></button>
+
+       <div *ngIf="showContent && side=='left'" [@leftPanel]>
+              <ng-content select="[slot=left]"></ng-content>
+       </div>
+
+       <div class="side-height" *ngIf="showContent && side=='right'" [@rightPanel]>
+              <ng-content select="[slot=right]"></ng-content>
+       </div>
+
+</div>

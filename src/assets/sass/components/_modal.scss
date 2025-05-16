@@ -1,0 +1,247 @@
+.modal {
+    .row {
+        @include px-to-rem(margin-left, -10px, false);
+        @include px-to-rem(margin-right, -10px, false);
+    }
+    [class^="col-"] {
+        @include px-to-rem(padding-left, 10px, false);
+        @include px-to-rem(padding-right, 10px, false);
+	}
+    .modal-dialog{
+        display: flex;
+		align-items: center;
+        min-height: calc(100% - 1rem);
+        padding: 0 15px;
+        @include media('<phone') {
+                max-width: 100%;
+                @include padding-tb-lr(0px, 15px);
+                min-height: calc(100% - 3.5rem) !important;
+        }
+        .modal-content {
+            border: none;
+            overflow: inherit;
+            .modal-header {
+                line-height: 1.375rem;
+                @include modal-header-style();
+                @include flex(flex, $align-items: center, $justify-content: space-between, $flex-wrap: wrap);
+                .modal-title {
+                    line-height: 1.5rem;
+                    @include px-to-rem(font-size, 17px, false);
+                }
+                .close {
+                    color: $white;
+                    opacity: unset !important;
+                    @include px-to-rem(margin, 0px -16px 0px 0px, false);
+                    @include px-to-rem(padding, 1px 12px 3px 12px, false);
+                    line-height: inherit;
+                    &:hover {
+                        opacity: unset !important;
+                        color: $white !important;
+                    }
+                    span {
+                        vertical-align: unset !important;
+                    }
+                }
+            }
+            .modal-body {
+                @include px-to-rem(padding, 15px 25px 25px 25px, false);
+                border-radius: 3px;
+                &.modal-pt-15 {
+                    padding-top: 0.9375rem !important;
+                }
+                
+                label {
+                    font-weight: 500;
+                    @include px-to-rem(font-size, 12px, false);
+                    @include px-to-rem(margin-bottom, 0px, false);
+                }
+                    .form-group {     
+                        .form-control{
+                            height: 1.875rem;
+                            @include px-to-rem(margin-bottom, 10px, false);
+                            background: $hint-of-red;
+                            &:focus {
+                                background: $white;
+                            }
+                            &::placeholder {
+                                color: $dusty-gray;
+                            }
+                        }
+                        .custom-select,
+                        .ng2-tag-input {
+                            background-color: $hint-of-red !important;
+                        }
+                        textarea {
+                            @include px-to-rem(min-height, 60px, false);
+                            resize: vertical !important;
+                        }
+                      
+                        .btn {
+                            @include padding-tb-lr(5px, 10px);
+                            @include px-to-rem(font-size, 13px, false);
+                            @include px-to-rem(height, 30px, false);
+                            min-width: 6rem;
+                            &:hover {
+                                color: $white;
+                            }
+                        }
+                        &.field{
+                            .icon-eye{
+                                position: absolute;
+                                top: 78%;
+                                right: 10px;
+                                color: rgba(0,0,0,.54);
+                                transform: translateY(-71%);
+                            }
+                        }
+                       
+                    }
+                
+                .bg-green {
+                    color: $white;
+                }
+        
+                .btn-outline-secondary {
+                    color: $black-light;
+        
+                    &:hover {
+                        background: $picton-blue !important;
+                        color: $white !important;
+                        border: 1px solid $picton-blue !important;
+
+                        span {
+                            color: $white !important;
+                        }
+                    }
+                }
+
+                .modal-btn-width {
+                    .btn {
+                        min-width: 120px;
+                        border-radius: 3px;
+                    }
+                }                
+                    select.form-control {
+                        background: #faf8f9 !important;
+                    }
+
+
+            }
+        }
+    }
+    .ng-select-container {
+		background: $hint-of-red;
+		color: $emperor ;
+		&:focus {
+			outline: none !important;
+			border-color: $picton-blue;
+			box-shadow: none !important;
+		}
+    }
+    .autocomplete-container {
+        @include px-to-rem(margin-bottom, 3px, false);
+        .input-container {
+            .input {
+                @include padding-tb-lr(4px, 10px);
+                color: $emperor;
+                @include font();
+                @include px-to-rem(line-height, 17px, false);
+                @include px-to-rem(font-size, 13px, false);
+            }
+            .x {
+                right: 5px;
+                @include px-to-rem(margin-top, -3px, false);
+                i {
+                    @include font-size(18px);
+                }
+            }
+        }
+    }
+    &.modal_extraDOc {
+        .modal-dialog {
+            min-height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
+            margin: 1.5rem auto !important;
+            justify-content: center;
+        }
+        .modal-body {
+            padding: 1.5625rem !important;
+        }
+    }
+	&.modalxl{
+		.modal-lg{
+			@media (min-width: 1200px){
+                @include px-to-rem(max-width, 1140px, false);
+			}
+		}
+	}
+	&.overflow_unset{
+		.modal-dialog{
+			.modal-content{
+				overflow: unset !important;
+			}
+		}
+	}
+
+}
+
+.create-task-modal {
+	.mat-icon-button {
+		position: absolute;
+		right: 15px;
+        @include px-to-rem(width, 28px, false);
+        @include px-to-rem(height, 28px, false);
+        @include px-to-rem(font-size, 7px, false);
+		text-align: center;
+        @include px-to-rem(line-height, 20px, false);
+		top: 26px;
+
+		&:hover {
+			color: $picton-blue;
+		}
+	}
+	.file-upload {
+		.ngx-file-drop__drop-zone {
+			height: auto;
+			border: none;
+		}
+		.ngx-file-drop__content {
+			height: auto;
+		}
+		p {
+            @include px-to-rem(font-size, 18px, false);
+            @include px-to-rem(margin-bottom, 0px, false);
+		}
+	}
+}
+
+.modal-backdrop.show {
+	opacity: 0.4 !important;
+}
+
+ng-multiselect-dropdown {
+.dropdown-list  {
+    margin-top: 0.125rem !important;
+}
+
+ul {
+    li {
+        padding: 0.1875rem 0.625rem !important;
+
+        h5 {
+            font-size: 0.8125rem !important;
+        }
+    }
+}
+
+}
+
+.modal-width {
+    .modal-dialog {
+        max-width: 100%;
+        @media (min-width: 576px) {
+            max-width: 90%;
+        }
+    }
+}

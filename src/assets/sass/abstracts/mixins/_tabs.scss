@@ -1,0 +1,90 @@
+// Tab Card Style 
+@mixin tab-card-style {
+	padding: 0.375rem 0.3125rem 0.625rem 0.625rem !important;
+	background: transparent !important;
+	border-color: $edward;
+
+	.nav-tabs {
+		@media screen and (max-width: 767px) {
+			margin-right: -.3rem !important;
+			margin-bottom: 0;
+			@include border(1px, solid, $pumice);
+		}
+
+		.nav-item {
+			@media screen and (max-width: 767px) {
+				width: 100%;
+			}
+
+			&:first-child .nav-link.active {
+				@media screen and (max-width: 767px) {
+					border-top: 0;
+				}
+			}
+
+			.nav-link {
+				@include padding-tb-lr(6px, 20px);
+				@include font-size(13px);
+				cursor: pointer;
+				@include font-weight(medium);
+				letter-spacing: 0.2px !important;
+
+				&.active {
+					border-color: $pumice;
+
+					@media screen and (max-width: 767px) {
+						border-top-left-radius: 0;
+						border-top-right-radius: 0;
+						border-left: 0;
+						border-right: 0;
+						background: $light-alabaster;
+						margin-top: 1px;
+					}
+				}
+
+				@include media('>xxl-widescreen') {
+					@include font-size(14px);
+				}
+
+				@include media('<xl-widescreen') {
+					@include padding-tb-lr(6px, 15px);
+					@include font-size(13px);
+				}
+
+				@media screen and (max-width: 1213px) {
+					@include padding-tb-lr(6px, -14px);
+				}
+
+				@media screen and (max-width: 1199px) {
+					@include padding-tb-lr(4px, 10px);
+					@include font-size(11px);
+				}
+
+				@media screen and (max-width: 767px) {
+					border-bottom: 1px solid #c3c4c3;
+				}
+
+			}
+		}
+	}
+
+	p {
+		@include font-size(14px);
+		@include font-weight(semi-bold);
+		@include margin-bottom(0px);
+		color: $black-light;
+	}
+
+	.icon-plus {
+		background: $picton-blue;
+		color: $white;
+		border-radius: 50%;
+		@include margin-left(5px);
+		@include padding-same(3px);
+		@include font-size(18px);
+
+		&:hover {
+			background: $green-haze;
+		}
+	}
+}

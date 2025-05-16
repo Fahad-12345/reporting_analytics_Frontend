@@ -1,0 +1,162 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="front-desk-block billing-info"
+    *ngIf="aclService.hasPermission(userPermissions.master_employer_insurance_linkage_view)">
+    <div class="d-block text-end">
+        <a *ngIf="aclService.hasPermission(userPermissions.master_employer_insurance_linkage_add)"
+            href="javascript:void(0)" class="btn btn-default round-btn" (click)="AddUpdateLinkage(null)">
+            <span class="icon-plus-circle"></span> Add New
+        </a>
+    </div>
+    <form class="form" autocomplete="off" [formGroup]="searchForm"
+        *ngIf="aclService.hasPermission(userPermissions.master_employer_insurance_linkage_filter)">
+        <div class="ng-check">
+            <div class="search-filter search-filter-bg-light filter-grid grid-2"
+            [class.hide-remaining-search-filter]="!isCollapsed">
+            <div class="filter-grid-container">
+                <div class="form-group">
+                    <app-ng-select-shareable [lableName]="'Employer Name'" [events]="eventsSubject.asObservable()"
+                        [bindlable]="'employer_name'" [searchLableName]="'employer_name'"
+                        [showSelectAll] ="true"
+                        [showGroupBy] = "false" [conditionalExtraApiParams]="{'is_verified_employer':1}"
+                        (valueChange)="valueSelectionChange($event,'employer_ids')"
+                        [bindId]="'id'" [apiPath]="EnumApiPath.EmployerApiPath"
+                        [multiple]="true"></app-ng-select-shareable>
+                </div>
+                <div class="form-group">
+                    <app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'Insurance Name'"
+                        [bindlable]="'insurance_name'" [searchLableName]="'insurance_name'" [charaterLimit]="true"
+                        (valueChange)="valueSelectionChange($event,'insurance_ids')"
+                        [showSelectAll] ="true"
+                        [showGroupBy] = "false"
+                        [conditionalExtraApiParams]="{order:'ASC',order_by:'insurance_name'}"
+                        [mainApiPath]="requestServerpath.billing_api_url" [bindId]="'id'"
+                        [apiPath]="EnumApiPath.insuranceApiPath" [multiple]="true"></app-ng-select-shareable>
+                </div>
+            </div>
+            <div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+                <button class="btn btn-success" (click)="setPage({ offset: 0 });">Filter</button>
+                <button class="btn btn-primary" (click)="resetFilter()">Reset</button>
+            </div>
+        </div>
+        </div>
+    </form>
+    <div class="card data-table p-0 mt-2 ma-datatable-ui employer-datatable">
+        <div class="row">
+            <div class="col-6 edit-block text-start">
+                <div class="form-group field option-field mb-2 d-inline-block">
+                    <ul>
+                        <li>Show</li>
+                        <li>
+                            <select class="custom-select" name="limit" id="limit"
+                                (change)="onResultPerPageChange($event)" [(ngModel)]="page.size">
+                                <option [value]="10" selected>10</option>
+                                <option [value]="20">20</option>
+                                <option [value]="30">30</option>
+                                <option [value]="40">40</option>
+                                <option [value]="50">50</option>
+                                <option [value]="100">100</option>
+                            </select>
+                        </li>
+                        <li>Entries</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end mb-2">
+                <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+                    Customize Columns
+                </button>
+                <button
+                    *ngIf="aclService.hasPermission(userPermissions.master_employer_insurance_linkage_delete) && selection.selected.length"
+                    type="button" (click)="deleteLinkage(null, false)" class="btn btn-danger ms-2">
+                    <i class="icon-remove"></i> Delete
+                    <span
+                        *ngIf="this.selection.selected.length">[{{this.selection.selected.length?this.selection.selected.length:''}}]</span>
+                </button>
+                <button *ngIf="selection.selected.length" class="btn btn-success d-inline-block ms-2"
+                    (click)="ActiveOrInactiveLink(true)" type="button">Activate <span
+                        *ngIf="this.selection.selected.length">[{{this.selection.selected.length?this.selection.selected.length:''}}]</span>
+                </button>
+                <button *ngIf="selection.selected.length" type="button" (click)="ActiveOrInactiveLink(false)"
+                    class="btn btn-warning text-white ms-2">
+                    De-Activate
+                    <span
+                        *ngIf="this.selection.selected.length">[{{this.selection.selected.length?this.selection.selected.length:''}}]</span>
+                </button>
+            </div>
+        </div>
+        <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" #empInsLinkageList [rows]="emplInsurData" [columnMode]='"force"'
+            [footerHeight]="50" [headerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [limit]="page.size"
+            [count]="page.totalElements" (page)="setPage($event)" [offset]="page.pageNumber" [virtualization]="false"
+            [externalPaging]="true">
+            <ngx-datatable-column name="Employer Name" [sortable]="false" [resizeable]="false" [draggable]="false"
+                [canAutoResize]="true" prop="employer" [width]="150">
+                <ng-template ngx-datatable-cell-template let-row="row">
+                    <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="{{row?.employer?.employer_name ||'N/A'}}" container="body">
+                        {{row?.employer?.employer_name ||'N/A'}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Insurance Name" [sortable]="false" [resizeable]="false" [width]="150"
+                [draggable]="false" [canAutoResize]="true" prop="insurance">
+                <ng-template ngx-datatable-cell-template let-row="row">
+                    <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                        ngbTooltip="{{row?.insurance?.insurance_name ||'N/A'}}" container="body">
+                        {{row?.insurance?.insurance_name ||'N/A'}}
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Actions" [sortable]="false" [width]="80" cellClass="action-icon"
+                [resizeable]="false" [draggable]="false" [canAutoResize]="true">
+                <ng-template ngx-datatable-header-template>
+                    <mat-checkbox
+                        *ngIf="aclService.hasPermission(userPermissions.master_employer_insurance_linkage_edit)"
+                        (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox> Actions
+                </ng-template>
+                <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+                    <mat-checkbox
+                        *ngIf="aclService.hasPermission(userPermissions.master_employer_insurance_linkage_edit)"
+                        (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                    <a *ngIf="aclService.hasPermission(userPermissions.master_employer_insurance_linkage_edit)"
+                        class="edit-hov mx-1" ngbTooltip="Edit" triggers="mouseenter:mouseleave" (click)="AddUpdateLinkage(row)" href="javascript:void(0)"
+                        role="button"><i class="icon-pencil"></i></a>
+                        <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="insLinkageHistoryStats(row)">
+                            <i class="fa fa-history"></i>
+                        </a>
+                        <a class="remove-hov mx-1" href="javascript:void(0)"
+                        (click)="deleteLinkage(row.id,true)" role="button"
+                        ngbTooltip="Delete" triggers="mouseenter:mouseleave">
+                        <i class="icon-remove"></i></a>
+                    <mat-slide-toggle class="mx-2" [ngModel]="row.is_active" ngbTooltip="Click here to Change Status"
+                        container="body" [labelPosition]="'before'"
+                        (change)="changeLinkStatuses($event,row)"></mat-slide-toggle>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+</div>
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

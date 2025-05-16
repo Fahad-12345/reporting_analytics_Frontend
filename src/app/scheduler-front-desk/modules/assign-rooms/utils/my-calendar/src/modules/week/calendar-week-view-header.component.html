@@ -1,0 +1,29 @@
+<ng-template #defaultTemplate let-days="days" let-locale="locale" let-dayHeaderClicked="dayHeaderClicked"
+  let-eventDropped="eventDropped">
+  <div class="cal-day-headers" [ngStyle]="index===0?{'padding-left': '72px'}:{'padding-left':'0'}">
+    <!-- weekdays -->
+    <div class="cal-header" *ngFor="let day of days; trackBy:trackByWeekDayHeaderDate" [class.cal-past]="day.isPast"
+      [class.cal-today]="day.isToday" [class.cal-future]="day.isFuture" [class.cal-weekend]="day.isWeekend"
+      style="flex: 0 0 14.28% !important;max-width: 14.28% !important;" (mwlClick)="dayHeaderClicked.emit({day: day})"
+      mwlDroppable dragOverClass="cal-drag-over"
+      (drop)="eventDropped.emit({event: $event.dropData.event, newStart: day.date})">
+      <div>{{ day.date.toString().substring(0,3) }}</div>
+      <span
+        title="{{ day.date | calendarDate:'weekViewColumnSubHeader':locale }}">{{ day.date | calendarDate:'weekViewColumnSubHeader':locale }}</span>
+      {{day.cssClass}}
+    </div>
+  </div>
+  <!--<div class="cal-day-headers" *ngIf="index != 0" style="padding-left: 0 !important;">-->
+  <!--&lt;!&ndash; weekdays &ndash;&gt;-->
+  <!--<div class="cal-header" *ngFor="let day of days; trackBy:trackByWeekDayHeaderDate" [class.cal-past]="day.isPast"-->
+  <!--[class.cal-today]="day.isToday" [class.cal-future]="day.isFuture" [class.cal-weekend]="day.isWeekend" style="flex: 0 0 14.28% !important;max-width: 14.28% !important;"-->
+  <!--(mwlClick)="dayHeaderClicked.emit({day: day})" mwlDroppable dragOverClass="cal-drag-over" (drop)="eventDropped.emit({event: $event.dropData.event, newStart: day.date})">-->
+  <!--<div>{{ day.date.toString().substring(0,3) }}</div>-->
+  <!--<span>{{ day.date | calendarDate:'weekViewColumnSubHeader':locale }}</span>-->
+  <!--{{day.cssClass}}-->
+  <!--</div>-->
+  <!--</div>-->
+</ng-template>
+<ng-template [ngTemplateOutlet]="customTemplate || defaultTemplate"
+  [ngTemplateOutletContext]="{days: days, locale: locale, dayHeaderClicked: dayHeaderClicked, eventDropped: eventDropped}">
+</ng-template>

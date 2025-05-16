@@ -1,0 +1,110 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="clinic-page" *ngIf="aclService.hasPermission(userPermissions.master_clinic_view) ||
+	aclService.hasPermission(userPermissions.master_clinic_add_new) ||
+	aclService.hasPermission(userPermissions.master_clinic_edit) ||
+	aclService.hasPermission(userPermissions.master_clinic_delete)">
+	<div class="search-filter">
+		<div class="d-block text-end" *ngIf="aclService.hasPermission(userPermissions.master_clinic_add_new)">
+			<button class="btn btn-default round-btn" (click)="addNewClinicOpen()">
+				<span class="icon-plus-circle"></span> Add New
+			</button>
+		</div>
+			<app-clinic-filter [loading]="loading" (applyFilterValues)="applyFilter($event)"></app-clinic-filter>
+		
+		</div>
+		
+		<app-add-clinic *ngIf="isAddNewClinicTrue" [isEditMood]="isEditMood" [getEditClinicData]="getEditClinicData" (closedAddNewClinicWindow)="addNewClinicClose($event)" (updateClinic)="clinicUpdated($event)"></app-add-clinic>
+		<div class="document-content-area mt-2">
+			<div class="row align-items-center select-all-document">
+				<div class="col-12 col-md-8 edit-block text-start" style="margin-left: -15px;">
+					<div class="form-group field option-field mb-2 d-inline-block ms-2 ps-1">
+						<ul>
+							<li> Show</li>
+							<li>
+								<select (change)="clinicPageLimit($event.target.value, $event)" class="custom-select"
+									name="limit" [(ngModel)]="clinicPage.size">
+									<option selected [value]="10">10</option>
+									<option [value]="20">20</option>
+									<option [value]="30">30</option>
+									<option [value]="40">40</option>
+									<option [value]="50">50</option>
+									<option [value]="100">100</option>
+								</select>
+							</li>
+							<li>Entries</li>
+						</ul>
+					</div>
+				</div>
+		
+				<div class="col-md-4 text-end pe-0 mb-1">
+				</div>
+			</div>
+			<div class="card mb-0 ma-body-list">
+				<div class="card-header card-header-custom mb-0">
+					<div class="row align-items-center">
+						<div class="col-md-3 pe-0 form" style="padding-top: 4px;">
+							<p class="float-left mb-0 ps-2 d-flex align-items-center">
+								<span class="text-white ps-1" style="position: relative; ">Clinic Name</span>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="card-body pb-0 card-body-custom" style="border-radius: 0">
+					<div class="card mb-3" *ngFor="let clinic of allClinics; index as i;">
+						<div class="card-header" style="padding: 0px 0.9375rem !important;">
+							<div class="row align-items-center">
+								<div class="col-10 pe-0 form text-start d-flex">		
+									<ul class="d-inline-block custom-btn-tooltip list-unstyled ms-0 text-elipse" tooltipClass="table-custom-tooltip" ngbTooltip="{{clinic.name}}" container="body"
+										style="font-size: 0.875rem; font-weight: 500;">
+										<ng-container *ngIf="clinic && clinic.name && clinic.name.length > 0">
+											{{clinic.name}}
+										</ng-container>
+									</ul>
+								</div>
+								<div class="col-2 text-end">
+									<button	*ngIf="aclService.hasPermission(userPermissions.master_clinic_delete)"
+									type="button" class="btn btn-outline-secondary hover-danger me-2"
+										(click)="deleteClinic(i,clinic)">
+										<span class="icon-remove"></span>
+									</button>
+									<button	*ngIf="aclService.hasPermission(userPermissions.master_clinic_edit)"
+									type="button" class="btn btn-outline-secondary"
+										(click)="getClinicWithLocation(clinic) ; triggerScrollToClinic('firm')">
+										<span class="icon-pencil"></span> Edit
+									</button>
+									
+									<button type="button" class="btn slide-btn" (click)="toggleClinic(i, clinic,opened[i])"
+										[ngClass]="{'btn-success': opened[i], 'btn-primary':!opened[i] }">
+										 <i class="ml-0 p-0 icon-{{ icon(i) }}" style="background: none;"></i>
+									</button>
+								</div>
+							</div>
+		
+						</div>
+						<div class="card-body p-3 border-top-0" *ngIf="!hidden(i)">
+							<div class="card data-table p-0">
+								<div class="row">
+									<div class="col-12">
+									</div>
+								</div>
+								<app-clinics-location-list [allLocationsOfClinic]="singleClinicLocations.locations" [clinic_id]="singleClinicLocations.id" (addedSecondaryLocation)="isSecondayLocationAdded($event)"></app-clinics-location-list>
+							</div>
+						</div>
+					</div>
+					<div class="mb-2 text-center" *ngIf="!allClinics?.length">
+						No data to display
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="custom-pagination text-capitalize" *ngIf="allClinics?.length > 0">
+			<span>{{clinicPage.totalElements}} total</span>
+				<pagination [boundaryLinks]=" true" [totalItems]="clinicPage.totalElements" 
+					 [itemsPerPage]="clinicPage.size"  [(ngModel)]="currentPage" 
+					   (pageChanged)="pageChangedClinic($event)"
+					 previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+			[maxSize]="clinicPage.maxPaginationContentSize"
+					 >
+				</pagination>
+		</div>
+</div>

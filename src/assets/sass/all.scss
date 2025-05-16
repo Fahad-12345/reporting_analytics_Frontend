@@ -1,0 +1,46 @@
+@import 'vendors/include-media';
+@import 'abstracts/function';
+@import 'abstracts/variables';
+@import 'themes/theme';
+@import 'abstracts/mixins';
+@import 'abstracts/extend/text-wrap';
+@import 'base/typography';
+@import 'base/reset';
+// Pages
+@import 'pages/login';
+// Components
+@import 
+'components/datatable',
+'components/loader',
+'components/pagination',
+'components/perfect-scrollbar',
+'components/calendar',
+'components/modal',
+'components/jaspero',
+'components/tabs',
+'components/checkbox',
+'components/custom-checkbox.scss',
+'components/custom-radio-btn.scss',
+'components/toast',
+'components/mat-tree',
+'components/search-filter', 
+'components/sidebar',
+'components/ejs-date-picker',
+'components/form',
+'components/ngselect',
+'components/icd-modal',
+'components/tooltip',
+'components/popover',
+'components/owl',
+'components/dynamic-radio-buttons';
+
+@import "layout/_header";
+@import "layout/_main";
+@import "layout/_footer";
+// import theme files
+@import 'themes/custom-theme';
+
+// iPad Responsive code Files
+@import 'responsive/iPad-portrait', 
+'responsive/iPad-landscape',
+'responsive/iPad-port-land';

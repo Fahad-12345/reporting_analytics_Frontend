@@ -1,0 +1,37 @@
+
+<div class="row mt-3">
+	<div class="col-md-12 col-lg-6 col-xl-6">
+		<form [formGroup]="additionalnfoForm">
+		<div  class="form-group field add-info" [ngClass]="{'focused': additionalnfoForm.get('name').value != '' && additionalnfoForm.get('name').value != null }">
+			<label class="form-label">{{updateObj.isGoingToUpdate ? 'Update' : 'Add'}} Additional Info</label>
+			<input notFirstCharactorSpace (keyup.enter)="addUpdateAdditionalInformation()"
+				class="form-control form-input" formControlName="name">
+				<span *ngIf="additionalnfoForm.get('name').value" class="icon-plus select-cross-icon" 
+				aria-hidden="true" (click)="RemoveFormValue()"></span>
+		</div>
+
+	</form>
+</div>
+<div class="col-md-2 col-lg-2 col-xl-2">
+	<button (click)="addUpdateAdditionalInformation()" [disabled]="!additionalnfoForm.get('name').value"
+	class="btn btn-success w-100 mt-0">
+	{{updateObj.isGoingToUpdate ? 'Update' : 'Add New'}}</button>
+</div>
+</div>
+<div class="row">
+	<div class="col-12">
+<div #contenedor class="categories" cdkDropListGroup> 
+	<ng-container *ngFor="let additionalInfo of additionalInfoList;let i = index">
+		<div class="categories-item" cdkDropList 
+    cdkDropListOrientation="horizontal"
+    [cdkDropListData]="{item:additionalInfo,index:i}" (cdkDropListDropped)="drop($event)" (click)="getSingleInfo(additionalInfo,i)" >
+			<div class=" mat-chip mat-standard-chip "  cdkDrag>
+        <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+        {{additionalInfo}}
+		<mat-icon class="mat-icon mat-chip-remove  material-icons" (click)="deleteAdditionalInfo(i)">cancel</mat-icon>
+        </div>
+		</div>
+	</ng-container>
+</div>	
+</div>
+</div>

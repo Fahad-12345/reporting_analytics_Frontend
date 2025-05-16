@@ -1,0 +1,92 @@
+<div class="card">
+    <div class="card-header color-white" style=" padding: 5px 5px 5px 10px !important;">
+     Template Manager
+	</div>
+	<!-- <div class="text-end">
+        <a class="btn btn-default round-btn" 
+          href="javascript:void(0)"> Add New
+          <span class="icon-plus-circle ms-2"></span></a>
+      </div> -->
+    <div class="card-body p-3 pb-0 border-top-0">
+      <div *ngFor="let visitType of lstSpeciality.visit_types" class="card mb-3">
+        <div class="card-header" style="padding: 0px 15px !important;">
+          <div class="row align-items-center">
+            <div class="col-10 pe-0 form text-start">
+              <ul class="d-inline-block custom-btn-tooltip list-unstyled ms-0"
+                style="font-size: 14px; font-weight: 500;">
+                {{visitType.name}} </ul>
+            </div>
+            <div class="col-2 text-end">
+              <button (click)="toggleOpen(visitType)" class="btn slide-btn" [class.btn-primary]="!visitType.is_open"
+                [class.btn-success]="visitType.is_open" type="button"><i style="background: none;" class="ml-0 p-0"
+                  [class.icon-plus]="!visitType.is_open" [class.icon-minus]="visitType.is_open"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="visitType.is_open" class="card-body p-3 border-top-0">
+		  <!-- <p class="text-center mb-0">Datatable Code Here</p> -->
+		  
+		  <div  class="text-end">
+			  <a  class="btn btn-default round-btn d-inline-block" (click)="openTemplateForm(visitType)" href="javascript:void(0)"> 
+				  <span  class="icon-plus-circle"></span> Add New
+				   </a>
+			</div>
+
+          <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="visitType.user_template" [scrollbarH]="true"
+            [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'">
+            <!-- <ngx-datatable-column name="Name" prop="name" [width]="200"></ngx-datatable-column> -->
+
+            <ngx-datatable-column name="Case Type" sortable="false" prop="case_type">
+              <ng-template let-column="column" ngx-datatable-header-template>
+                Case Type
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div *ngFor="let caseType of row.case_types " class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.case_type}}">
+				  {{caseType.name}} <span></span>  </div>
+				  <div *ngIf='row.case_types && row.case_types.length==0' class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.case_type}}">
+					All <span></span>  </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Template Name" sortable="false" prop="template_name">
+              <ng-template let-column="column" ngx-datatable-header-template>
+
+               Template Name
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                  ngbTooltip="{{row.template_name}}">
+                  {{row.template_name}}</div>
+              </ng-template>
+            </ngx-datatable-column>
+
+            
+
+            <ngx-datatable-column name="Actions" sortable="false" prop="id">
+              <ng-template let-column="column" ngx-datatable-header-template>
+
+                Actions
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <a href="javascript:void(0)" class="edit-hov mx-1" data-original-title="Edit" title="Edit"
+                  (click)="editVisitType(visitType,row,row.case_types)">
+                  <i class="icon-pencil"></i>
+				</a>
+				<a href="javascript:void(0)" class="remove-hov mx-1" data-original-title="Delete" title="Delete"
+                  (click)="deleteTemplate(visitType,row)">
+                  <i class="icon-remove"></i>
+                </a>
+			  </ng-template>
+			  <!-- <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                <a href="javascript:void(0)" class="delete-hov" data-original-title="Delete" title="Delete"
+                  (click)="deleteTemplate(visitType)">
+                  <i class="icon-remove"></i>
+                </a>
+              </ng-template> -->
+            </ngx-datatable-column> 
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>

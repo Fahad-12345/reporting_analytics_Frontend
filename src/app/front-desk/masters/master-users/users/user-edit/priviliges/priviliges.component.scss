@@ -1,0 +1,125 @@
+@import '../../../../../../../assets/sass/components/new-tabs';
+%danger-bg-color {
+    background: #c1272d !important;
+    border-color: #c1272d !important;
+}
+%danger-text-color {
+    color: #c1272d !important;
+}
+.badge{
+    padding: 3px 8px 5px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+
+.tags-outer {
+    overflow: hidden;
+    float: left;
+    white-space: nowrap;
+    width: 90%;
+    text-overflow: ellipsis;
+}
+
+.plus-tag {
+    cursor: pointer;
+    padding: 4px 5px;
+    border-radius: 3px;
+}
+
+.user-time{
+    border: 1px solid #cbcfc7;
+    margin-top: 2.7rem !important;
+}
+
+.user-prev{
+    margin-top: 2.7rem !important;
+    border: 1px solid #cbcfc7;
+    .user-tab{
+        margin: 0 10px 0 10px !important;
+        ul{
+            li {
+                &.user-speciality {
+                    position: absolute;
+                    right: 20px;
+                    top: 83px;
+                }
+            }
+        }
+    } 
+	.user-scroll{
+		overflow: auto;
+		white-space: nowrap;
+		overflow-y: hidden;
+		flex-wrap: inherit;
+        margin-bottom: 5px !important;
+        &::-webkit-scrollbar {
+            height: 4px;
+        }
+        .button--wayra {
+            overflow: unset;
+            a {
+                margin-bottom: 0 !important;
+                line-height: 1.2;
+            }
+            .tab-icon {
+                margin-left: 5px;
+            }
+        }
+	}
+}
+
+nav{
+    &.left-nav {
+        ul {
+            .button--wayra {
+                a {
+                    &.active {
+                        &.bg-danger {
+                            @extend %danger-bg-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+.nav {
+    &.nav-tabs {
+        .nav-item {
+            .nav-link {
+                &.text-danger {
+                    @extend %danger-text-color;
+                }
+                &.active {
+                    &.text-danger {
+                        @extend %danger-text-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.tab-container {
+    .tab-header {
+        .nav-tabs {
+            .btn-holder {
+                .btn {
+                    max-width: 100%;
+                    &.btn-outline-success {
+                        &:hover {
+                            .tab-icon {
+                                color: #fff;
+                            }
+                        }
+                        .tab-icon {
+                            color: #525252;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

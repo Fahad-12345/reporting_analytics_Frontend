@@ -1,0 +1,212 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div class="container-fluid comments-modal px-0">
+	<div  class="row mb-2" style="padding: 0 2px;">
+		<div  class="col-6" *ngIf="showCategory">
+			<!-- *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_user_filters)" -->
+			<div *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_user_filters)"  class="form-group my-2">
+				<mat-form-field appearance="outline">
+					<mat-label>Comment Category</mat-label>
+					<mat-select [(ngModel)]="selectedCategories" #selectionModel="ngModel" name="selectedContent"  multiple panelClass="commentsPanel bottom-pannel top-handler" >
+							<app-select-check-all [model]="selectionModel"  (selectedAllValues) = "selectedAllValuesCaseComment($event,true)"  [values]="categories"></app-select-check-all>
+						<mat-option  *ngFor="let category of categories" [value]="category">   {{category.name}} </mat-option>
+				  </mat-select>
+				</mat-form-field>
+			</div>
+		</div>
+				<div [ngClass]="showCategory? 'col-6' : 'col-8'">
+					<!-- *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_user_filters)"  -->
+					<div *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_user_filters)" class="form-group mb-2 mt-2">
+					<ng-select #searchUser [(ngModel)]="searchUsers" placeholder="Search User" (search)="searchUsersInformation($event)"
+					[items]="searchedUsers"  [multiple]="true" [closeOnSelect]="false" bindLabel="full_name" bindValue="id"
+					[ngModelOptions]="{standalone: true}"
+					(selectItem)="selectedUsers($event)">
+					<ng-template ng-label-tmp let-item="item">
+						{{item.first_name}} {{item.middle_name?item.middle_name:''}} {{item.last_name}}
+					</ng-template>
+					<ng-template ng-option-tmp let-item="item" let-index="index">
+						{{item.first_name}} {{item.middle_name?item.middle_name:''}} {{item.last_name}}
+					</ng-template>
+
+					<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+						<div class="ng-value" *ngFor="let item of items | slice:0:1">
+							<span class="ng-value-label"> {{item.first_name}} {{item.middle_name?item.middle_name:''}} {{item.last_name}}</span>
+							<span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+						</div>
+						<div class="ng-value" *ngIf="items.length > 1">
+							<span class="ng-value-label">{{items.length - 1}} more...</span>
+						</div>
+					</ng-template> 
+				</ng-select>
+			</div>
+		</div>
+
+
+		<div [ngClass]="showCategory? 'col-md-4 offset-md-4 mb-1' : 'col-4'">
+			<!-- *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_user_filters)" -->
+			<div *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_user_filters)" class="row justify-content-center">
+				<div class="col-6">
+					<button type="button" class="btn btn-primary w-100 mt-2"
+						(click)="resetComments()" [disabled] = "disalberesetComment" >Reset</button>
+				</div>
+				<div class="col-6">
+					<button type="button" class="btn btn-success w-100 mt-2" 
+						(click)="refreshComments()" [disabled] = "disabledFilterComment">Filter</button>
+				</div>
+			</div>
+		</div>
+	
+	</div>
+        <div class="inbox_msg">
+			<!-- *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_view)"  -->
+
+			<div id = "msg_history" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_view)"
+			class="msg_history" infiniteScroll [infiniteScrollDistance]="scrollDistance"
+                [infiniteScrollUpDistance]="scrollUpDistance" [scrollWindow]="false" [infiniteScrollThrottle]="throttle"
+                (scrolled)="scrollDownCaseComments()" [infiniteScrollDisabled]="infiniteScrollDisabled"
+                (scrolledUp)="scrollUpCaseComments()" #scrollComments>
+                <div class="mesgs">
+                    <div>
+                        <!-- <h2 *ngIf="comments && comments.length==0"
+                            style="padding:28%; font-size: 20px; text-align: center">No
+                            Comments Found.</h2> -->
+                        <div *ngFor="let comment of comments">
+                            <!-- -->
+                            <div class="incoming_msg" *ngIf="comment.user.id != userDetail?.id">
+                                <div class="incoming_msg_img mt-2"> <img
+									[src]="this.defaultDoctorImageUrl" alt="sunil"> </div>
+                                <div class="received_msg">
+                                    <div class="time_date mb-1">
+                                        <strong>{{comment?.user?.first_name}} {{comment?.user?.middle_name}}
+                                        {{comment?.user?.last_name}}</strong> | <span class="text-orange">{{comment.user?.role}} </span> |
+                                        <span *ngIf= "comment?.comment_category?.length != categories.length">
+											<span class="light-blue"  *ngFor="let commentCategory of comment?.comment_category">
+											 {{commentCategory.category_name}} 
+											</span>
+										</span>
+											<span class="light-blue" *ngIf= "comment?.comment_category?.length === categories.length" >  All</span>
+											<span *ngIf="comment?.object_id"> | comment?.object_id</span>
+										 </div>
+										 <!-- <button class="btn btn-sucuss" (click)="deleteComment(comment)"> delete</button> -->
+
+                                    <div class="received_withd_msg">
+                                        <p [innerHTML] = "showCommentsDetails(comment.comment,comment)">
+                                        </p>
+                                        <span class="time_date"> {{comment.created_at|
+                                                            date:'MMM dd, y h:mm a'}}</span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="outgoing_msg" *ngIf="comment.user.id == userDetail?.id">
+                                <div class="incoming_msg_img float-right m-2 pt-1"> <img
+                                        [src]="this.defaultDoctorImageUrl" alt="sunil"> </div>
+
+                                        <div class="time_date text-end">
+                                            <!-- {{comment?.user?.first_name}} {{comment?.user?.middle_name}}
+											{{comment?.user?.last_name}} | -->
+											 <span class="text-orange"> {{comment.user?.role}}</span> |
+											
+											<span *ngIf= "comment?.comment_category?.length != categories.length">
+											<span class="light-blue" *ngFor="let commentCategory of comment?.comment_category">
+											 {{commentCategory.category_name}}  
+											 <span *ngIf="commentCategory?.object_id"> | {{ commentCategory?.label ? commentCategory?.label : commentCategory?.object_id}} </span>
+
+											</span>
+										</span>
+											<span class="light-blue" *ngIf= "comment?.comment_category?.length === categories.length" >  All</span> | <strong>Me</strong>
+										</div>
+    
+                                <div class="sent_msg">
+                                    <p class="sent_msg_hold">
+										<span class="mt-1" [innerHTML] = "showCommentsDetails(comment.comment,comment)">
+										</span>
+										<button class="btn d-flex-inline float-right remove-btn text-white" *ngIf="!disabledCommentTimeOut(comment)" 
+											 (click)="deleteComment(comment)" [disabled]="disabledCommentTimeOut(comment)">
+												<span class="icon-remove" container="body" 
+												[ngbTooltip]="disabledCommentTimeOut(comment)?'Comments can be deleted with in 15 seconds':null">
+												
+											</span>
+											<span class="badge badge-light">{{15 - secondComment | number:'1.0-0'}}</span>
+										</button> 
+											
+										<button class="btn d-flex-inline float-right remove-btn text-white" *ngIf="!disabledCommentTimeOut(comment)" 
+											(click)="editComment(comment)" [disabled]="disabledCommentTimeOut(comment)">
+											   <span class="icon-pencil"  container="body" 
+											   [ngbTooltip]="disabledCommentTimeOut(comment)?'Comments can be edited with in 15 seconds':null">
+											   
+										   </span>
+										   <span class="badge badge-light">{{15 - secondComment | number:'1.0-0'}}</span>
+										</button> 
+									</p>
+                                    <span class="time_date"> {{comment.created_at|
+															date:'MMM dd, y h:mm a'}}</span>
+															
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+			</div>
+
+			
+			<!-- *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_add)" -->
+            <div *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_add)" class="type_msg">
+                <div class="input_msg_write px-3 py-2">
+					<div class="row">
+					
+						<div class="col-md-4 cat-select mb-3 mb-md-0" *ngIf="showCategory">
+							<mat-form-field appearance="outline">
+								<mat-label>Comment Category</mat-label>
+								<mat-select  [(ngModel)]="addCategoryList[0]"  #selectionModel="ngModel" name="selectedContent"    panelClass="commentsPanel textarea-bottom-handler" >
+
+										<app-select-check-all *ngIf="!showCategory" [model]="selectionModel" (selectedAllValues) = "selectedAllValuesCaseComment($event)"  [values]="categories"></app-select-check-all>
+									<mat-option  *ngFor="let category of categories" [value]="category.id">   {{category.name}} </mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div class="col-md-4 cat-select mb-3 mb-md-0" *ngIf="!showCategory">
+							<mat-form-field appearance="outline">
+								<mat-label>Comment Category</mat-label>
+								<mat-select  [(ngModel)]="addCategoryList"  #selectionModel="ngModel" name="selectedContent"   multiple   panelClass="commentsPanel textarea-bottom-handler" >
+
+										<app-select-check-all *ngIf="!showCategory" [model]="selectionModel" (selectedAllValues) = "selectedAllValuesCaseComment($event)"  [values]="categories"></app-select-check-all>
+									<mat-option  *ngFor="let category of categories" [value]="category.id">   {{category.name}} </mat-option>
+								</mat-select>
+							</mat-form-field>
+						</div>
+						<div [ngClass]="showCategory ? 'col-md-8' : 'col-md-12'">
+							<form  class="form" [formGroup]="form" novalidate>
+								<!-- <input type="text" class="write_msg" name="comments" placeholder="Type a message"
+									formControlName="comment"   (keyup)="onKey($event)" /> -->
+									<mat-form-field appearance="outline">
+										<mat-label>Type a message</mat-label>
+										<div class="resize">
+											<textarea #inputCommentTextArea matInput
+												cdkTextareaAutosize
+												  name="comments" 
+												  id = "textAreaComment"
+												  (keyup)="onKey($event)"
+												  formControlName="comment"
+											
+												  panelClass="typePanel" notFirstCharactorSpace></textarea>
+										</div>
+									  </mat-form-field>
+								<button class="msg_send_btn" type="button" (click)="addComments()"
+									[class.disabled_custom]="!form.value.comment || commentAdded" [disabled]="!form.value.comment || commentAdded"><i
+										class="fa fa-paper-plane" aria-hidden="true"></i></button>
+								</form>
+						</div>
+					</div>
+					
+                </div>
+			</div>
+			<a class="return-to-top" *ngIf="scrollToBottomIconShow" (click) = "scrollToBottom()">
+				<i class="fa fa-chevron-down"></i>
+			</a>
+		</div>
+		
+</div>

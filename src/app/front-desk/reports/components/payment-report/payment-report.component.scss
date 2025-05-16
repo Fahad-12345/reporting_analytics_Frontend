@@ -1,0 +1,66 @@
+@import "src/assets/sass/abstracts/variables/_colors.scss";
+ngx-datatable {
+  max-height: 70vh !important;
+  
+}
+ngx-datatable.payment-detail-table {
+  overflow-y: scroll !important; 
+}
+  .table-height {
+    height: 500px;
+}
+  .text-bold {
+    font-weight: bold;
+  }
+  :host ::ng-deep .ngx-datatable {
+    .datatable-body {
+      overflow-y: visible !important;
+      .datatable-scroll {
+        .datatable-row-wrapper {
+          .datatable-body-row {
+            &.datatable-row-even,
+            &.datatable-row-odd {
+              &.row-color {
+                .datatable-row-center {
+                  .datatable-body-cell {
+                    font-weight: bold;
+                    background-color: #dceced !important;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+
+  .link-color:hover {
+    color: #00a650;
+    cursor: pointer;
+  }
+  .modal_pad{
+    padding: 10px;
+  }
+  .height {
+    height: 25px;
+  }
+  .padding-col{
+      text-align: left;
+        padding: 0px 15px 0px 54px;
+    }
+  .summary-footer {
+      display: flex;
+      margin-top: -1.4%;
+      padding: 18px;
+      background-color: #dceced; 
+    }
+  .summary-column {
+      font-weight: bold;
+      font-size: 13px;
+      margin-top: -0.65%;
+      position: absolute;
+    }
+  

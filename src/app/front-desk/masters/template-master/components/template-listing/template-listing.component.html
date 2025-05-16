@@ -1,0 +1,163 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="firm-tab">
+  <div class="card border-0" id="firm">
+    <div class="d-block">
+      <!-- <button class="btn btn-default round-btn float-right" (click)="addField()">
+        Add New <span class="icon-plus-circle ms-2"></span></button> -->
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="search-filter-block mt-3 mb-3">
+          <form class="form" [formGroup]="fieldFilterForm" (keydown.enter)="setPage({offset: 0})"
+            (ngSubmit)="setPage({offset: 0})" autocomplete="off">
+            <div class="card-body mb-sm-20" style="border-top: 1px solid #b0b1b1;">
+              <div class="row">
+                <div class="col-xl-10">
+                  <div class="row">
+                    <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                      <div class="form-group field">
+                        <label class="form-label">Field Name</label>
+                        <input type="text" formControlName="title" class="form-control form-input">
+                      </div>
+                    </div>
+    
+                    <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                      <div class="form-group field">
+                        <label class="form-label">Comments</label>
+                        <input type="text" formControlName="description" class="form-control form-input">
+                      </div>
+                    </div>
+                   <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                   <div class="form-group field">
+                     <label class="form-label">Created By</label>
+                        <input type="text" formControlName="created_by_ids" class="form-control form-input">
+                      </div>
+                </div>
+                   
+                   <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                    <div class="form-group field">
+                       <label class="form-label">Updated By</label>
+                         <input type="text" formControlName="updated_by_ids" class="form-control form-input">
+                       </div>
+                 </div>
+                   
+                <!-- <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                  <div class="form-group field"
+                            [ngClass]="{'focused': (fieldFilterForm.get('created_at').value != '' && fieldFilterForm.get('created_at').value != null) || fieldFilterForm.get('created_at').errors?.invalid_date  || fieldFilterForm.get('created_at').errors?.invalid_date }">
+                            <label class="form-label" for="dateOfAccidentFrom">Created At</label>
+                            <input [matDatepicker]="created_at"  
+                            [appInputDateMask]="created_at"
+                            class="form-control form-input" id="dueDate"
+                            formControlName="created_at">
+                            <mat-datepicker-toggle matSuffix [for]="created_at"></mat-datepicker-toggle>
+                            <mat-datepicker #created_at></mat-datepicker>
+                            <small class="form-text text-muted danger" *ngIf="fieldFilterForm.get('created_at').errors?.invalid_date && fieldFilterForm.get('created_at').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+                          </div>
+                </div>
+                <div class="col-sm-6 col-md-5 col-lg-4 col-xl-3">
+                          <div class="form-group field"
+                            [ngClass]="{'focused': (fieldFilterForm.get('updated_at').value != '' && fieldFilterForm.get('updated_at').value != null) || fieldFilterForm.get('updated_at').errors?.invalid_date  || fieldFilterForm.get('updated_at').errors?.invalid_date }">
+                            <label class="form-label" for="dateOfAccidentFrom">Updated At</label>
+                            <input [matDatepicker]="updated_at" 
+                            [appInputDateMask]="updated_at"
+                            class="form-control form-input" id="dueDate"
+                            formControlName="updated_at">
+                            <mat-datepicker-toggle matSuffix [for]="updated_at"></mat-datepicker-toggle>
+                            <mat-datepicker #updated_at></mat-datepicker>
+                            <small class="form-text text-muted danger" *ngIf="fieldFilterForm.get('updated_at').errors?.invalid_date && fieldFilterForm.get('updated_at').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+                          </div>
+                </div> -->
+                  </div>
+                </div>
+                <div class="col-xl-2 text-center">
+                  <div class="row justify-content-center mb-0">
+                    <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                      <button type="submit" class="btn btn-success w-100 me-3"> Filter
+                      </button>
+                    </div>
+                    <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                      <button (click)="fieldFilterForm.reset();setPage({offset:0})" class="btn btn-primary w-100" [disabled]="checkInputs()">
+                        Reset</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 col-sm-6 edit-block text-start">
+        <div class="form-group field option-field mb-2 d-inline-block">
+          <ul>
+            <li>Show</li>
+            <li>
+              <!-- <select class="custom-select" name="limit" id="limit" > -->
+              <select [(ngModel)]="this.page.size " class="custom-select" name="limit" id="limit" id="limit"
+                (change)="pageLimit($event.target.value)">
+                <option [value]="10" >10</option>
+                <option [value]="20">20</option>
+                <option [value]="30">30</option>
+                <option [value]="40">40</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+              </select>
+            </li>
+            <li class="text-capitalize">entries</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+        <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+          Customize Columns
+        </button>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <ngx-datatable class="bootstrap" #fieldsList [rows]="fields" [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50"
+          [footerHeight]="50" [rowHeight]="'auto'" [limit]="page.size" (page)="setPage($event)"
+          [count]='page.totalElements' [offset]="page.pageNumber" [externalPaging]="true">
+          <ngx-datatable-column name="Name" prop="title" [width]="100" [sortable]="false"></ngx-datatable-column>
+          <ngx-datatable-column name="Comments" prop="description" [width]="100" [sortable]="false"></ngx-datatable-column>
+          <ngx-datatable-column name="Actions" sortable="false" prop="id" [width]="90">
+            <ng-template let-column="column" ngx-datatable-header-template>
+              Actions
+            </ng-template>
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="controlsHistoryStats(row)">
+                <i class="fa fa-history"></i>
+              </a>
+            </ng-template>
+          </ngx-datatable-column> 
+        </ngx-datatable>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

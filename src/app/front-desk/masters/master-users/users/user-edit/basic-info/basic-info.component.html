@@ -1,0 +1,17 @@
+<div class="card-body bill-border border-top-0">
+  <div class="document-manager add-user pt-2 px-0">
+    <div class="user-info">
+      <div class="row">
+        <div class="col-md-12">
+		  <h4 class="mt-1 mb-0 color-green">Edit User</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="line-bottom mb-0">
+  <div class="card " [ngClass]="{'pointer-none':isSameLoginUser()}">
+    <app-user-form #userForm [loading]="loading" [userRelatedData]="userRelatedData"
+      (userFormSubmit)="userFormSubmit($event)">
+    </app-user-form>
+  </div>
+</div>

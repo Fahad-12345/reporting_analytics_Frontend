@@ -1,0 +1,130 @@
+<ng-template #openErrorModal let-modal>
+	<div class="modal-header">
+	   <h4 id="dialog-sizes-name1" class="modal-title pull-left"> {{modelTitle | titlecase}}</h4>
+	   <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+	   <span aria-hidden="true">&times;</span>
+	   </button>
+	</div>
+	<div class="modal-body">
+	   <div class="alert alert-danger custom-padding-alert my-3 text-start break-word" role="alert">
+		  <strong><i class="fas fa-exclamation-triangle text-danger"></i></strong>
+		  {{errorMessage}}
+	   </div>
+	   <ngx-datatable
+	   class="material"
+	   [rows]="rows"
+	   [columnMode]="'force'"
+	   [footerHeight]="50"
+	   rowHeight="auto"
+	   [reorderable]="false"
+	   [virtualization]="false"
+	   [scrollbarH]="true"
+	   [rowClass]="getRowClass"
+	   >
+	   <ngx-datatable-column  [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Case ID" [width]="80"
+	   prop="case_id">
+	   <ng-template ngx-datatable-cell-template let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			 ngbTooltip="{{value }}">
+			 {{value }}
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Patient Name" prop="row" [width]="100">
+	   <ng-template ngx-datatable-cell-template let-value="row">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			 ngbTooltip="{{value?.patient_full_name}}">
+		{{value?.patient_full_name}}
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Date" prop="visit_date" [width]="70">
+	   <ng-template ngx-datatable-cell-template let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			 ngbTooltip="{{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+			 <span> {{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Practice-Location" [width]="130"
+	   prop="practice_location_name">
+	   <ng-template ngx-datatable-cell-template let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			 ngbTooltip="{{value }}">
+			 {{value }}
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider Name" [sortable]="false" prop="row"
+	   [width]="100">
+	   <ng-template ngx-datatable-cell-template let-value="row">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+			 ngbTooltip="{{value?.doc_full_name}}">
+			 		 {{value?.doc_full_name}} 
+			
+		
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Specialty" prop="speciality_name" [width]="100">
+	   <ng-template ngx-datatable-cell-template let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+			 <span> {{value}}</span>
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Type" prop="appointment_type_name" [width]="80">
+	   <ng-template ngx-datatable-cell-template let-value="value">
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+			 <span> {{value}}</span>
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <ngx-datatable-column
+	   [sortable]="false"
+	   [canAutoResize]="true"
+	   [draggable]="false"
+	   [resizeable]="false"
+	   name="Case Type"
+	   prop="case_type_name"
+	   [width]="80"
+	   >
+	   <ng-template ngx-datatable-cell-template let-value="value">
+		  <div
+			 class="tooltip-outer"
+			 tooltipClass="table-custom-tooltip"
+			 container="body"
+			 ngbTooltip="{{value}}"
+			 >
+			 <span> {{value}}</span>
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <!-- <ngx-datatable-column
+	   [sortable]="false"
+	   [canAutoResize]="true"
+	   [draggable]="false"
+	   [resizeable]="false"
+	   name="No. of Days"
+	   prop="no_of_days"
+	   [width]="80"
+	   >
+	   <ng-template ngx-datatable-cell-template let-value="value">
+		  <div
+			 class="tooltip-outer"
+			 tooltipClass="table-custom-tooltip"
+			 container="body"
+			 ngbTooltip="{{value}}"
+			 >
+			 <span> {{value}}</span>
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column> -->
+	   <ngx-datatable-column [canAutoResize]="true" [draggable]="false"   prop="deleted_at" [resizeable]="false" name="Action"  [width]="60">
+	   <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		  <i [class]="actionClassBind(row)"></i>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   </ngx-datatable>
+	</div>
+ </ng-template>

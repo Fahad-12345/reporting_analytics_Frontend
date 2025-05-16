@@ -1,0 +1,36 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">{{'Add Supervisor'}}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="close()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+
+	<div class="modal-body modal-pt-15">
+		<form [formGroup]="supervisorForm" (ngSubmit)="onSubmit(supervisorForm.value)">
+			<div class="row">
+				
+				<div  class="col-md-12">
+					<div class="form-group field mb-1 cpt-plc-hold">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'supervisor_ids'"
+										[showSelectFieldList]="selectedMultipleFieldFiter['supervisor_ids']" [ngSelectShow]="true"
+										 [showSelectFieldOnRefresh]="supervisorForm&&supervisorForm.get('supervisor_ids').value" 
+										 [lableName]="'Supervisor Name*'" [bindlable]="'full_name'" [searchLableName]="'supervisor_ids'"
+										 [bindId]="'id'" [apiPath]="EnumApiPath.search_technician_supervisor"  [conditionalExtraApiParams]="conditionalExtraApiParams"
+										 (valueChange)="selectionOnValueChange($event,supervisorForm,'supervisor_ids')" 
+										 [multiple]="true" ></app-ng-select-shareable> 
+					</div>
+				</div>   
+	
+			</div>
+		
+			<div class="row">
+				<div class="col-md-12 modal-btn-width text-center">
+					<button class="btn btn-primary me-3" (click)="close()" type="button"
+						>Cancel</button>
+						<button [disabled]="supervisorForm.invalid" class="btn btn-success" type="submit"
+						>Save & Continue </button>
+				</div>
+			</div>
+		</form>
+	</div>

@@ -1,0 +1,777 @@
+
+<div class="modal-header">
+	<h5 class="modal-title">{{title}}</h5>
+	<button type="button" class="close" data-dismiss="modal" (click)="closeModal()" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body scroll-control">
+	<div class="row">
+		<div class="col-6">
+			<p class="mb-2">
+				<span class="font-bold">Patient Id:</span> <span class="me-3">
+					{{idToChartId(patient?.id) | ssnFormatPipe}} </span>
+				<span class="font-bold">Patient Name: </span> <span class="me-3"> {{patient?.first_name}}
+					{{patient?.middle_name}}
+					{{patient?.last_name}}</span>
+				<span class="font-bold">Case Id:</span> <span> {{caseId}}</span>
+			</p>
+		</div>
+		<div class="col-6 text-end">
+			<p><span class="font-bold">Date Of Accident:</span>
+				<span *ngIf="billDetail">{{billDetail?.kiosk_case?.accident_information?.accident_date | date:
+					commonService.slashDateFormat_MM_dd_yyyy() }} </span>
+				<span *ngIf="!billDetail">{{visitList[0]?.kiosk_case?.accident_information?.accident_date | date:
+					commonService.slashDateFormat_MM_dd_yyyy() }} </span>
+		</div>
+		<div class="btn-train">
+			<a class="btn btn-default mb-3" *ngIf='!isBillingDetail && billID' (click)="getVisits(addVisitBill,visitList)" href="javascript:void(0)" role="button">
+				<span class="icon-plus-circle me-1 align-middle"></span> Add Visit 
+			</a>
+			<a class="btn btn-success mb-3" *ngIf='!isBillingDetail' (click)="calcaulateAllVitits()"
+				href="javascript:void(0)" role="button">
+				<span class="icon-save-continue me-2 align-middle"></span> Refresh </a>
+		</div>
+	</div>
+	<div class=" create-bill-modal" *ngIf="showTable">
+		<ngx-datatable #myTable class="bootstrap parent-table" [class.table-scroll-h]="visitList.length > 6"
+			[rowClass]="getRowClass" [rows]="visitList" [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50"
+			[footerHeight]="50" [rowHeight]="'auto'" [externalPaging]="false" [count]="page.totalElements"
+			[offset]="page.pageNumber-1" [limit]="page.size" (page)="onPageChange($event)">
+			<ngx-datatable-column name="Visit Date" prop="visit_date" [width]="80" [sortable]="false">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}" container="body">
+						{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Visit Type" prop="appointment_type" [width]="100" [sortable]="false">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name}}"
+						container="body">
+						{{value?.qualifier}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column *ngIf="hideDuration" name="Duration" [width]="80" prop="duration" [sortable]="false">
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Attorney" [width]="100" prop="kiosk_case" [width]="120" [sortable]="false">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+						ngbTooltip="{{attorney_firm ? attorney_firm  : ''}}">{{attorney_firm ? attorney_firm : ''}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="No Of Days" [width]="100" prop="no_of_days" [sortable]="false">
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Claim #" [width]="100" prop="primary_claim_no" [sortable]="false">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{primary_claim_no === 'NULL' ? 'N/A' : (primary_claim_no?primary_claim_no:value)}}" container="body">
+						{{primary_claim_no === 'NULL' ? 'N/A' : (primary_claim_no ? primary_claim_no : billDetail?.primary_claim_no ? billDetail?.primary_claim_no : value)}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Specialty" prop="speciality" [width]="100" [sortable]="false">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value.name}}"
+						container="body">
+						{{value?.qualifier}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Insurance Name" prop="primary_insurance_name" [width]="120" [sortable]="false">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{value || primary_insurance_name || billDetail?.primary_insurance_name || 'N/A'}}"
+						container="body">
+						{{value || primary_insurance_name || billDetail?.primary_insurance_name || 'N/A'}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Provider Name" [sortable]="false" prop="doctor" [width]="130">
+				<ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value?.first_name}} {{value?.middle_name}}
+        {{value?.last_name}}{{row?.billing_title | AddBillingTitle}}" container="body">
+						{{value?.first_name}} {{value?.middle_name}}
+						{{value?.last_name}}{{row?.billing_title | AddBillingTitle}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Practice Location Name" [width]="150" prop="facility_location" [sortable]="false">
+				<ng-template ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+						ngbTooltip="{{value && value.facility && value.facility_full_name?value.facility_full_name:''}}">
+						{{value && value?.qualifier?value?.qualifier:null}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Total Amount" [width]="100" prop="visit_charges" [sortable]="false">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span>
+						{{(row.visit_charges || 0 )| currency}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-row-detail [rowHeight]="'auto'" #myDetailRow (toggle)="onDetailToggle($event)">
+				<ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+					<div class="child-table-border">
+						<ngx-datatable #Table class="bootstrap child-datatable"
+							[class.table-scroll-h]="row?.cpt_fee_schedules.length > 6" [scrollbarH]="true"
+							[columnMode]="'force'" [headerHeight]="50" [footerHeight]="0" [rowHeight]="'auto'"
+							[rows]="row?.cpt_fee_schedules" style="width: 100% !important;">
+							<ngx-datatable-column name="CPT Code Description" prop="cpt_code" [width]="280" [sortable]="false">
+								<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+									<span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ bindCptCodeName(row)}}" container="body">
+										{{ bindCptCodeName(row)}}
+									</span>
+								</ng-template>
+							</ngx-datatable-column>
+							<ngx-datatable-column name="Fee Schedule" [width]="100" prop="base_price" [sortable]="false">
+								<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+									<span>
+										{{(row?.base_price || 0 )| currency}}
+									</span>
+								</ng-template>
+							</ngx-datatable-column>
+							<ngx-datatable-column name="Units" [width]="50" prop="units" [sortable]="false">
+								<ng-template let-childrow="row" let-Index='rowIndex' ngx-datatable-cell-template
+									let-value="value">
+									<span>
+										<input autofocus type="text" (change)="updateUnitValue($event,childrow,row)"
+											mask="99" appOnlyNumeric [(ngModel)]='childrow.units' maxlength=5
+											[disabled]='isBillingDetail?true:false'
+											(keyup)="updateUnitValue($event,childrow,row)" class="form-control" />
+									</span>
+								</ng-template>
+							</ngx-datatable-column>
+							<ngx-datatable-column name="Per Unit Price" [width]="100" prop="per_unit_price" [sortable]="false">
+								<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+									<span>
+										{{(row?.per_unit_price || 0 )| currency}}
+									</span>
+								</ng-template>
+							</ngx-datatable-column>
+							<ngx-datatable-column name="Modifiers" [width]="250" prop="modifiers"
+								cellClass="action-icon" [sortable]="false">
+								<ng-template let-childrow="row" let-rowIndex="rowIndex" ngx-datatable-cell-template
+									let-value="value">
+									<div *ngIf="value" class="d-inline-block tags-block">
+										<span *ngFor="let item of value; let x = index">
+											<label class="form-label tags-btn"
+												(click)="!isBillingDetail?removeModifier(childrow,item):''"
+												[class.disabled]='isBillingDetail?true:false'>
+												{{item?.name}}
+												<span class="fa fa-times" *ngIf='!isBillingDetail'></span></label>
+										</span>
+									</div>
+									<span *ngIf="!value.length">N/A</span>
+									<button (click)="addModal(add,childrow, 'modifiers',null,rowIndex,row)"
+										[disabled]='isBillingDetail?true:false' *ngIf='!isBillingDetail'
+										class="btn btn-success add-tag-btn ms-2">
+										<i class="icon-plus text-white"></i>
+									</button>
+								</ng-template>
+							</ngx-datatable-column>
+							<ngx-datatable-column name="Total Charges" [width]="100" prop="total_charges" [sortable]="false">
+								<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+									<span>
+										{{(row.per_unit_price*row.units || 0 )| currency}} 
+									</span>
+								</ng-template>
+							</ngx-datatable-column>
+							<ngx-datatable-column name="Actions" sortable="false" prop="id" [width]="100"
+								*ngIf='!isBillingDetail' cellClass="action-icon" [sortable]="false">
+								<ng-template let-childrow="row" let-rowIndex="rowIndex" let-value="value"
+									ngx-datatable-cell-template>
+									<button class="remove-hov mx-2" style="width:16px;" ngbTooltip="Delete"
+										container="body" *ngIf='!isBillingDetail'
+										(click)="!isBillingDetail?confirmDelete(childrow,rowIndex,row):''"><i
+											class="icon-remove"></i></button>
+									<button class="edit-hov" style="width:16px; vertical-align: bottom;"><span
+											*ngIf="title == 'Create New Bill' ? childrow.hasMultiplFee && childrow.fee_schedule_id : childrow.hasMultiplFee || childrow.fee_schedule_id"
+											(click)="openModel(childrow,row)">
+											<i class="fa fa-exclamation-circle"></i>
+											
+										</span>
+										
+									</button>
+								</ng-template>
+							</ngx-datatable-column>
+						</ngx-datatable>
+					</div>
+				</ng-template>
+			</ngx-datatable-row-detail>
+			<ngx-datatable-column name="Actions" sortable="false" prop="id" [width]="100" cellClass="action-icon">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					Actions
+				</ng-template>
+				<ng-template let-row="row" let-rowIndex="rowIndex" let-expanded="expanded" ngx-datatable-cell-template>
+					<a href="javascript:void(0)" ngbTooltip="Expand Treatment Codes" container="body"
+						(click)="expandTable(row,rowIndex)" container="body">
+						<span class="angle-left" [class.icon-down-arrow]="!expanded"></span>
+						<span class="angle-right" [class.icon-down-arrow]="expanded"></span>
+					</a>
+					<button class="remove-hov mx-2" ngbTooltip="Delete" container="body" *ngIf='!isBillingDetail'
+						(click)="!isBillingDetail?confirmDelete(row):''"><i class="icon-remove"></i></button>
+					<button (click)="addModal(add,row, 'cptcodes',rowIndex)" *ngIf='!isBillingDetail'
+						class="btn btn-success add-tag-btn ms-1">
+						<i class="icon-plus text-white" ngbTooltip="Add cpt codes" container="body"></i>
+					</button>
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+	</div>
+	<form autocomplete="off" [formGroup]="createbillForm">
+		<div class="row mt-4 pt-2 px-1 justify-content-between">
+			<div class="col-md-6">
+				<div class="row form-group align-items-center horizontal-label">
+					<label class="col-sm-2 form-label">Bill Date*</label>
+					<div class="col-sm-10">
+						<div class="position-relative">
+							<input [matDatepicker]="remindDatePicker" (click)="remindDatePicker.open()"
+							class="form-control form-input mb-0" id="remindDate" formControlName="bill_date"
+								[min]="todayDate" [max]="maxBillDate">
+							<span
+							*ngIf="createbillForm.get('bill_date').value != '' && createbillForm.get('bill_date').value != null"
+								(click)="createbillForm?.get('bill_date')?.reset()"
+								class="icon-plus date-cross-icon"></span>
+							<mat-datepicker-toggle matSuffix [for]="remindDatePicker"></mat-datepicker-toggle>
+							<mat-datepicker #remindDatePicker></mat-datepicker>
+							<small class="form-text text-muted danger"
+								*ngIf="createbillForm.controls.bill_date.errors?.required && (createbillForm.get('bill_date').value === null || createbillForm.get('bill_date').value === '') ">
+								This field is required
+							</small>
+							<small class="form-text text-muted danger"
+								*ngIf="createbillForm.controls.bill_date.errors?.matDatepickerMin">
+								Bill date cannot be older than the visit date. 
+							</small>
+							<small class="form-text text-muted danger"
+								*ngIf="createbillForm.controls.bill_date.errors?.matDatepickerMax">
+								Bill date cannot be greater than current date. 
+							</small>
+						</div>
+					</div>
+				</div>
+				<div class="d-flex payment-selected-option">
+					<label class="radio-btn payment-radio tooltip-outer" for="ebill" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{eBill?'':'Payer does not exist against the selected insurance location.'}}">
+						<input type="radio" id="ebill" value="1" (click)="billClick($event, $event.target.value, eBill)"
+							formControlName="bill_type" name="bill_type">
+						<span [ngClass]="(eBill)?'fake-radio-button':'fake-radio-button-disabled'"></span>
+						<span [ngClass]="(eBill)?'fake-radio-label':'fake-radio-label-disbaled'">Electronic Bill</span>
+					</label>
+					<label class="radio-btn payment-radio" for="manual">
+						<input type="radio" id="manual" value="2"
+							(click)="billClick($event, $event.target.value, eBill)" formControlName="bill_type"
+							name="bill_type">
+						<span class="fake-radio-button"></span>
+						<span class="fake-radio-label">Manual Bill</span>
+					</label>
+				</div>
+				<ng-container *ngIf="bill_type_id == '1'">
+					<div class="row form-group mb-2">
+						<label class="col-sm-2 form-label pt-2">Bill To* </label>
+						<div class="col-sm-10">
+							<ng-multiselect-dropdown class="multiselect-dropdown-hold arrow-absolute handle-arrow"
+								[settings]="eBilldropdownSettings" [data]="eBilllstRecip"
+								formControlName="ebill_recipients" [placeholder]="'Bill To'" [disabled]='true'>
+							</ng-multiselect-dropdown>
+						</div>
+					</div>
+					<div class="row align-items-center mb-1 grid-3">
+						<label class="col-sm-2 form-label">Insurance: </label>
+						<div class="col-md-10 px-1">
+							<ul class="inner-grid list-unstyled mb-0" *ngIf="electronice_insurances?.length">
+								<li *ngFor="let eInsur of electronice_insurances;let i= index;">
+									<label class="radio-btn w-100" for="insur{{i}}">
+										<input type="radio" id="insur{{i}}" name="insurance"
+											(change)="selectedInsurance(i)" [checked]="eInsur.checked_radio">
+										<span class="fake-radio-button"></span>
+										<span class="fake-radio-label tooltip-outer text-truncate"
+											tooltipClass="table-custom-tooltip"
+											ngbTooltip="{{eInsur?.insurance?.insurance_name || 'N/A'}}">{{eInsur?.insurance?.insurance_name
+											|| 'N/A'}}</span>
+									</label>
+									<div class="CH-name tooltip-outer text-truncate ms-3"
+										tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{eInsur?.payer?.clearinghouse?.name || 'N/A'}}">
+										{{eInsur?.payer?.clearinghouse?.name || 'N/A'}}</div>
+									<div class="pairID text-truncate ms-3">{{eInsur?.payer?.payer_id || 'N/A'}}</div>
+									<app-ng-select-shareable [filterFieldName]="'document_type_ids'"
+										[lableName]="'Bill Formats'" [bindlable]="'name'"
+										[mainApiPath]="requestServerpath.fd_api_url"
+										[disableField]="true" [showSelectFieldOnRefresh]="[207]"
+										[updateOnRunTimeValue]="ngSelectedInsurance.asObservable()"
+										[lists]="formateData" [searchedKeys]="searchedKeys" [bindId]="'id'"
+										[apiPath]="EnumApiPath.documentFormatApiPath" [searchLableName]="'name'"
+										(valueChange)="selectionOnValueChange($event,'document_type_ids','Insurance',item.insurance_id,item)"
+										[multiple]="true"></app-ng-select-shareable>
+								</li>
+							</ul>
+							<div class="list-unstyled mb-0 ps-1" *ngIf="!insurances.length"><span
+									class="font-14">N/A</span>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="bill_type_id == '2' || !(electronice_insurances?.length)">
+					<div class="row form-group mb-2">
+						<label class="col-sm-2 form-label pt-2">Bill To* </label>
+						<div class="col-sm-10">
+							<ng-multiselect-dropdown class="multiselect-dropdown-hold arrow-absolute handle-arrow"
+								[settings]="dropdownSettings" #recipt (onSelectAll)="onSelectAll($event)"
+								(onDeSelectAll)="onDeSelectAll($event)" [data]="lstRecip"
+								formControlName="bill_recipients" [placeholder]="'Bill To'"
+								[disabled]='isBillingDetail?true:false' (onSelect)="onItemSelect($event)"
+								(onDeSelect)="onDeItemSelect($event)">
+							</ng-multiselect-dropdown>
+						</div>
+					</div>
+					<div class="row grid-main mb-2" *ngIf='ispatient'>
+						<label class="col-sm-2 form-label">Patient: </label>
+						<div class="col-md-10 inner-grid">
+							<div>
+								<span class="font-14">{{patient?.first_name}} {{patient?.middle_name}}
+									{{patient?.last_name}}</span>
+							</div>
+							<div>
+								<app-ng-select-shareable [filterFieldName]="'document_type_ids'"
+									[showSelectFieldOnRefresh]="patient.document_type_ids" [lableName]="'Bill Formats'"
+									[bindlable]="'name'" [mainApiPath]="requestServerpath.fd_api_url"
+									[updateOnRunTimeValue]="ngSelectedPatient.asObservable()" [ngSelectShow]="true"
+									[bindId]="'id'" [lists]="formateData" [searchedKeys]="searchedKeys"
+									[apiPath]="EnumApiPath.documentFormatApiPath" [searchLableName]="'name'"
+									(valueChange)="selectionOnValueChange($event,'document_type_ids','Patient')"
+									[multiple]="true"></app-ng-select-shareable>
+							</div>
+						</div>
+					</div>
+					<div class="row align-items-center mb-1 grid-3" *ngIf='isEmployer'>
+						<label class="col-sm-2 form-label">Employer: </label>
+						<div class="col-md-10 ps-1">
+							<ul class="inner-grid list-unstyled mb-0" *ngIf="employer.length">
+								<li *ngFor="let item of employer;let i=index">
+									<mat-checkbox [disabled]="isBillingDetail"
+										(change)="toBillEmployer($event,item.id,i,item)" [checked]='item?.checked'>
+										{{item.employer_name}}
+									</mat-checkbox>
+									<app-ng-select-shareable *ngIf="item?.checked"
+										[filterFieldName]="'document_type_ids'" [lableName]="'Bill Formats'"
+										[bindlable]="'name'" [mainApiPath]="requestServerpath.fd_api_url"
+										[showSelectFieldOnRefresh]="item?.document_type_ids" [bindId]="'id'"
+										[ngSelectShow]="true" [updateOnRunTimeValue]="ngSelectedEmployee.asObservable()"
+										[lists]="formateData" [searchedKeys]="searchedKeys" [onEditCall]="(this.isBillingDetail || this.editBill)?false:true"
+										[apiPath]="EnumApiPath.documentFormatApiPath" [searchLableName]="'name'"
+										(valueChange)="selectionOnValueChange($event,'document_type_ids','Employer',item.id,item,i,true)"
+										[multiple]="true"></app-ng-select-shareable>
+								</li>
+							</ul>
+							<div class="list-unstyled mb-0 ps-1" *ngIf='!employer.length'><span
+									class="font-14">N/A</span>
+							</div>
+						</div>
+					</div>
+					<div class="row align-items-center mb-1 grid-3" *ngIf='isInsurance'>
+						<label class="col-sm-2 form-label">Insurance: </label>
+						<div class="col-md-10 px-1">
+							<ul class="inner-grid list-unstyled mb-0" *ngIf="insurances.length">
+								<li *ngFor="let item of insurances;let i = index">
+									<mat-checkbox [disabled]="isBillingDetail" name="insuranceRecipent"
+										(change)="toBillInsurances($event,item.insurance_id,i,item,item.id)"
+										[checked]='item?.checked'
+										
+										>
+										<span 
+										tooltipClass="table-custom-tooltip"
+										ngbTooltip="{{ (item?.location?.street_address || 'N/A') + ', ' + 
+										(item?.location?.city || 'N/A') + ', ' + 
+										(item?.location?.state || 'N/A') + ' ' + 
+										(item?.location?.zip || 'N/A') }}" 
+										>
+											{{item?.insurance?.insurance_name || 'N/A'}}
+										</span>
+										
+									</mat-checkbox>
+									<app-ng-select-shareable *ngIf="item?.checked"
+										[filterFieldName]="'document_type_ids'" [lableName]="'Bill Formats'"
+										[bindlable]="'name'"  [mainApiPath]="requestServerpath.fd_api_url"
+										[ngSelectShow]="true" [showSelectFieldOnRefresh]="item?.document_type_ids"
+										[updateOnRunTimeValue]="ngSelectedInsurance.asObservable()"
+										[lists]="formateData" [onEditCall]="(this.isBillingDetail || this.editBill)?false:true" [searchedKeys]="searchedKeys" [bindId]="'id'"
+										[apiPath]="EnumApiPath.documentFormatApiPath" [searchLableName]="'name'"
+										(valueChange)="selectionOnValueChange($event,'document_type_ids','Insurance',item.insurance_id,item,i,true)"
+										[multiple]="true"></app-ng-select-shareable>
+								</li>
+							</ul>
+							<div class="list-unstyled mb-0 ps-1" *ngIf="!insurances.length"><span
+									class="font-14">N/A</span>
+							</div>
+						</div>
+					</div>
+					<div class="row grid-main" *ngIf='isLawyer'>
+						<label class="col-sm-2 form-label">Firm Name: </label>
+						<div class="col-md-10 inner-grid">
+							<div>
+								<span class="font-14">{{attorney_firm ? attorney_firm : ''}} </span>
+								<div *ngIf="!attorney_firm"><span class="font-14">N/A</span></div>
+							</div>
+							<div>
+								<app-ng-select-shareable *ngIf="firm_id" [filterFieldName]="'document_type_ids'"
+									[showSelectFieldOnRefresh]="lawer?.document_type_ids" [lableName]="'Bill Formats'"
+									[bindlable]="'name'" [ngSelectShow]="true"
+									[mainApiPath]="requestServerpath.fd_api_url"
+									[updateOnRunTimeValue]="ngSelectedLawyer.asObservable()" [lists]="formateData"
+									[searchedKeys]="searchedKeys" [bindId]="'id'" 
+									[apiPath]="EnumApiPath.documentFormatApiPath" [searchLableName]="'name'"
+									(valueChange)="selectionOnValueChange($event,'document_type_ids','Lawyer')"
+									[multiple]="true"></app-ng-select-shareable>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+			<div class="col-md-5">
+				<h6 class="form-label text-end mb-2">Total Amount:
+					<span class="text-success">
+						{{(totalAmount || 0 )| currency}}
+					</span>
+				</h6>
+				<div class="total-amount">
+					<div class="form-group row">
+						<div class="col-sm-12">
+							<app-mat-autocomplete [loader]="showSpinnerIntellicense.diagnosis_codes" [max]="12"
+								[selected_case_type_slug]='case_type?.slug'
+								[allowed_case_type_slugs]="allowed_case_type_slugs"
+								(onkeyUp)="getICDcodes($event, 'search')" (onScrolled)="onScroll($event)"
+								(onChangeEmitter)="removeICDcodeFromList($event)" [selectedOptions]="icdbuttons"
+								[placeHolder]="'Diagnosis Codes*'" [options]="lstICDcodes"></app-mat-autocomplete>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div *ngIf="!isBillingDetail" class="row justify-content-left mt-2 mb-1 modal-btn">
+			<div class="col-12">
+				<button type="button" class="btn btn-primary me-3" (click)='modalRef.close()'>Cancel
+				</button>
+				<button type="submit" class="btn btn-success text-white" [disabled]="disableButton"
+					(click)='submitCreateBillForm(createbillForm.value)'>{{billButtonTitle}}</button>
+			</div>
+		</div>
+	</form>
+	<div class="col-md-12 px-0" *ngIf="isBillingDetail">
+		<div class="card-header mb-3 px-0 mt-0">
+			<tabset>
+				<tab *ngIf="patienDocument && patienDocument!=null" heading="Patient {{patienDocument?.recipient?.first_name}}
+          {{patienDocument?.recipient?.middle_name}}
+          {{patienDocument?.recipient?.last_name}}" id="Patient {{patienDocument?.recipient?.first_name}}
+          {{patienDocument?.recipient?.middle_name}}
+          {{patienDocument?.recipient?.last_name}}">
+					<app-billing-document-listing [patienDocument]='patienDocument'></app-billing-document-listing>
+				</tab>
+				<tab *ngFor="let item of multipleInsuranceDocument"
+					heading="Insurance {{item?.recipient?.insurance_name}}">
+					<app-billing-document-listing [InsuranceDocument]='item'></app-billing-document-listing>
+				</tab>
+				<tab *ngIf="AttorneyDocument && AttorneyDocument!=null"
+					heading="{{attorney_firm ? 'Firm ' + attorney_firm  : ''}}">
+					<app-billing-document-listing [AttorneyDocument]='AttorneyDocument'>
+					</app-billing-document-listing>
+				</tab>
+				<tab *ngFor="let item of employerDocument" heading="Employer {{item?.recipient?.employer_name}}">
+					<app-billing-document-listing [employerDocument]='item'></app-billing-document-listing>
+				</tab>
+			</tabset>
+		</div>
+	</div>
+</div>
+<ng-template #documenttable let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">Bill <strong>{{billDeatils?billDeatils.label_id:''}} </strong> Document</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modalReference.close()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="card-header mx-4 my-3">
+		<tabset>
+			<tab *ngIf="patienDocument && patienDocument!=null" heading="Patient {{patienDocument?.recipient?.first_name}}
+        {{patienDocument?.recipient?.middle_name}}
+        {{patienDocument?.recipient?.last_name}}" id="Patient {{patienDocument?.recipient?.first_name}}
+        {{patienDocument?.recipient?.middle_name}}
+        {{patienDocument?.recipient?.last_name}}">
+				<app-billing-document-listing [patienDocument]='patienDocument'></app-billing-document-listing>
+			</tab>
+			<tab *ngFor="let item of multipleInsuranceDocument;"
+				heading="Insurance {{item?.recipient?.insurance_name}}">
+				<app-billing-document-listing [InsuranceDocument]='item'></app-billing-document-listing>
+			</tab>
+			<tab *ngIf="AttorneyDocument && AttorneyDocument!=null"
+				heading="{{attorney_firm ? 'Firm ' + attorney_firm  : ''}}">
+				<app-billing-document-listing [AttorneyDocument]='AttorneyDocument'></app-billing-document-listing>
+			</tab>
+			<tab *ngFor="let item of employerDocument" heading="Employer {{item?.recipient?.employer_name}}"
+				id="Employer {{item?.recipient?.employer_name}}">
+				<app-billing-document-listing [employerDocument]='item'></app-billing-document-listing>
+			</tab>
+		</tabset>
+	</div>
+</ng-template>
+<ng-template #showMultipleCPTFeeScheduleModel let-modal style="max-width: 500px;">
+	<div class="modal-header">
+		<h5 class="modal-title">Select CPT</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body" *ngIf='showCptTable'>
+		<ngx-datatable class="bootstrap  scroll-hide custom-scroll-x" [scrollbarH]="true" [columnMode]="'force'"
+			[headerHeight]="50" [footerHeight]="0" [rowHeight]="'auto'" [rows]="selectedmultiplefeerecords"
+			style="width: 100% !important; border-bottom:1px solid #bbcbbb;">
+			<ngx-datatable-column name="CPT Code Description" prop="cpt_code" [width]="150">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value?.name}}">
+						{{value?.name}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Fee Schedule" [width]="120" prop="base_price">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span>
+						{{(row?.base_price || 0 )| currency}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Units" [width]="80" prop="units">
+				<ng-template let-row="row" let-Index='rowIndex' ngx-datatable-cell-template let-value="value">
+					<span>
+						{{row?.units}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Per Unit Price" [width]="100" prop="per_unit_price">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<span>
+						{{(row?.per_unit_price || 0 )| currency}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Actions" sortable="false" [width]="100" cellClass="action-icon">
+				<ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+					<mat-radio-button [value]="row.per_unit_price" [checked]="setCpt && setCpt.id==row.id"
+						(click)="selectCpts(selectedmultiplefeerecords,row,rowIndex)">
+					</mat-radio-button>
+				</ng-template>
+			</ngx-datatable-column>
+		</ngx-datatable>
+		<div class="row">
+			<div class="col-12 text-center">
+				<button class="btn btn-success add-pm mt-3" (click)="appendCPT(selectedmultiplefeerecords)"
+					type="submit">
+					Add
+				</button>
+			</div>
+		</div>
+	</div>
+</ng-template>
+<ng-template #add let-modal style="max-width: 500px;">
+
+	<div class="modal-header">
+		<h5 class="modal-title">Add {{cptOrmodifier}}</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+
+		<form [formGroup]="addCptForm">
+
+			<!-- <div class="tags-block">
+				<span *ngFor="let item of modifiersData ; let x = index">
+					<label class="form-label tags-btn"
+						(click)="!isBillingDetail?removeModifierOrCptFromModel(item,cptOrmodifier):''"
+						[class.disabled]='isBillingDetail?true:false'>
+						{{item.name}}
+						<span class="fa fa-times" *ngIf='!isBillingDetail'></span></label>
+				</span>
+			</div> -->
+
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="form-group mb-2 mt-2">
+
+
+						<app-mat-autocomplete [loader]="showSpinnerIntellicense.cpt_codes"
+							*ngIf="cptOrmodifier == 'CPT Codes'; else elseBlock" [max]="6"
+							(onkeyUp)="getCptCodes($event,cptOrmodifier, 'search')" (onScrolled)="onScrollCpt($event)"
+							[multiple]="selectMultipleCPTs" (onChangeEmitter)="showOnModel($event)"
+							[placeHolder]="'CPT Codes'" [options]="lstCptorModifiers"></app-mat-autocomplete>
+
+
+						<ng-template #elseBlock>
+							<!-- <ng-select formControlName="name" [maxSelectedItems]="4" [items]="lstCptorModifiers"
+								[closeOnSelect]='false' [multiple]="true" bindLabel="name"
+								(keyup)="getModifiers($event,cptOrmodifier)"
+								(change)="showOnModel(addCptForm.value)">
+								<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+									<div class="ng-value" *ngFor="let item of items | slice:0:2">
+										<span class="ng-value-label"> {{item.name}}</span>
+										<span class="ng-value-icon right" (click)="clear(item)"
+											aria-hidden="true">×</span>
+									</div>
+									<div class="ng-value" *ngIf="items.length > 2">
+										<span class="ng-value-label">{{items.length - 2}} more...</span>
+									</div>
+								</ng-template>
+							</ng-select> -->
+
+							<app-mat-autocomplete (onkeyUp)="getModifiers($event,cptOrmodifier, 'search')" [max]="4"
+								(onScrolled)="onScrollModifier($event)" (onChangeEmitter)="showOnModel($event)"
+								[placeHolder]="'Modifier Codes'" [options]="lstCptorModifiers"></app-mat-autocomplete>
+
+
+
+						</ng-template>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group row mb-0">
+				<div class="col-sm-6 offset-sm-3">
+					<div class="row">
+						<div class="col-6">
+							<button type="button" (click)="modal.dismiss('Cross click')"
+								class="btn btn-primary w-100">Close</button>
+						</div>
+
+						<div class="col-6">
+							<button class="btn btn-success w-100"
+								[disabled]="addCptForm.value.name.length==0 || isdisable"
+								(click)='submtCptOrModifiers(selectedCpt,cptOrmodifier)' type="submit">
+								Add
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+<ng-template #addVisitBill let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left">Add Visits</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<ngx-datatable class="bootstrap" [rows]="visits" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50"
+			[rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true">
+			<ngx-datatable-column name="Practice Location" [sortable]="false" prop="bill_id" [canAutoResize]="true"
+				[draggable]="false" [resizeable]="false">
+				<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Practice Location" [width]="100"
+					[minWidth]="100">
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+							ngbTooltip="{{row?.facility_location?.name}}">
+							{{row?.facility_location?.qualifier}}
+						</span>
+					</ng-template>
+				</ngx-datatable-column>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="provider" [width]="80"
+				[minWidth]="80">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<span class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+						ngbTooltip="{{row?.doctor?.first_name}} {{((row?.doctor?.middle_name)?row?.doctor?.middle_name:'')}} {{row?.doctor?.last_name}}">
+						{{row?.doctor?.first_name}} {{((row?.doctor?.middle_name)?row?.doctor?.middle_name:'')}}
+						{{row?.doctor?.last_name}}
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Specialty" [width]="80"
+				[minWidth]="80">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row?.speciality?.name}}" container="body">
+						{{row?.speciality?.qualifier}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Visit Type" [width]="80"
+				[minWidth]="80">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row?.appointment_type?.name}}" container="body">
+						{{row?.appointment_type?.qualifier}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Visit Date" [width]="90"
+				[minWidth]="90">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row?.visit_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}"
+						container="body">
+						{{row?.visit_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="CPT Codes" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="cpt_codes" cellClass="action-icon" [width]="150">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<span *ngFor="let type of row?.cpt_codes" class="badge bg-info modal-name">{{type?.name}}</span>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="ICD Codes" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="cpt_codes" cellClass="action-icon" [width]="150">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<span *ngFor="let type of row?.icd_codes" class="badge bg-info modal-name">{{type?.name}}</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Status" [width]="100" [minWidth]="80">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{row?.visit_session_state?.name}}" container="body">
+						{{row?.visit_session_state?.name}}
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' prop="" [canAutoResize]="true" name="Report Uploaded Status"
+				[width]="160" [minWidth]="160">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					{{(row?.document_uploaded)?'Yes':'No'}}
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Actions" [sortable]="false" cellClass="action-icon" [minWidth]="100"
+				[width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-header-template name="Actions">
+					<mat-checkbox (change)="$event ? visitMasterToggle($event) : null"
+						[checked]="selection.hasValue() && isVisitAllSelected()"
+						[indeterminate]="selection.hasValue() && !isVisitAllSelected()">
+					</mat-checkbox>
+					Actions
+				</ng-template>
+				<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+					<mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+						[checked]="selection.isSelected(row)">
+					</mat-checkbox>
+					<button class="edit-hov mx-1 " [ngClass]="{'not-active': !row?.document_uploaded}"
+						(click)="getVisitDocument(row)" tooltip="View" role="button"><i class="icon-eye"></i></button>
+				</ng-template>
+
+			</ngx-datatable-column>
+		</ngx-datatable>
+	</div>
+	<div class="text-center">
+		<a class="btn btn-default mb-3" *ngIf='!isBillingDetail' href="javascript:void(0)" role="button"
+			(click)="addSelectedVisits();modal.dismiss('Cross click');"> Add Visit</a>
+	</div>
+
+</ng-template>

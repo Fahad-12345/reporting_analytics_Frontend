@@ -1,0 +1,844 @@
+<div *ngIf="loadSpin" class="lds-roller">
+	<img src="assets/images/spinner.gif" alt="spinner">
+</div>
+
+<div class="tab-pane fade show active" id="firm" role="tabpanel" aria-labelledby="firm-tab"
+	*ngIf="aclService.hasPermission(userPermissions.master_billing_firm_view)">
+	<div class="d-block text-end" *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_add)">
+		<button (click)="addFirmModal()" class="btn btn-default round-btn" *ngIf='hideAddButton'>
+			<span class="icon-plus-circle"></span> Add New 
+		</button>
+	</div>
+	<form class="form" action="" (ngSubmit)="setFirms({offset: 0},true)" autocomplete="off" [formGroup]="firmSearchForm" *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('name').value != '' && firmSearchForm.get('name').value != null }">
+					<label class="form-label" for="FirmName">Firm Name</label>
+					<input type="text" id="FirmName" class="form-control form-input" formControlName="name">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('location').value != '' && firmSearchForm.get('location').value != null }">
+					<label class="form-label" for="location">Location Name</label>
+					<input type="text" id="location" class="form-control form-input" formControlName="location">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('street_address').value != '' && firmSearchForm.get('street_address').value != null }">
+					<label class="form-label" for="street_address">Address</label>
+					<input type="text" id="street_address" class="form-control form-input" formControlName="street_address">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('city').value != '' && firmSearchForm.get('city').value != null }">
+					<label class="form-label" for="city">City</label>
+					<input type="text" id="city" class="form-control form-input" formControlName="city">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('state').value != '' && firmSearchForm.get('state').value != null }">
+					<label class="form-label" for="state">State</label>
+					<input type="text" id="state" class="form-control form-input" formControlName="state">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('zip').value != '' && firmSearchForm.get('zip').value != null }">
+					<label class="form-label" for="zip">Zip</label>
+					<input type="text" id="zip" class="form-control form-input" formControlName="zip">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('phone').value != '' && firmSearchForm.get('phone').value != null }">
+					<label class="form-label" for="phone">Phone No</label>
+					<input type="text" id="phone" mask="000-000-0000" class="form-control form-input" formControlName="phone">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('fax').value != '' && firmSearchForm.get('fax').value != null }">
+					<label class="form-label" for="fax">Fax</label>
+					<input type="text" id="fax" class="form-control form-input" mask="000-000-0000" formControlName="fax">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': firmSearchForm.get('email').value != '' && firmSearchForm.get('email').value != null }">
+					<label class="form-label" for="email">Email</label>
+					<input type="text" id="email" class="form-control form-input" formControlName="email">
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success">Filter</button>
+				<button class="btn btn-primary" (click)="resetFilter()" [disabled]="checkInputs()">Reset</button>
+			</div>
+		</div>
+   </form>
+	<div *ngIf="showform">
+		<app-add-attorney #firm [id]='id' (childForm)="firmSearchForm.reset();getDataFromChild($event)"></app-add-attorney>
+	</div>
+	<!-- <div class="search-filter">
+
+		<div class="d-block" *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_add)">
+			<button (click)="addFirmModal()" class="btn btn-default round-btn float-right" *ngIf='hideAddButton'>
+				<span class="icon-plus-circle"></span> Add New 
+			</button>
+		</div>
+		<div *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_filter)">
+		<form action="" (ngSubmit)="setFirms({offset: 0},true)" autocomplete="off" [formGroup]="firmSearchForm">
+			<div class="form">
+				<div class="search-filter-body" [class.pb-3]="!isCollapsed">
+					<div class="row px-2">
+						<div class="field-block">
+							<div class="row pb-1">
+								<div class="col-sm-6 col-lg-3">
+									<div class="form-group field mb-lg-0"
+										[ngClass]="{'focused': firmSearchForm.get('name').value != '' && firmSearchForm.get('name').value != null }">
+										<label class="form-label" for="FirmName">Firm Name</label>
+										<input type="text" id="FirmName" class="form-control form-input"
+											formControlName="name">
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3">
+									<div class="form-group field mb-lg-0"
+										[ngClass]="{'focused': firmSearchForm.get('location').value != '' && firmSearchForm.get('location').value != null }">
+										<label class="form-label" for="location">Location Name</label>
+										<input type="text" id="location" class="form-control form-input"
+											formControlName="location">
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3">
+									<div class="form-group field mb-0"
+										[ngClass]="{'focused': firmSearchForm.get('street_address').value != '' && firmSearchForm.get('street_address').value != null }">
+										<label class="form-label" for="street_address">Address</label>
+										<input type="text" id="street_address" class="form-control form-input"
+											formControlName="street_address">
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3">
+									<div class="form-group field mb-0"
+										[ngClass]="{'focused': firmSearchForm.get('city').value != '' && firmSearchForm.get('city').value != null }">
+										<label class="form-label" for="city">City</label>
+										<input type="text" id="city" class="form-control form-input"
+											formControlName="city">
+									</div>
+								</div>
+
+							</div>
+							<div class="row collapse-basic pt-3" id="collapseBasic" [collapse]="!isCollapsed"
+								[isAnimated]="true">
+
+								<div class="col-sm-6 col-lg-3 d-inline-block float-left">
+									<div class="form-group field"
+										[ngClass]="{'focused': firmSearchForm.get('state').value != '' && firmSearchForm.get('state').value != null }">
+										<label class="form-label" for="state">State</label>
+										<input type="text" id="state" class="form-control form-input"
+											formControlName="state">
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3 d-inline-block float-left">
+									<div class="form-group field"
+										[ngClass]="{'focused': firmSearchForm.get('zip').value != '' && firmSearchForm.get('zip').value != null }">
+										<label class="form-label" for="zip">Zip</label>
+										<input type="text" id="zip" class="form-control form-input"
+											formControlName="zip">
+									</div>
+								</div>
+
+								<div class="col-sm-6 col-lg-3 d-inline-block float-left">
+									<div class="form-group field"
+										[ngClass]="{'focused': firmSearchForm.get('phone').value != '' && firmSearchForm.get('phone').value != null }">
+										<label class="form-label" for="phone">Phone No</label>
+										<input type="text" id="phone" mask="000-000-0000"
+											class="form-control form-input" formControlName="phone">
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3 d-inline-block float-left">
+									<div class="form-group field"
+										[ngClass]="{'focused': firmSearchForm.get('fax').value != '' && firmSearchForm.get('fax').value != null }">
+										<label class="form-label" for="fax">Fax</label>
+										<input type="text" id="fax" class="form-control form-input" mask="000-000-0000"
+											formControlName="fax">
+									</div>
+								</div>
+								<div class="col-sm-6 col-lg-3 d-inline-block float-left">
+									<div class="form-group field"
+										[ngClass]="{'focused': firmSearchForm.get('email').value != '' && firmSearchForm.get('email').value != null }">
+										<label class="form-label" for="email">Email</label>
+										<input type="text" id="email" class="form-control form-input"
+											formControlName="email">
+									</div>
+								</div>
+								<div class="col-md-12 text-center search-filter-btn float-left mb-3">
+									<button class=" btn btn-success mt-0 me-3" type="submit"> Filter </button>
+									<button class="btn btn-primary mt-0" type="button" (click)="resetFilter()" [disabled]="checkInputs()">
+										Reset</button></div>
+							</div>
+						</div>
+						<div class="colps-btn-block">
+							<button class="btn plus-btn float-right mt-0" (click)="isCollapsed = !isCollapsed"
+								[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"
+								[class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button"><span
+									class="" [class.icon-plus]="!isCollapsed"
+									[class.icon-minus]="isCollapsed"></span></button>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</form>
+		</div>
+
+		<div *ngIf="showform">
+			<app-add-attorney #firm [id]='id' (childForm)="firmSearchForm.reset();getDataFromChild($event)"></app-add-attorney>
+		</div>
+	</div> -->
+
+	<div class="document-content-area mt-2">
+		<div class="row align-items-center select-all-document">
+			<div class="col-12 col-md-8 edit-block text-start" style="margin-left: -15px;">
+				<div class="form-group field option-field mb-2 d-inline-block ms-2 ps-1">
+					<ul>
+						<li> Show</li>
+						<li>
+							<select (change)="firmPageLimit($event.target.value, $event)" class="custom-select"
+								name="limit" [(ngModel)]="firmPage.size">
+								<option selected [value]="10">10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="col-md-4 text-end pe-0 mb-1">
+
+
+				<!-- <p class="mb-2 d-inline-block ms-1">
+					<mat-checkbox (change)="$event ? masterToggle() : null"
+						[checked]="selection.hasValue() && isAllSelected()"
+						[indeterminate]="selection.hasValue() && !isAllSelected()"
+						*ngIf="aclService.hasPermission(userPermissions.master_billing_firm_delete)">
+					</mat-checkbox>
+					<span style="position: relative; top: 1px;">Check all</span>
+				</p> -->
+				<!-- <a class="btn btn-default color-white" *ngIf="selection.selected.length"
+					  (click)="deleteMultipleFirm()"><span class="icon-remove"></span>Delete
+					  [{{selection.selected.length}}]</a> -->
+			</div>
+		</div>
+
+		<div class="card mb-0 ma-body-list">
+			<div class="card-header card-header-custom mb-0">
+				<div class="row align-items-center">
+					<div class="col-md-3 pe-0 form" style="padding-top: 4px;">
+						<p class="float-left mb-0 ps-2 d-flex align-items-center">
+							<mat-checkbox (change)="$event ? masterToggle() : null"
+								[checked]="selection.hasValue() && isAllSelected()"
+								[indeterminate]="selection.hasValue() && !isAllSelected()" 
+								*ngIf="aclService.hasPermission(userPermissions.master_billing_firm_delete)" style="margin: -3px 0 0;" disabled>
+							</mat-checkbox>
+							<span class="text-white ps-1" style="position: relative; ">Firm Name</span>
+						</p>
+					</div>
+					<!-- <div class="col-md-7 ">
+						<ul class="list-unstyled social-icon-block pt-1 " style="font-weight: 600">
+							<li class="text-white ps-4 "> Cell No</li>
+							<li class="text-white ps-3"> Fax</li>
+							<li class="text-white ps-2">Email</li>
+						</ul>
+					</div> -->
+				</div>
+			</div>
+			<div class="card-body pb-0 card-body-custom" style="border-radius: 0">
+				<div class="card mb-3" *ngFor="let firms of allFirms; index as i;">
+					<div class="card-header" style="padding: 0px 0.9375rem !important;">
+						<div class="row align-items-center">
+							<div class="col-10 pe-0 form text-start d-flex">
+								<mat-checkbox (click)="$event.stopPropagation()"
+									(change)="$event ? selection.toggle(firms) : null"
+									[checked]="selection.isSelected(firms)" disabled>
+								</mat-checkbox>
+
+								<ul class="d-inline-block custom-btn-tooltip list-unstyled ms-0 text-elipse" tooltipClass="table-custom-tooltip" ngbTooltip="{{firms.name}}" container="body"
+									style="font-size: 0.875rem; font-weight: 500;">
+									<ng-container *ngIf="firms && firms.name && firms.name.length > 0">
+										{{firms.name}}
+									</ng-container>
+									<!-- <li class="btn-tooltip-top text-center"
+										*ngIf="firms && firms.name && firms.name.length > 26">
+										<span>{{firms && firms.name && firms.name}}</span>
+										<i></i>
+									</li> -->
+								</ul>
+
+								<!-- <span style="position: relative;
+							  top: 1px;">{{firms.name}}</span> -->
+							</div>
+							<!-- 
+							<div class="col-md-7">
+								<ul class="list-unstyled social-icon-block">
+
+									<li><span class="icon-phone me-1">
+											{{firms.firm_locations[0]?.cell | phoneFormatPipe}}</span></li>
+									<li><span class="icon-fax me-1">
+											{{firms.firm_locations[0]?.fax | phoneFormatPipe}}</span></li>
+									<li><span class="icon-envelope me-1"></span> {{firms.email}}</li>
+									<li>
+										<span class="icon-envelope me-1"></span>
+										<ul class="d-inline-block custom-btn-tooltip list-unstyled">
+											<ng-container
+												*ngIf="firms && firms.firm_locations[0] && firms.firm_locations[0].email && firms.firm_locations[0].email.length > 0">
+												{{firms && firms.firm_locations[0].email && firms.firm_locations[0].email.length > 25 ? firms.firm_locations[0].email.substring(0, 25)+'...' : firms.firm_locations[0].email}}
+											</ng-container>
+											<li class="btn-tooltip-top text-center"
+												*ngIf="firms && firms.email && firms.email.length > 25">
+												<span>{{firms && firms.firm_locations[0].email && firms.firm_locations[0].email}}</span>
+												<i></i>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</div> -->
+
+							<div class="col-2 text-end">
+								<button *ngIf="aclService.hasPermission(userPermissions.master_billing_firm_edit)"
+									type="button" class="btn btn-outline-secondary"
+									(click)="updateAttorney(firms,i, true) ; triggerScrollTo('firm')">
+									<span class="icon-pencil"></span> Edit
+								</button>
+								<!-- <button type="button" class="btn btn-outline-secondary" (click)="deleteFirm(firms)">
+							  <span class="icon-remove"></span> Delete
+							</button> -->
+								<!-- <button type="button" class="btn slide-btn" (click)="toggle(i)"
+					[disabled]="firms?.firm_locations.length == 0"
+					[ngClass]="{'btn-success': opened[i], 'btn-primary':!opened[i] }">
+					<i class="ml-0 p-0 icon-{{ icon(i) }}" style="background: none;"></i>
+				  </button> -->
+
+								<button type="button" class="btn slide-btn" (click)="toggle(i, firms)"
+									[ngClass]="{'btn-success': opened[i], 'btn-primary':!opened[i] }">
+									<i class="ml-0 p-0 icon-{{ icon(i) }}" style="background: none;"></i>
+								</button>
+							</div>
+						</div>
+
+					</div>
+					<div class="card-body p-3 border-top-0" *ngIf="!hidden(i)">
+						<div class="card data-table p-0">
+							<div class="row">
+								<div class="col-12">
+									<!-- <div class="edit-block float-left">
+					  <div class="form-group field option-field mb-2 d-inline-block">
+						<ul>
+						  <li>Show</li>
+						  <li>
+  
+							<select class="custom-select" name="limit" id="limit"
+							  (change)="PageLimit($event.target.value,firms)">
+							  <option [value]="10" selected>10</option>
+							  <option [value]="20">20</option>
+							  <option [value]="30">30</option>
+							  <option [value]="40">40</option>
+							  <option [value]="50">50</option>
+							  <option [value]="100">100</option>
+							</select>
+						  </li>
+						  <li>entries</li>
+						</ul>
+  
+					  </div>
+					</div> -->
+								
+
+									<!-- <a href="javascript:void(0)" class="btn btn-default round-btn me-2"
+								  *ngIf="getCheckedLocations(firms).length > 0" (click)="deleteMultipleLocations(firms)">
+								  <span class="icon-remove me-1"></span> Delete [{{getCheckedLocations(firms).length}}]
+								</a> -->
+									<!-- <button class="btn btn-primary round-btn ms-3" type="button"
+						(click)="addLocation(firm_locations, firms)"> Add Location..</button> -->
+									<!-- </div> -->
+								</div>
+							</div>
+							<!--  [allLocations]='allLocationsBYFIrmId'  -->
+							<app-shared-firms-location [externalPagination]="true"
+								(dropdownSelectionValue)="dropdownSelectedValue($event)"
+								(paginationLocation)="locationPagination($event)"
+								[requiredFields] = "['city','zip','state','street_address']"
+								(locationFormValue)="firmLocationValue($event , firms.id)"
+								(onSelectionUpdate)="checkboxData($event)" [totalLocations]='firms.totalElements'
+								[allLocations]='firms.firm_locations' locationPopUp='firm'></app-shared-firms-location>
+							<!-- <ngx-datatable [rows]="firms.firm_locations" [columnMode]='"force"'
+				  class='bootstrap scroll-hide custom-scroll-x' [footerHeight]="50" [rowHeight]="'auto'"
+				  [scrollbarH]="true" [limit]="firms.pageLimit || '20'">
+  
+  
+				  <ngx-datatable-column name="Location Name" [sortable]="false" prop="location_name">
+  
+					<ng-template *ngFor="let loc of firms.firm_locations">
+					  <span *ngIf="loc.is_main">{{loc.location_name}}</span>
+					</ng-template>
+  
+				  </ngx-datatable-column>
+  
+				  <ngx-datatable-column name="Address" [sortable]="false" prop="street_address">
+					<ng-template *ngFor="let loc of firms.firm_locations">
+					  <span *ngIf="loc.street_address">{{loc.street_address}},</span>
+					  <span *ngIf="loc.apartment_suite"> {{loc.apartment_suite}},</span>
+					  <span *ngIf="loc.city">{{loc.city }},</span>
+					  <span *ngIf="loc.state">{{loc.state}},</span> {{loc.zip}}
+					</ng-template>
+  
+				  </ngx-datatable-column>
+  
+				  <ngx-datatable-column name="Cell No" [sortable]="false" prop="cell">
+  
+				  </ngx-datatable-column>
+  
+				  <ngx-datatable-column name="Fax" [sortable]="false" prop="fax">
+  
+				  </ngx-datatable-column>
+  
+				  <ngx-datatable-column name="Email" [sortable]="false" prop="email">
+  
+				  </ngx-datatable-column>
+  
+				  <ngx-datatable-column name="Actions" [width]="150" [sortable]="false">
+					<ng-template ngx-datatable-header-template name="Actions">
+  
+					  <mat-checkbox (change)="selectAllFirmLocations($event,firms)"
+						[checked]="getCheckedLocations(firms).length ==firms.firm_locations.length && firms.firm_locations.length!=0">
+					  </mat-checkbox>
+					  Actions
+  
+					</ng-template>
+  
+					<ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+  
+					  <mat-checkbox (change)="checkLocation($event,row)" [checked]="row.checked">
+					  </mat-checkbox>
+  
+					  <a class="edit-hov mx-1" tooltip="Edit" (click)="editLocation(firm_locations , rowIndex , row)"
+						href="javascript:void(0)" role="button"><i class="icon-pencil"></i></a>
+  
+					 -->
+
+							<!-- <a class="remove-hov mx-1" tooltip="Delete" href="javascript:void(0)" role="button"
+								  (click)="deleteOneLocation(row.id)">
+								  <span class="icon-remove"></span></a> -->
+
+							<!-- </ng-template>
+				  </ngx-datatable-column>
+  
+  
+				</ngx-datatable> -->
+
+							<!-- <table class="table table-bordered table-striped text-center mb-0">
+							<thead>
+							  <tr>
+								<th class="border-right" scope="col">Firm Name</th>
+								<th class="border-right" scope="col">Location Name</th>
+								<th class="form" scope="col">
+								  <label class="chkbox position-relative mt-1" for="">
+									<input id="" name="" type="checkbox" value=""><span
+									  class="fake-input position-absolute"></span></label> Actions</th>
+							  </tr>
+							</thead>
+							<tbody>
+							  <tr>
+								<td>IMS</td>
+								<td>Washington, Louisiana</td>
+								<td class="form">
+								  <label class="chkbox position-relative mt-1" for="intake4">
+									<input id="intake4" name="" type="checkbox" value=""><span
+									  class="fake-input position-absolute"></span>
+								  </label>
+								  <a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><span
+									  class="icon-pencil"></span></a>
+								  <a class="tasks-hov mx-2" href="javascript:void(0)" role="button"
+									tooltip="Create Task"><span class="icon-create-task"></span></a>
+								  <a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+									  class="icon-remove"></span>
+								  </a>
+								</td>
+							  </tr>
+	  
+							  <tr>
+								<td>IMS</td>
+								<td>Washington, Louisiana</td>
+								<td class="form">
+								  <label class="chkbox position-relative mt-1" for="intake4">
+									<input id="intake4" name="" type="checkbox" value=""><span
+									  class="fake-input position-absolute"></span>
+								  </label>
+								  <a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><span
+									  class="icon-pencil"></span></a>
+								  <a class="tasks-hov mx-2" href="javascript:void(0)" role="button"
+									tooltip="Create Task"><span class="icon-create-task"></span></a>
+								  <a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+									  class="icon-remove"></span>
+								  </a>
+								</td>
+							  </tr>
+	  
+							  <tr>
+								<td>IMS</td>
+								<td>Washington, Louisiana</td>
+								<td class="form">
+								  <label class="chkbox position-relative mt-1" for="intake4">
+									<input id="intake4" name="" type="checkbox" value=""><span
+									  class="fake-input position-absolute"></span>
+								  </label>
+								  <a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><span
+									  class="icon-pencil"></span></a>
+								  <a class="tasks-hov mx-2" href="javascript:void(0)" role="button"
+									tooltip="Create Task"><span class="icon-create-task"></span></a>
+								  <a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+									  class="icon-remove"></span>
+								  </a>
+								</td>
+							  </tr>
+	  
+							  <tr>
+								<td>IMS</td>
+								<td>Washington, Louisiana</td>
+								<td class="form">
+								  <label class="chkbox position-relative mt-1" for="intake4">
+									<input id="intake4" name="" type="checkbox" value=""><span
+									  class="fake-input position-absolute"></span>
+								  </label>
+								  <a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><span
+									  class="icon-pencil"></span></a>
+								  <a class="tasks-hov mx-2" href="javascript:void(0)" role="button"
+									tooltip="Create Task"><span class="icon-create-task"></span></a>
+								  <a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+									  class="icon-remove"></span>
+								  </a>
+								</td>
+							  </tr>
+	  
+							  <tr>
+								<td>IMS</td>
+								<td>Washington, Louisiana</td>
+								<td class="form">
+								  <label class="chkbox position-relative mt-1" for="intake4">
+									<input id="intake4" name="" type="checkbox" value=""><span
+									  class="fake-input position-absolute"></span>
+								  </label>
+								  <a class="edit-hov mx-1" href="javascript:void(0)" role="button" tooltip="Edit"><span
+									  class="icon-pencil"></span></a>
+								  <a class="tasks-hov mx-2" href="javascript:void(0)" role="button"
+									tooltip="Create Task"><span class="icon-create-task"></span></a>
+								  <a class="remove-hov mx-1" href="javascript:void(0)" role="button" tooltip="Delete"><span
+									  class="icon-remove"></span>
+								  </a>
+								</td>
+							  </tr>
+	  
+							</tbody>
+						  </table> -->
+							<!-- <div class="card-footer text-muted">
+							<div class="row">
+							  <div class="col-md-12 text-start">
+								<p>5 Total</p>
+							  </div>
+							</div>
+						  </div> -->
+						</div>
+					</div>
+				</div>
+				<div class="mb-3" *ngIf="allFirms && allFirms.length==0">
+					{{result}}
+				</div>
+			</div>
+		</div>
+		<!-- <div class="card mb-3">
+				  <div class="card-header" style="padding: 0px 15px !important; background: #f7f7f7 !important;">
+					<div class="row align-items-center">
+					  <div class="col-md-3 pe-0 form text-start">
+						<p class="mb-0">
+						  <mat-checkbox (change)="$event ? masterToggle() : null"
+							[checked]="selection.hasValue() && isAllSelected()"
+							[indeterminate]="selection.hasValue() && !isAllSelected()">
+						  </mat-checkbox>
+						  <span style="position: relative;
+							top: 1px;">ABM Industries</span>
+						</p>
+					  
+					  </div>
+  
+					  <div class="col-md-7">
+						<ul class="list-unstyled social-icon-block">
+						  <li><span class="fa fa-phone me-2"></span> 000-000-0000</li>
+						  <li><span class="fa fa-print me-2"></span> 000-000-0000</li>
+						  <li><span class="fa fa-envelope me-2"></span> Test@Test.com</li>
+						</ul>
+					  </div>
+  
+					  <div class="col-md-2 text-sm-end">
+						<button type="button" class="btn btn-outline-secondary">
+						  <span class="icon-pencil"></span> Edit
+						</button>
+						<button type="button" class="btn btn-outline-secondary">
+						  <span class="icon-remove"></span> Delete
+						</button>
+						<button type="button" class="btn slide-btn btn-primary">
+						  <i class="icon-plus ms-0" style="background: none;"></i>
+						</button>
+					  </div>
+					</div>
+  
+				  </div>
+				  <div class="card-body p-0 border-top-0">
+  
+				  </div>
+				</div> -->
+
+
+	</div>
+
+	<div class="custom-pagination text-capitalize" *ngIf="allFirms && allFirms.length > 0">
+		<span> {{firmPage.totalElements}} total</span>
+		<pagination *ngIf="firmPage.size < firmPage.totalElements" [boundaryLinks]="true" [totalItems]="firmPage.totalElements" 
+			[(ngModel)]="currentPage"  (pageChanged)="pageChanged($event)" [itemsPerPage]="firmPage.size"
+			previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+			[maxSize]="firmPage.maxPaginationContentSize"
+			>
+
+	
+			
+		</pagination>
+		current page{{currentPage}}
+	</div>
+
+</div>
+
+
+<ng-template #firm_locations let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">Add Location</h5>
+		<button type="button" class="close" data-dismiss="modal" (click)="closeModal()" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+		<form autocomplete="" [formGroup]="locationForm" (ngSubmit)="onLocationSubmit(locationForm.value)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="custom-control custom-checkbox my-1 me-sm-2">
+						<input type="checkbox" class="custom-control-input" id="is_main" name="is_main"
+							formControlName="is_main" (click)="setPrimaryLocation($event)" type="checkbox">
+						<label class="custom-control-label" for="is_main"><span style="position: relative;
+		   top: 2px;">Set as Primary Location</span></label>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="form-group mb-1">
+						<!-- <div>
+				<input type="checkbox" formControlName="primaryLocationChecked" (click)="setPrimaryLocation(locationForm.get('primaryLocationChecked').value)" value="true">
+				<label  class="form-label" for="primaryLocationChecked">Set as primary location</label>
+			  </div> -->
+
+						<label class="form-label">Location Name*</label>
+						<input type="text" class="form-control mb-0" formControlName="location_name">
+						<small class="form-text text-muted danger"
+							*ngIf="locationForm.get('location_name').errors?.required && (locationForm.get('location_name').dirty || locationForm.get('location_name').touched)">
+							This field is required</small>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<!-- <input type="text" class="form-control" placeholder="Street Address" formControlName="street_address"> -->
+						<div class="form-group field mb-0"
+							[ngClass]="{'focused': locationForm.get('street_address').value != ''}">
+							<label class="form-label" for="Street">Street Address</label>
+							<input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+							<input ngx-google-places-autocomplete [options]="{
+										types: [],
+										componentRestrictions: { country: 'US' }
+										}" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'location')"
+								formControlName="street_address" type="text" id="address"
+								class="form-control form-input mb-0">
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Suite / Floor</label>
+						<input type="text" class="form-control mb-0" formControlName="apartment_suite">
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">City</label>
+						<input type="text" class="form-control mb-0" formControlName="city">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">State</label>
+						<input type="text" class="form-control mb-0" formControlName="state">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Zip</label>
+						<!-- <input type="text" class="form-control mb-0" formControlName="zip" appOnlyNumeric
+				minlength="2" minlength="10"
+				  > -->
+						<input type="text" class="form-control mb-0" formControlName="zip" appOnlyNumeric maxlength="10"
+							minlength="2">
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Phone No</label>
+						<input type="text" class="form-control mb-0" formControlName="phone" mask='000-000-0000'
+							minlength="12" minlength="12" [dropSpecialCharacters]="true">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Extension</label>
+						<input type="text" class="form-control mb-0" formControlName="ext" mask='000000' minlength="6"
+							minlength="6" [dropSpecialCharacters]="true">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Cell No.</label>
+						<input type="text" class="form-control mb-0" formControlName="cell" mask='000-000-0000'
+							minlength="12" minlength="12" [dropSpecialCharacters]="true">
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Fax</label>
+						<input type="text" class="form-control mb-0" formControlName="fax" mask='000-000-0000'
+							[dropSpecialCharacters]="true">
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Email</label>
+						<input type="text" class="form-control mb-0" formControlName="email">
+						<small class="form-text text-muted danger"
+							*ngIf="locationForm.get('email').errors?.email && (locationForm.get('email').dirty || locationForm.get('email').touched)">
+							Invalid email address.</small>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-12">
+					<h6 class="color-green mb-0 mt-1">Contact Person Information</h6>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">First Name</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_first_name">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Middle Name</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_middle_name">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Last Name</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_last_name">
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Phone No</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_phone"
+							mask='000-000-0000' [dropSpecialCharacters]="true">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Extension</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_ext" mask='000000'
+							[dropSpecialCharacters]="true">
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Cell No</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_cell"
+							mask='000-000-0000' [dropSpecialCharacters]="true">
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label" for="Street">Fax</label>
+						<input type="text" class="form-control mb-0" formControlName="contact_person_fax"
+							mask='000-000-0000' [dropSpecialCharacters]="true">
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label mb-0" for="Street">Email</label>
+						<input type="text" class="form-control" formControlName="contact_person_email">
+						<small class="form-text text-muted danger"
+							*ngIf="locationForm.get('contact_person_email').errors?.email && (locationForm.get('contact_person_email').dirty || locationForm.get('contact_person_email').touched)">
+							Invalid email address.</small>
+					</div>
+				</div>
+
+			</div>
+
+
+			<div class="col-md-12">
+				<div class="form-group row mb-2">
+					<label class="form-label" for="Street">Comments</label>
+					<textarea style="height: 70px !important;" class="form-control" rows="5"
+						formControlName="comments"></textarea>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12 modal-btn-width text-center">
+					<button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+						(click)="closeModal()">Cancel</button>
+					<button type="submit" class="btn btn-success" >Save & Continue</button>
+				</div>
+			</div>
+
+		</form>
+	</div>
+</ng-template>

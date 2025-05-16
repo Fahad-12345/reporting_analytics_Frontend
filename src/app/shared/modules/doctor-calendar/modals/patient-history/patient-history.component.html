@@ -1,0 +1,124 @@
+<!-- <div class="collapse-sidebar right-sidebar-collapse" [class.close-side-bar]="isCollapsed">
+	<div class="collapse-sidebar-holder">
+		<div id="accordion">
+			<header class="head">History</header>
+			<div class="acc-holder">
+				<div class="acc-header" id="headingOne">
+					<button class="btn btn-success w-100" data-bs-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						Completed ({{completedAppointment?.total ||0}})
+					</button>
+				</div>
+			  	<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+					<div class="acc-body">
+						<div class="acc-body-holder">
+							<div class="text-holder" *ngFor="let completeAppt of (completedAppointment&&completedAppointment.data)">
+								<span class="d-block">
+									<p>{{completeAppt?.doctor_full_name}}-{{completeAppt?.speciality?.name}}</p>
+									<time>{{completeAppt?.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy() }}{{datePipeService.signBetweenDateTime()}}{{completeAppt?.scheduled_date_time| date: datePipeService.hourMinAmPmTimeFormat()}}</time>
+								</span>
+								<a  class="view-hov mx-1" href="javascript:void(0)" role="button" (click)="viewAppointment(completeAppt)">
+									<i class="icon-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+			  	</div>
+			</div>
+			<div class="acc-holder">
+				<div class="acc-header" id="headingTwo">
+					<button class="btn btn-danger w-100" data-bs-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+						Cancelled ({{cancelledAppointments?.total ||0}})
+					</button>
+				</div>
+			  	<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+					<div class="acc-body">
+						<div class="acc-body-holder">
+							<div class="text-holder" *ngFor="let cancelAppt of (cancelledAppointments&&cancelledAppointments.data)">
+								<span class="d-block">
+									<p>{{cancelAppt?.doctor_full_name}}-{{cancelAppt?.speciality?.name}}</p>
+									<time>{{cancelAppt?.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy() }}{{datePipeService.signBetweenDateTime()}}{{cancelAppt?.scheduled_date_time| date: datePipeService.hourMinAmPmTimeFormat()}}</time>
+								</span>
+								<a  class="view-hov mx-1" href="javascript:void(0)" role="button" (click)="viewAppointment(cancelAppt)">
+									<i class="icon-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+			  	</div>
+			</div>
+			<div class="acc-holder">
+				<div class="acc-header" id="headingThree">
+					<button class="btn btn-primary w-100" data-bs-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+						No Show ({{noShowAppointments?.total || 0}})
+					</button>
+				</div>
+			  	<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+					<div class="acc-body">
+						<div class="acc-body-holder">
+							<div class="text-holder" *ngFor="let noShowAppt of (noShowAppointments&&noShowAppointments.data)">
+								<span class="d-block">
+									<p>{{noShowAppt?.doctor_full_name}}-{{noShowAppt?.speciality?.name}}</p>
+									<time>{{noShowAppt?.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy() }}{{datePipeService.signBetweenDateTime()}}{{noShowAppt?.scheduled_date_time| date: datePipeService.hourMinAmPmTimeFormat()}}</time>
+								</span>
+								<a  class="view-hov mx-1" href="javascript:void(0)" role="button"  (click)="viewAppointment(noShowAppt)">
+									<i class="icon-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+			  	</div>
+			</div>
+			<div class="acc-holder">
+				<div class="acc-header" id="headingFour">
+					<button class="btn btn-warning w-100" data-bs-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+						Today's Apts. ({{todaysAppointments?.total ||0}})
+					</button>
+				</div>
+			  	<div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
+					<div class="acc-body">
+						<div class="acc-body-holder">
+							<div class="text-holder" *ngFor="let todaysAppt of (todaysAppointments&&todaysAppointments.data)">
+								<span class="d-block">
+									<p>{{todaysAppt?.doctor_full_name}}-{{todaysAppt?.speciality?.name}}</p>
+									<time>{{todaysAppt?.scheduled_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy() }}{{datePipeService.signBetweenDateTime()}}{{todaysAppt?.scheduled_date_time| date: datePipeService.hourMinAmPmTimeFormat()}}</time>
+								</span>
+								<a  class="view-hov mx-1" href="javascript:void(0)" role="button"  (click)="viewAppointment(todaysAppt)">
+									<i class="icon-eye"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+			  	</div>
+			</div>
+		  </div>
+	</div>
+	<button class="toggle-btn opener left-opener left-btn" 
+		aria-label="Toggle Open Close" 
+		(click)="isCollapsed = !isCollapsed" 
+		[attr.aria-expanded]="!isCollapsed" 
+		aria-controls="collapseBasic">
+		<span class="icon-down-arrow"></span>
+	</button>
+</div> -->
+<!-- <h5 class="head">History</h5> -->
+<tabset #tabset>
+	<tab heading="Today's Apts ({{patientHistoryCount.todayAppointments}})"  (selectTab) = "selectCompleted(typeEnum?.today)">
+		<app-appointment-listing-component #todayAptListComponent [type]="typeEnum?.today"  [case_id]="caseId"></app-appointment-listing-component>
+
+	</tab>
+	<tab heading="Completed ({{patientHistoryCount.completedAppointments}})"  (selectTab) = "selectCompleted(typeEnum.completed)">
+		<app-appointment-listing-component #completedAptListComponent [type]="typeEnum?.completed" [case_id]="caseId"></app-appointment-listing-component>
+	</tab>
+
+	<tab heading="Cancelled ({{patientHistoryCount.cancelledAppointments}})"  (selectTab) = "selectCompleted(typeEnum?.cancel)">
+		<app-appointment-listing-component #cancelledAptListComponent  [type]="typeEnum?.cancel"  [case_id]="caseId"></app-appointment-listing-component>
+
+	</tab>
+
+	<tab heading="No Show ({{patientHistoryCount.noShowAppointments}})"  (selectTab) = "selectCompleted(typeEnum?.no_show)">
+		<app-appointment-listing-component #noshowAptListComponent [type]="typeEnum?.no_show"  [case_id]="caseId"></app-appointment-listing-component>
+
+	</tab>
+
+	
+</tabset>

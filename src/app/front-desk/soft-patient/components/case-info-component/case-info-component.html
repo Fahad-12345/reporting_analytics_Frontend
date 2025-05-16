@@ -1,0 +1,18 @@
+<div class="front-desk-block">
+	<div class="card border-0 w-100 mb-0 mt-2 p-0">
+		<div class="card-body form">
+
+			<dynamic-form #caseInformationFormComponent (submit)="onSubmit($event)" (onReady)="onReady($event)" [fields]="fieldConfigs">
+			</dynamic-form>
+
+			<app-soft-patient-health-insurance-form [case]="case" *ngIf="showPrivateHealthFormComponent" #privateHealthInsuranceFormComponent></app-soft-patient-health-insurance-form>
+
+			<div  class="row form-btn justify-content-center">
+				<button *ngIf="this.aclService.hasPermission(this.userPermissions.patient_case_list_insurance_insurance_info_edit)" class="btn btn-primary w-100 mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="goBack()"><i
+					class="icon-left-arrow me-2"></i> Back</button>
+				<button *ngIf="this.aclService.hasPermission(this.userPermissions.patient_case_list_insurance_insurance_info_edit)"[disabled]="isBtnSubmitDisabled" class="btn btn-success w-100 mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="save($event)"><i
+					class="icon-save-continue me-2"></i> Save & Continue</button>
+			</div>
+		</div>
+	</div>
+</div>

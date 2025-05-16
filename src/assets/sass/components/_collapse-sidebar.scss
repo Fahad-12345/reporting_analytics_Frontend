@@ -1,0 +1,34 @@
+.collapse-sidebar {
+    padding: 0 0 0 20px;
+    position: relative;
+    &.right-sidebar-collapse {
+        .collapse-sidebar-holder {
+            width: 200px;
+        }
+        .toggle-btn {
+            left: 15px;
+            &[aria-expanded="false"] {
+                .icon-down-arrow {
+                    transform: rotate(-90deg);
+                }
+            }
+        }
+        &.close-side-bar {
+            overflow: hidden;
+            width: 0;
+            .collapse-sidebar-holder {
+                right: -230px;
+                + .toggle-btn {
+                    left: 7px;
+                }
+            }
+        }
+    }
+    .collapse-sidebar-holder {
+        position: relative;
+        border: 1px solid #000;
+        height: calc(100vh - 15px);
+        padding: 0 8px;
+        max-height: 495px;
+    }
+}

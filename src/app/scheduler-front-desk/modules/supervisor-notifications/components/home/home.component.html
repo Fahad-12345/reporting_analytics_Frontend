@@ -1,0 +1,708 @@
+<div class="row">
+    <div class="col-12 pt-2">
+        <div class="user-info">
+            <div class="row">
+                <div class='col-md-12 assignment-notifi'>
+                    <h4 class="my-0 color-green fs-18">Assignment</h4>
+                </div>
+            </div>
+        </div>
+        <hr class="line-bottom my-2">
+
+        <div class="row">
+            <div class="col-md-12 assignment-notifi">
+                <nav class="left-nav p-0 mt-2">
+                    <ul class="list-unstyled">
+                        <li class="button--wayra ">
+                            <a class="d-block" [routerLink]="['/scheduler-front-desk/speciality']">Specialty</a>
+                        </li>
+                        <li class="button--wayra">
+                            <a class="d-block" [routerLink]="['/scheduler-front-desk/doctor']">Provider</a>
+                        </li>
+                        <li class="button--wayra active">
+                            <a class="d-block" [routerLink]="['/scheduler-front-desk/notifications_sup']" *ngIf="aclService.hasPermission(userPermissions.notification_menu)">Notifications</a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+		<div *ngIf="aclService.hasPermission(userPermissions.notification_menu);else no_notification_menu">
+        <div *ngIf="CurrentNotification" class="row mt-1 current-notification">
+            <div class="col-md-4 col-lg-3 assignment-notifi"  >
+                <div class="doctor-notify-outer">
+                    <div class="doctor-notify-list scrol-doc-list" infinite-scroll style="flex: none !important; "
+					[infiniteScrollDistance]="scrollDistance"
+						[infiniteScrollUpDistance]="scrollUpDistance" [scrollWindow]="false" [infiniteScrollThrottle]="throttle"
+						(scrolled)="scrollDownNotification($event)" [infiniteScrollDisabled]="infiniteScrollDisabled" 
+						(scrolledUp)="scrollUpNotification($event)">
+                        <div class="row doctor-notify-box mx-1 my-2" *ngFor="let noti of notification; let i = index" [ngStyle]="noti.id===CurrentNotification.id?
+						{'background-color': 'white','border-color': '#34c3ee'} :  {'background-color': 'white','border-color':'#e1e1e1'} " (click)="openNotification(noti)">
+                            <div class="doctor-color doc-color-width px-0" [ngStyle]="{'background-color': noti.speciality_color}"></div>
+                            <div *ngIf='noti?.doctor?.userBasicInfo?.profile_pic_url' class="col-md-3 col-lg-3 list-img py-2">
+                                <img src="{{noti?.doctor?.userBasicInfo?.profile_pic_url}}" class="list-profile-picture">
+                            </div>
+                            <div class="col-md-7 col-lg-7 py-1 list-img">
+                                <div class="row">
+                                    <div class="col-md-12 text-truncate">
+                                        <strong>
+                                            {{noti?.doctor?.userBasicInfo?.first_name}}
+                                            {{noti?.doctor?.userBasicInfo?.middle_name}}
+                                            {{noti?.doctor?.userBasicInfo?.last_name}}{{noti?.doctor?.medicalIdentifiers?.billingTitle?.name | AddBillingTitle}}
+                                        </strong>
+                                    </div>
+                                    <div class="col-md-12" *ngIf="noti.deleted_at==null">
+                                        <div *ngIf="noti.approval_status===1">Approved</div>
+                                        <div *ngIf="noti.approval_status===0">Decline</div>
+                                        <div *ngIf="noti.approval_status===null">No Decision</div>
+                                    </div>
+                                    <div class="col-md-12" *ngIf="noti.deleted_at!=null">
+                                        <span class="text-truncate w-100 d-block">Unavailibility Deleted</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="noti.deleted_at==null" class="col-md-1 col-lg-1 py-1 list-img">
+                                <span *ngIf="noti.approval_status===1" class="dot notification-approve"></span>
+                                <span *ngIf="noti.approval_status===0" class="dot notification-decline"></span>
+                                <span *ngIf="noti.approval_status===null" class="dot notification-no"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="row" [hidden]="!isCallRoute">
+                        <div class="col-md-4 col-sm-4 down-arrow" (click)="isCallRouteF()"><i class="fa fa-angle-down fa-3x"></i></div>
+
+                    </div> -->
+                </div>
+            </div>
+
+			<div *ngIf="CurrentNotificationDetail&&CurrentNotificationDetail.deleted_at==null" class="col-md-8 col-lg-9 bg-white">
+
+                <div class="row doctor-details">
+                    <div class="col-md-12 col-lg-2 pe-0 d-flex d-lg-block justify-content-center">
+                        <div  class="profile-image">
+                            <img  alt="Avatar" src={{CurrentNotificationDetail?.doctor?.userBasicInfo?.profile_pic_url}}>
+						</div>
+						
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="row mb-2">
+                            <div class="col-lg-6 col-xl-7 user-info noti-name">
+                                <h4 class="d-inline  tooltip-outer">
+                                    <strong tooltipClass="table-custom-tooltip" 
+                                    ngbTooltip="{{CurrentNotificationDetail?.doctor?.userBasicInfo?.first_name}} {{CurrentNotificationDetail?.doctor?.userBasicInfo?.middle_name}} {{CurrentNotificationDetail?.doctor?.userBasicInfo?.last_name}}{{CurrentNotificationDetail?.doctor?.provider_title | AddBillingTitle}}">
+                                        {{CurrentNotificationDetail?.doctor?.userBasicInfo?.first_name}}
+										{{CurrentNotificationDetail?.doctor?.userBasicInfo?.middle_name}}
+										{{CurrentNotificationDetail?.doctor?.userBasicInfo?.last_name}}{{CurrentNotificationDetail?.doctor?.provider_title | AddBillingTitle}}
+                                    </strong>
+                                </h4>
+                                <h6 class="d-inline ps-3  tooltip-outer" *ngFor="let speciality of CurrentNotificationDetail.doctor.specialities"
+								
+								tooltipClass="table-custom-tooltip" ngbTooltip="{{speciality?.name}}" container="body"
+								>{{speciality?.qualifier}}</h6>
+                                <ul class="mt-2 mb-1">
+                                    <!-- <li><i class="icon-phone "></i>
+                                        <span> {{CurrentNotification.doctor.cell_phone_no}}</span></li> -->
+                                    <li><i class="icon-envelope"></i>
+                                        <span>{{CurrentNotificationDetail.doctor.email}}</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-6 col-xl-5 text-end btn-spc">
+                                <button class="btn btn-success custom-btn me-3" [disabled]="CurrentNotificationDetail.approval_status!=null " (click)="Approve()">Approve</button>
+                                <button class="btn btn-primary custom-btn" [disabled]="CurrentNotificationDetail.approval_status!=null" (click)="Decline()">&nbsp;Decline</button>
+                                <span class="decline" *ngIf="CurrentNotificationDetail.approval_status===0  ">
+									Decline By {{CurrentNotificationDetail.approved_by?.user_basic_info?.first_name}} {{CurrentNotificationDetail.approved_by?.user_basic_info?.middle_name}} {{CurrentNotificationDetail.approved_by?.user_basic_info?.last_name}}
+								</span>
+                                <span class="approved" *ngIf="CurrentNotificationDetail.approval_status===1">
+									Approved By {{CurrentNotificationDetail.approved_by?.user_basic_info?.first_name}} {{CurrentNotificationDetail.approved_by?.user_basic_info?.middle_name}} {{CurrentNotificationDetail.approved_by?.user_basic_info?.last_name}}
+								</span>
+
+                            </div>
+
+
+                        </div>
+                        <div class="row subject-row d-flex align-items-center mx-0 py-1 noti-subject">
+                            <div class="col-md-9 col-lg-8 col-xl-3 mb-md-2 mb-lg-0">
+                                <span class="d-inline-block text-wrap w-100 grid-area">
+									<strong class="float-left"> Subject:&nbsp;</strong> <span class="text-truncate-notification tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{CurrentNotificationDetail.subject}}"> {{CurrentNotificationDetail.subject}}</span>
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-3 col-lg-4 col-xl-1 px-xl-0 mb-md-2 mb-lg-0">
+                                <button class="btn btn-default see-more-btn float-right color-white ms-4" (click)="ShowMore(CurrentNotificationDetail.subject,CurrentNotificationDetail.description)">See
+									More
+								</button>
+                            </div>
+                            <div class="col-md-11 col-lg-9 col-xl-7">
+                                <ul class="list-unstyled d-flex justify-content-lg-start mb-0 just">
+                                    <li>
+                                        <strong>From:</strong>
+                                        <span class="badge badge-light date-time-box ms-2">{{CurrentNotificationDetail.start_date| date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+											{{datePipeService.signBetweenDateTime()}}
+											{{CurrentNotificationDetail.start_date| date: datePipeService.hourMinAmPmTimeFormat()}}</span>
+                                    </li>
+                                    <li class="ps-md-1 ps-xl-0">
+                                        <strong>To:</strong>
+                                        <span class="badge badge-light date-time-box ms-2">{{CurrentNotificationDetail.end_date| date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+											{{datePipeService.signBetweenDateTime()}}
+											{{CurrentNotificationDetail.end_date| date: datePipeService.hourMinAmPmTimeFormat()}}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="col-md-1 col-lg-3 col-xl-1 form px-xl-0 label-handler">
+                                <label class="d-block chkbox position-relative m-0">
+									<input type="checkbox" id="viewCalendar" [(ngModel)]="isShowCalendar" (click)="showCalendar($event)">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block"><i class="icon-Scheduler"></i></span>
+								</label>
+                            </div>
+
+
+                        </div>
+<!-- 
+                        <div class="row recurrence-row" *ngIf="CurrentNotification.recurrence && CurrentNotification.recurrence.id">
+                            <div class="col-md-4">
+                                <input type="checkbox" id="showRecurrence" (click)="showRecurrence($event)">
+                                <label for="showRecurrence">
+									<strong>Recurrence :</strong>
+								</label>
+                            </div>
+                        </div>
+
+                        <div class="row recurrence-row repeat-after" *ngIf="isShowRecurrence">
+                            <div class="col-md-12">
+                                <h6>Repeat after every {{CurrentNotification.recurrence.endingCriteria }} on</h6>
+                            </div>
+                        </div>
+                        <div class="row recurrence-row days-noti" *ngIf="isShowRecurrence">
+                            <div *ngFor="let days of weekday;let i=index">
+                                <div class="weekend-days-noti" [ngStyle]="days[0].isColor===true?{'background-color':'red'}:{'color':'black'}">
+                                    <span>{{days[0].name}}</span>
+                                </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                            <div class="col-md-2 offset"></div>
+                        </div>
+                        <div class="row recurrence-row currnt-noti" *ngIf="isShowRecurrence && CurrentNotification.recurrence.endAfterWeeks">
+                            <div class="col-md-1 offset"></div>
+                            <div class="col-md-12">
+                                <h6>End after {{CurrentNotification.recurrence.endAfterWeeks }} occurence</h6>
+                            </div>
+                        </div>
+                        <div class="row recurrence-row currnt-noti" *ngIf="isShowRecurrence && CurrentNotification.recurrence.endDate">
+                            <div class="col-md-12">
+                                <h6>Ends on {{CurrentNotification.recurrence.endDate | date: 'dd/MM/yyyy'}}</h6>
+                            </div>
+                        </div> -->
+
+
+
+                        <div class="row recurrence-row mx-0 border-top-0 d-flex align-items-center effected-clinic">
+                            <div class="col-md-4 col-lg-3 col-xl-2">
+                                <strong> Effected Clinics:&nbsp;</strong>
+                            </div>
+                            <div class="col-md-8 col-lg-9 col-xl-10">
+                                <ul class="form m-0 p-0 list-unstyled cli-name">
+                                    <li class="d-flex align-items-center py-2" *ngFor="let facility of CurrentNotificationDetail.affected_facilities;let i=index">
+
+                                        <label class="d-inline-block chkbox position-relative m-0">
+											<input *ngIf="facility.is_accessible===1" type="checkbox" id={{i}}
+												name="radio-group" [checked]="facility.isChecked"
+												(click)="clinicCheck(facility)">
+											<span class="fake-input position-absolute"></span>
+											<label class="fake-label clinic_name text-truncate d-block py-0 mb-0"
+												*ngIf="facility.is_accessible===1" for={{i}}>
+												{{facility.name}}
+											</label>
+                                        </label>
+
+                                        <label class="clinic_name text-truncate mb-0" *ngIf="facility.is_accessible===0" [ngStyle]="facility.is_accessible===0?{'margin-right':'10px'}:{'margin-top': '0px'}">
+											{{facility.name}}
+										</label>
+                                        <div class="d-inline-block clinic-appoitnment" [ngStyle]="{'background-color':facility.facility_color}"></div>
+                                        <div class="d-inline-block px-2">({{facility.appointment_count}})</div>
+                                    </li>
+									<li *ngIf="(!CurrentNotificationDetail.affected_facilities || CurrentNotificationDetail.affected_facilities.length==0)" class="d-flex align-items-center py-2" >
+                                        <label class="d-inline-block chkbox position-relative m-0">
+											<label class="fake-label clinic_name text-truncate d-block py-0 mb-0"
+												>
+												N/A
+											</label>
+                                        </label> 
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row mt-4 calendar-head" *ngIf="isShowCalendar">
+                        <div class="col-lg-3 mini-calendar">
+                            <form [formGroup]="myForm" novalidate>
+
+                                <mat-calendar (selectedChange)="setDateMat($event)" [(selected)]="model"></mat-calendar>
+
+                            </form>
+                        </div>
+
+                        <div class="col-lg-9 large-calendar mx-0" [ngSwitch]="view">
+                            <div class="row show-calendar" *ngIf="isShowCalendar">
+
+                                <div class="col-md-6 col-sm-3">
+
+
+                                    <div class="btn-group date-bar">
+                                        <div class="view-date" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (click)="setDate(viewDate)" title="Previous Month">
+                                            <i class="fa fa-caret-left"></i> </div>
+                                        <div class="text-truncate calendar-date" mwlCalendarToday>
+                                            {{ viewDate | calendarDate:(view + 'ViewTitle'):locale:0 }}
+                                        </div>
+                                        <div class="view-setdate" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (click)="setDate(viewDate)" title="Next Month">
+                                            <i class="fa fa-caret-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4 col-md-4 col-lg-4 weak-day-maindiv">
+
+                                    <nav class="left-nav p-0 nav-div">
+                                        <ul class="list-unstyled pt-1">
+                                            <li class="button--wayra" (click)="view='week'" [class.active]="view === 'week'">
+                                                <a class="d-block week-day">Week</a>
+                                            </li>
+                                            <li class="button--wayra" (click)="view='day'" [class.active]="view === 'day'">
+                                                <a class="d-block week-day">Day</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+
+                            </div>
+                            <mwl-calendar-week-view *ngSwitchCase="'week'" [CurDocName]="CurrentNotificationDetail.doctor" [checkDay]="'week'" [CurrDocFirstName]="CurrentNotificationDetail?.doctor?.userBasicInfo?.first_name" [refresh]="refresh" [(start)]="CurrentNotificationDetail.start_date" [(end)]="CurrentNotificationDetail.end_date"
+                                (eventTimesChanged)="eventTimesChanged($event)" [(viewDate)]="viewDate" [(events)]="events">
+                            </mwl-calendar-week-view>
+                            <mwl-calendar-week-view *ngSwitchCase="'day'" [CurDocName]="CurrentNotificationDetail.doctor" [CurrDocFirstName]="CurrentNotificationDetail?.doctor?.userBasicInfo?.first_name" [refresh]="refresh" [(start)]="CurrentNotificationDetail.start_date" [(end)]="CurrentNotificationDetail.end_date" [checkDay]="'day'"
+                                (eventTimesChanged)="eventTimesChanged($event)" [(viewDate)]="viewDate" [(events)]="events">
+                            </mwl-calendar-week-view>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div> 
+
+			<div *ngIf="CurrentNotificationDetail&&CurrentNotificationDetail.deleted_at!=null" class="col-md-9 bg-white">
+                <div class="row doctor-details">
+
+
+                    <div class="col-md-12 col-lg-2 pe-0">
+                        <div class="profile-image">
+                            <img alt="Avatar" src={{CurrentNotificationDetail?.doctor?.userBasicInfo?.profile_pic_url}}>
+                        </div>
+                    </div>
+
+                    <div class="col-md-10">
+                        <div class="row mb-2">
+                            <div class="col-md-12 user-info">
+                                <h4 class="d-inline">
+                                    <strong> {{CurrentNotificationDetail?.doctor?.userBasicInfo?.first_name}}
+										{{CurrentNotificationDetail?.doctor?.userBasicInfo?.middle_name}}
+										{{CurrentNotificationDetail?.doctor?.userBasicInfo?.last_name}}</strong>
+                                </h4>
+								<h6 class="d-inline ps-3 tooltip-outer" *ngFor="let speciality of CurrentNotificationDetail.doctor.specialities"
+								
+								tooltipClass="table-custom-tooltip" ngbTooltip="{{speciality?.name}}" container="body"
+								>{{speciality.qualifier}}</h6>
+
+                                <ul class="mt-2">
+                                    <!-- <li><i class="icon-phone"></i>
+                                        <span> {{CurrentNotification.doctor.cell_phone_no}}</span></li> -->
+                                    <li><i class="icon-envelope"></i>
+                                        <span>{{CurrentNotificationDetail.doctor.email}}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row subject-row d-flex align-items-center mx-0 py-1 noti-subject">
+                            <div class="col-md-4 col-lg-3" *ngIf = "CurrentNotification.subject.length > 10">
+                                <span class="d-inline-block text-wrap w-100">
+									<strong> Subject : </strong> {{CurrentNotificationDetail.subject.substring(0,10)}}..</span>
+                            </div>
+                            <div class="col-md-4 col-lg-3"  *ngIf = "CurrentNotification.subject.length < 10">
+                                <span class="d-inline-block text-wrap w-100">
+									<strong> Subject : </strong> {{CurrentNotificationDetail.subject}}</span>
+                            </div>
+                            
+                            <div class="col-md-4 col-lg-1 px-0">
+                                <button class="btn btn-default see-more-btn float-right color-white ms-4" (click)="ShowMore(CurrentNotificationDetail.subject,CurrentNotificationDetail.description)">See
+									More
+								</button>
+                            </div>
+                            <div class="col-md-4 col-lg-7">
+                                <ul class="list-unstyled d-flex justify-content- mb-0 just">
+                                <li>
+                                    <strong>From:</strong> &nbsp;
+                                    <span class="date-time-box">{{CurrentNotificationDetail.start_date| date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+										{{datePipeService.signBetweenDateTime()}}
+										{{CurrentNotificationDetail.start_date| date: datePipeService.hourMinAmPmTimeFormat()}}</span>
+                                    </li>
+                                    <li>
+                                        <strong>To:</strong> &nbsp;
+                                    <span class="date-time-box">{{CurrentNotificationDetail.end_date| date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+										{{datePipeService.signBetweenDateTime()}}
+										{{CurrentNotification.end_date| date: datePipeService.hourMinAmPmTimeFormat()}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                      
+
+                        <div class="row subject-row mx-0 py-2 border-top-0 aprov-div">
+                            <div class="col-md-4">
+                                <span class="text-truncate mb-0 display-inh">
+									<strong> Approved by : </strong> {{CurrentNotificationDetail.approved_by?.user_basic_info.first_name}} {{CurrentNotificationDetail.approved_by?.user_basic_info.middle_name?CurrentNotificationDetail.approved_by?.user_basic_info.middle_name:''}} {{CurrentNotificationDetail.approved_by?.user_basic_info.last_name}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="text-truncate mb-0 display-inh">
+									<strong> Deleted by : </strong> {{CurrentNotificationDetail.updated_by?CurrentNotification.updated_by.user_basic_info.first_name+' '+(CurrentNotificationDetail.updated_by.user_basic_info.middle_name?CurrentNotificationDetail.updated_by.user_basic_info.middle_name+' '+CurrentNotificationDetail.updated_by.user_basic_info.last_name: CurrentNotificationDetail.updated_by.user_basic_info.last_name):''}} </span>
+                            </div>
+                        </div>
+                        <div class="row subject-row mx-0 py-0 noti-column">
+                            <div class="col-md-12">
+                                <span class="text-truncate mb-0 pt-2 display-inh">
+									<strong> Reason : </strong> {{CurrentNotificationDetail.comments}} </span>
+                            </div>
+
+                            <div class="col-md-8 text-truncate desc-noti">
+                            </div>
+                        </div>
+                        <div class="row date-time-row mx-0 border-top-0 noti-column">
+                           
+
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+            </div> 
+
+			
+
+            <!-- <div *ngIf="CurrentNotification.deleted_at==null" class="col-md-9 bg-white">
+
+                <div class="row doctor-details">
+                    <div class="col-md-3 col-lg-2 pe-0">
+                        <div  class="profile-image">
+                            <img  alt="Avatar" src={{CurrentNotification.doctor.userBasicInfo.profile_pic_url}}>
+						</div>
+						
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="row mb-2">
+                            <div class="col-lg-8 col-md-8 user-info noti-name">
+                                <h4 class="d-inline">
+                                    <strong> {{CurrentNotification.doctor.userBasicInfo.first_name}}
+										{{CurrentNotification.doctor.userBasicInfo.middle_name}}
+										{{CurrentNotification.doctor.userBasicInfo.last_name}}</strong>
+                                </h4>
+                                <h6 class="d-inline ps-3">{{CurrentNotification.doctor.specialities.name}}</h6>
+                                <ul class="mt-2 mb-1">
+                                    <li><i class="icon-phone "></i>
+                                        <span> {{CurrentNotification.doctor.cell_phone_no}}</span></li>
+                                    <li><i class="icon-envelope"></i>
+                                        <span>{{CurrentNotification.doctor.email}}</span></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 text-end btn-spc">
+
+                                <button class="btn btn-success custom-btn me-3" [disabled]="disableApprove" (click)="Approve()">Approve</button>
+
+
+                                <button class="btn btn-primary custom-btn" [disabled]="disableDecline" (click)="Decline()">&nbsp;Decline</button>
+                                <span class="decline" *ngIf="CurrentNotification.approval_status===0  ">
+									Decline By {{CurrentNotification.approved_by?.userBasicInfo?.first_name}} {{CurrentNotification.approved_by?.userBasicInfo?.middle_name}} {{CurrentNotification.approved_by?.userBasicInfo?.last_name}}
+								</span>
+                                <span class="approved" *ngIf="CurrentNotification.approval_status===1">
+									Approved By {{CurrentNotification.approved_by?.userBasicInfo?.first_name}} {{CurrentNotification.approved_by?.userBasicInfo?.middle_name}} {{CurrentNotification.approved_by?.userBasicInfo?.last_name}}
+								</span>
+
+                            </div>
+
+
+                        </div>
+                        <div class="row subject-row d-flex align-items-center mx-0 py-1 noti-subject">
+                            <div class="col-md-4 col-lg-3">
+                                <span class="d-inline-block text-wrap w-100">
+									<strong class="float-left"> Subject : </strong> <span class="text-truncate-notification"> {{CurrentNotification.subject}}</span>
+                                </span>
+
+                            </div>
+
+                            <div class="col-md-4 col-lg-1 px-0">
+                                <button class="btn btn-default see-more-btn float-right color-white ms-4" (click)="ShowMore(CurrentNotification.subject,CurrentNotification.description)">See
+									More
+								</button>
+                            </div>
+                            <div class="col-md-4 col-lg-7">
+                                <ul class="list-unstyled d-flex justify-content- mb-0 just">
+                                    <li>
+                                        <strong>From:</strong>
+                                        <span class="badge badge-light date-time-box ms-2">{{CurrentNotification.start_date| date: 'MM/dd/yyyy'}}
+											-
+											{{CurrentNotification.start_date| date: 'hh:mm a'}}</span>
+                                    </li>
+                                    <li>
+                                        <strong>To:</strong>
+                                        <span class="badge badge-light date-time-box ms-2">{{CurrentNotification.end_date| date: 'MM/dd/yyyy'}}
+											-
+											{{CurrentNotification.end_date| date: 'hh:mm a'}}</span>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <div class="col-md-4 col-lg-1 form px-0">
+                                <label class="d-block chkbox position-relative m-0">
+									<input type="checkbox" id="viewCalendar" (click)="showCalendar($event)">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block"><i class="icon-Scheduler"></i></span>
+								</label>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row recurrence-row" *ngIf="CurrentNotification.recurrence && CurrentNotification.recurrence.id">
+                            <div class="col-md-4">
+                                <input type="checkbox" id="showRecurrence" (click)="showRecurrence($event)">
+                                <label for="showRecurrence">
+									<strong>Recurrence :</strong>
+								</label>
+                            </div>
+                        </div>
+
+                        <div class="row recurrence-row repeat-after" *ngIf="isShowRecurrence">
+                            <div class="col-md-12">
+                                <h6>Repeat after every {{CurrentNotification.recurrence.endingCriteria }} on</h6>
+                            </div>
+                        </div>
+                        <div class="row recurrence-row days-noti" *ngIf="isShowRecurrence">
+                            <div *ngFor="let days of weekday;let i=index">
+                                <div class="weekend-days-noti" [ngStyle]="days[0].isColor===true?{'background-color':'red'}:{'color':'black'}">
+                                    <span>{{days[0].name}}</span>
+                                </div>&nbsp;&nbsp;&nbsp;&nbsp;
+                            </div>
+                            <div class="col-md-2 offset"></div>
+                        </div>
+                        <div class="row recurrence-row currnt-noti" *ngIf="isShowRecurrence && CurrentNotification.recurrence.endAfterWeeks">
+                            <div class="col-md-1 offset"></div>
+                            <div class="col-md-12">
+                                <h6>End after {{CurrentNotification.recurrence.endAfterWeeks }} occurence</h6>
+                            </div>
+                        </div>
+                        <div class="row recurrence-row currnt-noti" *ngIf="isShowRecurrence && CurrentNotification.recurrence.endDate">
+                            <div class="col-md-12">
+                                <h6>Ends on {{CurrentNotification.recurrence.endDate | date: 'dd/MM/yyyy'}}</h6>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row recurrence-row mx-0 border-top-0 d-flex align-items-center effected-clinic">
+                            <div class="col-md-2">
+                                <strong> Effected Clinics : </strong>
+                            </div>
+                            <div class="col-md-10 col-lg-10">
+                                <ul class="form m-0 p-0 list-unstyled cli-name">
+                                    <li class="d-flex align-items-center py-2" *ngFor="let facility of CurrentNotification.affected_facilities;let i=index">
+
+                                        <label class="d-inline-block chkbox position-relative m-0">
+											<input *ngIf="facility.is_accessible===1" type="checkbox" id={{i}}
+												name="radio-group" [checked]="facility.isChecked"
+												(click)="clinicCheck(facility)">
+											<span class="fake-input position-absolute"></span>
+											<label class="fake-label clinic_name text-truncate d-block py-0 mb-0"
+												*ngIf="facility.is_accessible===1" for={{i}}>
+												{{facility.name}}
+											</label>
+                                        </label>
+
+                                        <label class="clinic_name text-truncate mb-0" *ngIf="facility.is_accessible===0" [ngStyle]="facility.is_accessible===0?{'margin-right':'10px'}:{'margin-top': '0px'}">
+											{{facility.name}}
+										</label>
+                                        <div class="d-inline-block clinic-appoitnment" [ngStyle]="{'background-color':facility.facility_color}"></div>
+                                        <div class="d-inline-block px-2">({{facility.appointment_count}})</div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="row mt-4 calendar-head" *ngIf="isShowCalendar">
+                        <div class="col-sm-3 mini-calendar">
+                            <form [formGroup]="myForm" novalidate>
+                                <my-date-picker name="mydate" formControlName="myDate" [options]="myDatePickerOptions" [(ngModel)]="model" required (dateChanged)="onDateChanged($event)"></my-date-picker>
+                            </form>
+                        </div>
+
+                        <div class="col-sm-9 large-calendar" [ngSwitch]="view">
+                            <div class="row show-calendar" *ngIf="isShowCalendar">
+
+                                <div class="col-md-6 col-sm-3">
+
+
+                                    <div class="btn-group date-bar">
+                                        <div class="view-date" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (click)="setDate(viewDate)" title="Previous Month">
+                                            <i class="fa fa-caret-left"></i> </div>
+                                        <div class="text-truncate calendar-date" mwlCalendarToday>
+                                            {{ viewDate | calendarDate:(view + 'ViewTitle'):locale:0 }}
+                                        </div>
+                                        <div class="view-setdate" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (click)="setDate(viewDate)" title="Next Month">
+                                            <i class="fa fa-caret-right"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-4 col-md-4 col-lg-4 weak-day-maindiv">
+
+                                    <nav class="left-nav p-0 nav-div">
+                                        <ul class="list-unstyled pt-1">
+                                            <li class="button--wayra" (click)="view='week'" [class.active]="view === 'week'">
+                                                <a class="d-block week-day">Week</a>
+                                            </li>
+                                            <li class="button--wayra" (click)="view='day'" [class.active]="view === 'day'">
+                                                <a class="d-block week-day">Day</a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+
+                            </div>
+                            <mwl-calendar-week-view *ngSwitchCase="'week'" [CurDocName]="CurrentNotification.doctor" [checkDay]="'week'" [CurrDocFirstName]="CurrentNotification.doctor.userBasicInfo.first_name" [refresh]="refresh" [(start)]="CurrentNotification.start_date" [(end)]="CurrentNotification.end_date"
+                                (eventTimesChanged)="eventTimesChanged($event)" [(viewDate)]="viewDate" [(events)]="events">
+                            </mwl-calendar-week-view>
+                            <mwl-calendar-week-view *ngSwitchCase="'day'" [CurDocName]="CurrentNotification.doctor" [CurrDocFirstName]="CurrentNotification.doctor.userBasicInfo.first_name" [refresh]="refresh" [(start)]="CurrentNotification.start_date" [(end)]="CurrentNotification.end_date" [checkDay]="'day'"
+                                (eventTimesChanged)="eventTimesChanged($event)" [(viewDate)]="viewDate" [(events)]="events">
+                            </mwl-calendar-week-view>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div> -->
+
+            <!-- <div *ngIf="CurrentNotification.deleted_at!=null" class="col-md-9 bg-white">
+                <div class="row doctor-details">
+
+
+                    <div class="col-md-2 pe-0">
+                        <div class="profile-image">
+                            <img alt="Avatar" src={{CurrentNotification.doctor.userBasicInfo.profile_pic_url}}>
+                        </div>
+                    </div>
+
+                    <div class="col-md-10">
+                        <div class="row mb-2">
+                            <div class="col-md-12 user-info">
+                                <h4 class="d-inline">
+                                    <strong> {{CurrentNotification.doctor.userBasicInfo.first_name}}
+										{{CurrentNotification.doctor.userBasicInfo.middle_name}}
+										{{CurrentNotification.doctor.userBasicInfo.last_name}}</strong>
+                                </h4>
+                                <h6 class="d-inline ps-3">{{CurrentNotification.doctor.specialities.name}}</h6>
+                                <ul class="mt-2">
+                                    <li><i class="icon-phone"></i>
+                                        <span> {{CurrentNotification.doctor.cell_phone_no}}</span></li>
+                                    <li><i class="icon-envelope"></i>
+                                        <span>{{CurrentNotification.doctor.email}}</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row subject-row d-flex align-items-center mx-0 py-1 noti-subject">
+                            <div class="col-md-4 col-lg-3" *ngIf = "CurrentNotification.subject.length > 10">
+                                <span class="d-inline-block text-wrap w-100">
+									<strong> Subject : </strong> {{CurrentNotification.subject.substring(0,10)}}..</span>
+                            </div>
+                            <div class="col-md-4 col-lg-3"  *ngIf = "CurrentNotification.subject.length < 10">
+                                <span class="d-inline-block text-wrap w-100">
+									<strong> Subject : </strong> {{CurrentNotification.subject}}</span>
+                            </div>
+                            
+                            <div class="col-md-4 col-lg-1 px-0">
+                                <button class="btn btn-default see-more-btn float-right color-white ms-4" (click)="ShowMore(CurrentNotification.subject,CurrentNotification.description)">See
+									More
+								</button>
+                            </div>
+                            <div class="col-md-4 col-lg-7">
+                                <ul class="list-unstyled d-flex justify-content- mb-0 just">
+                                <li>
+                                    <strong>From:</strong> &nbsp;
+                                    <span class="date-time-box">{{CurrentNotification.start_date| date: 'MM/dd/yyyy'}}
+										-
+										{{CurrentNotification.start_date| date: 'hh:mm a'}}</span>
+                                    </li>
+                                    <li>
+                                        <strong>To:</strong> &nbsp;
+                                    <span class="date-time-box">{{CurrentNotification.end_date| date: 'MM/dd/yyyy'}}
+										-
+										{{CurrentNotification.end_date| date: 'hh:mm a'}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                      
+
+                        <div class="row subject-row mx-0 py-2 border-top-0 aprov-div">
+                            <div class="col-md-4">
+                                <span class="text-truncate mb-0 display-inh">
+									<strong> Approved by : </strong> {{CurrentNotification.approved_by?.userBasicInfo.first_name}} {{CurrentNotification.approved_by?.userBasicInfo.middle_name?CurrentNotification.approved_by?.userBasicInfo.middle_name:''}} {{CurrentNotification.approved_by?.userBasicInfo.last_name}}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <span class="text-truncate mb-0 display-inh">
+									<strong> Deleted by : </strong> {{CurrentNotification.updated_by?CurrentNotification.updated_by.userBasicInfo.first_name+' '+(CurrentNotification.updated_by.userBasicInfo.middle_name?CurrentNotification.updated_by.userBasicInfo.middle_name+' '+CurrentNotification.updated_by.userBasicInfo.last_name: CurrentNotification.updated_by.userBasicInfo.last_name):''}} </span>
+                            </div>
+                        </div>
+                        <div class="row subject-row mx-0 py-0 noti-column">
+                            <div class="col-md-12">
+                                <span class="text-truncate mb-0 pt-2 display-inh">
+									<strong> Reason : </strong> {{CurrentNotification.comments}} </span>
+                            </div>
+
+                            <div class="col-md-8 text-truncate desc-noti">
+                            </div>
+                        </div>
+                        <div class="row date-time-row mx-0 border-top-0 noti-column">
+                           
+
+                            
+                        </div>
+
+                    </div>
+
+                </div>
+            </div> -->
+
+
+        </div>
+        <div *ngIf="!CurrentNotification" class="row list-empty">
+            <div class="col-md-5"></div>
+            <div class="col-md-7">Notification list is empty</div>
+        </div>
+	</div>
+	<ng-template #no_notification_menu>
+		<h6 class="col-12 color-red">No Access Permission</h6>
+	</ng-template>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">{{title}}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="close()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+
+	<div class="modal-body modal-pt-15">
+		<div class="modal-body-data mb-3 replicate-checkbox">
+			<!-- <div class="row">
+				
+				<div  class="col-md-12">
+				<h6>{{subtitle}}</h6>
+				</div>   
+	
+			</div> -->
+
+			<mat-checkbox 
+			(change)="$event ? casesmasterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+			[indeterminate]="selection.hasValue() && !isAllSelected()">
+			Select All
+			</mat-checkbox>
+
+			<div class="row" *ngFor="let row of data">
+				
+				<div  class="col-md-12">
+					<mat-checkbox  class="replicate-text-wrap" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+					[checked]="selection.isSelected(row)">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+					ngbTooltip="{{row.facility_name}}-{{row.facility_location_name}}-{{row.name}}">{{row.facility_name}}-{{row.facility_location_name}}-{{row.name}}</div>
+					
+				  </mat-checkbox>
+				</div>   
+				<!-- <div  class="col-md-11">
+					{{row.facility_name}}-{{row.facility_location_name}}-{{row.name}}
+				</div>  -->
+			</div>
+			<div class="row">
+				<div class="col-md-12 mt-3 modal-btn-width text-center">
+					<button class="btn btn-primary me-3" (click)="close()" type="button"
+						>Cancel</button>
+						<button [disabled]="this.selection.selected.length==0" class="btn btn-success" (click)="Replicate()"
+						>Replicate </button>
+				</div>
+			</div>
+	</div>

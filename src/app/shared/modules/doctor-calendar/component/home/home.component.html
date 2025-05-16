@@ -1,0 +1,494 @@
+<div class="row">
+    <!-- <busy-loader [loaderSpin]="mainService.isLoaderPending | async"></busy-loader> -->
+    <div class="col-12 pt-2">
+        <div class="user-info">
+            <div class="row">
+                <div class='col-md-12'>
+                    <h4 class="my-0 color-green fs-18">{{provCalendarTitle}}</h4>
+                </div>
+            </div>
+        </div>
+        <div class="divmaincontainer mt-2" *ngIf="aclService.hasPermission(userPermissions.schedule_doctor_calendar_view)">
+            <app-side-nav side='left' class="position-relative">
+                <div slot='left' class="sidebar-frame h-100" style="width: 350px;">
+                    <section class="widget">
+                        <div class="col-sm-12 mini-calendar">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-6">
+                                    <form [formGroup]="myForm" novalidate>
+                                        <!-- <my-date-picker name="mydate" formControlName="myDate"
+                                            [options]="myDatePickerOptions" [(ngModel)]="model" required
+                                            (dateChanged)="onDateChanged($event)"></my-date-picker> -->
+                                            <mat-calendar formControlName="myDate" ngDefaultControl (selectedChange)="setDate($event)" [(selected)]="model" [minDate]="minDate"></mat-calendar>
+
+                                    </form>
+                                </div>
+
+                    
+    
+                                <div class="col-md-12 col-sm-6">
+                                    <app-doctor-clinic-list *ngIf="!isHidePatientRecord"
+                                        (selectClinic)="selectClinic($event)" (patientCheck)="patientSelected($event)"
+                                        (selectDoctor)="selectDoctor($event)" (selectSpec)="selectSpec($event)">
+                                    </app-doctor-clinic-list>
+                                    <app-patient-data (hidePatientRecord)="hidePatientRecord()"
+                                        (startEvaluation)="startEvaluation($event)" [(isShowDetails)]="isShowDetails"
+                                        [(isShowComments)]="isShowComments" [(patientData)]="patientData"
+                                        *ngIf="isHidePatientRecord"></app-patient-data>
+                                </div>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+            </app-side-nav>
+            <!-- <aside class="sidebar left-panel float-left position-relative provider-sidebar"> -->
+            <!-- <button class="opener left-opener position-absolute p-0" type="button"><span
+						class="icon-down-arrow"></span></button> -->
+            <!-- <div class="sidebar-frame h-100">
+           
+            </div> -->
+            <!-- </aside> -->
+            <div class="row divcontainer">
+                <div class="col-sm-12 ps-2">
+                    <app-view-calendar-header [(view)]="view" [(hourSegments)]="hourSegments" [(viewDate)]="viewDate"
+                        (changeDatePickerMonthNext)="getMainCalendarCurrentDate($event)"
+                        (changeDatePickerMonthPrev)="getMainCalendarCurrentDate($event)"
+                        (viewChange)="viewChange($event)" (hourChange)="hourChange($event)">
+                    </app-view-calendar-header>
+
+                    <div *ngIf="view!=='month'">
+                        <div class="row large-calendar" [ngSwitch]="view">
+                            <div class="col-md-12 total-width">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <a class="caret-left" (click)="chnageDoctorHeader('left')">
+                                            <i class="fa fa-caret-left"></i>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="arow_click caret-right" (click)="chnageDoctorHeader('right')">
+                                            <i class="fa fa-caret-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="!patientCheck && currentDoctors.length===2">
+                                    <div class="col-md-6 current-doctor " *ngFor="let doc of currentDoctors; let i=index " [ngStyle]="i===1?{'padding-right':'4px'}:{'padding-right':'0px'}">
+                                        <div (click)="removeTopEntry(doc)" [hidden]="doc.id == 0" class="text-center remove-top-entry">
+                                            <div *ngIf="doc.doctor && doc.doctor.specialities" class="doc-speciality" [style.background-color]="doc.doctor.specialities.color || doc.doctor.specialities.color">
+                                            </div>
+                                            <div *ngIf="!doc.doctor" class="doc-speciality"
+                                                [style.background-color]="doc.color">
+                                            </div> 
+                                            <h4 class="text-truncate" *ngIf="doc.doctor && doc.doctor.specialities" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc?.facility_location?.facility?.name}}-{{doc?.facility_location?.name}}  - {{doc?.doctor?.info?.first_name}} {{doc?.doctor?.info?.middle_name}} {{doc?.doctor?.info?.last_name}} - {{doc?.doctor?.specialities?.name}}" >
+                                                {{doc?.facility_location?.facility?.qualifier}}-{{doc?.facility_location?.qualifier}} - {{doc?.doctor?.info?.first_name}} {{doc?.doctor?.info?.middle_name}} {{doc?.doctor?.info?.last_name}} - {{doc?.doctor?.specialities?.qualifier}}
+                                            </h4>
+                                            <!-- <h4 class="text-truncate" *ngIf="!doc.doctor">{{doc.info.name}}
+											</h4> -->
+											<h4 class="text-truncate" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc?.name}}" *ngIf="!doc.doctor">{{doc?.qualifier}}
+                                            </h4>
+                                        </div>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'" [(hourSegments)]="hourSegments" [hourSegmentHeight]="100" [headerOn]="'true'" [doc]="doc.doctor" [viewDate]="viewDate" [clinicId]="calenderClinics" [docIndex]="i" [index]="i" startEvaluation (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" (showEvaluation)="showEvaluation($event)" 
+                                            [checkDay]="'week'"  [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation" [currentDoc]="doc" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" (showPatientRecordParent)="showPatientRecordParent($event)"
+                                            >
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'" [headerOn]="'true'" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [(hourSegments)]="hourSegments" [hourSegmentHeight]="100" [doc]="doc.doctor" [viewDate]="viewDate" [clinicId]="calenderClinics"
+                                            [docIndex]="i" [index]="i" (startEvaluation)="startEvaluation($event)"  (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" (showEvaluation)="showEvaluation($event)"  [checkDay]="'day'" [currentDoc]="doc" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" (showPatientRecordParent)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)"  [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation" >
+                                        </mwl-calendar-week-view-doc>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="!patientCheck && currentDoctors.length===1">
+                                    <div class="col-md-12" *ngFor="let doc of currentDoctors; let i=index" [ngStyle]="i===1?{'padding-left':'0'}:{'padding-right':'0px'}">
+                                        <div (click)="removeTopEntry(doc)" [hidden]="doc.id == 0" class="text-center remove-top-entry" style="margin-top: -30px;">
+                                            <div *ngIf="doc.doctor && doc.doctor.specialities" class="doc-speciality" [style.background-color]="doc.color || doc.color">
+                                            </div>
+                                            <div *ngIf="!doc.doctor" class="doc-speciality"
+                                                [style.background-color]="doc.color">
+                                            </div>
+                                            <h4 class="text-truncate" *ngIf="doc.doctor && doc.doctor.specialities" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc?.facility_location?.facility?.name}}-{{doc?.facility_location?.name}}  - {{doc.doctor.info.first_name}} {{doc.doctor.info.middle_name}} {{doc.doctor.info.last_name}} - {{doc.doctor.specialities.name}}" >
+                                                {{doc?.facility_location?.facility?.qualifier}}-{{doc?.facility_location?.qualifier}} - {{doc?.doctor?.info.first_name}} {{doc?.doctor?.info?.middle_name}} {{doc?.doctor?.info?.last_name}} - {{doc?.doctor?.specialities?.qualifier}}
+                                            </h4>
+                                            <h4 class="text-truncate" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc?.name}}" *ngIf="!doc.doctor">{{doc?.qualifier}}
+                                            </h4>
+                                        </div>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [headerOn]="'true'" [doc]="doc.doctor" [viewDate]="viewDate" [clinicId]="calenderClinics"
+                                            [docIndex]="i" [index]="i" [currentDoc]="doc" [checkDay]="'week'" [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation" (startEvaluation)="startEvaluation($event)"  (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" (showEvaluation)="showEvaluation($event)" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [headerOn]="'true'" [doc]="doc.doctor" [viewDate]="viewDate" [clinicId]="calenderClinics"
+                                            [docIndex]="i" [index]="i" (startEvaluation)="startEvaluation($event)" [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation" (showEvaluation)="showEvaluation($event)"    (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" [checkDay]="'day'" [currentDoc]="doc" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)">
+                                        </mwl-calendar-week-view-doc>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="patientCheck && currentDoctors[0] && currentDoctors[0].id!==0">
+                                    <div class="col-md-6 pe-1 " *ngFor="let doc of currentDoctors">
+                                        <div (click)="removeTopEntryPatient()" class="text-center remove-top-entry">
+                                            <div class="doc-speciality">
+                                            </div>
+                                            <h4 class="text-truncate">{{patientDetails?.first_name}}
+                                                {{patientDetails?.middle_name}} {{patientDetails?.last_name}}
+                                            </h4>
+
+                                        </div>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'"
+                                            [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH"
+                                            (highl)="highl($event)" [hourSegmentHeight]="100" [headerOn]="'true'"
+                                            [viewDate]="viewDate" [clinicId]="calenderClinics" [index]="0"
+                                            [patient]="'true'" [checkDay]="'week'"
+                                            (startEvaluation)="startEvaluation($event)"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+                                            (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn"
+                                            (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)"
+											[currentDoc]="doc"
+											[doc]="doc.doctor"
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation"
+											[currentDocId]="doc.user_id?doc.user_id:doc.id">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'"
+                                            [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH"
+                                            (highl)="highl($event)" [hourSegmentHeight]="100" [headerOn]="'true'"
+                                            [viewDate]="viewDate" [clinicId]="calenderClinics" [index]="0"
+                                            [patient]="'true'" [checkDay]="'day'"
+                                            (startEvaluation)="startEvaluation($event)"
+                                            (showEvaluation)="showEvaluation($event)"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+                                            (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn"
+                                            (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)"
+											[currentDoc]="doc"
+											[doc]="doc.doctor"
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation"
+											[currentDocId]="doc.user_id?doc.user_id:doc.id">
+                                        </mwl-calendar-week-view-doc>
+                                    </div>
+                                    <div class="col-md-6  current-doctor" *ngFor="let doc of currentDoctors; let i=index">
+                                        <div (click)="removeTopEntry(doc)" [hidden]="doc.id == 0" class="text-center remove-top-entry">
+                                            <div *ngIf="doc.doctor && doc.doctor.specialities" class="doc-speciality" [style.background-color]="doc.color || doc.color">
+                                            </div>
+                                            <div *ngIf="!doc.doctor" class="doc-speciality"
+                                                [style.background-color]="doc.color">
+                                            </div>
+                                            <h4 class="text-truncate" *ngIf="doc.doctor && doc.doctor.specialities" tooltipClass="table-custom-tooltip" container="body" ngbTooltip=" {{doc?.doctor?.info?.first_name}} {{doc?.doctor?.info?.middle_name}} {{doc?.doctor?.info?.last_name}} - {{ doc?.doctor?.specialities?.name}}" >
+                                                {{doc?.doctor?.info?.first_name}} {{doc?.doctor?.info?.middle_name}} {{doc?.doctor?.info?.last_name}} - {{ doc?.doctor?.specialities?.qualifier}}
+                                            </h4>
+                                            <!-- <h4 class="text-truncate" *ngIf="!doc.doctor">{{doc.name}}
+											</h4> -->
+											<h4 class="text-truncate" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc?.name}}" *ngIf="!doc.doctor">{{doc?.qualifier}}
+                                            </h4>
+                                        </div>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [headerOn]="'true'" [doc]="doc.doctor" [viewDate]="viewDate" [clinicId]="calenderClinics"
+                                            (startEvaluation)="startEvaluation($event)" (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation" (showEvaluation)="showEvaluation($event)"  [checkDay]="'week'" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" [currentDoc]="doc" (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [headerOn]="'true'" [doc]="doc.doctor" [viewDate]="viewDate" [clinicId]="calenderClinics"
+                                            (startEvaluation)="startEvaluation($event)" (showEvaluation)="showEvaluation($event)"  [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation"   (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" [checkDay]="'day'" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" [currentDoc]="doc" (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)">
+                                        </mwl-calendar-week-view-doc>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="patientCheck && currentDoctors[0] && currentDoctors[0].id===0">
+                                    <div class="col-md-12 pe-0">
+                                        <div  (click)="removeTopEntryPatient()" class="text-center remove-top-entry">
+                                            <div class="doc-speciality">
+                                            </div>
+                                            <h4 class="text-truncate">{{patientDetails.first_name}}
+                                                {{patientDetails.middle_name}} {{patientDetails.last_name}}
+                                            </h4>
+
+                                        </div>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'"
+                                            [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH"
+                                            (highl)="highl($event)" [hourSegmentHeight]="100" [headerOn]="'true'"
+                                            [viewDate]="viewDate" [clinicId]="calenderClinics" [index]="0"
+                                            [patient]="'true'" [checkDay]="'week'"
+                                            (startEvaluation)="startEvaluation($event)"
+                                            (showEvaluation)="showEvaluation($event)"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+                                            (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn"
+                                            (showPatientRecord)="showPatientRecordParent($event)"
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation"
+                                            (currentAssignments)="getCurrentAssignments($event)">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'"
+                                            [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH"
+                                            (highl)="highl($event)" [hourSegmentHeight]="100" [headerOn]="'true'"
+                                            [viewDate]="viewDate" [clinicId]="calenderClinics" [index]="0"
+                                            [patient]="'true'" [checkDay]="'day'"
+                                            (startEvaluation)="startEvaluation($event)"
+                                            (showEvaluation)="showEvaluation($event)"
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+                                            (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn"
+                                            (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)">
+                                        </mwl-calendar-week-view-doc>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div id="test-scroll" class="col-md-12 calendar-scroll" #scrollContainer>
+
+                                <div class="row" *ngIf="!patientCheck  && currentDoctors.length===2">
+                                    <div class="col-md-6 " *ngFor="let doc of currentDoctors; let i=index" [ngStyle]="i===1?{'padding-left':'17px','padding-right':'3px'}:{'padding-right':'0px','padding-left':'16px'}">
+
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [doc]="doc.doctor" [viewDate]="viewDate" [clinicId]="calenderClinics" [docIndex]="i"
+                                            [swaps]="isSwapped" [checkDay]="'week'" [index]="i" (startEvaluation)="startEvaluation($event)" (showEvaluation)="showEvaluation($event)"   (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" [currentDoc]="doc" (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)" [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [doc]="doc.doctor" [viewDate]="viewDate" [checkDay]="'day'" [index]="i" [clinicId]="calenderClinics"
+                                            (startEvaluation)="startEvaluation($event)"   (startEvualtionFlagShow) ="startEvualtionFlagShow($event)"  (showEvaluation) = "showEvaluation($event)" (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" [docIndex]="i" [swaps]="isSwapped" [allDoc]="currentDoctors" [currentDoc]="doc" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id"
+                                            (showPatientRecord)="showPatientRecordParent($event)" (currentAssignments)="getCurrentAssignments($event)" [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+
+
+                                    </div>
+                                </div>
+                                <div id="scrollCheck" class="row" *ngIf="!patientCheck  && currentDoctors.length===1">
+                                    <div class="col-md-12" *ngFor="let doc of currentDoctors; let i=index" [ngStyle]="i===1?{'padding-left':'0'}:{'padding-right':'0'}">
+
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [doc]="doc.doctor" [viewDate]="viewDate" [clinicId]="calenderClinics" [docIndex]="i"
+                                            [swaps]="isSwapped" [checkDay]="'week'" [index]="i" (startEvaluation)="startEvaluation($event)"   (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" (showEvaluation)="showEvaluation($event)"  (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" [currentDoc]="doc" (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)" [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [doc]="doc.doctor" [viewDate]="viewDate" [checkDay]="'day'" [index]="i" [clinicId]="calenderClinics"
+                                            (startEvaluation)="startEvaluation($event)"   (startEvualtionFlagShow) ="startEvualtionFlagShow($event)" (showEvaluation)="showEvaluation($event)"  [docIndex]="i" [swaps]="isSwapped" [allDoc]="currentDoctors" [currentDoc]="doc" (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id"
+                                            (showPatientRecord)="showPatientRecordParent($event)" (currentAssignments)="getCurrentAssignments($event)" [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+
+
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="patientCheck && currentDoctors[0] && currentDoctors[0].id===0">
+                                    <div class="col-md-12 pe-0">
+
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'" [viewDate]="viewDate"
+                                            [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH"
+                                            (highl)="highl($event)" [hourSegmentHeight]="100"
+                                            [clinicId]="calenderClinics" [index]="0" [docIndex]="i" [swaps]="isSwapped"
+                                            [checkDay]="'week'" [patient]="'true'"
+                                            (showEvaluation)="showEvaluation($event)"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+                                            (startEvaluation)="startEvaluation($event)"
+                                            (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn"
+                                            (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)"
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'" [viewDate]="viewDate"
+                                            [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH"
+                                            (highl)="highl($event)" [hourSegmentHeight]="100" [checkDay]="'day'"
+                                            [patient]="'true'" [clinicId]="calenderClinics" [index]="0" [docIndex]="i"
+                                            [swaps]="isSwapped" (showEvaluation)="showEvaluation($event)"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+                                            (startEvaluation)="startEvaluation($event)"
+                                            (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn"
+                                            (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)"
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="patientCheck && currentDoctors[0] && currentDoctors[0].id!==0">
+                                    <div class="col-md-6 pe-1" *ngFor="let doc of currentDoctors">
+
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'" [viewDate]="viewDate"
+                                            [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH"
+                                            (highl)="highl($event)" [hourSegmentHeight]="100"
+                                            [clinicId]="calenderClinics" [index]="0" [docIndex]="i" [swaps]="isSwapped"
+                                            (startEvaluation)="startEvaluation($event)"
+                                            (showEvaluation)="showEvaluation($event)"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+                                            [checkDay]="'week'" [patient]="'true'" (updateSpecAssign)="update($event)"
+                                            [weekStartsOn]="weekStartOn"
+                                            (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)"
+											[currentDoc]="doc"
+											[doc]="doc.doctor"
+											[currentDocId]="doc.user_id?doc.user_id:doc.id"
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'" [viewDate]="viewDate"
+                                            [checkDay]="'day'" [(hourSegments)]="hourSegments"
+                                            [(highlightdayH)]="highlightdayH" (highl)="highl($event)"
+                                            [hourSegmentHeight]="100" [patient]="'true'" [clinicId]="calenderClinics"
+                                            [index]="0" [docIndex]="i" [swaps]="isSwapped"
+                                            (startEvaluation)="startEvaluation($event)"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+                                            (showEvaluation)="showEvaluation($event)"
+                                            (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn"
+                                            (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)"
+											[currentDoc]="doc"
+											[doc]="doc.doctor"
+											[currentDocId]="doc.user_id?doc.user_id:doc.id"
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+
+
+                                    </div>
+                                    <div class="col-md-6 current-doc" *ngFor="let doc of currentDoctors;let i=index">
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'week'" [doc]="doc.doctor" [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH" (highl)="highl($event)" [hourSegmentHeight]="100" [viewDate]="viewDate" [clinicId]="calenderClinics" [docIndex]="i"
+                                            [swaps]="isSwapped" [checkDay]="'week'" (startEvaluation)="startEvaluation($event)"  (startEvualtionFlagShow) ="startEvualtionFlagShow($event)"  (showEvaluation)="showEvaluation($event)"  (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" [currentDocId]="doc.user_id?doc.user_id:doc.id" [currentDoc]="doc" (showPatientRecord)="showPatientRecordParent($event)"
+                                            (currentAssignments)="getCurrentAssignments($event)" [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation">
+                                        </mwl-calendar-week-view-doc>
+                                        <mwl-calendar-week-view-doc *ngSwitchCase="'day'" [doc]="doc.doctor"
+                                            [(hourSegments)]="hourSegments" [(highlightdayH)]="highlightdayH"
+                                            (highl)="highl($event)" [hourSegmentHeight]="100" [viewDate]="viewDate"
+                                            [checkDay]="'day'" [clinicId]="calenderClinics"
+                                            (startEvaluation)="startEvaluation($event)" [docIndex]="i"
+                                            (startEvualtionFlagShow)="startEvualtionFlagShow($event)"
+											(showEvaluation)="showEvaluation($event)" 
+                                             [swaps]="isSwapped" [allDoc]="currentDoctors" 
+                                             (updateSpecAssign)="update($event)" [weekStartsOn]="weekStartOn" 
+                                             [currentDocId]="doc.user_id?doc.user_id:doc.id" [currentDoc]="doc"
+                                            (showPatientRecord)="showPatientRecordParent($event)" 
+                                            [timeAgaintsPraticeLocation]="timeAgaintsPraticeLocation"
+                                            >
+                                        </mwl-calendar-week-view-doc>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="view=='month'">
+                        <div (scroll)="onScroll($event)" #calendarContainer class="overflow-drag-front-desk-doctor-calendar speciality-month-calendar" [ngClass]="{'scroll-provider-one': !patientCheck&&currentDoctors.length == 1}">
+                            <table class="total-width" id="drag" [ngSwitch]="view">
+                                <tr>
+                                    <td>
+                                        <a class="caret-left" (click)="chnageDoctorHeader('left')">
+                                            <!-- <i class="fa fa-arrow-circle-left arrow-circle"></i> -->
+                                            <i class="fa fa-caret-left"></i>
+                                        </a>
+                                    </td>
+                                    <td class="arow_click">
+                                        <a (click)="chnageDoctorHeader('right')" class="arow_click caret-right">
+                                            <!-- <i class="fa fa-arrow-circle-right arrow-circle"></i> -->
+                                            <i class="fa fa-caret-right"></i>
+                                        </a>
+
+                                    </td>
+                                </tr>
+                                <tr *ngIf="currentDoctors[0] && currentDoctors[0].id===0 && patientCheck">
+                                    <td class="total-min-width" *ngIf="patientCheck">
+                                        <div (click)="removeTopEntryPatient()" class="text-center remove-top-entry">
+                                            <div class="doc-speciality">
+                                            </div>
+                                            <h4 class="text-truncate">{{patientDetails.first_name}}
+                                                {{patientDetails.middle_name}} {{patientDetails.last_name}}
+                                            </h4>
+
+                                        </div>
+                                        <mwl-calendar-month-view *ngSwitchCase="'month'" [clinicId]="calenderClinics" [patient]="'true'" 
+                                        [(viewDate)]="viewDate" (startEvaluation)="startEvaluation($event)" (startEvualtionFlagShow)="startEvualtionFlagShow($event)" (showEvaluation)="showEvaluation($event)" 
+                                        [weekStartsOn]="weekStartOn" [selectDate]="datePick"
+                                        [refresh]="refresh"
+                                        [patientData]="eventsSendPatient">
+                                        </mwl-calendar-month-view>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="currentDoctors[0] && currentDoctors[0].id===0 && !patientCheck">
+
+                                    <td *ngFor="let doc of currentDoctors;let i=index" [ngStyle]="doc.id!=0?{'min-width': '856px','padding-left':'10px'}:patientCheck?{'min-width': '0','max-width': '0'}:{'min-width': '856px','padding-left':'10px'}">
+                                        <div (click)="removeTopEntry(doc)" [hidden]="doc.id == 0" class="text-center remove-top-entry">
+                                            <div *ngIf="doc.doctor && doc.doctor.specialities" class="doc-speciality" [style.background-color]="doc.color">
+                                            </div>
+                                            <!--<h4 class="text-truncate">{{doc.doctor.last_name}}</h4>-->
+
+                                        </div>
+                                        <mwl-calendar-month-view *ngSwitchCase="'month'" [clinicId]="calenderClinics"
+                                            [(viewDate)]="viewDate" [currentDoc]="doc" [patient]="'false'"
+                                            [weekStartsOn]="weekStartOn" [selectDate]="datePick" [refresh]="refresh">
+                                        </mwl-calendar-month-view>
+
+                                    </td>
+
+                                </tr>
+                                <tr *ngIf="currentDoctors[0] && currentDoctors[0].id!==0 && !patientCheck">
+
+                                    <td *ngFor="let doc of currentDoctors;let i=index" [ngStyle]="doc.id!=0?{'min-width': '856px','padding-left':'10px'}:patientCheck?{'min-width': '0','max-width': '0'}:{'min-width': '856px','padding-left':'10px'}">
+                                        <div (click)="removeTopEntry(doc)" [hidden]="doc.id == 0" class="text-center remove-top-entry">
+                                            <div *ngIf="doc.doctor && doc.doctor.specialities" class="doc-speciality" [style.background-color]="doc.color">
+                                            </div>
+                                            <div *ngIf="!doc.doctor" class="doc-speciality"
+                                                [style.background-color]="doc.color">
+                                            </div>
+                                            <!-- <h4 class="text-truncate" *ngIf="doc.doctor && doc.doctor.info" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc.doctor.info.first_name}} {{doc.doctor.info.middle_name}} {{doc.doctor.info.last_name}} - {{doc.doctor.specialities?.name}}" >
+                                                {{doc.doctor.info.first_name}} {{doc.doctor.info.middle_name}} {{doc.doctor.info.last_name}} - {{doc.doctor.specialities?.qualifier}}
+                                            </h4> -->
+                                            <h4 class="text-truncate" *ngIf="doc.doctor && doc.doctor.specialities" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc?.facility_location?.facility?.name}}-{{doc?.facility_location?.name}}  - {{doc?.doctor?.info?.first_name}} {{doc?.doctor?.info?.middle_name}} {{doc?.doctor?.info?.last_name}}{{doc?.doctor?.billing_title?.name ? ',' + doc?.doctor?.billing_title?.name : ''}} - {{doc?.doctor?.specialities?.name}}" >
+                                                {{doc?.facility_location?.facility?.qualifier}}-{{doc?.facility_location?.qualifier}} - {{doc?.doctor?.info?.first_name}} {{doc?.doctor?.info?.middle_name}} {{doc?.doctor?.info?.last_name}}{{doc?.doctor?.billing_title?.name ? ',' + doc?.doctor?.billing_title?.name : ''}} - {{doc?.doctor?.specialities?.qualifier}}
+                                            </h4>
+                                            <!-- <h4 class="text-truncate" *ngIf="!doc.doctor">{{doc.name}}
+											</h4> -->
+											<h4 class="text-truncate" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc.name}}" *ngIf="!doc.doctor">{{doc.qualifier}}
+                                            </h4>
+                                        </div>
+                                        <mwl-calendar-month-view *ngSwitchCase="'month'" [clinicId]="calenderClinics"
+                                            [(viewDate)]="viewDate" [currentDoc]="doc" [patient]="'false'"
+                                            [weekStartsOn]="weekStartOn" [selectDate]="datePick" [refresh]="refresh"
+                                            [allMonthEvents]="allMonthEvents">
+                                        </mwl-calendar-month-view>
+
+                                    </td>
+
+                                </tr>
+                                <tr *ngIf="currentDoctors[0] && currentDoctors[0].id!==0 && patientCheck">
+
+                                    <td *ngFor="let doc of currentDoctors;let i=index" class="total-min-width" [ngStyle]="doc.id!=0?{'min-width': '856px','padding-left':'10px'}:patientCheck?{'min-width': '0','max-width': '0'}:{'min-width': '856px','padding-left':'10px'}" >
+                                        <div (click)="removeTopEntryPatient()" class="text-center remove-top-entry">
+                                            <div class="doc-speciality">
+                                            </div>
+                                            <h4 class="text-truncate">{{patientDetails.first_name}}
+                                                {{patientDetails.middle_name}} {{patientDetails.last_name}}
+                                            </h4>
+
+                                        </div>
+                                        <mwl-calendar-month-view *ngSwitchCase="'month'" [clinicId]="calenderClinics" [patient]="'true'" [(viewDate)]="viewDate" [currentDoc]="doc" [patientData]="eventsSendPatient" (startEvaluation)="startEvaluation($event)"   (startEvualtionFlagShow)="startEvualtionFlagShow($event)" (showEvaluation)="showEvaluation($event)"  [patientObject]="patientObject" [weekStartsOn]="weekStartOn"
+                                            [selectDate]="datePick" [refresh]="refresh">
+                                        </mwl-calendar-month-view>
+
+                                    </td>
+
+                                    <td *ngFor="let doc of currentDoctors;let i=index" [ngStyle]="doc.id!=0?{'min-width': '856px','padding-left':'10px'}:patientCheck?{'min-width': '0','max-width': '0'}:{'min-width': '856px'}">
+                                        <div (click)="removeTopEntry(doc)" [hidden]="doc.id == 0" class="text-center remove-top-entry">
+                                            <div *ngIf="doc.doctor && doc.doctor.specialities" class="doc-speciality" [style.background-color]="doc.color">
+                                            </div>
+                                            <div *ngIf="!doc.doctor" class="doc-speciality"
+                                                [style.background-color]="doc.color">
+                                            </div>
+                                            <h4 class="text-truncate" *ngIf="doc.doctor && doc.doctor.specialities" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc.doctor.info.first_name}} {{doc.doctor.info.middle_name}} {{doc.doctor.info.last_name}} - {{doc.doctor.specialities.name}}"  >
+                                                {{doc.doctor.info.first_name}} {{doc.doctor.info.middle_name}} {{doc.doctor.info.last_name}} - {{doc.doctor.specialities.qualifier}}
+                                            </h4>
+                                            <!-- <h4 class="text-truncate" *ngIf="!doc.doctor">{{doc.name}}
+											</h4> -->
+											<h4 class="text-truncate" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{doc.name}}" *ngIf="!doc.doctor">{{doc.qualifier}}
+                                            </h4>
+
+                                        </div>
+                                        <mwl-calendar-month-view *ngSwitchCase="'month'" [clinicId]="calenderClinics"
+                                            [(viewDate)]="viewDate" [currentDoc]="doc" [patient]="'false'"
+                                            [weekStartsOn]="weekStartOn" [selectDate]="datePick" [refresh]="refresh"
+                                            [allMonthEvents]="allMonthEvents">
+                                        </mwl-calendar-month-view>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row" *ngIf="!aclService.hasPermission(userPermissions.schedule_doctor_calendar_view)">
+            <div class="col-md-12">
+                <h6 class="my-0 color-red">No Access Permission</h6>
+            </div>
+        </div>
+    </div>
+</div>

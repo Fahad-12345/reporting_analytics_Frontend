@@ -1,0 +1,18 @@
+
+
+// input.disabled ~ .fake-label, input.disabled {
+// 	pointer-events: none !important;
+//     opacity: 0.7;
+// }
+
+
+.form.disabled textarea, .form.disabled input {
+	background-color: #e9ecef !important; 
+	pointer-events: none !important;
+}
+
+
+.form.disabled label, .form.disabled .btn-secondary {
+	pointer-events: none !important;
+	opacity: 0.7;
+}

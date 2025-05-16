@@ -1,0 +1,25 @@
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end">
+    <button class="btn btn-default btn-clear" (click)="clearFunc()">Clear</button></div>
+<div class="column-content" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+
+    <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [hidden]="object.isStatement == false || layoutService.editorView == false" (click)="textClick()" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+    </p>
+    <angular-editor [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)" *ngIf="object.isStatement == true && layoutService.editorView == false" class="gridster-item-content "
+        id="Editor" [(ngModel)]="object.statement" (ngModelChange)="statementUpdate()">
+    </angular-editor>
+    <angular-editor [disabled]="object.selected_linked_ui_component != object.linked_ui" *ngIf="!layoutService.isInstancePreview && !layoutService.editorView && !layoutService.isShowEditor" class="gridster-item-content" id="Calculation" [(obj)]="object" [(text)]="text"
+         [(ngModel)]="object.calculation" (keyup)="calculateResult($event)">
+    </angular-editor>
+    <div *ngIf="(layoutService.isInstancePreview || layoutService.editorView || layoutService.isShowEditor) && !object.invalidCheck" class="row">
+        <div class="col-md-12 form-group">
+
+            <p class="form-control" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object.answers[0]?.answer || 0)" readonly></p>
+        </div>
+    </div>
+    <div class="row" *ngIf="(layoutService.isInstancePreview || layoutService.editorView || layoutService.isShowEditor) && object.invalidCheck">
+        <div class="col-12">
+            <textarea type="text" class="form-control" disabled>Invalid Equation</textarea>
+        </div>
+    </div>
+
+</div>

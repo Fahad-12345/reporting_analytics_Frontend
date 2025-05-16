@@ -1,0 +1,76 @@
+.currency {
+  padding-left: 25px !important;
+}
+
+.fa-dollar-sign {
+  position: absolute;
+  top: 31px;
+  font-size: 14px;
+  left: 10px;
+  color: #4b4b4b;
+}
+.date-field {
+  background-color: white !important;
+}
+
+.pdf-view {
+  position: absolute;
+  right: 10px;
+  top: 28px;
+}
+.check-no-margin {
+  margin-top: -5px;
+}
+
+.uploadFile-text {
+  display: block;
+  font-size: 14px;
+}
+
+.payment-actions {
+  .search-filter-btn {
+    button.btn {
+      flex: 1;
+      max-width: 135px;
+    }
+  }
+}
+
+.payment-selected-option {
+  width: 100%;
+  .payment-radio {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    .fake-radio-label {
+      margin-left: 23px;
+    }
+  }
+}
+
+.bill-payment-option {
+  ::ng-deep app-ng-select-shareable {
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.form-media-upload {
+  input[type=file] {
+    &[disabled] {
+      & + .custom-file-upload {
+        opacity: 0.7;
+        cursor: default;
+      }
+    }
+  }
+  &.remove-media {
+    display: flex;
+    justify-content: space-between;
+    gap: 7px;
+    .btn-danger {
+      
+    }
+  }
+}

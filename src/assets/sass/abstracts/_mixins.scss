@@ -1,0 +1,30 @@
+// Utilities
+@import 'mixins/width-height';
+@import 'mixins/margin-padding';
+@import 'mixins/fonts';
+@import 'mixins/px-to-rem';
+
+// Component
+@import 'mixins/search-box';
+@import 'mixins/tabs';
+@import 'mixins/custom-pagination';
+@import 'mixins/ejs-date-picker';
+@import 'mixins/modal';
+@import 'mixins/btns';
+@import 'mixins/tooltip';
+@import 'mixins/bg-text-color';
+@import 'mixins/plus-btn-style';
+@import 'mixins/file-upload-style';
+
+// Skins
+@import 'mixins/borders';
+@import 'mixins/box-shadow';
+
+// Layout
+@import 'mixins/grid';
+@import 'mixins/rotate';
+@import 'mixins/align';
+@import 'mixins/font-face';
+
+// iPad Responsive
+@import 'mixins/responsive-iPad';

@@ -1,0 +1,1147 @@
+<!-- <busy-loader [loaderSpin]="profileIamgeUploading || loading"></busy-loader> -->
+
+<form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+    <div class="form add-user-form">
+        <div class="card-body pt-4">
+            <div class="row">
+                <div class="col-md-12 pe-md-0">
+                    <div class="user-basic-info">
+                        <div class="profile-image pb-sm-3 mb-sm-3">
+                            <ngx-file-drop  (onFileDrop)="droppedImageProfile($event, false)"
+                            [showBrowseBtn]="true" browseBtnClassName="btn py-1 upload-btn printer-alfa"
+                                browseBtnLabel="" (onFileOver)="fileOverImage($event)"
+                                (onFileLeave)="fileLeaveImage($event)">
+                                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                    <ng-container *ngIf="profileImageSrc != '' && profileImageSrc != null">
+                                        <img src="{{profileImageSrc}}">
+                                    </ng-container>
+                            <img *ngIf="profileImageSrc == '' || profileImageSrc == null" [src]="this.defaultDoctorImageUrl">
+                            <button type="button" (click)="openFileSelector()" class="btn py-1 upload-btn printer-alfa"></button>
+                            </ng-template>
+                        </ngx-file-drop>
+                        </div>
+                        <div class="text-hold pt-md-0 mt-sm-3">
+                            <div class="row">
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form?.get('title')?.value != '' && form?.get('title')?.value != null }">
+                                        <label class="form-label" for="SelectTitle">Title</label>
+                                        <select class="form-select form-input" formControlName="title"
+                                            id="SelectTitle">
+                                            <!-- <option value="" disabled>Select Title</option> -->
+                                            <option value="Mr.">Mr.</option>
+                                            <option value="Mrs.">Mrs.</option>
+                                            <option value="Ms.">Ms.</option>
+                                            <option value="Dr.">Dr.</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('first_name').value != '' && form.get('first_name').value != null }">
+                                        <label class="form-label" for="FirstName">First Name*</label>
+                                        <input type="text" id="FirstName" formControlName="first_name"
+                                            class="form-control form-input">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="form.get('first_name').errors?.required && (form.get('first_name').dirty || form.get('first_name').touched)">
+											This field is required
+                                        </small>
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('middle_name').value != '' && form.get('middle_name').value != null }">
+                                        <label class="form-label" for="MiddleName">Middle Name</label>
+                                        <input type="text" id="MiddleName" formControlName="middle_name"
+                                            class="form-control form-input">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('last_name').value != '' && form.get('last_name').value != null }">
+                                        <label class="form-label" for="LastName">Last Name*</label>
+                                        <input type="text" id="LastName" formControlName="last_name"
+                                            class="form-control form-input">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="form.get('last_name').errors?.required && (form.get('last_name').dirty || form.get('last_name').touched)">
+                                            This field is required
+
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4 col-xl-3"
+                                    [ngClass]="{'focused': form.get('social_security').value != '' && form.get('social_security').value != null }">
+                                    <div class="form-group field">
+                                        <label class="form-label" for="SSN">SSN</label>
+                                        <input type="text" id="SSN" formControlName="social_security" mask='000-00-0000'
+                                            class="form-control form-input">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="(form.get('social_security').value && form.get('social_security').value.length > 0 && form.get('social_security').value.length < 9) && form.get('social_security').touched">
+                                            Invalid Format: 000-000-0000
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-lg-3 col-md-12">
+									<div class="form-group field"
+										[ngClass]="{'focused': form.get('date_of_birth').value != ''}">
+										<label for="dob" class="form-label">DOB</label>
+										<input type="text"  formControlName="date_of_birth" onfocus="(this.type='date')"
+											onfocusout="(this.type='text')" class="form-control form-input">
+										<img src="assets/images/dob.png" alt="">
+									</div>
+								</div> -->
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': (form.get('date_of_birth').value != '' && form.get('date_of_birth').value != null ) || form.get('date_of_birth').errors?.invalid_date}">
+                                        <label class="form-label" for="dob">DOB (mm/dd/yyyy)</label>
+                                        <input  appInputDateMask [matDatepicker]="date_of_birth" type="text"
+                                            id="date_of_birth" formControlName="date_of_birth"
+                                            class="form-control form-input"  [appMaskDate]=" form.get('date_of_birth').value"   [max]="dobDate">
+                                        <span
+                                            *ngIf="form.get('date_of_birth').value != '' && form.get('date_of_birth').value != null"
+                                            (click)="form?.get('date_of_birth')?.reset()"
+                                            class="icon-plus date-cross-icon"></span>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="form.get('date_of_birth').errors?.invalid_date && (form.get('date_of_birth').dirty && form.get('date_of_birth').touched)">
+                                            Invalid Date Format
+                                        </small>
+                                        <mat-datepicker-toggle [for]="date_of_birth"></mat-datepicker-toggle>
+                                        <mat-datepicker #date_of_birth></mat-datepicker>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('gender').value != '' && form.get('gender').value != null }">
+                                        <label class="form-label" for="SelectGender">Gender*</label>
+                                        <select class="form-select form-input" id="SelectGender"
+                                            formControlName="gender">
+                                            <!-- <option value="" disabled>Select Gender</option> -->
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                            <option value="X">X</option>
+                                        </select>
+                                        <!-- <span class="icon-plus select-cross-icon"></span> -->
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="form.get('gender').errors?.required && (form.get('gender').dirty || form.get('gender').touched)">
+											This field is required
+
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('email').value != '' && form.get('email').value != null }">
+                                        <label class="form-label" for="Email">Email*</label>
+                                        <input type="email"[readonly]="!aclService.hasPermission(userPermissions.master_user_list_edit_email)" id="Email" formControlName="email"
+                                            class="form-control form-input">
+                                            <small class="form-text text-muted danger"
+                                            *ngIf="form.get('email').errors?.required && (form.get('email').dirty || form.get('email').touched)">
+                                            This field is required
+                                        </small>
+                                        <small class="form-text text-muted danger"
+                                        *ngIf="(form.get('email').touched || form.get('email').dirty) && form.get('email').errors?.pattern">Email field is invalid</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('work_phone').value != '' && form.get('work_phone').value != null }">
+                                        <label class="form-label" for="WorkPhone">Work Phone</label>
+                                        <input type="text" id="WorkPhone" formControlName="work_phone"
+                                            mask='000-000-0000' class="form-control form-input">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="(form.get('work_phone').value && form.get('work_phone').value.length > 0 && form.get('work_phone').value.length < 10)  && form.get('work_phone').touched">
+                                            Invalid Format: 000-000-0000</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('extension').value != '' && form.get('extension').value != null }">
+                                        <label class="form-label" for="Extension">Extension</label>
+                                        <input type="text" id="Extension" formControlName="extension" appOnlyNumeric maxlength='10'
+                                            class="form-control form-input">
+                                        <!-- <small class="form-text text-muted danger"
+											*ngIf="form.get('extension').errors?.required && (form.get('extension').dirty || form.get('extension').touched)">Please
+											enter your Extension!</small> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('home_phone').value != '' && form.get('home_phone').value != null }">
+                                        <label class="form-label" for="homePhone">Home Phone</label>
+                                        <input type="text" id="homePhone" formControlName="home_phone"
+                                            mask='000-000-0000' class="form-control form-input">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="(form.get('home_phone').value && form.get('home_phone').value.length > 0 && form.get('home_phone').value.length < 10) && form.get('home_phone').touched">
+                                            Invalid Format: 000-000-0000</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4 col-xl-3">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('cell_no').value != '' && form.get('cell_no').value != null }">
+                                        <label class="form-label" for="cell_no">Cell Phone</label>
+                                        <input type="text" id="cell_no" formControlName="cell_no" mask='000-000-0000'
+                                            class="form-control form-input">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="(form.get('cell_no').value && form.get('cell_no').value.length > 0 && form.get('cell_no').value.length < 10) && form.get('cell_no').touched">
+                                            Invalid Format: 000-000-0000
+                                        </small>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('address').value != '' && form.get('address').value != null }">
+                                        <label class="form-label" for="Street">Street Address</label>
+                                        <input style="display: none" type="text" name="fakeaddress"
+                                            autocomplete="off" />
+                                        <input ngx-google-places-autocomplete [options]="{
+														  types: [],
+														  componentRestrictions: { country: 'US' }
+														  }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event)"
+                                            formControlName="address" type="text" id="address"
+                                            class="form-control form-input">
+                                        <!-- <small class="form-text text-muted danger"
+											*ngIf="form.get('address').errors?.required && (form.get('address').dirty || form.get('address').touched)">Please
+											enter your Address!</small> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('apartment_suite').value != '' && form.get('apartment_suite').value != null }">
+                                        <label class="form-label" for="Apartment">Apartment / Suite</label>
+                                        <input type="text" id="Apartment" formControlName="apartment_suite"
+                                            class="form-control form-input">
+
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('fax').value != '' && form.get('fax').value != null }">
+                                        <label class="form-label" for="Fax">Fax</label>
+                                        <input type="text" id="Fax" formControlName="fax" mask='000-000-0000'
+                                            class="form-control form-input">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="(form.get('fax').value && form.get('fax').value.length > 0 && form.get('fax').value.length < 10) && form.get('fax').touched">
+                                            Invalid Format: 000-000-0000</small>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('city').value != '' && form.get('city').value != null }">
+                                        <label class="form-label" for="City">City</label>
+                                        <input type="text" id="City" formControlName="city"
+                                            class="form-control form-input">
+                                        <!-- <small class="form-text text-muted danger"
+                                    *ngIf="form.get('city').errors?.required && (form.get('city').dirty || form.get('city').touched)">Please
+                                    enter your City!</small> -->
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('state').value != '' && form.get('state').value != null }">
+                                        <label class="form-label" for="State">State</label>
+                                        <input type="text" id="State" formControlName="state"
+                                            class="form-control form-input">
+                                        <!-- <small class="form-text text-muted danger"
+                                    *ngIf="form.get('state').errors?.required && (form.get('state').dirty || form.get('state').touched)">Please
+                                    enter your State!</small> -->
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-sm-6 col-lg-4">
+                                    <div class="form-group field"
+                                        [ngClass]="{'focused': form.get('zip').value != '' && form.get('zip').value != null }">
+                                        <label class="form-label" for="Zip">Zip</label>
+                                        <input type="text" id="Zip" formControlName="zip"
+                                            class="form-control form-input" >
+                                        <!-- <label class="mb-0 form-text text-muted danger"
+                                            *ngIf="form.get('zip').value && form.get('zip').value?.length > 0 && form.get('zip').value?.length < 5 ">
+                                            Invalid Format: 00000
+                                        </label> -->
+                                        <!-- <small class="form-text text-muted danger"
+                                    *ngIf="form.get('zip').errors?.required && (form.get('zip').dirty || form.get('zip').touched)">Please
+                                    enter your Zip!</small> -->
+									<!-- <small class="form-text text-muted danger"
+									*ngIf="form.get('zip').errors?.pattern">Please
+									enter valid zip!</small> -->
+									<small class="form-text text-muted danger"
+									*ngIf="form.get('zip').errors?.pattern">{{zipFormatMessage.format_usa}}</small>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="col-lg-3 col-md-12 pe-0">
+									<div class="form-group field" [ngClass]="{'focused': form.get('phone_no').value != ''}">
+										<label class="form-label" for="phone">Phone no</label>
+										<input type="text" id="phone" formControlName="phone_no" mask='000-000-0000'
+											 
+											class="form-control form-input">
+										<small class="form-text text-muted danger"
+											*ngIf="form.get('phone_no').errors?.required && (form.get('phone_no').dirty || form.get('phone_no').touched)">Please
+											enter your Phone Number!</small>
+									</div>
+								</div> -->
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+                    <div class="row">
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="form-group field"
+                                [ngClass]="{'focused': form.get('emergency_name').value != '' && form.get('emergency_name').value != null }">
+                                <label class="form-label" for="Emergencyname">Emergency Contact Name</label>
+                                <input type="text" id="Emergencyname" formControlName="emergency_name"
+                                    class="form-control form-input">
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                            <div class="form-group field"
+                                [ngClass]="{'focused': form.get('emergency_phone').value != '' && form.get('emergency_phone').value != null }">
+                                <label class="form-label" for="EmergencyPhone">Emergency Contact Phone</label>
+                                <input type="text" id="EmergencyPhone" formControlName="emergency_phone"
+                                    [dropSpecialCharacters]="false" mask='000-000-0000' class="form-control form-input">
+                                <small class="form-text text-muted danger"
+                                    *ngIf="(form.get('emergency_phone').value && form.get('emergency_phone').value.length > 0 && form.get('emergency_phone').value.length < 12) && form.get('emergency_phone').touched">
+                                    Invalid Format: 000-000-0000</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                            <div class="form-group field"
+                                [ngClass]="{'focused': form.get('role_id').value != '' && form.get('role_id').value != null }">
+                                <label class="form-label" for="role_id">User Role*</label>
+                                <select class="form-select form-input text-truncate" (change)="onRoleChange($event,allRole)"
+                                    formControlName="role_id" id="role_id" [ngbTooltip]="selectedRole" #allRole container="body" tooltipClass="table-custom-tooltip">
+                                    <option *ngFor="let role of userRelatedData.rolesData" value={{role.id}}>
+                                        {{role.name | slice:0:45}}
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+							<app-ng-select-shareable #designation  [filterFieldName]="'designation_id'"
+							[lableName]="'Designation'" [showSelectFieldList]="userRelatedData && userRelatedData.designationDropDownData ? userRelatedData.designationDropDownData : []"
+							[showSelectFieldOnRefresh]="form ? form.get('designation_id').value : null"
+						   [bindId]="'id'" [apiPath]="EnumApiPath.designationApiPath"
+						   (valueChange)="selectionOnValueChange($event)" [ngSelectShow]="true"
+						   [multiple]="false"></app-ng-select-shareable> 
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-lg-4 col-xl-3"> 
+                            <div class="form-group field"
+                                [ngClass]="{'focused':( form.get('department_id').value != '' && form.get('department_id').value != null) ||  form.get('department_id').value === null }">
+                                <label class="form-label" for="SelectDeparment">Department</label>
+                                <select class="form-select form-input text-truncate" formControlName="department_id"
+                                    id="SelectDeparment" [ngbTooltip]="selectedDepartment" container="body" tooltipClass="table-custom-tooltip" #dept (change)= "departmentChange(dept)">
+                                    <option value="null" selected disabled>Select Deparment</option>
+                                    <option *ngFor="let deptinfo of userRelatedData.departmentDropDownData"
+                                        value={{deptinfo.id}}>
+                                        {{deptinfo.name | slice:0:44}}
+                                    </option>
+                                </select>
+                                <span
+                                    *ngIf="form.get('department_id').value != '' && form.get('department_id').value != null"
+                                    (click)="form.get('department_id').reset()"
+                                    class="icon-plus select-cross-icon"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+							<app-ng-select-shareable  #employementTypeId [filterFieldName]="'employment_type_id'"
+							[lableName]="'Employment Type'" [showSelectFieldList]="userRelatedData && userRelatedData.employmentTypeDropDownData ? userRelatedData.employmentTypeDropDownData : []"
+							[showSelectFieldOnRefresh]="form ? form.get('employment_type_id').value : null"
+						   [bindId]="'id'" [apiPath]="EnumApiPath.employmentTypeApiPath"
+						   (valueChange)="selectionOnValueChange($event)" [ngSelectShow]="true"
+						   [multiple]="false"></app-ng-select-shareable> 
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+							<app-ng-select-shareable  #employedBy [filterFieldName]="'employed_by_id'"
+							[lableName]="'Employed By'" [showSelectFieldList]="userRelatedData && userRelatedData.employedByDropDownData ? [userRelatedData.employedByDropDownData] : []"
+							[showSelectFieldOnRefresh]="form ? form.get('employed_by_id').value : null"
+						   [bindId]="'id'" [apiPath]="EnumApiPath.employedByApiPath"
+						   (valueChange)="selectionOnValueChange($event)" [ngSelectShow]="true" 
+						   [multiple]="false"></app-ng-select-shareable> 
+                        </div>
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="form-group field"
+                                [ngClass]="{'focused': form.get('biography').value != '' && form.get('biography').value != null }">
+                                <label class="form-label" for="Biography">Biography</label>
+                                <input type="text" id="Biography" formControlName="biography"
+                                    class="form-control form-input">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+							<div class="form-group field"
+															[ngClass]="{'focused': (form.get('primary_facility_id').value != '' && form.get('primary_facility_id').value != null) || labelName.practiceLocation  }">
+															<label class="form-label" for="case_type_ids"> Primary
+																Practice*
+																</label>
+							<ng-select formControlName="primary_facility_id" id="name" #allFacility
+							(change)="onPrimaryPracticeChange($event, allFacility)" [searchFn]="customSearchFn"
+							[items]="userRelatedData.practicesDropDownData" [multiple]="false" (clear)="ngSelectClear('primary_facility_id')"
+                      (open)="labelMovetoAbove(true, 'practiceLocation')" (close)="labelMovetoAbove(false, 'practiceLocation')"
+							bindLabel="facility_full_name" bindValue="id" [closeOnSelect]="false">
+							<!-- <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+								<div class="ng-value ng-label"
+								  *ngFor="let item of items | slice:0:1">
+								  <span class="ng-value-label" ngbTooltip="{{item?.facility_full_name}}">{{item?.qualifier?(item?.qualifier):'N/A'}}</span>
+								  <span class="ng-value-icon right" (click)="clear(item)"
+									aria-hidden="true">×</span>
+								</div>
+								<div class="ng-value bg-none ng-numbers" *ngIf="items?.length > 1">
+								  <span class="ng-value-label border-0">+{{items?.length -
+									1}}</span>
+								</div>
+							  </ng-template> -->
+                              <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                                <span class="ng-option-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip"
+								
+								[ngbTooltip]="item.facility_full_name" container="body"  [ngOptionHighlight]="search">
+								{{item?.qualifier?(item?.qualifier):'N/A'}}									
+							</span>
+                            </ng-template>
+
+							  <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+								<span class="ng-option-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip"
+								
+								[ngbTooltip]="item.facility_full_name" container="body"  [ngOptionHighlight]="search">
+								{{item?.qualifier?(item?.qualifier):'N/A'}}									
+							</span>
+							  </ng-template>
+						</ng-select>
+                        <small class="form-text text-muted danger" *ngIf="form.get('primary_facility_id').errors?.required">
+                                    This field is required
+                        </small>
+
+							
+                            <!-- <div class="form-group field"
+                                [ngClass]="{'focused': form.get('primary_facility_id').value != '' && form.get('primary_facility_id').value != null }"> -->
+                                <!-- <label class="form-label" for="SelectPrimaryFacility">Primary
+                                    Practice*</label> -->
+
+									
+
+									<!-- <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'primary_facility_id'"
+									 [showSelectFieldList]="selectedMultipleFieldFiter['primary_facility_id']"
+									  [showSelectFieldOnRefresh]="form.get('primary_facility_id').value" 
+									  [lableName]="'Practice-Location'" [bindlable]="'facility_full_name'" 
+									  [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"
+									   (valueChange)="selectionOnValueChange($event,'primary_facility_id')"
+									    [multiple]="false"></app-ng-select-shareable> -->
+
+                                <!-- <select id="SelectPrimaryFacility" formControlName="primary_facility_id"
+                                    (change)="onPrimaryPracticeChange($event.target.value, allFacility)"
+                                    class="form-control form-input text-truncate" [ngbTooltip]="selectedPractice" container="body" tooltipClass="table-custom-tooltip" #allFacility> 
+                                    <option *ngFor="let facility of userRelatedData.practicesDropDownData"
+                                        value="{{+facility.id}}"
+                                        title="{{facility.address}} {{facility.floor?',':'' }} {{facility.floor}} {{facility.city?',':''}} {{facility.city}} {{facility.state?',':''}} {{facility.state}} {{facility.zip?',':''}} {{facility.zip}}">
+                                        {{facility.facility_full_name | slice:0:45}}
+                                    </option>
+                                </select> -->
+                               
+                            <!-- </div> -->
+							</div>
+                        </div>
+
+                        <!-- Commented for now due to bug -->
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+
+							<div class="form-group field"
+															[ngClass]="{'focused': (form.get('affiliated_facility_ids').value != '' && form.get('affiliated_facility_ids').value != null) || labelName.practiceLocationAfliated  }">
+															<label class="form-label" for="case_type_ids"> Affiliated Pratices Location(s)
+																</label>
+
+
+							<ng-select formControlName="affiliated_facility_ids" id="name" #allFacility
+						
+							[items]="affiliatedPracticesDropdownData" [multiple]="true" (clear)="ngSelectClear('affiliated_facility_ids')"
+                      (open)="labelMovetoAbove(true, 'practiceLocationAfliated')" 
+					  (remove) = "remove($event)" [searchFn]="customSearchFn"
+					  (add)="addAfflicated($event)" 
+					  (close)="labelMovetoAbove(false, 'practiceLocationAfliated')"
+							bindLabel="name" bindValue="id" [closeOnSelect]="false">
+							<ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+								<div class="ng-value ng-label"
+								  *ngFor="let item of items | slice:0:1">
+								  <span class="ng-value-label"[ngbTooltip]="item.facility_full_name"  container="body" >
+									
+									{{item?.qualifier?(item?.qualifier):'N/A'}}
+								</span>
+								  <span class="ng-value-icon right" (click)="clear(item)"
+									aria-hidden="true">×</span>
+								</div>
+								<div class="ng-value bg-none ng-numbers" *ngIf="items?.length > 1">
+								  <span class="ng-value-label border-0" 
+								  ngbTooltip="{{selectedItemDisplay}}" container="body" 
+								  >+{{items?.length -
+									1}}</span>
+								</div>
+							  </ng-template>
+
+							  <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+								<span class="ng-option-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip"
+								
+								[ngbTooltip]="item.facility_full_name" container="body"  [ngOptionHighlight]="search">
+	{{item?.qualifier?(item?.qualifier):'N/A'}}
+									</span>
+							  </ng-template>
+						</ng-select>
+
+                            <!-- <div class="form-group field"
+                                [ngClass]="{'focused': form.get('affiliated_facility_ids').value != '' && form.get('affiliated_facility_ids').value != null }">
+                                <label class="form-label"
+                                    *ngIf="form.get('affiliated_facility_ids').value != '' && form.get('affiliated_facility_ids').value != null">
+									Affiliated
+                                    Pratices Location(s)</label>
+                                <ng-multiselect-dropdown #affiliatedPracticesDropdown
+                                    [placeholder]="'Affiliated Practices Location(s)'"
+                                    [data]="affiliatedPracticesDropdownData" formControlName="affiliated_facility_ids"
+                                    [settings]="dropdownSettings" (onSelect)="onItemSelect($event)">
+                                </ng-multiselect-dropdown>
+                            </div> -->
+							</div>
+                        </div>
+                        <!-- <div class="col-lg-3 col-md-12">
+                            <div class="form-group field mb-0"
+                                [ngClass]="{'focused': form.get('hiring_date').value != ''}">
+                                <label class="form-label" for="HiringDate">Hiring Date</label>
+                                <input type="date" id="HiringDate" formControlName="hiring_date"
+                                    class="form-control form-input">
+                            </div>
+						</div> -->
+                        <div class="col-sm-6 col-lg-4 col-xl-3">
+                            <div class="form-group field"
+                                [ngClass]="{'focused': (form.get('hiring_date').value != '' && form.get('hiring_date').value != null) || form.get('hiring_date').errors?.invalid_date }">
+                                <label class="form-label" for="HiringDate">Hiring Date (mm/dd/yyyy)</label>
+                                <input appInputDateMask   id="HiringDate" [matDatepicker]="hiring_date" type="text"
+                                    id="hiring_date" formControlName="hiring_date"[appMaskDate]="form.get('hiring_date').value"  class="form-control form-input"
+                                    [max]="2099-01-01">
+                                <mat-datepicker-toggle [for]="hiring_date"></mat-datepicker-toggle>
+                                <mat-datepicker #hiring_date></mat-datepicker>
+                                <span
+                                    *ngIf="form.get('hiring_date').value != '' && form.get('hiring_date').value != null"
+                                    (click)="form.get('hiring_date').reset()"
+									class="icon-plus select-cross-icon"></span>
+									<small class="form-text text-muted danger"
+									*ngIf="form.get('hiring_date').errors?.invalid_date && (form.get('hiring_date').dirty && form.get('hiring_date').touched)">
+									Invalid Date Format
+								</small>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!--   <div class="row">
+                        <div *ngIf="form.get('primary_facility_id').value">
+                            <p>{{getFacilityNameFromFacilityData(form.get('primary_facility_id').value)}}</p>
+                            <app-time-plan [childValues]="childValuesObj[form.get('primary_facility_id').value]">
+                            </app-time-plan>
+                        </div>
+
+                        <div *ngFor="let i of form.get('affiliated_facility_ids').value">
+                            <p>{{getFacilityNameFromFacilityData(i.id)}}</p>
+                            <app-time-plan [childValues]="childValuesObj[i.id]">
+                            </app-time-plan>
+                        </div>
+
+                    </div>-->
+                    <!-- <div class="row">
+                        {{childValuesObj | json}}
+                    </div> -->
+                    <!-- <div class="row">
+                        <div class="col-lg-5 col-md-12">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <p class="mb-0 pt-1">Office Hours *:</p>
+                                </div>
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="form-group field mb-0">
+                                        <ejs-timepicker
+                                                [format]="'HH:mm:ss'"
+                                                [step]="'30'"
+                                                (keydown)="$event.preventDefault()"
+                                                (ngModelChange)="officeStartTimeChange($event)"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]='office_hours_start'>
+                                        </ejs-timepicker>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="form-group field mb-0">
+                                        <ejs-timepicker
+                                                [format]="'HH:mm:ss'"
+                                                [step]="'30'"
+                                                (keydown)="$event.preventDefault()"
+                                                (ngModelChange)="officeEndTimeChange($event)"
+                                                [ngModelOptions]="{standalone: true}"
+                                                [(ngModel)]='office_hours_end'>
+                                        </ejs-timepicker>
+                                    </div>
+                                </div>
+                                <div class="col-lg-9 offset-md-3 col-md-12">
+                                    <small class="form-text text-muted danger" *ngIf="checkTimes()">Start and end time
+                                        cannot be same.
+                                    </small>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div> -->
+
+
+                   
+                    <app-shared-file-upload [currentUser]="currentUser" [objectType]="'staff'"></app-shared-file-upload>
+
+                    <div *ngIf="!isSameUser" class="row form-btn" >
+                        <div class="col-md-12 text-center">
+                            <!-- <div class="col-md-6">
+                                    <a href="javascript:void(0)" class="btn btn-primary w-100  me-3">
+                                        <span class="icon-left-arrow me-2"></span> Back</a>
+                                </div> -->
+                            <!--<button [disabled]="loading ||form.invalid || isChildValuesValid()"
+                                        (click)="submitForm()" class="btn btn-success  w-100"><span
+                                            class="icon-save-continue me-2"></span>
+                                        Save & Continue
+                                    </button>-->
+								<button 
+									class="btn btn-primary text-white me-2" (click)="cancelUser()">
+                                     Cancel
+								</button>
+									<button [disabled]="loading" (click)="submitForm()"
+                                class="btn btn-success"><span class="icon-save-continue me-2"></span>
+                                Save & Continue
+							</button>
+							
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</form>
+
+
+<!-- <div class="document-manager mt-3 p-0" *ngIf="showingFiles">
+    <div class="row document-content-area">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header" style="padding: 0px 15px !important;">
+                            <div class="row align-items-center">
+                                <div class="col-md-6 pe-0 ps-3">
+                                    <p class="mb-0">User Document</p>
+                                </div>
+                                <div class="col-md-6 text-sm-end ps-0 pe-2">
+                                    <button type="button" class="btn bg-green slide-btn">
+                                        <i class="icon-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <ngx-datatable class="bootstrap" [rows]="folderFiles" [scrollbarH]="true" [columnMode]="'force'"
+                            [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'">
+
+                            <ngx-datatable-column name="Document Name" [width]="150" [sortable]="false"
+                                prop="file_title">
+
+
+                            </ngx-datatable-column>
+
+                            <ngx-datatable-column name="Tags" [width]="150" [sortable]="false" prop="tags">
+
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template
+                                    let-rowIndex="rowIndex">
+                                    <ng-container *ngIf="row.tags" class="btn-tooltip-top">
+                                        <button type="button">{{row &&  row.tags.split(',')[0] &&  
+										row.tags.split(',')[0].length > 10 ?  row.tags.split(',')[0].substring(0, 10)+'...' :  
+										row.tags.split(',')[0]}}</button>
+                                    </ng-container>
+
+                                    <ul class="btn bg-green add-tag-btn custom-btn-tooltip list-unstyled"
+                                        (click)="addTagModal(addTag, row, rowIndex)"><i class="fa fa-plus"></i>
+
+                                       
+
+                                        <li *ngIf="row.tags" class="btn-tooltip-top">
+                                            <ng-container *ngFor="let tag of row.tags.split(',')">
+                                                <button type="button"
+                                                    class="btn btn-outline-secondary">{{tag &&  tag.length > 10 ?  tag.substring(0, 10)+'...' :  tag}}</button>
+                                            </ng-container>
+                                            <i></i>
+                                        </li>
+                                    </ul>
+                                </ng-template>
+
+                            </ngx-datatable-column>
+
+
+                            <ngx-datatable-column name="Action" [width]="150" [sortable]="false" prop="tags" Action>
+
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template
+                                    let-rowIndex="rowIndex">
+
+                                    <mat-checkbox (click)="$event.stopPropagation()"
+                                        (change)="$event ? selection.toggle(row) : null"
+                                        [checked]="selection.isSelected(row)">
+                                    </mat-checkbox>
+
+                                    <a class="ms-2 me-1 view-hov" tooltip="View" href="javascript:void(0)" role="button"
+                                        (click)="showMedia(row.file_link)"><i class="fa fa-eye"></i></a>
+
+                                    <a class="mx-1 edit-hov" tooltip="Edit" href="javascript:void(0)"
+                                        (click)="editDocModal(editTag , row)" role="button"><i
+                                            class="icon-pencil"></i></a>
+
+                                    <a class="mx-1 printer-hov" tooltip="Print" target="_blank" href="{{row.file_link}}"
+                                        role="button"><i class="icon-printer"></i></a>
+
+                                    <a class="mx-1 remove-hov me-1" tooltip="Delete" role="button"
+                                        (click)="deleteFile(row)"><i class="icon-remove"></i></a>
+
+
+
+                                </ng-template>
+
+                            </ngx-datatable-column>
+
+                        </ngx-datatable>
+
+                        <div class="card-body data-table border-top-0">
+                            
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+        <div class="col-md-6 preview-details">
+            <div class="card">
+                <div class="card-header border-0" style="padding: 0px 15px; padding: 0px 15px !important;
+                    background: #4b4b4b !important;">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <p class="mb-0">Preview</p>
+                        </div>
+                        <div class="col-md-9 text-end">
+                            <button type="button" class="input-group-text btn-default slide-btn float-right"
+                                style="background: #34c3ee !important;" *ngIf="!showFile"
+                                (click)="showFilePreview(true)"><span class="icon-plus ms-0 p-0"
+                                    style="background: transparent !important;">
+                                </span></button>
+                            <button type="button" class="input-group-text btn-success slide-btn float-right"
+                                *ngIf="showFile" (click)="showFilePreview(false)"><span class="icon-minus">
+                                </span></button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="preview-scroll" [style.visibility]="showFile ? 'visible' : 'hidden'">
+                    <div class="card-body border-0">
+                        <div class="pdf" id="pdf" *ngIf="pdfSourceLink != null" [@fadeInOut]></div>
+                        <img class="img-fluid" [src]="imageSourceLink" *ngIf="imageSourceLink" [@fadeInOut] />
+                        <img class="img-fluid" *ngIf="pdfSourceLink == 'xyz' && imageSourceLink == null"
+                            src="assets/images/preview.jpg" [@fadeInOut]>
+                    </div>
+                    <div class="card-body border-left-0 border-top-0 border-right-0" *ngIf="!showingFiles">
+                        <img class="img-fluid" src="assets/images/preview.jpg">
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div> -->
+<!-- 
+<div class="col-12 h-100">
+    <perfect-scrollbar>
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h1 class="card-title text-white m-0">{{title}} User</h1>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                            <div class="form" action="#">
+
+                                <div class="row fields-holder" *ngIf="form.get('id').value == null">
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('email').value != ''}">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="text" id="email" class="form-control form-input" formControlName="email">
+                                            <small class="form-text text-muted danger" *ngIf="form.get('email').errors?.required && (form.get('email').dirty || form.get('email').touched)">Please enter Email!</small>
+                                            <small class="form-text text-muted danger" *ngIf="form.controls.email.errors && !form.controls.email.errors.required"> Invalid Email!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('password').value != ''}">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" id="password" class="form-control form-input" formControlName="password">
+                                            <small class="form-text text-muted danger" *ngIf="form.get('password').errors?.required && (form.get('password').dirty || form.get('password').touched)">Please enter Password!</small>
+                                            <small class="form-text text-muted danger" *ngIf="form.get('password').hasError('minlength') && (form.get('password').dirty || form.get('password').touched)">Password characters length must be between 6!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('password_confirmation').value != ''}">
+                                            <label for="password_confirmation" class="form-label">Confirm Password</label>
+                                            <input type="password" id="password_confirmation" class="form-control form-input" formControlName="password_confirmation">
+                                            <small class="form-text text-muted danger" *ngIf="form.get('password_confirmation').errors?.required && (form.get('password_confirmation').dirty || form.get('password_confirmation').touched)">Please enter Password!</small>
+                                            <small class="form-text text-muted danger" *ngIf="form.get('password_confirmation').hasError('minlength') && (form.get('password_confirmation').dirty || form.get('password_confirmation').touched)">Password characters length must be between 6!</small>    
+                                            <small class="form-text text-muted danger" *ngIf="form.get('password').value != form.get('password_confirmation').value && (form.get('password_confirmation').dirty || form.get('password_confirmation').touched)">Password and confirm password should be matched!</small>    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row fields-holder">
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('first_name').value != '' || form.get('first_name').value != null }">
+                                            <label for="firstName" class="form-label">First Name</label>
+                                            <input type="text" id="firstName" class="form-control form-input"  formControlName="first_name">
+                                            <small class="form-text text-muted danger" *ngIf="form.get('first_name').errors?.required && (form.get('first_name').dirty || form.get('first_name').touched)">Please enter first name!</small>
+                                            <small class="form-text text-muted danger" *ngIf="(form.get('first_name').errors?.maxlength) && form.get('first_name').dirty">Maximum characters should be 25!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('middle_name').value != '' && form.get('middle_name').value != null }">
+                                            <label for="middleName" class="form-label">Middle Name</label>
+                                            <input type="text" id="middleName" class="form-control form-input" formControlName="middle_name">
+                                            <small class="form-text text-muted danger" *ngIf="(form.get('middle_name').errors?.maxlength) && form.get('middle_name').dirty">Maximum characters should be 25!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('last_name').value != ''}">
+                                            <label for="lastName" class="form-label" >Last Name</label>
+                                            <input type="text" id="lastName" class="form-control form-input" formControlName="last_name">
+                                            <small class="form-text text-muted danger" *ngIf="form.get('last_name').errors?.required && (form.get('last_name').dirty || form.get('last_name').touched)">Please enter last name!</small>
+                                            <small class="form-text text-muted danger" *ngIf="(form.get('last_name').errors?.maxlength) && form.get('last_name').dirty">Maximum characters should be 25!</small>    
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row fields-holder">
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('date_of_birth').value != ''}">
+                                            <label for="dob" class="form-label">DOB</label>
+                                            <input type="date" id="dob" class="form-control form-input" formControlName="date_of_birth" >
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group">
+                                            <span class="d-block" style="margin: -24px 0 2px;">Gender</span>
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <label for="male" class="d-block position-relative m-0">
+                                                        <input id="male" checked="checked" type="radio" value="M" formControlName="gender">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Male</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="female" class="d-block position-relative m-0">
+                                                        <input id="female" checked="checked" type="radio" value="F" formControlName="gender">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Female</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="X" class="d-block position-relative m-0">
+                                                        <input id="X" checked="checked" type="radio" value="X" formControlName="gender">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">X</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger" *ngIf="!form.get('gender').valid && (form.get('gender').dirty || form.get('gender').touched)">Please select gender!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field" [ngClass]="{'focused': form.get('social_security').value != ''}">
+                                            <label for="social_security" class="form-label">SSN</label>
+                                            <input type="tel" id="social_security" class="form-control form-input"  mask='000-00-0000' formControlName="social_security"  >
+                                            <small class="form-text text-muted danger" *ngIf="!form.get('social_security').valid && (form.get('social_security').dirty || form.get('social_security').touched)">Please enter social security No.</small>
+                                            <small class="form-text text-muted danger" *ngIf="(form.get('social_security').errors?.maxlength) && form.get('social_security').dirty">Maximum characters should be 10!</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="row fields-holder">
+                                <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('phone_no').value != ''}">
+                                        <label for="home_phone" class="form-label">Home Phone</label>
+                                        <input type="tel" id="home_phone" class="form-control form-input" formControlName="phone_no" mask='000-000-0000' [dropSpecialCharacters]="false" >
+                                        <small class="form-text text-muted danger" *ngIf="form.get('phone_no').errors?.minlength?.requiredLength==10">Please enter valid phone number!</small>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('work_phone').value != ''}">
+                                        <label for="work_phone" class="form-label">Work Phone</label>
+                                        <input type="tel" id="work_phone" class="form-control form-input" formControlName="work_phone" mask='000-000-0000' [dropSpecialCharacters]="false" >
+                                        <small class="form-text text-muted danger" *ngIf="form.get('work_phone').errors?.minlength?.requiredLength==10">Please enter valid work phone number!</small>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('phone_extension').value != ''}">
+                                        <label for="extension" class="form-label">Extension</label>
+                                        <input type="tel" id="extension" class="form-control form-input" formControlName="phone_extension" mask='000'>
+                                        <small class="form-text text-muted danger" *ngIf="form.get('phone_extension').errors?.minlength?.requiredLength==3">Please enter extension number!</small>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('emergency_contact').value != ''}">
+                                        <label for="emergency_contact" class="form-label">Emergency Contact</label>
+                                        <input type="text" id="emergency_contact" class="form-control form-input" formControlName="emergency_contact" mask='000-000-0000' [dropSpecialCharacters]="false" >
+                                        <small class="form-text text-muted danger" *ngIf="form.get('emergency_contact').errors?.minlength?.requiredLength==10">Please enter valid emergency contact number!</small>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('fax').value != ''}">
+                                        <label for="fax" class="form-label">Fax</label>
+                                        <input type="tel" id="fax" class="form-control form-input" formControlName="fax" mask='000-000-0000' [dropSpecialCharacters]="false" >
+                                        <small class="form-text text-muted danger" *ngIf="form.get('fax').errors?.minlength?.requiredLength==10">Please enter valid fax number!</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row fields-holder">
+                                <div class="col-xl-12 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('address').value != ''}">
+                                        <label for="address" class="form-label">Address</label>
+                                        <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+                                        <input ngx-google-places-autocomplete [options]="{
+                                            types: [],
+                                            componentRestrictions: { country: 'US' }
+                                            }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event)" class="form-control form-input" formControlName="address"  />
+                                            <small class="form-text text-muted danger" *ngIf="form.get('address').errors?.required && (form.get('address').dirty || form.get('address').touched)">Please enter address!</small>
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('city').value != ''}">
+                                        <label for="city" class="form-label">City</label>
+                                        <input type="text" id="city" class="form-control form-input" formControlName="city" [readonly]="form.get('address').value != ''">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('state').value != ''}">
+                                        <label for="state" class="form-label">State</label>
+                                        <input type="text" id="state" class="form-control form-input" formControlName="state"  [readonly]="form.get('address').value != ''">
+                                    </div>
+                                </div>
+                                <div class="col-xl-4 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('zip').value != ''}">
+                                        <label for="zip" class="form-label">Zip</label>
+                                        <input type="tel" id="zip" class="form-control form-input" formControlName="zip" mask="00000"  [readonly]="form.get('address').value != ''">
+                                        <small class="form-text text-muted danger" *ngIf="form.get('zip').errors?.maxLength?.requiredLength==5">Maximum characters should be 5</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-4 col-lg-12">
+                                    <div class="form-group field">
+                                        <label for="modules">Roles</label>
+                                        <select formControlName="role_id" class="custom-select">
+                                            <option value="">Select Role</option>
+                                            <option *ngFor="let role of roles" value="{{ role.id }}">{{ role.name }}</option>
+                                        </select>
+                                        <small class="form-text text-muted danger" *ngIf="!form.get('role_id').valid && (form.get('role_id').dirty || form.get('role_id').touched)">Please select Role</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:20px">
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-default d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" (click)="goBack()">Back</button>
+                                    <button type="submit" class="btn btn-primary d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+     
+        </div>
+    </perfect-scrollbar>
+</div> -->
+
+
+<ng-template #addTag let-modal style="max-width: 500px;">
+    <div class="modal-header">
+        <h5 class="modal-title">Add Tags</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="addTagForm" (ngSubmit)="onSubmitAddTag(addTagForm.value)">
+            <input type="hidden" formControlName="id">
+            <div class="form-group row">
+                <label class="col-sm-12 col-form-label pt-0">Please insert multiple tags comma separated! E.g (Tag#1,
+                    Tag#2, Tag#3)</label>
+                <div class="col-sm-12">
+                    <tag-input formControlName="tags" theme='bootstrap3-info'></tag-input>
+                    <!-- <textarea class="form-control w-100" rows="5" formControlName="tags" style="height: 60px !important;"></textarea> -->
+                </div>
+            </div>
+
+            <div class="form-group row mb-0">
+                <div class="col-sm-10 offset-sm-2">
+                    <div class="row">
+                        <div class="col-4">
+                            <button type="button" (click)="modal.dismiss('Cross click')"
+                                class="btn btn-primary w-100">Cancel
+                            </button>
+                        </div>
+                        <div class="col-8">
+                            <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                                    class="icon-save-continue me-2"></span>
+                                {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</ng-template>
+
+
+<ng-template #editTag let-modal style="max-width: 500px;">
+    <div class="modal-header">
+        <h5 class="modal-title">Add Tags</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <form [formGroup]="editTagForm" (ngSubmit)="editTagSubmit()">
+
+            <div class="form-group fields-holder row mb-2"
+                [ngClass]="{'focused': editTagForm.get('file_title').value != ''}">
+                <label for="fileTitle" class="col-sm-3  col-form-label">Rename file</label>
+                <div class="col-sm-9">
+                    <input type="text" id="fileTitle" class="form-control form-input" formControlName="file_title"
+                        placeholder="Enter Document Name">
+                    <small class="form-text text-muted danger"
+                        *ngIf="editTagForm.get('file_title').errors?.required && (editTagForm.get('file_title').dirty || editTagForm.get('file_title').touched)">
+                        Please
+                        enter Description!
+                    </small>
+                    <small class="form-text text-muted danger"
+                        *ngIf="editTagForm.get('file_title').errors?.maxLength?.requiredLength==100">Maximum
+                        characters
+                        should be 100!
+                    </small>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-12 col-form-label pt-0">Please insert multiple tags comma separated! E.g (Tag#1,
+                    Tag#2, Tag#3)</label>
+                <div class="col-sm-12">
+                    <tag-input formControlName="tags" theme='bootstrap3-info'></tag-input>
+                </div>
+            </div>
+
+            <div class="form-group row mb-0">
+                <div class="col-sm-10 offset-sm-2">
+                    <div class="row">
+                        <div class="col-4">
+                            <button type="button" (click)="modal.dismiss('Cross click')"
+                                class="btn btn-primary w-100">Cancel
+                            </button>
+                        </div>
+                        <div class="col-8">
+                            <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                                    class="icon-save-continue me-2"></span>
+                                {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-12 col-form-label pt-0">Please insert multiple tags comma separated! E.g (Tag#1,
+            Tag#2, Tag#3)</label>
+        <div class="col-sm-12">
+            <tag-input formControlName="tags" theme='bootstrap3-info'></tag-input>
+            <!-- <textarea class="form-control w-100" rows="5" formControlName="tags" style="height: 60px !important;"></textarea> -->
+        </div>
+    </div>
+
+    <div *ngIf="!isSameUser" class="form-group row mb-0">
+        <div class="col-sm-10 offset-sm-2">
+            <div class="row">
+                <div class="col-4">
+                    <button type="button" (click)="modal.dismiss('Cross click')"
+                        class="btn btn-primary w-100">Cancel
+                    </button>
+                </div>
+                <div class="col-8">
+                    <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                            class="icon-save-continue me-2"></span>
+                        {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</ng-template>

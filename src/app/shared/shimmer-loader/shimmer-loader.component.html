@@ -1,0 +1,4 @@
+<div class="overflow-hidden h-100 w-100" *ngIf="loaderSpin">
+  <ngx-shimmer-loading [shape]="'rect'" [width]="'100%'" [height]="'120px'"></ngx-shimmer-loading>
+  <ngx-shimmer-loading [width]="'100%'" [height]="'20px'" *ngFor="let number of numbers"></ngx-shimmer-loading>
+</div>

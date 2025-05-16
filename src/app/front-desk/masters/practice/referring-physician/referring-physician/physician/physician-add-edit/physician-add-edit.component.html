@@ -1,0 +1,120 @@
+<div class="referring-physician-modal">
+	<!-- <div class="modal-body"> -->
+		<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+		<form [formGroup]="physicianDetailForm" class="search-label">
+			<div class="row">
+				<div class="col-md-6">	
+					<app-ng-select-shareable class="form-group-mb-0" #clinicData [filterFieldName]="'clinic_or_facility_id'"
+					[showSelectFieldList]="ngSelectValues ? ngSelectValues.clinics : []"
+					 [showSelectFieldOnRefresh]="physicianDetailForm.get('clinic_or_facility_id').value" 
+					 [lableName]="'Clinic Name/Practice Name*'" [bindlable]="'name'" [closeOnSelect]="false"
+					 [bindId]="'id'" [apiPath]="EnumApiPath_Referring.GET_CLINICS_FACILITIES_REFERRING_PHYSICIAN"  
+					 (valueChange)="selectionOnValueChange($event,'clinic_or_facility_id')"  [ngSelectShow]="true"
+					 [conditionalExtraApiParams]="getParamForFacility()" [showGroupBy]="true" [showSelectAll]="true"
+					 [multiple]="true" [charaterLimit]="true" [onEditCall]="false"></app-ng-select-shareable>
+					 <small class ="text-muted danger" *ngIf="physicianDetailForm.get('source').errors?.required && (physicianDetailForm.get('source').dirty || physicianDetailForm.get('source').touched)">This field is required </small>
+				</div>
+				<div class="col-md-6">
+					<app-ng-select-shareable class="form-group-mb-0" #specialityData [filterFieldName]="'speciality_ids'"
+					[showSelectFieldList]="ngSelectValues ? ngSelectValues.speciality : []"
+					 [showSelectFieldOnRefresh]="physicianDetailForm.get('speciality_ids').value" 
+					 [lableName]="'Specialty'" [bindlable]="'name'" [closeOnSelect]="false"
+					 [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  [ngSelectShow]="true"
+					 (valueChange)="selectionOnValueChange($event,'speciality_ids')" [onEditCall]="false" 
+					 [multiple]="true" [showGroupBy]="true" [showSelectAll]="true"></app-ng-select-shareable>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': physicianDetailForm.get('first_name').value != '' && physicianDetailForm.get('first_name').value != null }">
+						<label class="form-label" for="first_name">First Name*</label>
+						<input type="text" class="form-control form-input mb-0" id="first_name"
+							formControlName="first_name">
+						<small class="form-text text-muted danger" *ngIf="physicianDetailForm.get('first_name').errors?.required && (physicianDetailForm.get('first_name').dirty || physicianDetailForm.get('first_name').touched)">This field is required</small>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': physicianDetailForm.get('middle_name').value != '' && physicianDetailForm.get('middle_name').value != null }">
+						<label class="form-label" for="middle_name">Middle Name</label>
+						<input type="text" class="form-control form-input mb-0" id="middle_name"
+							formControlName="middle_name">
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': physicianDetailForm.get('last_name').value != '' && physicianDetailForm.get('last_name').value != null }">
+						<label class="form-label" for="last_name">Last Name*</label>
+						<input type="text" class="form-control form-input mb-0" id="last_name"
+							formControlName="last_name">
+						<small class="form-text text-muted danger" *ngIf="physicianDetailForm.get('last_name').errors?.required && (physicianDetailForm.get('last_name').dirty || physicianDetailForm.get('last_name').touched)">This field is required</small>
+					</div>
+				</div>
+				<div class="col-md-6">	
+					<app-ng-select-shareable #BillingTitle [filterFieldName]="'billing_title_id'"
+						[lableName]="'Billing Title'"
+						[showSelectFieldList]="lstBillingTitle ? lstBillingTitle : []"
+						[showSelectFieldOnRefresh]="physicianDetailForm ? physicianDetailForm.get('billing_title_id').value : null"
+						[bindId]="'id'" [apiPath]="EnumApiPath.medicalIdentifierBillingTitle"
+						(valueChange)="selectionOnValueChange($event,'BillTitle')"
+						[multiple]="false">
+					</app-ng-select-shareable>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"
+					[ngClass]="{'focused': physicianDetailForm.get('cell_no').value != '' && physicianDetailForm.get('cell_no').value != null }">
+					<label class="form-label" for="cell_no">Phone Number*</label>
+					<input type="text" class="form-control form-input mb-0" id="cell_no"
+						formControlName="cell_no" mask='000-000-0000'>
+						<small class="form-text text-muted danger"
+						*ngIf="(physicianDetailForm.get('cell_no').value && physicianDetailForm.get('cell_no').value.length > 0 && physicianDetailForm.get('cell_no').value.length < 10) && physicianDetailForm.get('cell_no').touched">
+						Invalid Format: 000-000-0000
+					</small>
+					<small class="form-text text-muted danger" *ngIf="physicianDetailForm.get('cell_no').errors?.required && (physicianDetailForm.get('cell_no').dirty || physicianDetailForm.get('cell_no').touched)">This field is required</small>
+				</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': physicianDetailForm.get('email').value != '' && physicianDetailForm.get('email').value != null }">
+						<label class="form-label" for="email">Email</label>
+						<input type="text" class="form-control form-input mb-0" id="email"
+							formControlName="email">
+							<small class="form-text text-muted danger"
+							*ngIf="(physicianDetailForm.get('email').touched || physicianDetailForm.get('email').dirty) && physicianDetailForm.get('email').errors?.pattern">Email field is invalid</small>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': physicianDetailForm.get('npi_no').value != '' && physicianDetailForm.get('npi_no').value != null }">
+						<label class="form-label" for="npi_no">NPI Number*</label>
+						<input type="text" class="form-control form-input mb-0" id="npi_no"
+							formControlName="npi_no" maxlength="10" minlength="10">
+							<small class="form-text text-muted danger" 
+							*ngIf="physicianDetailForm.get('npi_no').errors?.required && (physicianDetailForm.get('npi_no').dirty || physicianDetailForm.get('npi_no').touched)">
+							This field is required
+							</small>
+							<small  class="form-text text-muted danger"
+							*ngIf="physicianDetailForm.controls['npi_no'].errors && physicianDetailForm.controls['npi_no'].touched && physicianDetailForm.get('npi_no').value.length>0">
+							NPI Number can only be of 10 characters.
+						</small>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': physicianDetailForm.get('license_no').value != '' && physicianDetailForm.get('license_no').value != null }">
+						<label class="form-label" for="license_no">License Number</label>
+						<input type="text" class="form-control form-input mb-0" id="license_no"
+							formControlName="license_no">
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="col-md-12 modal-btn-width text-center mt-3">
+			<button *ngIf="physicianDetail.action == action.EDIT || physicianDetail.action == action.ADD"
+				class="btn btn-primary me-3" type="button" (click)="closeModal()">Cancel</button>
+			<button *ngIf="physicianDetail.action == action.EDIT || physicianDetail.action == action.ADD"
+				[disabled]="physicianDetailForm.invalid" (click)="saveContinue(duplicatePhysician)" class="btn btn-success" type="submit">Save
+				&amp;
+				Continue </button>
+		</div>
+		<!-- </div> -->	
+</div>

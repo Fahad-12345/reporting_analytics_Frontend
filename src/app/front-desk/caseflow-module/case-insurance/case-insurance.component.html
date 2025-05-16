@@ -1,0 +1,82 @@
+<div class="front-desk-block patient-insurance nav-tab-block">
+
+    <ul class="nav nav-tabs mt-1 text-center" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_insurance_tab) && _shouldShowInsurance"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/insurance">
+                Insurance <span *ngIf="_showValidationIconInsurance"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_attorney_tab) && _shouldShowAttorney"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/attorney">Attorney</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_employer_tab) && _shouldShowEmployer"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/employer">
+                Employer <span *ngIf="_showValidationIconEmployer"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_accident_tab) && _shouldShowAccident"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/accident">
+                Accident <span *ngIf="_showValidationIconAccident"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_vehicle_tab) && _shouldShowVehicle"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/vehicle">
+                Vehicle <span *ngIf="_showValidationIconVehicle"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_household_tab) && _shouldShowHouseHoldInformation"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/house-hold-info">
+                Household Information <span *ngIf="_showValidationIconHouseholdInfo"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <!-- <li class="nav-item">
+            <a class="nav-link disable-auth"
+                *ngIf="aclService.hasPermission(userPermissions.patient_authorization_tab)">Authorization</a>
+        </li> -->
+        <!-- <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active" disable
+                *ngIf="aclService.hasPermission(userPermissions.patient_authorization_tab)"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/authorization">Authorization</a>
+        </li> -->
+        <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_medical_treatment_tab) && _shouldShowMedical"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/medical-treatment">
+                Medical Treatment <span *ngIf="_showValidationIconMedicalTreatment"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+
+		<li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf=" _shouldShowMRI"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/mri-intakes">
+                Diagnostic Intake <span *ngIf="_showValidationIconDiagnosticIntake"><img alt="alert-img" [src]="source" class="warning-sign"></span></a>
+        </li>
+        <!-- <li class="nav-item">
+            <a class="nav-link" routerLinkActive="active"
+                *ngIf="aclService.hasPermission(userPermissions.patient_mri_intake_tab)"
+                routerLink="/front-desk/cases/edit/{{caseId}}/case-insurance/mri-intake">MRI Intake</a>
+        </li> -->
+        <!-- 
+              <li class="nav-item">
+                    <a class="nav-link" id="medical-tab" data-bs-toggle="tab" href="#medical" role="tab"
+                        aria-controls="medical" aria-selected="false">Medical Treatment</a>
+                </li>  -->
+
+    </ul>
+    <!-- <div class="tab-content">
+              <div class="tab-pane fade show active" role="tabpanel"
+                  aria-labelledby="insurance-type-tab"> -->
+                  <div class="position-relative">
+                    <!-- <app-shimmer-loader class="d-block" [ngClass]="{'shimer-control': caseFlowService?.loadSpin}" [loaderSpin]="caseFlowService?.loadSpin">
+                    </app-shimmer-loader> -->
+                    <router-outlet></router-outlet>
+                </div>
+
+</div>

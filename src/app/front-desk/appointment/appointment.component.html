@@ -1,0 +1,432 @@
+<div class="row justify-content-center">
+    <div class="col-10">
+        <div class="card">
+            <div class="card-header text-center">
+                <h1 class="card-title text-white m-0">Create Appointment</h1>
+            </div>
+            <div class="card-body">
+                <form [formGroup]="assignmentForm" (ngSubmit)="onSubmitAssignments(assignmentForm.value)">
+                    <div class="form" action="#">
+                        <div class="modal-body">
+                            <div class="row fields-holder">
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group fields-holder"
+                                        [ngClass]="{'focused': assignmentForm.get('specId').value != ''}">
+                                        <!-- <label for="name" class="form-label">Speciality *</label> -->
+                                        <select formControlName="specId" class="custom-select"
+                                            (change)="getDoctors($event.target.value)">
+                                            <option value=''>Speciality *</option>
+                                            <option *ngFor="let speciality of specialities" [value]="speciality.id" title="{{speciality.name}}">
+                                                {{ speciality.qualifier }}</option>
+                                        </select>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="assignmentForm.get('specId').errors?.required && (assignmentForm.get('specId').dirty || assignmentForm.get('specId').touched)">Please
+                                            enter Speciality!</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group fields-holder"
+                                        [ngClass]="{'focused': assignmentForm.get('docId').value != ''}">
+                                        <!-- <label for="name" class="form-label">Speciality *</label> -->
+                                        <select formControlName="docId" class="custom-select">
+                                            <option value=''>Doctor *</option>
+                                            <option *ngFor="let d of doctorsData" [value]="d.id">
+                                                {{ d.first_name + ' ' + d.middle_name + ' ' + d.last_name }}</option>
+                                        </select>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="assignmentForm.get('docId').errors?.required && (assignmentForm.get('docId').dirty || assignmentForm.get('docId').touched)">Please
+                                            enter Doctor!</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group fields-holder"
+                                        [ngClass]="{'focused': assignmentForm.get('clinicId').value != ''}">
+                                        <!-- <label for="name" class="form-label">Speciality *</label> -->
+                                        <select formControlName="clinicId" class="custom-select">
+                                            <option value=''>Clinic *</option>
+                                            <option *ngFor="let facility of facilities" [value]="facility.id">
+                                                {{ facility.name }}</option>
+                                        </select>
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="assignmentForm.get('clinicId').errors?.required && (assignmentForm.get('clinicId').dirty || assignmentForm.get('clinicId').touched)">Please
+                                            enter Facility!</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group fields-holder"
+                                        [ngClass]="{'focused': assignmentForm.get('start').value != ''}">
+                                        <!-- <label for="name" class="form-label">Start Date *</label> -->
+                                        <input class="form-control" type="text" mwlFlatpickr formControlName="start"
+                                            [altInput]="true" [minDate]="'today'" [convertModelValue]="false"
+                                            [enableTime]="true" dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i"
+                                            placeholder="Start Date">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="assignmentForm.get('start').errors?.required && (assignmentForm.get('start').dirty || assignmentForm.get('start').touched)">Please
+                                            enter Start Date!</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="form-group fields-holder"
+                                        [ngClass]="{'focused': assignmentForm.get('end').value != ''}">
+                                        <!-- <label for="name" class="form-label">Start Date *</label> -->
+                                        <input class="form-control" type="text" mwlFlatpickr formControlName="end"
+                                            [altInput]="true" [minDate]="'today'" [convertModelValue]="false"
+                                            [enableTime]="true" dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i"
+                                            placeholder="End Date">
+                                        <small class="form-text text-muted danger"
+                                            *ngIf="assignmentForm.get('end').errors?.required && (assignmentForm.get('end').dirty || assignmentForm.get('end').touched)">Please
+                                            enter End Date!</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <button type="submit" class="btn btn-primary ">Get Assignments!</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="col-12" *ngIf="loading">
+                    <p>Loading...</p>
+                </div>
+                <div class="row" *ngIf="docsAssigned.length > 0">
+                    <div class="col-12">
+                        <h4>Doctors Assigned</h4>
+                    </div>
+                    <div class="col-sm-12">
+                        <ngx-datatable class="bootstrap" [rows]="docsAssigned" [scrollbarH]="true"
+                            [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+                            [limit]="10">
+                            <ngx-datatable-column name="ID" prop="id" [width]="100"></ngx-datatable-column>
+                            <ngx-datatable-column name="Doctor ID" prop="docId" [width]="100"></ngx-datatable-column>
+                            <ngx-datatable-column name="Doctor Name" prop="doctorName" [width]="230">
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="Start Date" prop="startDate">
+                                <ng-template let-column="column" let-prop="startDate" ngx-datatable-header-template>
+                                    Start Date
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{value | date:'MM-dd-yyyy h:mm:ss a'}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="End Date" prop="endDate">
+                                <ng-template let-column="column" let-prop="endDate" ngx-datatable-header-template>
+                                    End Date
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    {{value | date:'MM-dd-yyyy h:mm:ss a'}}
+                                </ng-template>
+                            </ngx-datatable-column>
+                            <ngx-datatable-column name="No. of Slots" prop="noOfSlots"></ngx-datatable-column>
+
+                            <ngx-datatable-column name="Actions" sortable="false" prop="id">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                    Actions
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                    <a class="success p-0" data-original-title="Edit" title="Create Appointment"
+                                        [routerLink]="" (click)="openAppointmentForm(content, row)">
+                                        <i class="icon-plus me-2"></i> Create Appointment
+                                    </a>
+                                </ng-template>
+                            </ngx-datatable-column>
+                        </ngx-datatable>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Appointment Form</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="model-body">
+        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+            <div class="form" action="#">
+                <div class="modal-body">
+                    <div class="row fields-holder">
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group fields-holder"
+                                [ngClass]="{'focused': form.get('priorityId').value != ''}">
+                                <!-- <label for="name" class="form-label">Speciality *</label> -->
+                                <select formControlName="priorityId" class="custom-select">
+                                    <option [value]="0">Priority *</option>
+                                    <option *ngFor="let priority of appointmentPriorities" [value]="priority.id">
+                                        {{ priority.description }}</option>
+                                </select>
+                                <small class="form-tapp-assign-specialityext text-muted danger"
+                                    *ngIf="form.get('priorityId').errors?.required && (form.get('priorityId').dirty || form.get('priorityId').touched)">Please
+                                    select Priority!</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group fields-holder"
+                                [ngClass]="{'focused': form.get('appointmentTypeId').value != ''}">
+                                <!-- <label for="name" class="form-label">Speciality *</label> -->
+                                <select formControlName="appointmentTypeId" class="custom-select">
+                                    <option [value]="0">Appointment Type *</option>
+                                    <option *ngFor="let type of appointmentTypes" [value]="type.id">
+                                        {{ type.description }}</option>
+                                </select>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('appointmentTypeId').errors?.required && (form.get('appointmentTypeId').dirty || form.get('appointmentTypeId').touched)">Please
+                                    select Appointment Type!</small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="form-group fields-holder"
+                                [ngClass]="{'focused': form.get('roomId').value != ''}">
+                                <!-- <label for="name" class="form-label">Speciality *</label> -->
+                                <select formControlName="roomId" class="custom-select">
+                                    <option [value]="0">Room No *</option>
+                                    <option *ngFor="let room of rooms" [value]="room.id">{{ room.name }}</option>
+                                </select>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('roomId').errors?.required && (form.get('roomId').dirty || form.get('roomId').touched)">Please
+                                    select Room!</small>
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-12 mb-3">
+                            <div class="row">
+                                <div class="col-xl-12 col-lg-12">
+                                    <div class="form-group">
+                                        <span class="d-block" style="margin: -24px 0 2px;">History (If any)</span>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item mb-2">
+                                                <label for="medical_doctor" class="d-block position-relative m-0">
+                                                    <input id="medical_doctor" checked="checked" type="radio" value="Medical Doctor" formControlName="history">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Medical Doctor</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item mb-2">
+                                                <label for="chiro" class="d-block position-relative m-0">
+                                                    <input id="chiro" checked="checked" type="radio" value="Chiro" formControlName="history">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Chiro</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item mb-2">
+                                                <label for="pt" class="d-block position-relative m-0">
+                                                    <input id="pt" checked="checked" type="radio" value="PT" formControlName="history">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">PT</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item mb-2">
+                                                <label for="accu" class="d-block position-relative m-0">
+                                                    <input id="accu" checked="checked" type="radio" value="ACCU" formControlName="history">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">ACCU</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+        
+                                <div class="col-xl-12 col-lg-12">
+                                    <div class="form-group">
+                                        <span class="d-block" style="margin: -24px 0 2px;">Type</span>
+                                        <ul class="list-inline">
+                                            <li class="list-inline-item mb-2">
+                                                <label for="new_patient" class="d-block position-relative m-0">
+                                                    <input id="new_patient" checked="checked" type="radio" value="New Patient" formControlName="patientType">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">New Patient</span>
+                                                </label>
+                                            </li>
+                                            <li class="list-inline-item">
+                                                <label for="returning_patient" class="d-block position-relative m-0">
+                                                    <input id="returning_patient" checked="checked" type="radio" value="Returning Patient" formControlName="patientType">
+                                                    <span class="fake-input position-absolute"></span>
+                                                    <span class="fake-label d-block">Returning Patient</span>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            -->
+
+
+                        <div class="col-12 mb-3">
+                            <div class="form-group fields-holder"
+                                [ngClass]="{'focused': form.get('comments').value != ''}">
+                                <label for="name" class="form-label">Comment</label>
+                                <textarea class="form-control form-input" formControlName="comments"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <h3>
+                                <button type="button" class="btn btn-primary pull-right" (click)="addEvent()">
+                                    Add new Appointment
+                                </button>
+                                <div class="clearfix"></div>
+                            </h3>
+
+                            <table class="table table-bordered">
+
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <!-- <th>Primary color</th>
+                                            <th>Secondary color</th> -->
+                                        <th>Starts at</th>
+                                        <th>Ends at</th>
+                                        <th>Remove</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <ng-container formArrayName="appointments"
+                                        *ngFor="let appointment of form['controls'].appointments['controls']; let i=index;">
+                                        <tr [formGroupName]="i">
+                                            <td>
+                                                <input type="text" class="form-control" formControlName="title"
+                                                    (keyup)="updateAppointment($event, i)">
+                                            </td>
+                                            <!-- <td>
+                                                            <input
+                                                                type="color"
+                                                                formControlName="color"
+                                                                (keyup)="updateAppointment(appointment, i)">
+                                                        </td>
+                                                        <td>
+                                                            <input
+                                                                type="color"
+                                                                formControlName="color"
+                                                                (keyup)="updateAppointment(appointment, i)">
+                                                        </td> -->
+                                            <td>
+                                                <input class="form-control" type="text" mwlFlatpickr
+                                                    formControlName="start"
+                                                    (ngModelChange)="updateAppointment($event, i)" [altInput]="true"
+                                                    [minDate]="minDate" [maxDate]="maxDate" [convertModelValue]="true"
+                                                    [enableTime]="true" dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i"
+                                                    (change)="updateAppointment($event, i)" placeholder="Not set">
+                                            </td>
+                                            <td>
+                                                <input class="form-control" type="text" mwlFlatpickr
+                                                    formControlName="end" (ngModelChange)="updateAppointment($event, i)"
+                                                    [altInput]="true" [minDate]="minDate" [maxDate]="maxDate"
+                                                    [convertModelValue]="true" [enableTime]="true"
+                                                    dateFormat="Y-m-dTH:i" altFormat="F j, Y H:i" placeholder="Not set">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-danger" (click)="deleteAppointment(i)">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+
+                                </tbody>
+
+                            </table>
+
+                            <small class="form-text text-muted danger" *ngIf="appointmentError">Please add atleast one
+                                appointment!</small>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary ">Submit!</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="col-12">
+            <ng-template #modalContent let-close="close">
+                <div class="modal-header">
+                    <h5 class="modal-title">Appointment</h5>
+                    <button type="button" class="close" (click)="close()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <strong>Title: </strong> {{ modalData?.event.title}}
+                        </div>
+                        <div class="col-md-12">
+                            <strong>Start: </strong> {{ modalData?.event.start}}
+                        </div>
+                        <div class="col-md-12">
+                            <strong>Title: </strong> {{ modalData?.event.end}}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" (click)="close()">OK</button>
+                </div>
+            </ng-template>
+
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="btn-group">
+                        <div class="btn btn-primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+                            (viewDateChange)="activeDayIsOpen = false">
+                            Previous
+                        </div>
+                        <div class="btn btn-primary" mwlCalendarToday [(viewDate)]="viewDate">
+                            Today
+                        </div>
+                        <div class="btn btn-primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+                            (viewDateChange)="activeDayIsOpen = false">
+                            Next
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+                </div>
+                <div class="col-md-4">
+                    <div class="btn-group">
+                        <div class="btn btn-primary" (click)="view = CalendarView.Month"
+                            [class.active]="view === CalendarView.Month">
+                            Month
+                        </div>
+                        <div class="btn btn-primary" (click)="view = CalendarView.Week"
+                            [class.active]="view === CalendarView.Week">
+                            Week
+                        </div>
+                        <div class="btn btn-primary" (click)="view = CalendarView.Day"
+                            [class.active]="view === CalendarView.Day">
+                            Day
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div [ngSwitch]="view">
+                <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate"
+                    [events]="appointments" [refresh]="refresh" [activeDayIsOpen]="activeDayIsOpen"
+                    (dayClicked)="dayClicked($event.day)" (eventTimesChanged)="eventTimesChanged($event)">
+                </mwl-calendar-month-view>
+                <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate" [events]="appointments"
+                    [refresh]="refresh" (eventTimesChanged)="eventTimesChanged($event)">
+                </mwl-calendar-week-view>
+                <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="appointments"
+                    [refresh]="refresh" (eventClicked)="handleEvent('Clicked', $event.event)"
+                    (eventTimesChanged)="eventTimesChanged($event)">
+                </mwl-calendar-day-view>
+            </div>
+
+
+        </div>
+    </div>
+
+</ng-template>

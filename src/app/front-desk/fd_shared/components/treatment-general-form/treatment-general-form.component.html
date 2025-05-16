@@ -1,0 +1,519 @@
+<div class="card">
+	<div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center">
+		<h6 class="pull-left color-blue d-inline-block">Treatment General Information
+		</h6>
+		<a href="javascript:void(0)" (click)="enableForm(enableflag)" tooltip="Edit"><i class="icon-pencil"></i></a>
+	</div>
+
+	<div class="form">
+		<div class="card-body pb-0">
+			<!-- <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                <div class="form" action="#" [ngClass]="{'form-disable': form.disabled }"> -->
+			<!-- <div class="row fields-holder">
+                        <div class="col-lg-8 col-md-12">
+                            <div class="form-group radio-block in-stop-work in-md-radio">
+                                <span class="float-md-left">Are you still being treated for this injury/illness
+                                </span>
+                                <ul class="list-inline float-md-right">
+                                    <li class="list-inline-item">
+                                        <label for="stillTreated_yes" class="d-block position-relative m-0">
+                                            <input id="stillTreated_yes" checked="checked" type="radio" [value]="true"
+                                                formControlName="stillTreated">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">Yes</span>
+                                        </label>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <label for="stillTreated_no" class="d-block position-relative m-0">
+                                            <input id="stillTreated_no" checked="checked" type="radio" [value]="false"
+                                                formControlName="stillTreated">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">No</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('stillTreated').errors?.required && (form.get('stillTreated').dirty || form.get('stillTreated').touched)">Please
+                                    select any one option!</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12">
+                            <div class="form-group radio-block in-stop-work in-md-radio">
+                                <span class="float-md-left">Do you remember having a same injury to same body
+                                    part?</span>
+                                <ul class="list-inline float-md-right">
+                                    <li class="list-inline-item">
+                                        <label for="sameInjury_yes" class="d-block position-relative m-0">
+                                            <input id="sameInjury_yes" checked="checked" type="radio" [value]="true"
+                                                formControlName="otherInjury">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">Yes</span>
+                                        </label>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <label for="sameInjury_no" class="d-block position-relative m-0">
+                                            <input id="sameInjury_no" checked="checked" type="radio" [value]="false"
+                                                formControlName="otherInjury">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">No</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('sameInjury').errors?.required && (form.get('sameInjury').dirty || form.get('sameInjury').touched)">Please
+                                    select any one option!</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12">
+                            <div class="form-group radio-block in-stop-work in-md-radio">
+                                <span class="float-md-left">If yes, were you treated by a doctor?</span>
+                                <ul class="list-inline float-md-right">
+                                    <li class="list-inline-item">
+                                        <label for="treatedByDoctor_yes" class="d-block position-relative m-0">
+                                            <input id="treatedByDoctor_yes" checked="checked" type="radio"
+                                                [value]="true" formControlName="treatedByDoctor">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">Yes</span>
+                                        </label>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <label for="treatedByDoctor_no" class="d-block position-relative m-0">
+                                            <input id="treatedByDoctor_no" checked="checked" type="radio"
+                                                [value]="false" formControlName="treatedByDoctor">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">No</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('treatedByDoctor').errors?.required && (form.get('treatedByDoctor').dirty || form.get('treatedByDoctor').touched)">Please
+                                    select any one option!</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12">
+                            <div class="form-group radio-block in-stop-work in-md-radio">
+                                <span class="float-md-left">Are there more doctors who treated you for similar
+                                    illness/bodypart?</span>
+                                <ul class="list-inline float-md-right">
+                                    <li class="list-inline-item">
+                                        <label for="otherInjury_yes" class="d-block position-relative m-0">
+                                            <input id="otherInjury_yes" checked="checked" type="radio" [value]="true"
+                                                formControlName="otherInjury">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">Yes</span>
+                                        </label>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <label for="otherInjury_no" class="d-block position-relative m-0">
+                                            <input id="otherInjury_no" checked="checked" type="radio" [value]="false"
+                                                formControlName="otherInjury">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">No</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('otherInjury').errors?.required && (form.get('otherInjury').dirty || form.get('otherInjury').touched)">Please
+                                    select any one option!</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12">
+                            <div class="form-group radio-block in-stop-work in-md-radio">
+                                <span class="float-md-left">Was this previous injury/illness work related?</span>
+                                <ul class="list-inline float-md-right">
+                                    <li class="list-inline-item">
+                                        <label for="previousInjuryWork_yes" class="d-block position-relative m-0">
+                                            <input id="previousInjuryWork_yes" checked="checked" type="radio"
+                                                [value]="true" formControlName="previousInjuryWork">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">Yes</span>
+                                        </label>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <label for="previousInjuryWork_no" class="d-block position-relative m-0">
+                                            <input id="previousInjuryWork_no" checked="checked" type="radio"
+                                                [value]="false" formControlName="previousInjuryWork">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">No</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('previousInjuryWork').errors?.required && (form.get('previousInjuryWork').dirty || form.get('previousInjuryWork').touched)">Please
+                                    select any one option!</small>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-12">
+                            <div class="form-group radio-block in-stop-work in-md-radio">
+                                <span class="float-md-left">If yes, were you working for the same employer that you
+                                    work for now?</span>
+                                <ul class="list-inline float-md-right">
+                                    <li class="list-inline-item">
+                                        <label for="sameEmployer_yes" class="d-block position-relative m-0">
+                                            <input id="sameEmployer_yes" checked="checked" type="radio" [value]="true"
+                                                formControlName="sameEmployer">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">Yes</span>
+                                        </label>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <label for="sameEmployer_no" class="d-block position-relative m-0">
+                                            <input id="sameEmployer_no" checked="checked" type="radio" [value]="false"
+                                                formControlName="sameEmployer">
+                                            <span class="fake-input position-absolute"></span>
+                                            <span class="fake-label d-block">No</span>
+                                        </label>
+                                    </li>
+                                </ul>
+                                <small class="form-text text-muted danger"
+                                    *ngIf="form.get('sameEmployer').errors?.required && (form.get('sameEmployer').dirty || form.get('sameEmployer').touched)">Please
+                                    select any one option!</small>
+                            </div>
+                        </div>
+                    </div> -->
+			<dynamic-form [fields]="fieldConfig" (submit)="onSubmit($event)">
+			</dynamic-form>
+			<div class="row fields-holder">
+				<div class="col-md-6">
+					<h6 class="color-green mb-2">Doctor's Detail For Previous Injury/Illness</h6>
+				</div>
+				<div class="col-md-6 text-end">
+				
+					<a href="javascript:void(0)" class="btn btn-default round-btn me-2"
+						*ngIf="selection.selected.length" (click)="confirmDel()">
+						<span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+					</a>
+					<a class="btn btn-primary round-btn" *ngIf="formEnabled" (click)="addDoctorModal(addPrevDoctor)"
+						href="javascript:void(0)">Add Provider</a>
+				</div>
+
+				<div class="col-12 data-table">
+
+					<!-- <table class="table table-bordered table-striped text-center mb-4">
+                                    <thead>
+                                        <tr>
+                                        <th class="border-right" scope="col">Doctor's First Name</th>
+                                        <th class="border-right" scope="col"> Last Name</th>
+                                        <th class="border-right" scope="col"> Address</th>
+                                        <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                        <td>John</td>
+                                        <td>Smith</td>
+                                        <td>732 La Porte Dr, La Canada Flintridge, CA, 91011</td>
+                                        <td class="form">
+                                                <label for="check" class="chkbox position-relative mt-1">
+                                                        <input id="check" name="" value="" type="checkbox">
+                                                        <span class="fake-input position-absolute"></span>
+                                                    </label>
+                                            <a class="pencil-hov mx-3" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                class="icon-pencil"></i></a>
+                                            <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                                                class="icon-remove"></i></a>
+                                        </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td>John</td>
+                                            <td>Smith</td>
+                                            <td>732 La Porte Dr, La Canada Flintridge, CA, 91011</td>
+                                            <td class="form">
+                                                    <label for="check" class="chkbox position-relative mt-1">
+                                                            <input id="check" name="" value="" type="checkbox">
+                                                            <span class="fake-input position-absolute"></span>
+                                                        </label>
+                                                <a class="pencil-hov mx-3" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                    class="icon-pencil"></i></a>
+                                                <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                                                    class="icon-remove"></i></a>
+                                            </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>John</td>
+                                                <td>Smith</td>
+                                                <td>732 La Porte Dr, La Canada Flintridge, CA, 91011</td>
+                                                <td class="form">
+                                                        <label for="check" class="chkbox position-relative mt-1">
+                                                                <input id="check" name="" value="" type="checkbox">
+                                                                <span class="fake-input position-absolute"></span>
+                                                            </label>
+                                                    <a class="pencil-hov mx-3" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                        class="icon-pencil"></i></a>
+                                                    <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                                                        class="icon-remove"></i></a>
+                                                </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>John</td>
+                                                    <td>Smith</td>
+                                                    <td>732 La Porte Dr, La Canada Flintridge, CA, 91011</td>
+                                                    <td class="form">
+                                                            <label for="check" class="chkbox position-relative mt-1">
+                                                                    <input id="check" name="" value="" type="checkbox">
+                                                                    <span class="fake-input position-absolute"></span>
+                                                                </label>
+                                                        <a class="pencil-hov mx-3" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                            class="icon-pencil"></i></a>
+                                                        <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                                                            class="icon-remove"></i></a>
+                                                    </td>
+                                                    </tr>
+                                
+                                    </tbody>
+                                </table> -->
+
+
+					<ngx-datatable class="bootstrap scroll-hide" [rows]="doctorRows" [scrollbarH]="true"
+						[columnMode]="'force'" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+
+						<ngx-datatable-column name="First Name" prop="firstName" [width]="100">
+						</ngx-datatable-column>
+						<ngx-datatable-column name="Middle Name" prop="middleName" [width]="100">
+						</ngx-datatable-column>
+						<ngx-datatable-column name="Last Name" prop="lastName" [width]="100">
+						</ngx-datatable-column>
+						<ngx-datatable-column name="Address" prop="street" [width]="120"></ngx-datatable-column>
+						<ngx-datatable-column name="City" prop="city" [width]="100"></ngx-datatable-column>
+						<ngx-datatable-column name="State" prop="state" [width]="100"></ngx-datatable-column>
+						<ngx-datatable-column name="Zip" prop="zip" [width]="100"></ngx-datatable-column>
+						<ngx-datatable-column name="Action" prop="id" sortable="false" [width]="110">
+							<ng-template let-column="column" ngx-datatable-header-template>
+								<mat-checkbox [disabled]="!formEnabled" (change)="$event ? masterToggle($event) : null"
+									[checked]="selection.hasValue() && isAllSelected()"
+									[indeterminate]="selection.hasValue() && !isAllSelected()">
+								</mat-checkbox>
+								Actions
+							</ng-template>
+							<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+
+								<mat-checkbox [disabled]="!formEnabled" (click)="$event.stopPropagation()"
+									(change)="$event ? selection.toggle(row) : null"
+									[checked]="selection.isSelected(row)">
+								</mat-checkbox>
+								<button type="button" style="background: transparent; border:none;"
+									[disabled]="!formEnabled" tooltip="Edit"
+									(click)="addDoctorModal(addPrevDoctor, row)" role="button"
+									[class]="formEnabled ? 'disabled pencil-hov mx-2 p-0': 'pencil-hov mx-2 p-0'"><i
+										class="icon-pencil"></i></button>
+							
+								<button type="button" style="background: transparent; border:none;"
+									[disabled]="!formEnabled" (click)="confirmDel(row.caseId)" tooltip="Delete"
+									role="button"
+									[class]="formEnabled ? 'disabled delete-hov mx-1 p-0': 'delete-hov mx-1 p-0'"><i
+										class="icon-remove"></i></button>
+							</ng-template>
+						</ngx-datatable-column>
+					</ngx-datatable>
+				</div>
+
+			</div>
+
+
+
+			<!-- <div class="row fields-holder mt-4">
+                <div class="col-lg-6 col-md-12">
+                    <div class="form-group field"
+                        [ngClass]="{'focused': form.get('amountOfHealth').value != '' && form.get('amountOfHealth').value != null }">
+                        <label for="amountOfHealth" class="form-label">$ Amount of health bills to date</label>
+                        <input type="text" id="amountOfHealth" class="form-control form-input"
+                            formControlName="amountOfHealth">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12">
+                    <div class="form-group radio-block in-stop-work in-md-radio">
+                        <span class="float-md-left">Will you have more health treatment(s)?</span>
+                        <ul class="list-inline float-md-right">
+                            <li class="list-inline-item">
+                                <label for="moreHealthTreatments_yes" class="d-block position-relative m-0">
+                                    <input id="moreHealthTreatments_yes" checked="checked" type="radio" [value]="true"
+                                        formControlName="moreHealthTreatments">
+                                    <span class="fake-input position-absolute"></span>
+                                    <span class="fake-label d-block">Yes</span>
+                                </label>
+                            </li>
+                            <li class="list-inline-item">
+                                <label for="moreHealthTreatments_no" class="d-block position-relative m-0">
+                                    <input id="moreHealthTreatments_no" checked="checked" type="radio" [value]="false"
+                                        formControlName="moreHealthTreatments">
+                                    <span class="fake-input position-absolute"></span>
+                                    <span class="fake-label d-block">No</span>
+                                </label>
+                            </li>
+                        </ul>
+                        <small class="form-text text-muted danger"
+                            *ngIf="form.get('moreHealthTreatments').errors?.required && (form.get('moreHealthTreatments').dirty || form.get('moreHealthTreatments').touched)">Please
+                            select any one option!</small>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <div class="form-group radio-block in-stop-work in-md-radio">
+                        <span class="float-md-left me-1">As a result of your injury, have you had any other
+                            expenses?</span>
+                        <ul class="list-inline float-md-right">
+                            <li class="list-inline-item">
+                                <label for="anyOtherExpense_yes" class="d-block position-relative m-0">
+                                    <input id="anyOtherExpense_yes" checked="checked" type="radio" [value]="true"
+                                        formControlName="anyOtherExpense">
+                                    <span class="fake-input position-absolute"></span>
+                                    <span class="fake-label d-block">Yes</span>
+                                </label>
+                            </li>
+                            <li class="list-inline-item">
+                                <label for="anyOtherExpense_no" class="d-block position-relative m-0">
+                                    <input id="anyOtherExpense_no" checked="checked" type="radio" [value]="false"
+                                        formControlName="anyOtherExpense">
+                                    <span class="fake-input position-absolute"></span>
+                                    <span class="fake-label d-block">No</span>
+                                </label>
+                            </li>
+                        </ul>
+                        <small class="form-text text-muted danger"
+                            *ngIf="form.get('anyOtherExpense').errors?.required && (form.get('anyOtherExpense').dirty || form.get('anyOtherExpense').touched)">Please
+                            select any one option!</small>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <div class="form-group field"
+                        [ngClass]="{'focused': form.get('expensesDescription').value != '' && form.get('expensesDescription').value != null }">
+                        <label for="expensesDescription" class="form-label">Explanation and amounts of such
+                            expenses *</label>
+                        <input type="text" id="expensesDescription" class="form-control form-input"
+                            formControlName="expensesDescription">
+                    </div>
+                </div>
+
+            </div> -->
+
+			<!-- <div class="row form-btn justify-content-center mb-3" *ngIf="formEnabled">
+                <div class="col-9 col-sm-5 col-md-4 col-lg-3 col-xl-2 text-center">
+                    <a href="javascript:void(0)" class="btn btn-primary w-100 mt-0" (click)="disableForm()"><span
+                            class="icon-left-arrow me-1"></span> Back</a>
+                </div>
+                <div class="col-9 col-sm-5 col-md-4 col-lg-3 col-xl-2 text-center">
+                    <button class="btn btn-success w-100 mt-0" type="submit" [disabled]="disableBtn"><span
+                            class="icon-save-continue me-1"></span>
+                        {{ disableBtn == false ? 'Save & Continue' : 'Please Wait...' }}</button>
+                </div>
+            </div> -->
+			<!-- </div>
+            </form> -->
+
+		</div>
+	</div>
+</div>
+
+
+<ng-template #addPrevDoctor let-modal style="max-width: 500px;">
+	<div class="modal-header">
+		<h5 class="modal-title">{{docTitle}} Provider</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+
+		<!-- <form [formGroup]="doctorForm" (ngSubmit)="onSubmitDoctorForm(doctorForm.value)" autocomplete="off">
+            <div class="form">
+                <div class="row fields-holder">
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group field"
+                            [ngClass]="{'focused': doctorForm.get('firstName').value != '' && doctorForm.get('firstName').value != null }">
+                            <label for="firstName" class="form-label">Doctors's First Name</label>
+                            <input type="text" id="firstName" formControlName="firstName"
+                                class="form-control form-input">
+                            <small class="form-text text-muted danger"
+                                *ngIf="doctorForm.get('firstName').errors?.required && (doctorForm.get('firstName').dirty || doctorForm.get('firstName').touched)">Please
+                                enter first name.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group field"
+                            [ngClass]="{'focused': doctorForm.get('middleName').value != '' && doctorForm.get('middleName').value != null }">
+                            <label for="middleName" class="form-label">Middle Name</label>
+                            <input type="text" id="middleName" formControlName="middleName"
+                                class="form-control form-input">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group field"
+                            [ngClass]="{'focused': doctorForm.get('lastName').value != '' && doctorForm.get('lastName').value != null }">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" id="lastName" formControlName="lastName" class="form-control form-input">
+                            <small class="form-text text-muted danger"
+                                *ngIf="doctorForm.get('lastName').errors?.required && (doctorForm.get('lastName').dirty || doctorForm.get('lastName').touched)">Please
+                                enter last name.</small>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12">
+                        <div class="form-group field"
+                            [ngClass]="{'focused': doctorForm.get('street').value != '' && doctorForm.get('street').value != null }">
+                            <label for="address" class="form-label">Street Address</label>
+                            <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+                            <input ngx-google-places-autocomplete [options]="{
+                                            types: [],
+                                            componentRestrictions: { country: 'US' }
+                                            }" #placesRef="ngx-places" placeholder=""
+                                (onAddressChange)="handleAddressChange($event, true)" class="form-control form-input"
+                                formControlName="street" />
+
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12">
+                        <div class="form-group field"
+                            [ngClass]="{'focused': doctorForm.get('apartment').value != '' && doctorForm.get('apartment').value != null }">
+                            <label for="apartment" class="form-label">Suite / Floor</label>
+                            <input type="text" id="apartment" formControlName="apartment"
+                                class="form-control form-input">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group field"
+                            [ngClass]="{'focused': doctorForm.get('city').value != '' && doctorForm.get('city').value != null }">
+                            <label for="city" class="form-label"> City</label>
+                            <input type="text" id="city" formControlName="city" class="form-control form-input">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group field"
+                            [ngClass]="{'focused': doctorForm.get('state').value != '' && doctorForm.get('state').value != null }">
+                            <label for="state" class="form-label"> State</label>
+                            <input type="text" id="state" formControlName="state" class="form-control form-input">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12">
+                        <div class="form-group field"
+                            [ngClass]="{'focused': doctorForm.get('zip').value != '' && doctorForm.get('zip').value != null }">
+                            <label for="zip" class="form-label">Zip</label>
+                            <input type="text" id="zip" formControlName="zip" class="form-control form-input">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row form-btn">
+                    <div class="col-lg-3 col-sm-6 offset-lg-3 text-center">
+                        <a href="javascript:void(0)" class="btn btn-primary w-100"
+                            (click)="disableDoctorForm()"><span class="icon-left-arrow me-2"></span> Back</a>
+                    </div>
+                    <div class="col-lg-3 col-sm-6 text-center">
+                        <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                                class="icon-save-continue me-2"></span>
+                            {{ disableBtn == false ? 'Save & Continue' : 'Please Wait...' }}</button>
+                    </div>
+                </div>
+            </div>
+        </form> -->
+		<dynamic-form [fields]="modalFieldConfig" (onReady)="onReady($event)" (submit)="onSubmitDoctorForm($event)">
+		</dynamic-form>
+	</div>
+</ng-template>

@@ -1,0 +1,16 @@
+<ng-template #defaultTemplate let-days="days" let-locale="locale" let-dayHeaderClicked="dayHeaderClicked"
+	let-eventDropped="eventDropped">
+	<div class="cal-day-headers">
+		<div class="cal-week-view cal-time" style="width: 71px;border-right: inherit">
+
+		</div>
+		<!--<div class="cal-header"-->
+		<!--[ngClass]="days.cssClass"-->
+		<!--mwlDroppable style="border:1px solid #bbbbbb;height: 40px;">-->
+		<!--<b style="margin-left: 80px">{{days}}</b>-->
+		<!--</div>-->
+	</div>
+</ng-template>
+<ng-template [ngTemplateOutlet]="customTemplate || defaultTemplate"
+	[ngTemplateOutletContext]="{days: days, locale: locale, dayHeaderClicked: dayHeaderClicked, eventDropped: eventDropped}">
+</ng-template>

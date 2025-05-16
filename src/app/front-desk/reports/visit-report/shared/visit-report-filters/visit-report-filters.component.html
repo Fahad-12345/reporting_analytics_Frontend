@@ -1,0 +1,187 @@
+<!-- <div class="mb-3 pt-3">
+    <form class="form" autocomplete="off" [formGroup]="searchVisitForm" method="filterHandler()">
+        <div class="ng-check">
+            <div class="search-filter search-filter-bg-light filter-grid grid-4"
+                [class.hide-remaining-search-filter]="!isCollapsed">
+                <div class="filter-grid-container">
+                    <div class="form-group" *ngIf="showFilterFields.showPracticeLocationFilter()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'practice_locations_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['practice_locations_ids']"
+                            [lableName]="'Practice-Location'" [bindlable]="'name'" [bindId]="'id'"
+                            [showSelectAll]="true" [showGroupBy]="true" [qulifierShown]="false"
+                            (valueChange)="selectionOnValueChange($event,'practice_locations_ids')"
+                            [lists]="filterResponse?.practice_locations" [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showCaseTypeField()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'case_type_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['case_type_ids']" [lableName]="'Case Type'"
+                            [bindlable]="'name'" [showSelectAll]="true" [showGroupBy]="true" [bindId]="'id'"
+                            (valueChange)="selectionOnValueChange($event,'case_type_ids')"
+                            [lists]="filterResponse?.case_types" [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showVisitType()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'visit_type_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['visit_type_ids']"
+                            [lableName]="'Visit Type'" [bindlable]="'name'" [showSelectAll]="true" [showGroupBy]="true"
+                            (valueChange)="selectionOnValueChange($event,'visit_type_ids')"
+                            [bindId]="'id'" [lists]="filterResponse?.visit_types"
+                            [multiple]="true"></app-ng-select-shareable>
+                    </div>
+
+                    <div class="form-group" *ngIf="showFilterFields.showBillStatus()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'status_id'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['status_id']" [lableName]="'Status'"
+                            [bindlable]="'name'" [showSelectAll]="false" [showGroupBy]="false" [bindId]="'id'" 
+                            (valueChange)="selectionOnValueChange($event,'status_id')"
+                            [lists]="filterResponse?.statuses" [multiple]="false"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showGroupBy()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'group_by_id'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['group_by_id']" [lableName]="'Group By'"
+                            [bindlable]="'name'" [showSelectAll]="false" [showGroupBy]="false" [bindId]="'id'"
+                            (valueChange)="selectionOnValueChange($event,'group_by_id')"
+                            [lists]="[{id:1,name:'Speciality'},{id:2,name:'Provider'},{id:3,name:'Status'}]" [multiple]="false"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showProvider()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'doctor_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['doctor_ids']"
+                            [showSelectFieldOnRefresh]="searchVisitForm?.get('doctor_ids')?.value"
+                            [showSelectAll]="true" [showGroupBy]="false" [lableName]="'Provider Name'"
+                            [bindlable]="'name'" [searchLableName]="'doctor_name'"
+                            [bindId]="'id'" [lists]="filterResponse?.providers"
+                            (valueChange)="selectionOnValueChange($event,'doctor_ids')"
+                            [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showSpecialtyField()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'speciality_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['speciality_ids']"
+                            [showSelectFieldOnRefresh]="searchVisitForm?.get('speciality_ids')?.value"
+                            [lableName]="'Specialty'" [bindlable]="'name'" [showSelectAll]="true" [showGroupBy]="true"
+                            [qulifierShown]="true" [bindId]="'id'" [lists]="filterResponse?.specialities"
+                            (valueChange)="selectionOnValueChange($event,'speciality_ids')"
+                            [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showDateRange()">
+                        <mat-date-range-input [rangePicker]="picker" [max]="maxDate" [min]="minDate">
+                            <input matStartDate readonly formControlName="fromDate" placeholder="Date Range">
+                            <input matEndDate readonly formControlName="toDate">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker>
+
+                        </mat-date-range-picker>
+                    </div>
+                </div>
+                <div class="collape-btn">
+                    <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+                        [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"
+                        [class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button">
+                        <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+                    </button>
+                </div>
+                <div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+                    <button class="btn btn-success" (click)="filterHandler()">Filter</button>
+                    <button class="btn btn-primary" (click)="onReset()">Reset</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div> -->
+
+
+<div class="mb-3 pt-3">
+    <form class="form" autocomplete="off" [formGroup]="searchVisitForm" method="filterHandler()">
+        <div class="ng-check">
+            <div class="search-filter search-filter-bg-light filter-grid grid-4"
+                [class.hide-remaining-search-filter]="!isCollapsed">
+                <div class="filter-grid-container">
+                    <div class="form-group" *ngIf="showFilterFields.showPracticeLocationFilter()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'practice_locations_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['practice_locations_ids']"
+                            [lableName]="'Practice-Location'" [bindlable]="'name'" [bindId]="'id'"
+                            [showSelectAll]="true" [showGroupBy]="false" [qulifierShown]="false"
+                            (valueChange)="selectionOnValueChange($event,'practice_locations_ids')"
+                            [lists]="filterResponse?.practice_locations" [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showCaseTypeField()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'case_type_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['case_type_ids']" [lableName]="'Case Type'"
+                            [bindlable]="'name'" [showSelectAll]="true" [showGroupBy]="false" [bindId]="'id'"
+                            (valueChange)="selectionOnValueChange($event,'case_type_ids')"
+                            [lists]="filterResponse?.case_types" [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showVisitType()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'visit_type_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['visit_type_ids']"
+                            [lableName]="'Visit Type'" [bindlable]="'name'" [showSelectAll]="true" [showGroupBy]="false"
+                            (valueChange)="selectionOnValueChange($event,'visit_type_ids')"
+                            [bindId]="'id'" [lists]="filterResponse?.visit_types"
+                            [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showBillStatus()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'status_id'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['status_id']" [lableName]="'Status'"
+                            [bindlable]="'name'" [showSelectAll]="false" [showGroupBy]="false" [bindId]="'id'"
+                            (valueChange)="selectionOnValueChange($event,'status_id')"
+                            [lists]="filterResponse?.statuses" [multiple]="false"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showGroupBy()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'group_by_id'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['group_by_id']" [lableName]="'Group By'"
+                            [bindlable]="'name'" [showSelectAll]="true" [showGroupBy]="false" [bindId]="'id'"
+                            (valueChange)="selectionOnValueChange($event,'group_by_id')"
+                            [lists]="[{id:1,name:'Speciality'},{id:2,name:'Provider'},{id:3,name:'Status'}]" [multiple]="false"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showProvider()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'doctor_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['doctor_ids']"
+                            [showSelectFieldOnRefresh]="searchVisitForm?.get('doctor_ids')?.value"
+                            [showSelectAll]="true" [showGroupBy]="false" [lableName]="'Provider Name'"
+                            [bindlable]="'name'" [searchLableName]="'doctor_name'"
+                            [bindId]="'id'" [lists]="filterResponse?.providers"
+                            (valueChange)="selectionOnValueChange($event,'doctor_ids')"
+                            [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showSpecialtyField()">
+                        <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                            [filterFieldName]="'speciality_ids'"
+                            [showSelectFieldList]="selectedMultipleFieldFiter['speciality_ids']"
+                            [showSelectFieldOnRefresh]="searchVisitForm?.get('speciality_ids')?.value"
+                            [lableName]="'Specialty'" [bindlable]="'name'" [showSelectAll]="true" [showGroupBy]="true"
+                             [bindId]="'id'" [lists]="filterResponse?.specialities"
+                            (valueChange)="selectionOnValueChange($event,'speciality_ids')"
+                            [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                    <div class="form-group" *ngIf="showFilterFields.showDateRange()">
+                        <mat-date-range-input [rangePicker]="picker" [max]="maxDate" [min]="minDate">
+                            <input matStartDate readonly formControlName="fromDate" placeholder="Date Range">
+                            <input matEndDate readonly formControlName="toDate">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker>
+                        </mat-date-range-picker>
+                    </div>
+                </div>
+                <div class="collape-btn">
+                    <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+                        [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic"
+                        [class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button">
+                        <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+                    </button>
+                </div>
+                <div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+                    <button class="btn btn-success" (click)="filterHandler()">Filter</button>
+                    <button class="btn btn-primary" (click)="onReset()">Reset</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,30 @@
+<div class="modal-header" style="background-color: #4b4b4b;color: #fff;padding: 8px 15px;font-size: 18px;">
+	<h4 class="modal-title" style="text-align: center;">Delete Unavailability </h4>
+	<button style="background-color: #4b4b4b;color: #fff" type="button" class="close" data-dismiss="modal"
+		(click)="activeModal.dismiss('Cross click')">&times;</button>
+</div>
+<form [formGroup]="myForm">
+	<div class="modal-body">
+		<div class="row">
+			<label class="col-sm-12 col-md-12 col-lg-11 title  " for="comments">Enter Comments</label>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 col-md-12 col-lg-12">
+				<textarea style="height: 60px!important;" type="text" class="form-control"
+					formControlName="comments"></textarea>
+			</div>
+		</div>
+		<div class="row justify-content-center mt-3">
+			<div class="col-md-4">
+				<button class="btn btn-secondary" data-dismiss="modal" type="button"
+					(click)="activeModal.close()">Cancel</button>
+			</div>
+			<div class="col-md-4">
+				<button class="btn btn-success" type="submit"
+					(click)="addReasonForUnavialabilty()">Delete</button>
+			</div>
+
+		</div>
+
+	</div>
+</form>

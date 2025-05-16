@@ -1,0 +1,40 @@
+.right{
+	text-align: right;
+	}
+	
+	::ng-deep.mat-slide-toggle {
+		&.mat-checked {
+			.mat-slide-toggle-bar {
+				background: rgba(80, 187, 94, 0.54) !important;
+			}
+			.mat-slide-toggle-thumb {
+				background: #00a650 !important;
+			}
+		}
+	}
+	
+	::ng-deep.cpt-plc-hold{
+		.ng-select {
+			&.ng-select-multiple {
+				.ng-select-container {
+					.ng-value-container {
+						.ng-placeholder {
+							color: #333 !important;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	.action-bdg {
+		.badge-info {
+			padding: 4px 9px 4px;
+			&.wrap-text {
+				max-width: 45% !important;
+			}
+		}
+	}
+	.hiddenControls{
+		visibility: hidden;
+	}

@@ -1,0 +1,35 @@
+export interface Ifilter {
+    getBillId(): boolean;
+    getSpecialty(): boolean;
+    getProvider(): boolean;
+    getPracticeLocation(): boolean;
+    getEorType(): boolean;
+    getCreatedBy(): boolean;
+    getUpdatedBy(): boolean;
+    getAuctionTypeId(): boolean;
+    getTypeId(): boolean;
+    getPaidBy(): boolean;
+    getDenialType(): boolean;
+    getVerificationType(): boolean;
+    getVerificationStatus(): boolean;
+    getCaseIds(): boolean;
+    getInsuranceIds(): boolean;
+    getAttorneyIds(): boolean;
+    getPaymentStatus(): boolean;
+    getBillStatus(): boolean;
+    getDenialStatus(): boolean;
+    getEorStatus(): boolean;
+    getPatientId(): boolean;
+    getPatientName(): boolean;
+    getCaseId(): boolean;
+    getPatientNames(): boolean;
+    getCaseTypesIds(): boolean;
+    getSpecialityIds(): boolean;
+    getFacilityIds(): boolean;
+    getProviderIds(): boolean;
+    getVerificationStatusIds(): boolean;
+    getCreatedByIds(): boolean;
+    getUpdatedByIds(): boolean;
+    getAppointmentTypes(): boolean;
+    getTargetPracticeLocation(): boolean;
+}

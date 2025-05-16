@@ -1,0 +1,218 @@
+<perfect-scrollbar>
+  <div class="col-12">
+    <div class="row">
+      <div class="col-xl-12 col-lg-12 mb-3">
+        <!-- MRI Intake 1 Information -->
+        <div class="card">
+          <div class="card-header text-center custom-tooltip-hov">
+            <h1 class="card-title text-white m-0">Patient's MRI Intake 1
+                <a class="success p-0 float-right text-white" tooltip="Edit" routerLink="intake1/edit">
+                  <i class="icon-pencil me-2"></i>
+                </a>
+            </h1>
+          </div>
+          <div class="card-body"> 
+            
+            <div class="mb-5 bordered">
+              <div class="row mb-3">
+                <div class="col-lg-12">
+                  <strong class="title"><span class="d-block">Surgery or operation (e.g., arthroscopy, endoscopy, etc.) of any kind?</span> {{ surgicalDetails?.hadSurgery == true ? 'Yes' : 'No'}}</strong>
+                </div>
+                <div class="col-lg-12" *ngIf="surgicalDetails?.hadSurgery">
+                  <div class="row"  *ngFor="let surgery of previousSurgeries">
+                    <div class="col-lg-3">
+                        <strong class="title"><span class="d-block">Date of Surgery</span> {{ surgery?.dateOfSurgery | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</strong>
+                    </div>
+                    <div class="col-lg-3">
+                        <strong class="title"><span class="d-block">Type of Surgery</span> {{ surgery?.typeOfSurgery?.name }}</strong>
+                    </div>
+                    <div class="col-lg-6">
+                        <strong class="title"><span class="d-block">Is surgery related to bodyparts tested today?</span> {{ surgery?.surgeryTestedToday == true ? 'Yes' : 'No'}}</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-5 bordered">
+              <div class="row mb-3">
+                  <div class="col-lg-12">
+                    <strong class="title"><span class="d-block">Prior diagnostic imaging study or examination (MRI, CT, Ultarsound , X-Ray) </span> {{ surgicalDetails?.hadExamination == true ? 'Yes' : 'No'}}</strong>
+                  </div>
+                  <div class="col-lg-12" *ngIf="surgicalDetails?.hadExamination">
+                    <div class="row" *ngFor="let exam of surgeryExaminations">
+                      <div class="col-lg-6">
+                          <strong class="title"><span class="d-block">Type of Study</span> {{ exam?.typeOfStudy }}</strong>
+                      </div>
+                      <div class="col-lg-6">
+                          <strong class="title"><span class="d-block">BodyParts</span> {{ exam?.bodyPart?.name }}</strong>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+
+            <div class="mb-5 bordered">
+              <div class="row mb-3">
+                  <div class="col-lg-12">
+                    <strong class="title"><span class="d-block">Experienced any problem related to a previous mri examination or mr procedure?  </span> {{ surgicalDetails?.experiencedProblem == true ? 'Yes' : 'No'}}</strong>
+                  </div>
+                  <div class="col-lg-12" *ngIf="surgicalDetails?.experiencedProblem">
+                    <div class="row" *ngFor="let problem of explianProblem">
+                      <div class="col-lg-12">
+                          <strong class="title"><span class="d-block">Description</span> {{ problem?.description }}</strong>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xl-12 col-lg-12 mb-3">
+        <!-- MRI Intake 2 Information -->
+        <div class="card">
+            <div class="card-header text-center">
+              <h1 class="card-title text-white m-0">Patient's MRI Intake 2
+                  <a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit" routerLink="intake2/edit">
+                    <i class="icon-pencil me-2"></i>
+                  </a>
+              </h1>
+            </div>
+            <div class="card-body">
+                <div class="mb-5 bordered">
+                  <div class="row mb-3">
+                    <div class="col-lg-12">
+                      <strong class="title"><span class="d-block">Injury to the eye involving a metallic object or fragment (e.g. Metallic Shavings)?</span> {{ medicalHistories?.eyeInvolvedObject == true ? 'Yes' : 'No'}}</strong>
+                    </div>
+                    <div class="col-lg-12" *ngIf="medicalHistories?.eyeInvolvedObject">
+                      <div class="row" *ngFor="let injury of describeInjuries">
+                        <div class="col-lg-12">
+                            <strong class="title"><span class="d-block">Description of Injuries</span> {{ injury?.description }}</strong>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mb-5 bordered">
+                  <div class="row mb-3">
+                      <div class="col-lg-12">
+                        <strong class="title"><span class="d-block">Injured by a metallic object or foreign body </span> {{ medicalHistories?.metallicObjectInvolved == true ? 'Yes' : 'No' }}</strong>
+                      </div>
+                      <div class="col-lg-12" *ngIf="medicalHistories?.metallicObjectInvolved">
+                        <div class="row" *ngFor="let object of describeObjects">
+                          <div class="col-lg-12">
+                              <strong class="title"><span class="d-block">Description of Objects</span> {{ object?.description }}</strong>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="mb-5 bordered">
+                  <div class="row mb-3">
+                      <div class="col-lg-12">
+                        <strong class="title"><span class="d-block">Recently taken any medication or drug?  </span> {{ medicalHistories?.takenAnyDrug == true ? 'Yes' : 'No'}}</strong>
+                      </div>
+                      <div class="col-lg-12" *ngIf="medicalHistories?.takenAnyDrug">
+                        <div class="row" *ngFor="let drug of drugs">
+                          <div class="col-lg-12">
+                              <strong class="title"><span class="d-block">Medications</span> {{ drug?.name }}</strong>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-lg-12">
+                      <strong class="title"><span class="d-block">Allergic to any food/medication? </span> {{ medicalHistories?.allergicToFood == true ? 'Yes' : 'No'}}</strong>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-lg-4">
+                      <strong class="title"><span class="d-block">Iodine contrast (dye injection)? </span> {{ medicalHistories?.iodineContrast == true ? 'Yes' : 'No'}}</strong>
+                    </div>
+                    <div class="col-lg-4">
+                        <strong class="title"><span class="d-block">Latex Allergie</span> {{ medicalHistories?.latexAllergies == true ? 'Yes' : 'No'}}</strong>
+                    </div>
+                    <div class="col-lg-4">
+                        <strong class="title"><span class="d-block">Medication/Food Allergies</span> {{ medicalHistories?.foodAllergies }}</strong>
+                    </div>
+                </div>
+                
+                <div class="mb-5 bordered" *ngIf="medicalHistories?.foodAllergies == 'Other'">
+                  <div class="row" >
+                    <div class="col-lg-12">
+                        <strong class="title"><span class="d-block">List of Alergies</span></strong>                 
+                    </div>
+                  </div>
+                </div>
+
+              <div class="row mb-3">
+                  <div class="col-lg-12">
+                    <strong class="title"><span class="d-block">History of asthma , allergic reaction , respiratory disease , or reaction to a contrast medium or dye used for an MRI , CT , X-Ray examination </span> {{ medicalHistories?.historyOfDisease == true ? 'Yes' : 'No' }}</strong>
+                  </div>
+              </div>
+
+              <div class="row mb-3">
+                  <div class="col-lg-6">
+                    <strong class="title"><span class="d-block">Had chemotherapy?</span> {{ medicalHistories?.hadChemotherapy == true ? 'Yes' : 'No'}}</strong>
+                  </div>
+                  <div class="col-lg-6">
+                      <strong class="title"><span class="d-block">Had radiation therapy? </span> {{ medicalHistories?.hadRadiation == true ? 'Yes' : 'No'}}</strong>
+                  </div>
+              </div>
+
+              <div class="row mb-3">
+                  <div class="col-lg-12">
+                    <strong class="title"><span class="d-block">Have anemia or any disease(s) that affects blood, a history of renal(kidney) disease, high blood pressure, liver disease, a history of diabetes or seizures?</span> {{ medicalHistories?.hadAnemia == true ? 'Yes' : 'No'}}</strong>
+                  </div>
+                  <div class="col-lg-12" *ngFor="let disease of describeDiseases">
+                      <strong class="title"><span class="d-block">Description</span> {{ disease?.description }}</strong>
+                  </div>
+              </div>
+
+              <ng-container *ngIf="caseData?.patient?.gender == 'female'">
+                  <div class="row mb-3">
+                      <div class="col-lg-4">
+                        <strong class="title"><span class="d-block">Date of Last Menstrual Period</span> {{ medicalHistories?.dateOfLastPeriod | date: datePipeService.slashDateFormat_MM_dd_yyyy() }}</strong>
+                      </div>
+                      <div class="col-lg-4">
+                          <strong class="title"><span class="d-block">Post-Menopausal?</span> {{ medicalHistories?.postMenopausal == true ? 'Yes' : 'No'}}</strong>
+                      </div>
+                      <div class="col-lg-4" *ngIf="caseData?.patient?.gender == 'female'">
+                          <strong class="title"><span class="d-block">Pregnant or experiencing a late menstrual period?</span> {{ medicalHistories?.postMenopausal }}</strong>
+                      </div>
+                  </div>
+    
+                  <div class="row mb-3">
+                      <div class="col-lg-6">
+                        <strong class="title"><span class="d-block">Taking oral contraceptives or receiving hormonal treatment?</span> {{ medicalHistories?.harmonalTreatment == true ? 'Yes' : 'No'}}</strong>
+                      </div>
+                      <div class="col-lg-6">
+                          <strong class="title"><span class="d-block">Taking any type of fertility medication or having fertility treatments</span> {{ medicalHistories?.harmonalTreatment == true ? 'Yes' : 'No'}}</strong>
+                      </div>
+                      <div class="col-lg-12" *ngFor="let treatment of fertilityTreatments">
+                          <strong class="title"><span class="d-block">Description of medications</span> {{ treatment?.description }}</strong>
+                      </div> 
+                  </div>
+    
+                  <div class="row mb-3">
+                      <div class="col-lg-12">
+                        <strong class="title"><span class="d-block">Currently breastfeeding</span> {{ medicalHistories?.breastfeeding == true ? 'Yes' : 'No'}}</strong>
+                      </div>
+                  </div>
+              </ng-container>
+              
+              
+            </div>
+          </div>
+      </div>
+
+    </div>
+  </div>
+</perfect-scrollbar>

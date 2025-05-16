@@ -1,0 +1,82 @@
+<div class="col-12 h-100">
+  <perfect-scrollbar>
+    <div class="row">
+      <!-- Attorney Information -->
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header text-center">
+            <h1 class="card-title text-white m-0">Attorney Information
+              <a class="success p-0 float-right text-white" data-original-title="Edit" title="Edit"
+                [routerLink]="['edit']">
+                <i class="icon-pencil me-2"></i>
+              </a>
+            </h1>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3">
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">First Name</span> {{attorney?.first_name}}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Middle Name</span> {{ attorney?.middle_name }}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Last Name</span> {{attorney?.last_name}}</strong>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Email</span> {{ attorney?.email1}}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Home Phone No</span> {{ attorney?.personalPhone }}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Firm Name</span> {{ attorney?.firm_name}}</strong>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Street #</span> {{ attorney?.address }}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">City</span> {{ attorney?.city }}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">State</span> {{ attorney?.state }}</strong>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Zip</span> {{ attorney?.zip }}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Apartment/Suite</span> {{ attorney?.apartment }}</strong>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <h6 class="color-green mb-0 mt-1">Contact Person Information</h6>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">First Name</span>
+                  {{ attorney?.otherContactPerson?.firstName }}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Middle Name</span>
+                  {{ attorney?.otherContactPerson?.middleName }}</strong>
+              </div>
+              <div class="col-lg-4">
+                <strong class="title"><span class="d-block">Last Name</span>
+                  {{ attorney?.otherContactPerson?.lastName }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </perfect-scrollbar>
+</div>

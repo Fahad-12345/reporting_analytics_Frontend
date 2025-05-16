@@ -1,0 +1,647 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="modal-header">
+    <h5 class="modal-title ms-1 ps-1">Total Appointments {{appointments.length}}
+    </h5>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close(appointments)">&times;</button>
+</div>
+<div class="modal-body data-table">
+    <div class="row">
+        <div *ngIf="PatientRecord==false" class="col-md-12">
+            <ngx-datatable class="bootstrap" #appModalDataTable [rows]="data" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" 
+			[scrollbarH]="true" [limit]="appointmentModalPageLimit" 
+			[rowClass]="getRowClass"
+			(page)="pageEvent($event)" [offset]="pageNumber-1">
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Location" prop="id" [width]="120">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Practice-Location
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.facility_name}}" container="body">
+                            {{row?.facility_qualifier}}-{{row?.facility_location_qualifier}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Patient" prop="id" [width]="110">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Patient
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.first_name + ' '+' '+(row.middle_name || '') +' '+row.last_name}}" container="body">
+                            {{row.first_name + '  '+(row.middle_name || '') +'  '+row.last_name}}
+                        </div>
+                      
+                        <!-- {{app.patientName}} -->
+                    </ng-template>
+                </ngx-datatable-column>
+				<ngx-datatable-column [canAutoResize]="true" [resizeable]="false" prop="patient_id" [width]="100">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Chart Id
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ value?(value | ssnFormatPipe):'N/A' }}" container="body">
+                            <a *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_profile) && row.is_active" class="underline-hov" (click)="onNavigateTo()" [routerLink]="['/front-desk/patients/profile/', row.patient_id]">
+								{{ value ?(value|ssnFormatPipe):'N/A' }}
+							  </a>
+							  <a *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_profile) && !row.is_active" class="underline-hov" (click)="onNavigateTo()"[routerLink]="['/front-desk/soft-patient/list']" [queryParams]="{pagination: true,page:1,per_page:10,filter:true,order_by:'DESC',id:row.patient_id}">
+								{{  value ?(value|ssnFormatPipe):'N/A' }}
+							  </a>
+                        </div>
+                      
+                        <!-- {{app.patientName}} -->
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Status" prop="id" [width]="80">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Status
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.appointment_visit_state_name ? row.appointment_visit_state_name : 'N/A'}}" container="body">
+                            <!-- {{row.visitSessionStateName ? row.visitSessionStateName :  "N/A"}} -->
+							{{row.appointment_visit_state_name ? row.appointment_visit_state_name :  "N/A"}}
+							
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Patient" prop="id" [width]="90">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Case ID
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value"  ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.case_id}}" container="body">
+                            {{row.case_id}}
+                        </div>
+                      
+                        <!-- {{app.patientName}} -->
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Apt. Time" prop="id" [width]="100">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Apt. Time
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.start_time}}" container="body">
+                            {{row.start_time}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Apt. Status" prop="id" [width]="100">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Apt. Status
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.appointment_status}}" container="body">
+                            {{row.appointment_status ? row.appointment_status : 'N/A'}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name=" Apt. Type" prop="id" [width]="120">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Visit Type
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.appointment_type_description}}" container="body">
+                            {{row.appointment_type_description ? row.appointment_type_description : 'N/A'}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                
+				<!-- <ng-template let-row="row"> -->
+					<ngx-datatable-column  cellClass="datatable-form-field" [canAutoResize]="true" [resizeable]="false" [width]="250">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Provider
+						</ng-template>  
+						<ng-template  let-row="row" let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+							<form [formGroup]="appointmentForm">							
+                                <app-ng-select-shareable [appendTo]="'body'" #providersRef [class.ngSelectDisabled] = "isProviderLogedIn && row.doctor_info || !isProviderLogedIn && row.doctor_info || isProviderLogedIn && !row.doctor_info || !isProviderLogedIn && !row.doctor_info && row.visit_session"
+							 [events]="eventsSubject.asObservable()"  [filterFieldName]="'provider_id'"
+							[lists]="row && row.selectedMultipleFieldFiterProviders ? row.selectedMultipleFieldFiterProviders : []"
+							 [showSelectFieldOnRefresh]="appointmentForm.get('provider_id').value" 
+							 [lableName]="''" [bindlable]="'full_name'" [ngSelectShow]="true"
+							 [bindId]="'id'" [apiPath]="EnumApiPath.get_providers_for_technicion_loggedIn"  
+							 (valueChange)="selectionOnValueChange($event,'provider_id',rowIndex)"
+							 [conditionalExtraApiParams]="data[rowIndex].conditionalExtraApiParamsForProvidersGet"
+							 [multiple]="false"></app-ng-select-shareable>
+                                <span class="text-muted danger" *ngIf="row.is_required_provider">This field is
+                                    required</span>
+							</form>
+						</ng-template>
+					</ngx-datatable-column>
+				<!-- </ng-template> -->
+
+				<ngx-datatable-column cellClass="datatable-form-field" [canAutoResize]="true" [resizeable]="false" [width]="250">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+						Technician/MA/PA
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+						<form [formGroup]="appointmentForm">
+						<app-ng-select-shareable #techniciansRef [appendTo]="'body'" [class.ngSelectDisabled] = "!isProviderLogedIn || row.visit_session" [events]="eventsSubject.asObservable()"  [filterFieldName]="'technician_id'"
+						[lists]="row && row.selectedMultipleFieldFiterTechnician ? row.selectedMultipleFieldFiterTechnician : []"
+						 [showSelectFieldOnRefresh]="appointmentForm.get('technician_id').value" 
+						 [lableName]="''" [bindlable]="'full_name'" [ngSelectShow]="true" [concateRoleQualifier]="true"
+						 [bindId]="'id'" [apiPath]="EnumApiPath.get_supervisor_technicians"  
+						 (valueChange)="selectionOnValueChange($event,'technician_id',rowIndex)"
+						 [conditionalExtraApiParams]="data[rowIndex].conditionalExtraApiParamsForTechnicianGet"
+						 [multiple]="false"></app-ng-select-shareable> 
+						</form>
+                    </ng-template>
+                </ngx-datatable-column>
+				<ngx-datatable-column cellClass="datatable-form-field" [canAutoResize]="true" [resizeable]="false" [width]="250">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+						Template
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+						<form [formGroup]="appointmentForm">
+						<app-ng-select-shareable #templateRef [appendTo]="'body'" [class.ngSelectDisabled] = "row.visit_session" [events]="eventsSubject.asObservable()"  [filterFieldName]="'template_id'"
+						[lists]="row && row.template ?row.template : []"
+						[showSelectFieldList]="selectedMultipleFieldFiter['template_id']"
+						 [showSelectFieldOnRefresh]="appointmentForm.get('template_id').value" 
+						 [lableName]="''" [bindlable]="'template_name'"
+						 [bindId]="'id'" [ngSelectShow]="true"
+						[apiPath]="templateUrls" [moduleName]="'template'"
+						[forceApiHitonOpen] = "true"
+						[removeDuplicatesfromElements] = "true"
+						 (valueChange)="selectionOnValueChange($event,'template_id',rowIndex)"
+						 [conditionalExtraApiParams]="data[rowIndex].conditionalExtraApiParamsForTemplateGet"
+						 [multiple]="false" ></app-ng-select-shareable>
+                        <span class="text-muted danger" *ngIf="row.is_required_template">This field is
+                            required</span> 
+						</form>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="CPT Codes" prop="appointment_cpt_codes" [width]="280">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                       CPT Codes
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="row" >
+                            <div class="col-9">
+                                <div class="tooltip-outer me-2" tooltipClass="table-custom-tooltip" [ngbTooltip]=" (value && value.length)? popContent : 'N/A'" triggers="mouseenter:mouseleave" container="body">
+                                    {{value&&value[0]?((value[0].billingCode&&value[0].billingCode['name']) +' - '+(value[0].billingCode&&value[0].billingCode['description']) + (value.length > 1 ? '...':'') ):'N/A'}}
+                                </div>
+                            </div>
+                           <div class="col-3">
+                                <button [ngClass]="[((row.visit_status_slug=='checked_out' || row.visit_status_slug=='in_session' || row.visit_status_slug=='no_show') || !(row['allow_multiple_cpt_codes'])) ? 'btn add-tag-btn-disabled':'btn btn-success add-tag-btn custom-btn-tooltip list-unstyled']"  tooltipClass="table-custom-tooltip" role="button"  
+                                ngbTooltip="{{row | tooltipContent}}" triggers="mouseenter:mouseleave" container="body"   (click)="addModal(add,row,$event,(row.visit_status_slug=='checked_out' || row.visit_status_slug=='in_session' || row.visit_status_slug=='no_show') || !(row['allow_multiple_cpt_codes']))">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                           </div>
+                        </div>
+                        <ng-template #popContent >
+                            <table *ngIf="value.length" class="w-100 text-start"> 
+                              <tbody>
+                                  <tr *ngFor="let item of value; let x = index">
+                                      <td> {{(item['billingCode']?item['billingCode'].name:'')+' - '+(item['billingCode']?item['billingCode'].description:'')}}</td>
+                                  </tr>
+                               
+                              </tbody>
+                            </table>
+                          </ng-template>
+                    </ng-template>
+                </ngx-datatable-column>
+				<ngx-datatable-column [canAutoResize]="true" name="Apt. Status" prop="case_status" [resizeable]="false" [width]="80"> 
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                       Case Status
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip=" {{value}}" container="body">
+                            {{value}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Actions" prop="id" cellClass="action-icon" [width]="165" >
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Actions
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                        <!-- <button class="btn-success mx-2" style="width : 50px">
+                            Show
+                        </button> -->
+                       
+                        <button class="btn-success mx-1 me-2" *ngIf="row.can_access && (!row.has_app || row.speciality_key === EnumSpecialtyType.MEDICAL_DOCTOR || row.speciality_key === EnumSpecialtyType.HBOT || row.speciality_key == EnumSpecialtyType.CHIROPRACTOR || row.speciality_key == EnumSpecialtyType.PHYSICAL_THERAPY || row.speciality_key == EnumSpecialtyType.ACUPUNCTURE)" [disabled]="row.appointment_status==='no show' " [disabled]="row.appointment_status==='no show' " (click)="startEvaluation(row,rowIndex)">
+							{{row.visit_session ? "Edit Eval" : "Start Eval"}}</button>
+							<button class="task-hov mx-1" container="body" ngbTooltip="View Eval" triggers="mouseenter:mouseleave" *ngIf="row.visit_session && row.can_access && (!row.has_app || row.speciality_key === EnumSpecialtyType.MEDICAL_DOCTOR || row.speciality_key === EnumSpecialtyType.HBOT || row.speciality_key == EnumSpecialtyType.CHIROPRACTOR || row.speciality_key == EnumSpecialtyType.PHYSICAL_THERAPY || row.speciality_key == EnumSpecialtyType.ACUPUNCTURE)" [disabled]="row.appointment_status==='no show' " (click)="disableSaveRecord(row)" triggers="mouseenter:mouseleave">
+								<i class="icon-file"></i></button>
+
+								<button class="view-hov mx-1" (click) = "openShowModal(row)" *ngIf = "row.visit_session" container="body" ngbTooltip="Report" triggers="mouseenter:mouseleave">
+									<i class="icon-pdf"></i>
+								</button>
+
+                        <button *ngIf="row.updateApp   && row.appointment_status_slug!='no_show'  && row.appointment_status_slug!='completed'"  [disabled]="!row.update_back || (row.visit_status_slug=='checked_out' || row.visit_status_slug=='in_session' || row.visit_status_slug=='no_show')" (click)="edit(row)" class="edit-hov mx-0" role="button" type=button container="body" triggers="mouseenter:mouseleave" ngbTooltip="Edit Appointment" triggers="mouseenter:mouseleave">
+                            <i class="icon-pencil"></i>
+                        </button>
+                        <button (click)="getPaitentDataFromAppointment(row)" class="view-hov mx-1" role="button" triggers="mouseenter:mouseleave"  ngbTooltip="View" triggers="mouseenter:mouseleave" container="body">
+                            <i class="icon-eye"></i>
+                        </button>
+                        <button *ngIf="row.deleteApp && !row.visit_session  && row.appointment_status_slug!='no_show'  && row.appointment_status_slug!='completed'"(click)="deleteAppointment(row)" class="remove-hov mx-1"  role="button" container="body" type=button ngbTooltip="Delete" triggers="mouseenter:mouseleave">
+                            <i class="icon-remove"></i>
+                        </button>
+                    </ng-template>
+
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div *ngIf="PatientRecord==true" class="col-lg-6 col-md-12 mb-md-3">
+            <ngx-datatable class="bootstrap scroll-hide" [rows]="data" [scrollbarH]="true" [columnMode]="'force'"
+			[rowClass]="getRowClass"
+			[headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="appointmentModalPageLimit" (page)="pageEvent($event)" [offset]="pageNumber-1">
+                <!-- <ngx-datatable-column [canAutoResize]="true" name="Provider" prop="id" [width]="90">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Provider
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div *ngIf="row.doctor_info" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.doctorName}} {{row.doctor_info.middle_name}} {{row.doctor_info.last_name}}">
+                            {{row.doctor_info.first_name}} {{row.doctor_info.middle_name}} {{row.doctor_info.last_name}}</div>
+                        <div *ngIf="!row.doctor_info" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="N/A">
+                            N/A</div>
+                    </ng-template>
+                </ngx-datatable-column> -->
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Location" prop="id" [width]="120">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Practice-Location
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.facility_name}}">
+                            {{row?.facility_qualifier}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Patient" prop="id" [width]="110">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Patient
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.first_name + ' '+' '+(row.middle_name || '') +' '+row.last_name}}"container="body">
+                            {{row.first_name + ' '+' '+(row.middle_name || '') +' '+row.last_name}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+				<ngx-datatable-column [canAutoResize]="true" [resizeable]="false"  prop="patient_id" [width]="100">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Chart Id
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ value?(value | ssnFormatPipe):'N/A' }}"container="body">
+                            <a *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_profile) && row.is_active" class="underline-hov" (click)="onNavigateTo()" [routerLink]="['/front-desk/patients/profile/', row.patient_id]">
+								{{ value ?(value|ssnFormatPipe):'N/A' }}
+							  </a>
+							  <a *ngIf="aclService.hasPermission(userPermissions.patient_patient_list_profile) && !row.is_active" class="underline-hov" (click)="onNavigateTo()"[routerLink]="['/front-desk/soft-patient/list']" [queryParams]="{pagination: true,page:1,per_page:10,filter:true,order_by:'DESC',id:row.patient_id}">
+								{{  value ?(value|ssnFormatPipe):'N/A' }}
+							  </a>
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Status" prop="id" [width]="80">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Status
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.appointment_visit_state_name ? row.appointment_visit_state_name : 'N/A'}}" container="body">
+                            <!-- {{row.visitSessionStateName ? row.visitSessionStateName :  "N/A"}} -->
+							{{row.appointment_visit_state_name ? row.appointment_visit_state_name :  "N/A"}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+
+				<ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Patient" prop="id" [width]="90">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Case ID
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.case_id}}" container="body">
+                            {{row.case_id}}
+                        </div>
+                      
+                        <!-- {{app.patientName}} -->
+                    </ng-template>
+				</ngx-datatable-column>
+
+				<ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Apt. Time" prop="id" [width]="100">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Apt. Time
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.start_time}}"container="body">
+                            {{row.start_time}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+				
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Apt. Status" prop="id" [width]="100">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Apt. Status
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.appointment_status}}" container="body">
+                            {{row.appointment_status ? row.appointment_status : 'N/A'}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name=" Apt. Type" prop="id" [width]="120">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Apt. Type
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.appointment_type_description}}" container="body">
+                            {{row.appointment_type_qualifier ? row.appointment_type_qualifier : 'N/A'}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+				<ngx-datatable-column  cellClass="datatable-form-field" [resizeable]="false" [canAutoResize]="true" [width]="250">
+					<ng-template let-column="column" ngx-datatable-header-template>
+						Provider
+					</ng-template>
+					<ng-template  let-row="row" let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+						<form [formGroup]="appointmentForm">
+						<app-ng-select-shareable [appendTo]="'body'" #providersRef [class.ngSelectDisabled] = "isProviderLogedIn && row.doctor_info || !isProviderLogedIn && row.doctor_info || isProviderLogedIn && !row.doctor_info || !isProviderLogedIn && !row.doctor_info && row.visit_session"
+						 [events]="eventsSubject.asObservable()"  [filterFieldName]="'provider_id'"
+						[lists]="row && row.selectedMultipleFieldFiterProviders ? row.selectedMultipleFieldFiterProviders : []"
+						 [showSelectFieldOnRefresh]="appointmentForm.get('provider_id').value" 
+						 [lableName]="''" [bindlable]="'full_name'" [ngSelectShow]="true"
+						 [bindId]="'id'" [apiPath]="EnumApiPath.get_providers_for_technicion_loggedIn"  
+						 (valueChange)="selectionOnValueChange($event,'provider_id',rowIndex)"
+						 [conditionalExtraApiParams]="data[rowIndex].conditionalExtraApiParamsForProvidersGet"
+						 [multiple]="false"></app-ng-select-shareable>
+						 <span class="text-muted danger" *ngIf="(appointmentForm.get('provider_id').errors?.required || appointmentForm.get('provider_id').value == null) && ((!isProviderLogedIn && !row.doctor_info) || (isProviderLogedIn && !row.doctor_info)) && !row.doctor_info && (appointmentForm.get('provider_id').dirty || appointmentForm.get('provider_id').touched)">This field is
+							required</span> 
+						</form>
+					</ng-template>
+				</ngx-datatable-column>
+			<!-- </ng-template> -->
+
+			<ngx-datatable-column cellClass="datatable-form-field" [canAutoResize]="true" [resizeable]="false" [width]="250">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					Technician/MA/PA
+				</ng-template>
+				<ng-template let-row="row" let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+					<form [formGroup]="appointmentForm">
+					<app-ng-select-shareable #techniciansRef [appendTo]="'body'" [class.ngSelectDisabled] = "!isProviderLogedIn || row.visit_session" [events]="eventsSubject.asObservable()"  [filterFieldName]="'technician_id'"
+					[lists]="row && row.selectedMultipleFieldFiterTechnician ? row.selectedMultipleFieldFiterTechnician : []"
+					 [showSelectFieldOnRefresh]="appointmentForm.get('technician_id').value" 
+					 [lableName]="''" [bindlable]="'full_name'"  [ngSelectShow]="true"
+					 [bindId]="'id'" [apiPath]="EnumApiPath.get_supervisor_technicians"  
+					 (valueChange)="selectionOnValueChange($event,'technician_id',rowIndex)"
+					 [conditionalExtraApiParams]="data[rowIndex].conditionalExtraApiParamsForTechnicianGet"
+					 [multiple]="false"></app-ng-select-shareable> 
+					</form>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column cellClass="datatable-form-field" [canAutoResize]="true" [resizeable]="false" [width]="250">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					Template
+				</ng-template>
+				<ng-template let-row="row" let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+					<form [formGroup]="appointmentForm">
+						{{row.template | json}}
+					<app-ng-select-shareable #templateRef [appendTo]="'body'" [class.ngSelectDisabled] = "row.visit_session" [events]="eventsSubject.asObservable()"  [filterFieldName]="'template_id'"
+					[lists]="row && row.template ? row.template : []"
+					[showSelectFieldList]="selectedMultipleFieldFiter['template_id']"
+					 [showSelectFieldOnRefresh]="appointmentForm.get('template_id').value" 
+					 [lableName]="''" [bindlable]="'template_name'"
+					 [bindId]="'id'" [ngSelectShow]="true"
+					[apiPath]="templateUrls" [moduleName]="'template'"
+					 (valueChange)="selectionOnValueChange($event,'template_id',rowIndex)"
+					 [conditionalExtraApiParams]="data[rowIndex].conditionalExtraApiParamsForTemplateGet"
+					 [multiple]="false"></app-ng-select-shareable>
+					 <span class="text-muted danger" *ngIf="(appointmentForm.get('template_id').errors?.required || appointmentForm.get('template_id').value == null) && (appointmentForm.get('template_id').dirty || appointmentForm.get('template_id').touched)">This field is
+						required</span> 
+					</form>
+				</ng-template>
+			</ngx-datatable-column>
+            <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="CPT Codes" prop="appointment_cpt_codes" [width]="280">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                   CPT Codes
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div class="row" >
+                        <div class="col-9">
+                            <div class="tooltip-outer me-2" tooltipClass="table-custom-tooltip" [ngbTooltip]=" (value && value.length)? popContent : 'N/A'" triggers="mouseenter:mouseleave" container="body">
+                                {{value&&value[0]?((value[0].billingCode&&value[0].billingCode['name']) +' - '+(value[0].billingCode&&value[0].billingCode['description']) + (value.length > 1 ? '...':'') ):'N/A'}}
+                            </div>
+                        </div>
+                       <div class="col-3">
+                        <button [ngClass]="[((row.visit_status_slug=='checked_out' || row.visit_status_slug=='in_session' || row.visit_status_slug=='no_show') || !(row['allow_multiple_cpt_codes'])) ? 'btn add-tag-btn-disabled':'btn btn-success add-tag-btn custom-btn-tooltip list-unstyled']"  tooltipClass="table-custom-tooltip" role="button"  
+                        ngbTooltip="{{row | tooltipContent}}" container="body"  triggers="mouseenter:mouseleave" (click)="addModal(add,row,$event,(row.visit_status_slug=='checked_out' || row.visit_status_slug=='in_session' || row.visit_status_slug=='no_show') || !(row['allow_multiple_cpt_codes']))">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                       </div>
+                    </div>
+                    <ng-template #popContent >
+                        <table *ngIf="value.length" class="w-100 text-start"> 
+                          <tbody>
+                              <tr *ngFor="let item of value; let x = index">
+                                  <td> {{(item['billingCode']?item['billingCode'].name:'')+' - '+(item['billingCode']?item['billingCode'].description:'')}}</td>
+                              </tr>
+                           
+                          </tbody>
+                        </table>
+                      </ng-template>
+                </ng-template>
+            </ngx-datatable-column>
+				<ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Apt. Status" prop="case_status" [width]="80">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                       Case Status
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip=" {{value}}" container="body">
+                            {{value}}
+                        </div>
+                    </ng-template>
+                </ngx-datatable-column>
+              
+                
+                <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Actions" prop="id" cellClass="action-icon" [width]="175">
+                    <ng-template let-column="column" ngx-datatable-header-template>
+                        Actions
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      
+                        <button class="btn-success mx-1" *ngIf="row.can_access && (!row.has_app || row.speciality_key === EnumSpecialtyType.MEDICAL_DOCTOR || row.speciality_key === EnumSpecialtyType.HBOT || row.speciality_key == EnumSpecialtyType.CHIROPRACTOR || row.speciality_key == EnumSpecialtyType.PHYSICAL_THERAPY || row.speciality_key == EnumSpecialtyType.ACUPUNCTURE)" [disabled]="row.appointment_status==='no show' " (click)="startEvaluation(row)">
+                            {{row.visit_session ? "Edit Eval" : "Start Eval"}}</button>
+						
+							<button class="task-hov mx-1" container="body" ngbTooltip="View Eval" triggers="mouseenter:mouseleave" *ngIf="row.visit_session && row.can_access && (!row.has_app || row.speciality_key === EnumSpecialtyType.MEDICAL_DOCTOR || row.speciality_key === EnumSpecialtyType.HBOT || row.speciality_key == EnumSpecialtyType.CHIROPRACTOR || row.speciality_key == EnumSpecialtyType.PHYSICAL_THERAPY || row.speciality_key == EnumSpecialtyType.ACUPUNCTURE)" [disabled]="row.appointment_status==='no show' " (click)="disableSaveRecord(row)">
+								<i class="icon-file"></i></button>
+							<button class="view-hov mx-1" container="body" ngbTooltip="Report" triggers="mouseenter:mouseleave" (click) = "openShowModal(row)" *ngIf = "row.visit_session">
+								<i class="icon-pdf"></i>
+							</button>
+
+                        <button *ngIf="row.updateApp && !row.visit_session && row.appointment_status_slug!='no_show'  && row.appointment_status_slug!='completed'" [disabled] = "!row.update_back || (row.visit_status_slug=='checked_out' || row.visit_status_slug=='in_session' || row.visit_status_slug=='no_show')" (click)="edit(row)" class="view-hov mx-1" role="button" type=button container="body" triggers="mouseenter:mouseleave" ngbTooltip="Edit Appointment">
+                            <i class="icon-pencil"></i>
+                        </button>
+                        <button (click)="getPaitentDataFromAppointment(row)" class="view-hov mx-1" container="body" role="button" triggers="mouseenter:mouseleave" ngbTooltip="View">
+                            <i class="icon-eye"></i>
+                        </button>
+                        <button *ngIf="row.deleteApp && !row.visit_session && row.appointment_status_slug!='no_show'  && row.appointment_status_slug!='completed'" (click)="deleteAppointment(row)" triggers="mouseenter:mouseleave" class="remove-hov mx-1" role="button" type=button  container="body" ngbTooltip="Delete">
+                            <i class="icon-remove"></i>
+                        </button>
+                    </ng-template>
+                </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+        <div *ngIf="PatientRecord" class="col-lg-6 col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="col-md-12 text-center text-truncate">
+                        {{patientData.patientName}}
+                    </div>
+                </div>
+                <div class="card-body pb-1">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <!-- <div *ngIf="patientData.picture" class="col-md-4 profile-outer">
+                                    <img class="profile-image" [src]="patientData.picture">
+                                </div> -->
+								<!-- *ngIf="!patientData.picture" -->
+                                <div  class="col-md-4 profile-outer">
+                                    <img class="profile-image" [src]="this.defaultDoctorImageUrl">
+                                </div>
+                                <div class="col-md-8 ps-1 appoint-details">
+                                    <div class="row bg-light">
+                                        <a class="hyperlink color-blue w-100" (click)="modalClose()" [routerLink]="'/front-desk/cases/edit/' + patientData.case_id +'/patient/patient_summary'">
+                                            <label class="col-5">Case No:</label>
+                                            <span class="col-7 color-blue">{{patientData.case_id}}</span>
+                                        </a>
+                                    </div>
+                                    <div class="row m-0 bg-white">
+                                        <label class="col-5 pt-1">Case Type:</label>
+                                        <div class="col-7 text text-tab">
+                                            <span>{{patientData.case_type_name}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="row bg-light">
+                                        <label class="col-5 pt-1">Visit Type:</label>
+                                        <div class="col-7">
+                                            <span tooltipClass="table-custom-tooltip" ngbTooltip="{{patientData?.appointmentType?.name}}"> {{patientData?.appointmentType?.name}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row bg-white m-0">
+                                <div class="col-12 details-text pe-0">
+                                    <label class="w-40">Apt. Time:</label>
+                                    <span> {{patientData.start_time}} - {{patientData.end_time}}</span>
+                                </div>
+                            </div>
+							<div class="row bg-light m-0">
+                                <div *ngIf="patientData.DOB!=='N/A'" class="col-12 details-text">
+                                    <label class="w-40">DOB:</label>
+                                    <span class="ps-2">{{patientData.DOB | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+                                </div>
+                                <div *ngIf="patientData.DOB==='N/A'" class="col-12 details-text">
+                                    <label class="w-40">DOB:</label>
+                                    <span class="ps-2"> {{patientData.DOB}}</span>
+                                </div>
+                            </div>
+                            <div class="row bg-white m-0">
+                                <div class="col-md-12 details-text">
+                                    <label class="w-40">Visit Status:</label>
+                                    <span> {{patientData.status}}</span>
+                                </div>
+                            </div>
+                            <div class="row bg-light m-0">
+                                <div class="col-md-12 details-text py-1">
+                                    <label class="float-left w-40">Status:</label>
+                                    <span style="display: inherit;" class="tooltip-outer text-truncate ps-1" tooltipClass="table-custom-tooltip" ngbTooltip="{{patientData.appointment_visit_state_name ? patientData.appointment_visit_state_name : 'N/A'}}">
+										 <!-- {{patientData.visitSessionStateName ? patientData.visitSessionStateName : "N/A"}} -->
+										 {{patientData.appointment_visit_state_name ? patientData.appointment_visit_state_name : "N/A"}} 
+										</span>
+                                </div>
+                            </div>
+                            <!-- <div class="row bg-white m-0">
+								<div *ngIf="patientData.checkedIn!=='N/A'" class="col-md-12 details-text">
+									<label class="w-40">Checked In:</label>
+									<span> {{patientData.checkedIn | date: 'MM/dd/yyyy hh:mm a'}} </span>
+								</div>
+								<div *ngIf="patientData.checkedIn==='N/A'" class="col-md-12 details-text">
+									<label class="w-40">Checked In:</label>
+									<span> {{patientData.checkedIn}}</span>
+								</div>
+                            </div> -->
+
+                            <div class="row bg-white m-0">
+                                <div class="col-md-12 details-text">
+                                    <label class="float-left w-40">Insurance:</label>
+                                    <span style="display: inherit;" class="tooltip-outer text-truncate ps-1" tooltipClass="table-custom-tooltip" ngbTooltip="{{patientData.companyName}}">{{patientData.companyName}}</span>
+                                </div>
+                            </div>
+
+                            <!-- <div class="row">
+                                <div class="col-md-12 details-text ps-0">
+                                    <label class="w-40 pt-1">Insurance: </label>
+                                    <ul class="custom-btn-tooltip list-unstyled ms-0">
+                                        <a style="color: black !important;max-width: 144px !important;"
+                                            href="javascript:void(0)"> <span> {{patientData.companyName}}</span></a>
+                                        <li class="btn-tooltip-top" style="top: -7px;">
+                                            <span>{{patientData.companyName}}</span>
+                                            <i></i>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+                    <div class="row bg-light m-0">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12 details-text">
+                                    <label class="float-left w-40">Comments:</label>
+                                    <span style="display: inherit;" class="tooltip-outer text-truncate ps-1" tooltipClass="table-custom-tooltip" ngbTooltip="{{patientData.comments}}">{{patientData.comments}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #add let-modal style="max-width: 500px;">
+
+	<div class="modal-header">
+		<h5 class="modal-title">Add CPT Codes</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+
+		<form [formGroup]="addCptForm">
+			<div class="row">
+				<div class="col-sm-12">
+                    <div class="form-group field mb-1 cpt-plc-hold search-label">
+                        <app-ng-select-shareable   [filterFieldName]="'cpt_codes_ids'" 
+                                            [showSelectFieldList]="selectedCPTs"
+                                             [showSelectFieldOnRefresh]="addCptForm.get('cpt_codes_ids').value" 
+                                             [lableName]="'CPT Codes'" [bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'"
+                                             [bindId]="'id'" [apiPath]="EnumApiPath.getCptListByVisitType"  [conditionalExtraApiParams]="{'visit_type_id':typeForAppointment}"
+											 [maxLengthName] = "80" [ngSelectShow]="true"
+											 (valueChange)="SelectionValueChangeCPT($event)" 
+                                             [multiple]="true" [closeOnSelect]='false'  ></app-ng-select-shareable>
+                        </div>
+				</div>
+			</div>
+			<div class="form-group row mb-0">
+                <div class="col-sm-6 offset-sm-3">
+					<div class="row">
+						<div class="col-6">
+							<button type="button" (click)="modal.dismiss('Cross click')"
+								class="btn btn-primary w-100">Close</button>
+						</div>
+						<div class="col-6">
+							<button class="btn btn-success w-100"
+								(click)="createAppointmentsWithCpts(addCptForm)" type="submit">
+								Add
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>

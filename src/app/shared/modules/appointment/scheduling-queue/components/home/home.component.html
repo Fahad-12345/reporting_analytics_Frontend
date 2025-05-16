@@ -1,0 +1,198 @@
+
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="row">
+    <div class="col-md-12 main-card">
+        <div class="card mt-3 body-card mb-3 px-4 pb-4">
+            <div class="row mt-2 mt-0" [class.align-items-center]="!isManualClicked">
+                <div class="col-md-12">
+                <nav class="left-nav find-best-btn">
+                    <ul class="list-unstyled" [class.text-center]="!isManualClicked">
+                        <li style = "margin-right: 15px;" [class.active]="!isFindBestClicked" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_Scheduler_scheduler_find_best)">
+                            <button id ="best" type="button" class="btn color-white" [ngClass] = "enableBest ? 'btn-success' :  'btn-default'" (click)="findBest()">Find Best</button>
+                        </li>
+                        <li style = "margin-right: 15px;" [class.active]="!isManualClicked" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_Scheduler_scheduler_manual)">
+                            <button id = "manual" type="button" class="btn color-white" [ngClass] = "enableManual ? 'btn-success' :  'btn-default'" (click)="manualCalendar()">   Manual</button>
+						</li>
+						
+						<li *ngIf="aclService.hasPermission(userPermissions.patient_case_list_Scheduler_scheduler_schedule_history)">
+							<button class="btn btn-default color-white" (click)="viewVisitHistory()">History
+							</button>
+						</li>
+                        <!-- <li class="button--wayra active" [class.active]="!isAddToOpenClicked" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_Scheduler_scheduler_add_to_waiting_list)">
+                            <button class="btn btn-success" (click)="waitngList()">Waiting
+                                List</button>
+						</li> -->
+						
+                        </ul>
+                    </nav>
+
+                    <div *ngIf="!isFindBestClicked" class='col-md-12 px-0 mt-2'>
+                        <app-find-best [(appointmentType)]="AppointmentType" [(caseId)]="caseId" [(caseType)]="caseType" [case_type_id]="case_type_id" [(typeForAppointment)]="typeForAppointment" [(selectedPrioirtyName)]="selectedPrioirtyName" [(chartNo)]="patientId"></app-find-best>
+                        <!-- <app-find-best  [(appointmentType)]="AppointmentType" [(caseId)]="caseId" [(appointmentTitle)]="appointmentTitle" [(caseType)]="caseType" [(typeForAppointment)]="typeForAppointment" [(selectedPrioirtyName)]="selectedPrioirtyName" [(chartNo)]="patientId"></app-find-best> -->
+                    </div>
+
+                    <div *ngIf="!isAddToOpenClicked" class="col-md-12 waiting-list-form ps-0 pe-3 mt-3">
+                        <!-- <h6 class="color-blue">Waiting List</h6> -->
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 mb-1">
+                                <div class="row">
+                                    <!-- <div class="col-md-3">
+                                                        <label class="title">Apt. Title</label>
+                                                        <input (change)="changeAppointmentTitle()" type="search" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="appointmentTitle">
+                                                    </div> -->
+                                    <!-- <div class="col-md-3">
+                                                        <label class="title">Apt. Title</label>
+                                                        <input type="text" class="form-control">
+                                                    </div> -->
+                                    <div class="col-md-3 extra-col">
+                                        <label class="title">Location</label>
+                                        <select class="form-select loc-spc-prov" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedClinicId" (change)="clinicChange()">
+											<option  value="">N/A</option>
+														
+											<option *ngFor="let clinic of clinics" value={{clinic.id}}>{{clinic.name}}
+                                                            </option>
+                                                        </select>
+                                    </div>
+                                    <div class="col-md-3 extra-col">
+                                        <label class="title">Specialty</label>
+                                        <select class="form-select loc-spc-prov" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedSepcId" (change)="specialityChange()">
+											<option  value="">N/A</option>				
+											<option *ngFor="let spec of speciality" value={{spec.id}}>{{spec.name}}
+                                                            </option>
+                                                        </select>
+                                    </div>
+                                    <div class="col-md-3 extra-col">
+                                        <label class="title">Provider</label>
+                                        <select class="form-select loc-spc-prov" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedDoctorId" (change)="doctorChange()">
+											<option  value="">N/A</option>				
+											<option *ngFor="let doc of doctors" value={{doc.docId}}>{{doc.doctorName}}
+                                                            </option>
+                                                        </select>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="title">Visit Type</label>
+                                        <select class="form-select" (change)="getAppointmentType($event)">
+                                                            <option *ngFor="let aP of AppointmentType" value={{aP.description}}>
+                                                                {{aP.description}}</option>
+                                                        </select>
+                                    </div>
+                                    <!-- <div class="col-md-3">
+                                                        <label class="title">Visit Type</label>
+                                                        <input type="text" class="form-control">
+                                                    </div> -->
+                                    <div class="col-md-3 extra-col">
+                                        <label class="title " (click)="getOpenAndWaitingSlots()">Waiting Slots
+                                                            <i class="fa fa-sync-alt curser" aria-hidden="true"></i>
+                                                        </label>
+                                        <input type="text" class="col-md-12 col-lg-12 form-control waiting-slot" value={{waitingSlots}} readonly>
+                                    </div>
+                                    <div class="col-md-3 extra-col">
+                                        <label class="title " (click)="getOpenAndWaitingSlots()">Open Slots
+                                                            <i class="fa fa-sync-alt curser" aria-hidden="true"></i>
+                                                        </label>
+                                        <input type="text" class="form-control" value={{freeSlots}} readonly>
+                                    </div>
+                                    <div class="col-md-3 extra-col">
+                                        <label class="title">Waiting List Priority</label>
+                                        <select class="form-select" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedPriorityId">
+                                                            <option *ngFor="let priority of priorityForAppointmentArray"
+                                                                value={{priority.id}}>{{priority.description}}</option>
+                                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center search-filter-btn my-3 pt-1">
+                            <div class="col-md-1">
+                                <button class="btn btn-primary w-100" type="button" (click)="resetWaitingListForm()">
+                                                    Reset</button>
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-success w-100" type="submit" (click)="addToWaitingList()">
+                                                    Save </button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- <div class="card-body left-div px-3 pt-2 pb-4">
+                        <form [formGroup]="myForm">
+                            <div class="row fields-holder mt-0">
+                                <div class="col-lg-3 col-md-12">
+                                    <label class="title">Apt. Title</label>
+                                    <input (change)="changeAppointmentTitle()" type="search" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="appointmentTitle">
+                                </div>
+
+                                <div class="col-lg-3 col-md-4">
+                                    <label class="title">Apt. Type</label>
+                                    <select class="form-select" (change)="getAppointmentType($event)">
+										<option *ngFor="let aP of AppointmentType" value={{aP.description}}>
+											{{aP.description}}</option>
+									</select>
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <label class="title">Apt. Priority</label>
+                                    <select class="form-select" formControlName="appointmentPirority" (change)="getAppointmentPriority($event)" disabled>
+										<option *ngFor="let aP of AppointmentPriority" value={{aP.id}}>
+											{{aP.description}}</option>
+									</select>
+
+                                </div>
+                                <div class="col-lg-3 col-md-4">
+                                    <label class="title">Case Id</label>
+                                    <input type="search" class="form-control case-color" [ngModelOptions]="{standalone: true}" [(ngModel)]="caseId" disabled>
+                                </div>
+                            </div>
+                        </form>
+                    </div> -->
+                </div>
+                <!-- <div class="col-md-3 pe-0">
+                            <ngx-datatable class="bootstrap scroll-hide" [rows]="historyData" [columnMode]="'force'" [headerHeight]="25" [footerHeight]="'auto'" [rowHeight]="25" [limit]="5">
+                                <ngx-datatable-column [canAutoResize]="true" name="Speciality" prop="id" [width]="90">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Specialty
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        {{row.specName}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column [canAutoResize]="true" name="Appointment" prop="id" [width]="90">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Appointment
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        {{row.leftAppointment}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                            <div class="text-center mt-3" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_Scheduler_scheduler_schedule_history)">
+                                <button class="btn btn-success history-btn" (click)="viewVisitHistory()">History
+                                </button>
+                    </div>
+                </div>  -->
+            </div>
+
+            <div [hidden]="isManualClicked" class="row">
+                <div class="col-md-12 manual-click mb-0">
+                    <div class="row">
+                        <div class="col-sm-12 large-calendar px-0">
+                            <app-manual-calendar *ngIf="!isManualClicked">
+                            </app-manual-calendar>
+                            <app-shared-doc-calendar-front-sup></app-shared-doc-calendar-front-sup>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <br>
+
+
+</div>

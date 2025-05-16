@@ -1,0 +1,327 @@
+@import "src/assets/sass/abstracts/variables/_colors.scss";
+
+@mixin admin-dashboard-headings{
+    font-weight: bold;
+    font-size: 13px;
+    @media (max-width: 1024px){
+        font-size: 11px;
+     
+        
+    }
+}
+
+@mixin admin-dashboard-tables{
+    font-size: 12px;
+    border: 1px solid #d3d3d3;
+    box-shadow: 1px 1px 1px 1px #BEBEBE;
+    border-radius: 5px;
+    overflow-y: scroll;
+}
+
+.container {
+    max-width: 100%;
+  
+}
+
+.heading{
+    font-weight: bolder;
+    font-size: 25px;
+
+}
+
+.admin{
+    min-height: 100%;
+    border: 1px solid $card-border-grey;
+    box-shadow: 2px 2px 2px 2px $card-boxshadow-grey;
+   
+}
+.billed-title{
+    @include admin-dashboard-headings;
+}
+.info-graph{
+    height: 18px;
+}
+.billed-img{
+    margin-top: 20px;
+    overflow: hidden;
+    position: relative;
+    // resize: both;
+    height: 368px;
+    @media (max-width: 1024px){
+        height: 320px;
+        
+    }
+    @media (min-width: 1600px){
+        margin-top: 26px;
+    }
+}
+.case-wise-title{
+    @include admin-dashboard-headings;
+}
+
+
+.card2{
+    border-top: 1px solid $black;
+}
+
+.heading-sum-billed-amt{
+    @include admin-dashboard-headings;
+}
+
+.top-billed-title{
+    @include admin-dashboard-headings;
+}
+.billed-speciality-img{
+    overflow: hidden;
+    position: relative;
+    width: 220px;
+    height: 170px;
+    margin-left: 30px;
+    @media (max-width: 1024px) {
+        height: 136px;
+        width: 190px;
+        margin-left: 0;
+    }
+    @media (min-width: 1600px) {
+        margin-left: 80px;
+    }
+    
+}
+
+.claim-heading-name{
+    @include admin-dashboard-headings;
+}
+
+.claim-subheading{
+    font-weight: bold;
+    color: $dove-gray;
+    @media (max-width: 1024px){
+        font-size: 12px;
+     
+        
+    }
+}
+
+.claim-sub-amount{
+    font-weight: bold;
+    font-size: 18px;
+    @media (max-width: 1024px){
+        font-size: 16px;
+     
+        
+    }
+}
+
+
+.claim-typet{
+    @include admin-dashboard-tables;
+    max-height: 280px;
+    @media (min-width: 1600px){
+        max-height: 294px;
+       
+        
+    }
+    @media (max-width: 1024px){
+        font-size: 8px;
+        max-height: 234px;
+     
+        
+    }
+}
+
+.billed-list{
+    overflow-y: scroll;
+    max-height: 210px;
+    box-shadow: 2px 2px 2px 2px #BEBEBE;
+    font-size: 14px;
+    @media (max-width: 1024px){
+        font-size: 10px;
+        max-height: 162px;
+     
+        
+    }
+    @media (min-width: 1600px){
+        max-height: 220px;
+    }
+    
+    .billed-list-title{
+        list-style-type: none;
+        font-weight: bold;
+        font-size: 14px;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: white;
+        border-bottom: .5px solid $card-border-grey;
+        @media (max-width: 1024px){
+            font-size: 10px;
+         
+            
+        }
+    }
+ }
+
+
+.highest-paying-heading{
+    @include admin-dashboard-headings;
+}
+
+.highest-paying-list{
+    @include admin-dashboard-tables;
+    max-height: 276px;
+    @media (min-width: 1600px){
+        max-height: 290px;
+
+        
+    }
+    @media (max-width: 1024px){
+        font-size: 10px;
+        max-height: 224px;
+        margin-top: 20px !important;
+     
+        
+    }
+  
+}
+
+.revenue-heading{
+    @include admin-dashboard-headings;
+}
+
+.revenue-list{
+    @include admin-dashboard-tables;
+    max-height: 286px;
+    @media (min-width: 1600px){
+        max-height: 324px;
+        
+    }
+    @media (max-width: 1024px){
+        max-height: 226px;
+        font-size: 10px;
+        margin-top: 35px !important;
+     
+        
+    }
+    
+    
+}
+.progress, .progress-stacked {
+
+    --bs-progress-bar-bg: #F4A74D !important;
+    @media (min-width: 1600px){
+        margin-bottom: 20px !important;
+
+    }
+}
+
+.progress-revenue{
+    height: 5px !important;
+    .mat-mdc-progress-bar {
+        --mdc-linear-progress-active-indicator-color: #F4A74D !important;
+    }
+    .mat-mdc-progress-bar .mdc-linear-progress__buffer-bar {
+        background-color: rgb(233 203 164 / 74%) !important; 
+    }
+    
+}
+.mdc-linear-progress__bar-inner {
+    border-color: #F4A74D !important;
+}
+ 
+.revenue-list-titles{
+    list-style-type: none;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: white;
+   
+
+}
+
+.dropdown{
+    .btn{
+        @media (max-width: 1024px){
+            font-size: 10px !important;
+         
+            
+        }
+    }
+}
+
+.dropdown-options{
+    text-align: left !important;
+    &:hover{
+        background-color: white !important;
+    }
+}
+.sum-billed-section{
+overflow: hidden;
+  position: relative;
+//   resize: both;
+  height:318px;
+  @media (max-width: 1024px) {
+    height: 238px;
+    
+}
+}
+.tooltip-outer:hover .tooltip-content {
+    display: block;
+}
+
+
+.tooltip-content {
+    display: none;
+}
+.tooltipRevenue {
+    position: absolute;
+    background-color: #A0AEEA;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    z-index: 999;
+  }
+
+  .total-amnt-text {
+    font-size: 11px;
+}
+
+.total-amnt-text .title {
+    font-weight: bold;
+    margin-right: 1%;
+    font-size: 11px; 
+}
+
+.total-amnt-text .amount {
+    margin-right: 3%; 
+}
+
+@media (max-width: 1024px) {
+    .total-amnt-text {
+        font-size: 9px;
+    }
+}
+
+#csv-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 22px;
+    margin: 10px; /* Adjust this value as needed */
+    z-index: 1;
+  }
+  
+  #csv-icon:hover {
+    cursor: pointer;
+  }
+  
+  .summary-icons {
+    height: 32px;
+    @media (max-width: 1024px) {
+      height: 24px;
+    }
+  }
+
+  .top-margin{
+    margin-top: 14px;
+  }

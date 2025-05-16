@@ -1,0 +1,45 @@
+
+
+::ng-deep.modal-lg-package-generate{
+    .modal-dialog {
+        max-width: 950px !important;
+    }
+}
+
+::ng-deep .modal{
+    .modal-body{
+        .ngx-datatable{
+            .page-count{
+                padding: 0 1.2rem;
+                font-size: 0.8125rem;
+            }
+        }
+    }
+}
+
+::ng-deep .ngx-datatable {
+    .datatable-header {
+        height: unset !important;
+    }
+}
+
+::ng-deep .ngx-datatable{
+    .datatable-body{
+        .datatable-scroll{
+            .datatable-row-wrapper{
+                .datatable-body-row{
+                    &.datatable-row-even, 
+                    &.datatable-row-odd{
+                        &.row-color{
+                            .datatable-row-center{
+                                .datatable-body-cell{
+                                    background-color: #c8e6c9 !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

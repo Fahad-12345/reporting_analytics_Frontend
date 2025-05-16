@@ -1,0 +1,36 @@
+<div>
+  <div class="modal-header">
+      <h4 class="modal-title">{{object.signatureLabel}}</h4>
+      <button aria-label="Close" class="close" type="button" data-dismiss="modal" (click)="sigModal.close('cancel')"><span aria-hidden="true">×</span></button>
+  </div>
+  <div class="modal-body" style="overflow: hidden;">
+    <div id="template-manager" style="display: block;">
+
+      <app-signature 
+      [editPad]="!object.previousSignature" 
+      [editable]="!object.previousSignature" 
+      (signatureCleared)="clearedSignature()" 
+      (signatureChange)="signatureChanged($event)" 
+      [hide_title]='true' [(selectedId)]="object.signature_id" 
+      [(signature)]='object.signature' 
+      [(signatures)]='object.signature_listing' 
+      (signaturePointsChanged)='signaturePointsChanged($event)' 
+      [(signaturePoint)]="object.signaturePoints">
+       </app-signature>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <div class="row w-100">
+          <div class="col-sm-8 offset-sm-2">
+              <div class="row">
+                  <div class="col-6">
+                      <button class="btn btn-success w-100"  type="submit" (click)="onSubmit()">Save</button>
+                  </div>
+                  <div class="col-6">
+                      <button class="btn btn-primary w-100" data-dismiss="modal" type="button" (click)="sigModal.close('cancel')">Cancel</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

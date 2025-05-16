@@ -1,0 +1,428 @@
+<!-- <busy-loader [loaderSpin]="DoctorCalendarService.loadSpin"></busy-loader> -->
+
+<!-- modal start -->
+<div class="modal-header">
+    <h4 class="modal-title">Create Appointment</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+<div class="modal-body assignment-modal create-app-form" >
+	<div  class="row d-flex justify-content-end mt-1 mb-1 ms-5">
+		<div class="col-12 d-flex align-items-center justify-content-end" *ngIf="!(WithoutTime(startDate)<WithoutTime(currentDate)) && !DoctorCalendarService.PatientSchedulingCalendar && isAllowedAddSoftPatient">
+			<button class="btn btn-default me-3" type="button" (click)="addSoftPatient()">Add Soft Registration </button>
+            <button class="btn btn-secondary mt-0" type="button" (click)="openPatientHistory()">View History </button>
+		</div>
+	
+
+	</div>
+    <div >
+        <form [formGroup]="myForm">
+            <div class="row" *ngIf ="false">
+                <div class="col-md-12">
+                    <label class="title">Apt. Title</label>
+                    <!-- <input type="text" class="form-control" formControlName="appoint_title" [(ngModel)]="title" /> -->
+                    <input type="text" class="form-control"  [(ngModel)]="title" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-3">
+                    <label class="title"> Patient<em>*</em></label>
+                    <div *ngIf="checkPatient" class="ng-autocomplete patitent_name" style="width:100%;">
+                        <!-- <form #form="ngForm"  > -->
+                            <!-- <ng-autocomplete class = "fome-control" placeHolder="Patient Name" [data]="data" name="patient" formControlName="patient"  [(ngModel)]="patient" [searchKeyword]="keyword" [minQueryLength]="1" (selected)='selectEvent($event)' (inputChanged)='onChangeSearch($event)' (inputFocused)='onFocused($event)' (inputCleared)="clearData($event)"
+                                [itemTemplate]="itemTemplate">
+                            </ng-autocomplete> -->
+                            <ng-autocomplete class = "fome-control" placeHolder="Patient Name" [data]="data" name="patient" formControlName="patient"   [searchKeyword]="keyword" [minQueryLength]="1" (selected)='selectEvent($event)' (inputChanged)='onChangeSearch($event)' (inputFocused)='onFocused($event)' (inputCleared)="clearData($event)"
+                                [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundPatientTemplate" (keyup.enter)="onEnterKeyPress($event, 'patient', data)" (keyup.arrowdown)="onArrowDownKeyPress('patient', data)" (keyup.arrowup)="onArrowUpKeyPress($event, data)">
+                            </ng-autocomplete>
+    
+                            <ng-template #itemTemplate let-item>
+                                <a [innerHTML]="item.name"></a>
+                            </ng-template>
+    
+                            <ng-template #notFoundPatientTemplate let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                            </ng-template>
+    
+                        <!-- </form> -->
+                    </div>
+                    <!-- <input *ngIf="!checkPatient" type="text" style="    height: 30px !important;" class="form-control" formControlName="patient" [(value)]="patient" disabled /> -->
+                    <input *ngIf="!checkPatient" type="text" style="    height: 30px !important;" class="form-control" formControlName="patient"  disabled />
+    
+                    <!-- <p class ="required" *ngIf = "patient_check">Patient Name field is required </p> -->
+                    <small class ="text-muted danger" *ngIf = "btnSubmit && myForm.get('patient').errors?.required">This field is required </small>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <label class="title"> Chart ID<em>*</em></label>
+                    <div *ngIf="checkPatient" class="ng-autocomplete patitent_name mb-0" style="width:100%; ">
+                            <ng-autocomplete placeHolder="Chart ID" name="chartStr" formControlName="chart_str" [data]="dataChart" [searchKeyword]="keywordChart" [minQueryLength]="1" (selected)='selectEventChart($event)' (inputChanged)='onChangeSearchChart($event)' (inputFocused)='onFocusedChart($event)'
+                            (inputCleared)="clearDataChart($event)" [itemTemplate]="itemTemplateChart" [notFoundTemplate]="notFoundTemplate" (keyup.enter)="onEnterKeyPress($event, 'chart_str', dataChart)" (keyup.arrowdown)="onArrowDownKeyPress('chart_str', dataChart)" (keyup.arrowup)="onArrowUpKeyPress($event, dataChart)" #auto>
+                            
+                        </ng-autocomplete>
+                            <ng-template #itemTemplateChart let-item>
+                                <a [innerHTML]="item.chart_id"></a>
+                            </ng-template>
+    
+                            <ng-template #notFoundTemplate let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                    </div>
+                     <input *ngIf="!checkPatient" type="text" style="    height: 30px !important;" class="form-control" formControlName="chart_str"  disabled />
+    
+                    <div [hidden]="noChartValidAlpha" class="requ-date">
+                        <p class="mb-0">Chart ID cannot contain alphabets</p>
+                    </div>
+                    <div [hidden]="noChartValidLength" class="requ-date">
+                        <p class="mb-0">Chart ID Length exceeded</p>
+                    </div>
+                    <small class ="text-muted danger" *ngIf = "btnSubmit && myForm.get('chart_str').errors?.required">This field is required </small>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <label class="title"> Case No.<em>*</em> </label>
+                    <!--IF manual calendar, then disable-->
+                    <select *ngIf="!caseFormat && DoctorCalendarService.PatientSchedulingCalendar" formControlName='case_str' class="form-control" (change)="chnageCaseId($event)" disabled>
+                        <option *ngFor="let case of allCaseIds; trackBy:identify" value={{case.case_id}}>
+                            {{case.case_id}}({{case.case_type}})
+                            <span *ngIf="case.accident_date">({{case.accident_date | date: datePipeService.slashDateFormat_MM_dd_yyyy()}})</span>
+                        </option>
+                    </select><!---->
+                    <select *ngIf="!caseFormat && !DoctorCalendarService.PatientSchedulingCalendar" formControlName='case_str' class="form-control" (change)="chnageCaseId($event)" >
+                        <option *ngFor="let case of allCaseIds ; trackBy:identify" value={{case.case_id}}>
+                            {{case.case_id}}({{case.case_type}})
+                            <span *ngIf="case.accident_date">({{case.accident_date | date: datePipeService.slashDateFormat_MM_dd_yyyy()}})</span>
+                        </option>
+                    </select>
+                    <div *ngIf="caseFormat" class="ng-autocomplete patitent_name" style="width:100%; ">
+                            <ng-autocomplete placeHolder="Case No." name="caseStr" formControlName='case_str'  [data]="dataCase" [searchKeyword]="keywordCase" [minQueryLength]="1" (selected)='selectEventCase($event)' (inputChanged)='onChangeSearchCase($event)' (inputFocused)='onFocusedCase($event)'
+                                (inputCleared)="clearDataCase($event)" [itemTemplate]="itemTemplateCase" [notFoundTemplate]="notCaseNoFoundTemplate" (keyup.enter)="onEnterKeyPress($event, 'case_str', dataCase)" (keyup.arrowdown)="onArrowDownKeyPress('case_str', dataCase)" (keyup.arrowup)="onArrowUpKeyPress($event, dataCase)">
+                            </ng-autocomplete>
+    
+                            <ng-template #itemTemplateCase let-item>
+                                <a [innerHTML]="item.id"></a>
+                            </ng-template>
+    
+                            <ng-template #notCaseNoFoundTemplate let-notCasenoFound>
+                                <div [innerHTML]="notCasenoFound"></div>
+                            </ng-template>
+                    </div>
+    
+                    <div [hidden]="noCaseValidAlpha" class="requ-date">
+                        <p class="mb-0">Case No. cannot contain alphabets</p>
+                    </div>
+                    <div [hidden]="noCaseValidLength" class="requ-date">
+                        <p class="mb-0">Case No. Length exceeded</p>
+                    </div>
+                    <small class ="text-muted danger" *ngIf = "btnSubmit && myForm.get('case_str').errors?.required">This field is required </small>
+                </div>
+                <div class="col-lg-2 col-md-3" >
+                    <app-mat-date-picker-sharedable [classesName]="['form-group','adj-cross-icon','date-field']" [lableName]="'Apt.Date'" (valueChange)="onChangeAptDate($event)" [defaultDate]="startDate" [placeholder]="'Apt. Date'" ></app-mat-date-picker-sharedable>
+                    <small class ="text-muted danger" *ngIf = "apt_date_check">This field is required </small>
+                </div>
+                <div class="col-lg-2 col-md-3" >
+                    <label class="title"> Apt. Time<em>*</em></label>
+                    <ejs-timepicker [min]="minStartTime" [max]="maxEndTime" [step]='interval' [(value)]='startTime' (change)="changeStartTime()" placeholder="Apt. Time"></ejs-timepicker>
+                    <!-- <select  class="form-select" formControlName="start_time" [(ngModel)]="startTime" >
+                        <option *ngFor="let times of timeInterval" [value]="times.dateTime" name ="valuesTime" >
+                          {{times?.time}}
+                        </option>   
+                      </select> -->
+                    
+                    <!-- <custom-time-picker></custom-time-picker> -->
+                    
+
+                    <p class ="text-muted danger" *ngIf = "apt_time_check">This field is required </p>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <label class="title"> Duration<em>*</em></label>
+                    <select class="form-select" formControlName="duration" (change)="changeDurationSlots($event)" >
+                        <option value="duration" selected>Duration</option>
+                        <option *ngFor="let duration of duration" value={{duration}}>{{duration}}
+    
+                        </option>
+                    </select>
+                    <small class ="text-muted danger" *ngIf = "duration_check">This field is required </small>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <label class="title">Practice-Location<em>*</em></label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" ngbTooltip="{{selectedClinic?.facility_name}}-{{selectedClinic?.name}}">
+                        <select class="form-select" style="width: 100%;color: #6d6969; " formControlName="clinicName" (change)="clinicChange($event)" >
+                            <option value="" selected>N/A</option>
+                            <option *ngFor="let clinic of clinics; trackBy:identify" value={{clinic.id}} title="{{clinic.facility_name}}-{{clinic.name}}"> {{clinic?.facility?.qualifier}}-{{clinic?.qualifier}} </option>
+                        </select>
+                    </span>
+                    <small class ="text-muted danger" *ngIf = "myForm.get('clinicName').errors?.required && btnSubmit">This field is required</small>
+                </div>
+    
+                <div class="col-lg-2 col-md-3">
+                    <label class="title"> Specialty<em>*</em></label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left"  [ngbTooltip]="selectedSpecialty?.name">
+                        <select class="form-select" style="width: 100%;color: #6d6969; " formControlName="spHName" (change)="specialityChange($event)" >
+                            <option value="" selected>N/A</option>
+                            <option *ngFor="let spec of speciality; trackBy:identify" [selected]="selectedSpecialityId==spec.id" value={{spec.id}} title="{{spec.name}}">
+                                {{spec.qualifier}}</option>
+                        </select>
+                    </span>
+                    <small class ="text-muted danger" *ngIf = "myForm.get('spHName').errors?.required && btnSubmit ">This field is required </small>
+                </div>
+    
+                <div class="col-lg-2 col-md-3">
+                    <label class="title"> Provider<em *ngIf="(WithoutTime(startDate)<WithoutTime(currentDate))">*</em></label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                        <select class="form-select" style="width: 100%;color: #6d6969; " formControlName="docName" (change)="doctorChange($event)"  >
+                            <option value="" selected>N/A</option>
+                            <option *ngFor="let doc of doctors; trackBy:identify" value={{doc.doctor_id}}>{{doc.doctor?.userBasicInfo?.first_name}} {{doc.doctor?.userBasicInfo?.middle_name}} 
+                                {{doc.doctor?.userBasicInfo?.last_name}}{{doc?.doctor && doc?.doctor?.medicalIdentifiers && doc?.doctor?.medicalIdentifiers?.billingTitle && doc?.doctor?.medicalIdentifiers?.billingTitle?.name? 
+									", "+doc?.doctor?.medicalIdentifiers?.billingTitle?.name :''}}
+							</option>
+                        </select>
+                    </span>
+                    <small class ="text-muted danger" *ngIf = "(WithoutTime(startDate)<WithoutTime(currentDate) && myForm.get('docName').errors?.required && btnSubmit)">This field is required </small>
+                </div>
+    
+                <div class="col-lg-2 col-md-3 text-truncate">
+                    <label class="title">Visit Type*</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" container="body" [ngbTooltip]="selectedvisitType?.name">
+                        <select class="col-md-12 form-select" (change)="getAppointmentType($event)" formControlName="appointment_type_id"  [(ngModel)]="typeForAppointment">
+							<option *ngFor="let aP of AppointmentType; trackBy:identify"  value={{aP.id}}
+								>{{aP?.qualifier}}</option>
+						</select>
+                    </span>
+					<small class ="text-muted danger" *ngIf = "(myForm.get('appointment_type_id').errors?.required &&  btnSubmit)">This field is required </small>
+
+                </div>
+                <div class="col-lg-2 col-md-3 text-truncate">
+                    <label class="title">Apt. Priority</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                        <select class="col-md-12 form-select" (change)="getAppointmentPriority($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedPriorityId" disabled >
+                            <option *ngFor="let aP of AppointmentPriority ; trackBy:identify" value={{aP.id}}>{{aP.name}}
+                            </option>
+                        </select>
+                    </span>
+                </div>
+        
+                <div class="col-lg-2 col-md-3 text-truncate" *ngIf='(WithoutTime(startDate)<WithoutTime(currentDate))'>
+                    <label class="title">Billable*</label>
+                    <select class="col-md-12 form-select" formControlName="billable" >
+                        <option [ngValue]=false>No</option>
+                        <option [ngValue]=true>Yes</option>
+                    </select>
+                    <small class ="text-muted danger" *ngIf = "(WithoutTime(startDate)<WithoutTime(currentDate) && myForm.get('billable').errors?.required && btnSubmit)">This field is required </small>
+    
+                </div>
+    
+                
+                <div class="col-lg-6">
+                    <div class="form-group field mb-1 cpt-plc-hold search-label">
+                        <app-ng-select-shareable [events]="eventsSubjectPhysicians.asObservable()"  [filterFieldName]="'physician_id'"
+                                            [showSelectFieldList]="selectedMultipleFieldFiter['physician_id']"
+											 [maxLengthName] = "95" [ngSelectShow]="true"
+                                             [showSelectFieldOnRefresh]="myForm.get('physician_id').value" 
+                                             [lableName]="selectedSpecialtyKey == 'diagnostic' ? 'Referring Physician*' : 'Referring Physician'" [bindlable]="'refferingOfficeName'" [searchLableName]="'physician_id'"
+                                             [bindId]="'id'" [apiPath]="ReferringPhysician_LocationListing" 
+                                             (valueChange)="selectionOnValueChange($event,myForm,'physician_id')" 
+                                             [multiple]="false"  ></app-ng-select-shareable> 
+                                             <small class ="text-muted danger" *ngIf = "(selectedSpecialtyKey == 'diagnostic' && !myForm.get('physician_id').value && btnSubmit)">This field is required </small>
+                        </div>	
+                </div>
+                <div class="col-lg-6" *ngIf="enableCptCodes">
+                    <div class="form-group field mb-1 cpt-plc-hold search-label">
+                        <app-ng-select-shareable [events]="eventsSubjectCpt.asObservable()"  [filterFieldName]="'cpt_codes_ids'"
+                                            [showSelectFieldList]="selectedMultipleFieldFiter['cpt_codes_ids']"
+                                             [showSelectFieldOnRefresh]="myForm.get('cpt_codes_ids').value" 
+                                             [lableName]="'CPT Codes'" [bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'"
+                                             [bindId]="'id'" [apiPath]="EnumApiPath.getCptListByVisitType"  [conditionalExtraApiParams]="{'visit_type_id':typeForAppointment}"
+											 [maxLengthName] = "95" [ngSelectShow]="true"
+											 (valueChange)="selectionOnValueChange($event,myForm,'cpt_codes_ids')"  (touched)="getTouched($event)"
+                                             [multiple]="allowMultiCPTs" [forceApiHitonOpen]="apidefaulthit" [closeOnSelect]='false' [disableField]="typeForAppointment?false:true" ></app-ng-select-shareable> 
+                        </div>	
+                </div>
+
+				<div class="col-lg-2 col-md-3" *ngIf="(WithoutTime(startDate)<WithoutTime(currentDate))">
+                    <div class="form-group field mb-1 cpt-plc-hold search-label">
+                        <app-ng-select-shareable [events]="eventsSubjectTechnician.asObservable()"  [filterFieldName]="'technician_id'"
+                                            [showSelectFieldList]="selectedMultipleFieldFiter['technician_id']"
+                                             [showSelectFieldOnRefresh]="myForm.get('technician_id').value"  [ngSelectShow]="true"
+                                             [lableName]="'Technician/MA/PA'" [bindlable]="'full_name'" [concateRoleQualifier]="true" [searchLableName]="'technician_id'"
+                                             [bindId]="'id'" [apiPath]="getTechnicianListing"  [conditionalExtraApiParams]="technicianExtraParams()"
+                                             (valueChange)="selectionOnValueChange($event,myForm,'technician_id')" 
+                                             [multiple]="false"  [disableField]="isDisableTechnician()" ></app-ng-select-shareable> 
+                        </div>	
+                </div>
+
+				
+
+				<div class="col-lg-2 col-md-3" *ngIf="(WithoutTime(startDate)<WithoutTime(currentDate))">
+                    <div class="form-group field mb-1 cpt-plc-hold search-label">
+                        <app-ng-select-shareable #templateControl [events]="eventsSubjectTemplate.asObservable()"  [filterFieldName]="'template_id'"
+                                            [showSelectFieldList]="selectedMultipleFieldFiter['template_id']"
+                                             [showSelectFieldOnRefresh]="myForm.get('template_id').value" [ngSelectShow]="true"
+                                             [lableName]="'Template*'" [bindlable]="'template_name'" [searchLableName]="'template_id'"
+                                             [bindId]="'id'" [apiPath]="getTemplateListing"  [conditionalExtraApiParams]="templateExtraParamsObj"
+                                             (valueChange)="selectionOnValueChange($event,myForm,'template_id')" 
+                                             [multiple]="false" (apiResponseReturned)="templateAPiResponse($event)" [disableField]="isDisableTemplate()"  ></app-ng-select-shareable> 
+                        </div>	
+						<small class ="text-muted danger" *ngIf = "(myForm.get('template_id').errors?.required &&  btnSubmit)">This field is required </small>
+
+                </div>
+
+				<div class="col-lg-2 col-md-3 " *ngIf="enableReadingProvider">
+                    <div class="form-group field mb-1 cpt-plc-hold search-label">
+                        <app-ng-select-shareable #readingProviderControl [events]="eventsSubjectReadingProvider.asObservable()"  [filterFieldName]="'reading_provider_id'"
+                                            [showSelectFieldList]="selectedMultipleFieldFiter['reading_provider_id']"
+                                             [showSelectFieldOnRefresh]="myForm.get('reading_provider_id').value" [ngSelectShow]="true"
+                                             [lableName]="'Reading Provider'" [bindlable]="'full_name'" [searchLableName]="'reading_provider_id'"
+                                             [bindId]="'id'" [apiPath]="EnumApiPath.getProviders"  [conditionalExtraApiParams]="{'reading_provider':1,'order': OrderEnum.ASC}"
+                                             (valueChange)="selectionOnValueChange($event,myForm,'reading_provider_id')" 
+                                             [multiple]="false" [closeOnSelect]='false' [disableField]="typeForAppointment?false:true" ></app-ng-select-shareable> 
+                        </div>	
+                </div>
+				<div class="col-md-3 mt-4" *ngIf="selectedSpecialtyKey=='diagnostic'">
+					<mat-checkbox formControlName="cd_image" class="col-md-12 form-control">CD(Image)</mat-checkbox>
+
+				</div>
+				<div class="col-lg-12 col-md-6">
+                    <label class="title">Comments</label>
+                    <textarea class="form-control" style="color: #6d6969;" formControlName="comment" placeholder="No Comment Yet" [(ngModel)]="comments">
+    
+                </textarea>
+                </div>
+                
+            </div >
+    
+           
+        
+        
+            <!-- <div class="row">
+                <div class="col-md-12">
+                    <label class="title">Comments</label>
+                    <textarea class="form-control" style="height:60px !important;color: #6d6969;" formControlName="comment" placeholder="No Comment Yet" [(ngModel)]="comments">
+    
+                </textarea>
+                </div>
+            </div> -->
+    
+            <div *ngIf='!(WithoutTime(startDate)<WithoutTime(currentDate))' class="row">
+                <div class='col-md-2 recurrence-tab form ps-0'>
+                    <label class="d-inline-block chkbox position-relative mt-2 mb-3 pt-1">
+                        <input id="recurrenceAfter" type="checkbox" name="recurrenceAfter" (click)="RecurrenceDoc($event)">
+                        <span class="fake-input position-absolute"></span>
+                        <label class="fake-label d-block py-0 mb-0" for="recurrenceAfter">
+                            Recurrence
+                        </label>
+                    </label>
+                </div>
+            </div>
+    
+            <div class="row d-flex align-items-center">
+                <div class="col-sm-4 mb-3" [hidden]="isShowRecuurenceBefore">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label class="title"> Repeat every </label>
+                        </div>
+                        <div class="col-md-6 ps-0">
+                            <select class="form-select" formControlName="dailyMontlyWeeklyOpt" (ngModelChange)="changeRepeatEvery()" style="margin-bottom:0px !important">
+                                <option *ngFor="let opt of option; trackBy:identify" value={{opt.id}}>
+                                    {{opt.value}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-1 ps-1">
+                            <label class="title">on</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div [hidden]="isShowRecuurenceBefore" class="row">
+                        <div [hidden]="isDisableOption" class="col-md-12 px-0">
+                            <ul class="list-unstyled form d-flex justify-content-around mb-0">
+                                <li class="d-inline-block" *ngFor="let days of weekDay;let i=index"  style="line-height: 10px;">
+                                    <label class="d-inline-block chkbox position-relative m-0">
+                                        <input id="Mon" type="checkbox" (click)="changeWeek($event,days[0])" [(checked)]="days[0].isChecked" name="week">
+                                        <span class="fake-input position-absolute"></span>
+                                        <label class="fake-label d-block font-weight-normal py-0 mb-0" (click)="changeWeek($event,days[0])">
+                                            {{days[0].name}}
+                                        </label>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-md-2 recurrence-tab form ps-0" [hidden]="isShowRecuurenceBefore">
+                    <label class="d-inline-block chkbox position-relative m-0">
+                        <input id="rangeRecurrence" type="checkbox" formControlName="rangeRecurrence" name="rangeRecurrence"
+                            (click)="rangeRecuurence($event)">
+                        <span class="fake-input position-absolute"></span>
+                        <label class="fake-label d-block" for="rangeRecurrence">
+                            *Range of Recurrence
+                        </label>
+                    </label>
+                </div>
+                <div class="col-md-10 radio-button-sch mb-3" [hidden]="hideRangeRec" [ngStyle]="{'color':isRangeRec ? 'grey' : 'black'}">
+                    <ul class="list-unstyled form d-flex justify-content-between mb-0">
+                        <li class="d-inline-block">
+                            <label class="fake-label-frame chkbox position-relative m-0" for="rangeRecOption1">
+                                    <input   name="rangeRecOption"
+                                    (click)="endAfter($event)" id="rangeRecOption1" type="radio">
+                                <span class="fake-input position-absolute"></span>
+                                <span class="fake-label d-block font-weight-normal">End
+                                    after</span>
+                            </label>
+                        </li>
+    
+                        <li class="d-inline-block col-md-2 px-2" (click)="endAfterClickChange()">
+                            <input formControlName="noOfOccurence"  class="form-control mb-0" type="number" min=1 oninput="validity.valid||(value='')" style="margin-bottom: 0px !important;">
+                        </li>
+                        <li class="d-inline-block">
+                            <label>Occurrence</label>
+                        </li>
+    
+                        <li class="d-inline-block">
+                            <label class="fake-label-frame chkbox position-relative m-0" for="rangeRecOption2">
+                                <input  type="radio" (click)="endBy($event)"
+                                    name="rangeRecOption" formControlName="rangeRecOption2" id="rangeRecOption2">
+                                <span class="fake-input position-absolute"></span>
+                                <span class="fake-label d-block font-weight-normal">End
+                                    by</span>
+                            </label>
+                        </li>
+    
+                        <li class="d-inline-block col-md-3 px-0 top-y-50" (click)="endbyClickChange()">
+                            <app-mat-date-picker-sharedable [classesName]="['form-group','field', 'horizontal-label']" [lableName]="''" (valueChange)="onChangeEndByDate($event)" [defaultDate]="endByDate" [min]='enddate' [placeholder]="'Enter date'" [disabled]='!endByCheck' ></app-mat-date-picker-sharedable>
+    
+                        </li>
+                    </ul>
+                </div>
+            </div>
+			<div class="row ">
+                <!-- <div  class="col-md-2"><button  class="btn btn-secondary w-100" (click)="openTransportation()" type="button">Transportation </button></div> -->
+				<!-- <h5>Transportation</h5>  -->
+				<div class='col-md-2 recurrence-tab form ps-0'>
+                    <label class="d-inline-block chkbox position-relative mt-2 mb-3 pt-1">
+                        <input id="is_transportation" type="checkbox" formControlName="is_transportation" (change)="onTransportationChange($event)">
+                        <span class="fake-input position-absolute"></span>
+                        <label class="fake-label d-block py-0 mb-0" for="is_transportation">
+                           Transportation
+                        </label>
+                    </label>
+                </div>
+				<app-transportation-modal *ngIf="myForm.get('is_transportation').value" #transportationComponent class="col-12" [patientId]='chart' [physician_id]="this.myForm.get('physician_id').value" [clinic_location_id]="clinic_location_id" [openAsModal]="false"></app-transportation-modal>
+			</div>
+            <div class="row d-flex justify-content-center mt-2">
+                <div class="col-12 d-flex align-items-center justify-content-center">
+                    <button class="btn btn-secondary me-3" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+                    <button class="btn btn-success" type="submit" 
+                    [disabled]=" (btnSubmit && myForm.invalid )|| disablebtnOnSubmit" 
+                    (click)="submit()"> Save & Continue</button>
+                </div>
+    
+            </div>
+        </form>
+		<!-- <app-patient-history-component [caseId]='caseIdModel'></app-patient-history-component> -->
+
+		
+	</div>
+</div>
+

@@ -1,0 +1,75 @@
+<div class="card">
+  <div class="card-body">
+    <form [formGroup]="loginForm">
+      <div class="col-md-4 offset-md-4">
+        <div class="row">
+          <div class="col-12 text-end">
+            <button class="btn btn-default text-white mt-2 mb-3" (click)="generatePassword()">Generate Password</button>
+          </div>
+          <div class="form-group col-md-12 mb-0 mt-0"
+            [ngClass]="{'focused': loginForm.get('password').value != '' && loginForm.get('password').value != null }">
+            <label for="Password" class="form-label mb-1">Password *</label>
+
+            <input class="form-control form-input" #password id="Password" type="password" formControlName="password"
+              autocomplete="new-password" spaceNotAllowed appBlockCopyPaste>
+            <a href="javascript:void(0)" class="password-icon" (click)="passwordToggle(password)"
+			spaceNotAllowed appBlockedCopyPaste
+			>
+				<i
+                [class.icon-eye-hide]="password.type == 'text'"
+                [class.icon-eye-show]="password.type == 'password'"></i></a>
+            <a class="copy-icon" href="javascript:void(0)" (click)="copyToClipBoard(password)"><span
+                class="fa fa-copy"></span></a>
+                <small class="form-text text-muted danger"
+                *ngIf="loginForm.get('password').errors?.required && (loginForm.get('password').dirty || loginForm.get('password').touched)">This
+                field is required</small>
+				<p *ngIf="!isValidPassword"> Use 8 or more characters with a mix of letters (uper case and lower case), two numbers & symbols	</p>
+				<app-password-strength
+				[passwordToCheck]="loginForm.value.password"
+				(passwordStrength)="passwordValid($event)"
+				></app-password-strength>
+        
+            <!-- <small class="form-text text-muted danger"
+  *ngIf="(loginForm.get('password').errors?.minlength || loginForm.get('password').errors?.maxlength) && loginForm.get('password').dirty">Password
+  characters length must be between 4 and 24 !</small> -->
+            <small class="form-text text-muted danger"
+              *ngIf="loginForm.get('password').errors?.pattern && loginForm.get('password').touched">requires
+              one lower case letter, one
+              upper case letter, one digit, 6-13 length, and no spaces.</small>
+          </div>
+          <div class="form-group col-md-12 mt-0 mb-2"
+            [ngClass]="{'focused': loginForm.get('password_confirmation').value != '' && loginForm.get('password_confirmation').value != null }">
+            <label for="c_password" class="form-label mb-1">Password Confirmation *</label>
+            <input #confirmPassword class="form-control form-input" type="password" id="c_password"
+              formControlName="password_confirmation" autocomplete="new-password" 
+			  spaceNotAllowed appBlockedCopyPaste>
+
+            <a href="javascript:void(0)" class="password-icon" (click)="passwordToggle(confirmPassword)"><i
+                [class.icon-eye-hide]="confirmPassword.type == 'text'"
+                [class.icon-eye-show]="confirmPassword.type == 'password'"></i></a>
+            <!-- <small class="form-text text-muted danger"
+      *ngIf="loginForm.get('password_confirmation').errors?.required && (loginForm.get('password_confirmation').dirty || loginForm.get('password_confirmation').touched)">Please
+      enter password!</small> -->
+            <!-- <small class="form-text text-muted danger"
+  *ngIf="(loginForm.get('password_confirmation').errors?.minlength || loginForm.get('password_confirmation').errors?.maxlength) && loginForm.get('password_confirmation').dirty">Password
+  characters length must be between 4 and 24 !</small> -->
+            <small class="form-text text-muted danger"
+              *ngIf="loginForm.controls['password'].value != loginForm.controls['password_confirmation'].value && loginForm.controls['password_confirmation'].touched">
+              Password does not match!
+            </small>
+            <!-- <small class="form-text text-muted danger"
+  *ngIf="loginForm.get('password_confirmation').errors?.pattern && loginForm.get('password_confirmation').touched">requires
+  one lower case letter, one
+  upper case letter, one digit, 6-13 length, and no spaces.</small> -->
+          </div>
+
+          <div class="col-md-12 text-center">
+            <button class="btn btn-success mt-2 mb-2"
+              [disabled]="!loginForm.valid ||!isValidPassword  ||disableBtn || loginForm.controls['password'].value != loginForm.controls['password_confirmation'].value"
+              (click)="submit(loginForm.value , 'submit')">Submit</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,166 @@
+<div class="modal-header">
+	<h4 class="modal-title" id="modal-basic-title">Header and Footer Settings</h4>
+	<button aria-label="Close" data-dissmiss="modal" class="close" type="button" (click)="resetModel()"> <span
+			aria-hidden="true">×</span></button>
+</div>
+<div class="modal-body">
+	<form novalidate="" ng-reflect-form="[object Object]" class="ng-untouched ng-pristine ng-invalid">
+		<div class="row form">
+
+			<!-- <select class="sel custom-select ng-pristine ng-valid ng-touched" id="cars" [(ngModel)]="selectedClinic"
+				[ngModelOptions]="{standalone: true}">
+				<option value="0">Location</option>
+				<option *ngFor="let clinic of clinics" value={{clinic.id}}>{{clinic.name}}
+				</option>
+			</select>
+			<select class="sel custom-select ng-pristine ng-valid ng-touched" id="cars" [(ngModel)]="selectedSpeciality"
+				[ngModelOptions]="{standalone: true}" (change)="getVisitType()">
+				<option value="0">Specialty</option>
+				<option *ngFor="let spec of speciality" value={{spec.id}}>{{spec.name}}
+				</option>
+			</select>
+			<select class="sel custom-select ng-pristine ng-valid ng-touched" id="cars" [(ngModel)]="selectedVisit"
+				[ngModelOptions]="{standalone: true}" [disabled]="selectedSpeciality==0">
+				<option value="0">Visit Type</option>
+				<option *ngFor="let visit of visitType" value={{visit.id}}>{{visit.name}}
+				</option>
+			</select> -->
+			<ng-select style="padding: 5px" (remove)="locationSelect($event)" (add)="locationSelect($event)"  [items]="locations" [placeholder]="'Select Multiple Locations'" [multiple]="true"
+				 appendTo="body" [(ngModel)]="selectedLocation" [ngModelOptions]="{standalone: true}" [closeOnSelect]="false" (clear)="clearLocations()">
+			</ng-select>
+			<ng-select style="padding: 5px" (remove)="specialitySelect($event)" (add)="specialitySelect($event)"  [items]="speciality" [placeholder]="'Select Multiple Specialities'" [multiple]="true"
+				 appendTo="body" [(ngModel)]="selectedSpeciality" [ngModelOptions]="{standalone: true}" [closeOnSelect]="false" (clear)="clearSpeciality()">
+				<ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <span class="ng-value-icon right" (click)="specialitySelect({'item': item, 'selected': false})" aria-hidden="true">×</span>
+              <span>{{item.name}}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <div>{{item.label}}</div>
+            </ng-template>
+			</ng-select>
+			<ng-select style="padding: 5px" (remove)="visitTypeSelect($event)" (add)="visitTypeSelect($event)"  [items]="visitType" [placeholder]="'Select Multiple Visit Types'" [multiple]="true"
+				 appendTo="body" [(ngModel)]="selectedVisit" [ngModelOptions]="{standalone: true}" [closeOnSelect]="false" (clear)="clearVisitTypes()">
+				<ng-template ng-label-tmp let-item="item" let-clear="clear">
+              <span class="ng-value-icon right" (click)="visitTypeSelect({'item': item, 'selected': false})" aria-hidden="true">×</span>
+              <span>{{item.name}}</span>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              <div>{{item.label}}</div>
+            </ng-template>
+			</ng-select>
+			<ng-select style="padding: 5px" (remove)="caseTypeSelect($event)" (add)="caseTypeSelect($event)"  [items]="caseTypes" [placeholder]="'Select Multiple Case Types'" [multiple]="true"
+				 appendTo="body" [closeOnSelect]="false" (clear)="clearCaseTypes()">
+			</ng-select>
+			<!-- <div class="col-12 mb-2 ">
+				<div class=" pe-0 form mb-0 ">
+					<mat-checkbox>
+						<span class="check-header" style=" font-size: 14px;">Default Template</span>
+					</mat-checkbox>
+				</div>
+			</div> -->
+		</div>
+
+
+
+		<div class="form-group modal-btn-width text-center mb-0">
+			<button class="btn btn-success" type="submit" (click)="saveTag()">Save</button>
+			<button class="btn btn-primary ms-3" type="submit" (click)="resetModel()">Cancel</button>
+		</div>
+
+		<div>
+			<ngx-datatable style="margin-top: 13px;" class="bootstrap custom-scroll-x table-border"
+				(page)="changePage($event)" [count]="counter" [rows]="data" [columnMode]="'force'" [headerHeight]="50"
+				[footerHeight]="50" [rowHeight]="'auto'" [limit]="counter" [scrollbarH]="true" [offset]="pageNumber-1">
+
+				<ngx-datatable-column [attr.canAutoResize]="true" name="Location Name" prop="id" [width]="93">
+					<ng-template let-column="column" ngx-dattable-header-template>
+						Location Name
+					</ng-template>
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+							ngbTooltip="{{row.location_name}}" container="body">
+							{{row.location_name}}
+						</div>
+
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Specialty" prop="Comments" [width]="93">
+					<ng-template let-column="column" ngx-dattable-header-template>
+						Specialty
+					</ng-template>
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+							ngbTooltip="{{row.speciality_name}}" container="body">
+							{{row.speciality_name}}
+						</div>
+
+					</ng-template>
+				</ngx-datatable-column>
+
+
+
+				<ngx-datatable-column name="Visit Type" prop="Comments" [width]="85">
+					<ng-template let-column="column" ngx-dattable-header-template>
+						Visit Type
+					</ng-template>
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+							ngbTooltip="{{row.visit_type_name}}" container="body">
+							{{row.visit_type_name}}
+						</div>
+					</ng-template>
+				</ngx-datatable-column>
+
+					<ngx-datatable-column name="Case Type" prop="Comments" [width]="85">
+              <ng-template let-column="column" ngx-dattable-header-template>
+                  Case Type
+              </ng-template>
+              <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.case_type_name}}" container="body">
+                      {{row.case_type_name}}
+                  </div>
+
+
+              </ng-template>
+          </ngx-datatable-column>
+
+				<!-- <ngx-datatable-column name="Default" prop="Comments" [width]="85">
+					<ng-template let-column="column" ngx-dattable-header-template>
+						Default
+					</ng-template>
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<mat-checkbox>
+						</mat-checkbox>
+
+					</ng-template>
+				</ngx-datatable-column> -->
+
+				<ngx-datatable-column [attr.canAutoResize]="true" name="Action" prop="id" [width]="83"
+					cellClass="action-icon">
+					<ng-template let-column="column" ngx-datatable-header-template>
+						<!-- <mat-checkbox (change)="allSelected($event)" [(ngModel)]="allChecked"
+							[ngModelOptions]="{standalone: true}">
+						</mat-checkbox> -->
+						Actions
+					</ng-template>
+					<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+						<!-- <mat-checkbox (change)="particularSelected(row,$event)" [(ngModel)]="row.isChecked"
+							[ngModelOptions]="{standalone: true}">
+						</mat-checkbox> -->
+
+						<!-- <button (click)="updatePermissions(row.id)"
+							class="view-hov mx-1" role="button" tooltip="View">
+							<i class="icon-pencil"></i>
+						</button> -->
+						<button (click)="deletePermissions(row.id)" href="javascript:void(0)" class="remove-hov mx-1"
+							role="button" tooltip="Delete">
+							<i class="icon-remove"></i>
+						</button>
+					</ng-template>
+				</ngx-datatable-column>
+
+			</ngx-datatable>
+
+		</div>
+	</form>
+</div>

@@ -1,0 +1,237 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="row">
+
+	<div class="col-md-12">
+		<div class="row">
+			<div class="col-12  edit-block text-start">
+				<div class="form-group field option-field mb-3 d-inline-block">
+					<ul class="text-capitalize">
+						<li>Show</li>
+						<li>
+							<select class="custom-select" id="limit" (change)="pageLimit($event.target.value)" [(ngModel)]="page.size"
+								name="limit">
+								<option [value]="5" >5</option>
+								<option [value]="10" >10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>entries</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- Datatable -->
+		<ngx-datatable class="bootstrap" [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'"
+			[scrollbarH]="true" [virtualization]="false" [externalPaging]="true" [rows]="appointmentList"
+			  
+			[count]="page.totalElements" [offset]="page.offset" [limit]="page.size" (page)='onPageChange($event)'
+			[externalPaging]="true">
+
+			<ngx-datatable-column  name="Patient" [sortable]="false" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false" prop="patient" [width]="125">
+		    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{ value?.first_name | FullName :value?.middle_name:value?.last_name }}">
+					{{ value?.first_name | FullName :value?.middle_name:value?.last_name }}
+				</div>
+
+				<div class="tooltip-outer hyperlink text-primary" container="body"  (click)="openLinkInNewTab(row)" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.case_id}}">
+					<span class="font-bold pe-1">Case No:</span> {{row.case_id}}
+				</div>
+
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.caseType?.name}}">
+					<span class="font-bold pe-1">Case Type:</span> {{row.caseType?.name}}
+				</div>
+
+			</ng-template>
+		</ngx-datatable-column> 
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider" prop="id" [width]="125">
+			<ng-template let-column="column" ngx-datatable-header-template>
+				Provider
+			</ng-template>
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div *ngIf="row.doctor_full_name" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.doctor_full_name}}">
+					{{row.doctor_full_name}}
+				</div>
+
+				<div *ngIf="!row.doctor_full_name" class="tooltip-outer" container="body">
+					N/A
+				</div>
+				<div *ngIf="row.speciality" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.speciality?.name}}">
+					{{row.speciality?.qualifier}}
+				</div>
+
+				<div *ngIf="!row.speciality" container="body" class="tooltip-outer">
+					N/A
+				</div>
+
+				<div *ngIf="row.facility_location_id" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.facility_location_name}}">
+					{{row?.availableSpeciality?.facilityLocation?.facility?.qualifier}}-{{row?.availableSpeciality?.facilityLocation?.qualifier}}
+				</div>
+
+				<div *ngIf="!row.facility_location_id" container="body" class="tooltip-outer">
+					N/A
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Appointment" prop="id" [width]="90">
+			<ng-template let-column="column" ngx-datatable-header-template>
+				Visit type
+			</ng-template>
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.appointmentType?.name}}" >
+					<span class="font-bold pe-1"></span> {{row.appointmentType?.qualifier}}
+				</div>
+				<div class="tooltip-outer" container="body" *ngIf="!row.appointmentType">
+					<span class="font-bold pe-1"></span> N/A
+				</div>
+				<!-- <div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.scheduled_date_time | date: 'MM/dd/yyyy h:mm a'}}" >
+					<span class="font-bold pe-1">Schedule Time:</span> {{row.scheduled_date_time | date: 'MM/dd/yyyy h:mm a'}}
+				</div> -->
+
+			</ng-template>
+		</ngx-datatable-column>
+		
+
+
+
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Date & Time" prop="id" [width]="150">
+			<ng-template let-column="column" ngx-datatable-header-template>
+				Schedule Date & Time
+			</ng-template>
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.scheduled_date_time | date: 'MM/dd/yyyy h:mm a'}}" >
+					<span class="font-bold pe-1"></span> {{row.scheduled_date_time | date: 'MM/dd/yyyy h:mm a'}}
+				</div>
+				
+				
+
+			</ng-template>
+		</ngx-datatable-column>
+
+
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Status" prop="id" [width]="140">
+			<ng-template let-column="column" ngx-datatable-header-template>
+				Appointment Status
+			</ng-template>
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.appointmentStatus && !row.cancelled ? row.appointmentStatus.name : 'N/A'}}" >
+					{{row.appointmentStatus && !row.cancelled ? row.appointmentStatus.name : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Status" prop="id" [width]="90">
+			<ng-template let-column="column" ngx-datatable-header-template>
+				Visit Status
+			</ng-template>
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.patientSessions && !row.cancelled ? row.patientSessions?.visitStatus?.name : 'N/A'}}" >
+					{{row.patientSessions && !row.cancelled ? row.patientSessions?.visitStatus?.name : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+
+		<ngx-datatable-column name="CPT Codes" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+			prop="appointmentCptCodes" cellClass="action-icon">
+		
+			   <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  <div *ngIf="row && row.appointmentCptCodes && row.appointmentCptCodes.length>0"  
+					
+					>
+					<span class="badge bg-info modal-name text-white tooltip-outer" *ngFor="let cpt of row.appointmentCptCodes"  tooltipClass="table-custom-tooltip" ngbTooltip="{{cpt.billingCode.name +(cpt.billingCode.description?' - '+cpt.billingCode.description:'')}}"  container="body">
+						{{cpt.billingCode.name +(cpt.billingCode.description?' - '+cpt.billingCode.description:'')}}
+					</span>
+				</div>
+				<!-- <ng-template #all>
+					<div   class="action-icon">
+						<span class="badge badge-info tooltip-outer d-inline-block wrap-text"   tooltipClass="table-custom-tooltip" ngbTooltip="All" container="body">
+							All
+						</span>
+					</div>
+				</ng-template> -->
+				
+				
+			   </ng-template>
+		   </ngx-datatable-column>
+
+		   <!-- <ngx-datatable-column name="Transportation" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+			>
+		
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div *ngFor="let transportation of row.transportations">
+					<div *ngIf="transportation.is_pickup">
+						<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{transportation?.type==DoctorCalendarEnum.from_home?'From Home':transportation?.type==DoctorCalendarEnum.from_medical_office?'From Medical Office':transportation?.type==DoctorCalendarEnum.other? 'Other':transportation?.type==DoctorCalendarEnum.no_pick_up?'No Pick Up Required':'N/A'}}" >
+							<span class="font-bold pe-1">Pick Up Type :</span> {{transportation?.type==DoctorCalendarEnum.from_home?'From Home':transportation?.type==DoctorCalendarEnum.from_medical_office?'From Medical Office':transportation?.type==DoctorCalendarEnum.other? 'Other':transportation?.type==DoctorCalendarEnum.no_pick_up?'No Pick Up Required':'N/A'}}
+						</div>
+						<div *ngIf="transportation?.type!=DoctorCalendarEnum.no_pick_up" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{transportation.street_address}}{{transportation.suit?', '+transportation.suit:''}}{{', ' +transportation.city}}{{', '+transportation.state}}{{' '+transportation.zip}}" >
+							<span  class="font-bold pe-1">Pick Up Address :</span> {{transportation.street_address}}{{transportation.suit?', '+transportation.suit:''}}{{', ' +transportation.city}}{{', '+transportation.state}}{{' '+transportation.zip}}
+
+						</div>
+
+						<div *ngIf="transportation?.type==DoctorCalendarEnum.no_pick_up" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="N/A" >
+							<span  class="font-bold pe-1">Pick Up Address :</span> N/A
+
+						</div>
+					</div>
+					<div *ngIf="transportation.is_dropoff">
+						<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{transportation?.type==DoctorCalendarEnum.from_home?'From Home':transportation?.type==DoctorCalendarEnum.from_medical_office?'From Medical Office':transportation?.type==DoctorCalendarEnum.other? 'Other':transportation?.type==DoctorCalendarEnum.no_drop_off?'No Drop Off Required':'N/A'}}" >
+							<span class="font-bold pe-1">Drop Off Type:</span> {{transportation?.type==DoctorCalendarEnum.from_home?'From Home':transportation?.type==DoctorCalendarEnum.from_medical_office?'From Medical Office':transportation?.type==DoctorCalendarEnum.other? 'Other':transportation?.type==DoctorCalendarEnum.no_drop_off?'No Drop Off Required':'N/A'}}
+						</div>
+						<div *ngIf="transportation?.type!=DoctorCalendarEnum.no_drop_off" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{transportation.street_address}}{{transportation.suit?', '+transportation.suit:''}}{{', ' +transportation.city}}{{', '+transportation.state}}{{' '+transportation.zip}}">
+							<span *ngIf="transportation?.type!=DoctorCalendarEnum.no_drop_off" class="font-bold pe-1">Drop Off Address :</span> {{transportation.street_address}}{{transportation.suit?', '+transportation.suit:''}}{{', ' +transportation.city}}{{', '+transportation.state}}{{' '+transportation.zip}}
+						</div>
+
+						<div *ngIf="transportation?.type==DoctorCalendarEnum.no_drop_off" class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="N/A">
+							<span  class="font-bold pe-1">Drop Off Address :</span>N/A
+						</div>
+					</div>
+					
+				</div>
+
+				<div *ngIf=" !row.transportations || (row.transportations && row.transportations.length==0)">
+					
+						<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="N/A" >
+							<span class="font-bold pe-1">Pick Up Type :</span> N/A
+						</div>
+						<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="N/A" >
+							<span class="font-bold pe-1">Pick Up Address :</span> N/A
+						</div>
+					
+					
+						<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="N/A" >
+							<span class="font-bold pe-1">Drop Off Type:</span> N/A
+						</div>
+						<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="N/A">
+							<span class="font-bold pe-1">Drop Off Address :</span> N/A
+						</div>
+					
+					
+				</div>
+
+				
+				
+
+			</ng-template>
+		   </ngx-datatable-column> -->
+
+		<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Actions" prop="id" [width]="70" cellClass="action-icon">
+			<ng-template let-column="column" ngx-datatable-header-template>
+				Actions 
+			</ng-template>
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<a class="mx-1 view-hov" ngbTooltip="View" container="body" href="javascript:void(0)" role="button"
+					(click)="viewAppointment(row)"><i class="icon-eye"></i></a>
+								
+			</ng-template>
+		</ngx-datatable-column>
+
+		</ngx-datatable>
+	</div>
+</div>

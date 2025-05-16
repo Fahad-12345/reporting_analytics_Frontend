@@ -1,0 +1,212 @@
+<div class="card search-filter-block">
+  <div class="d-block">
+    <a href="javascript:void(0)" data-target="#user-group" data-bs-toggle="modal"
+      class="btn btn-default round-btn float-right">
+      Add New <span class="icon-plus-circle ms-2"></span>
+    </a>
+  </div>
+  <form action="" autocomplete="off">
+    <div class="form">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-xl-10 col-lg-9 col-md-12">
+            <div class="row">
+              <div class="col-lg-12 col-md-12">
+                <div class="form-group field">
+                  <label class="form-label" for="CreationDate">Creation Date</label>
+                  <input type="text" id="CreationDate" class="form-control form-input">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-2 col-lg-3 col-md-12">
+            <div class="row justify-content-center mb-xl-0 mb-lg-0 mb-4">
+              <div class="col-lg-6 col-md-3 col-sm-4 col-6 align-self-center">
+                <button class="btn btn-success w-100 me-3"> Filter
+                </button>
+              </div>
+              <div class="col-lg-6 col-md-3 col-sm-4 col-6 align-self-center">
+                <button class="btn btn-primary w-100">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </form>
+</div>
+
+<div class="card data-table p-0 mt-2">
+  <div class="row">
+    <div class="col-md-6 edit-block">
+      <div class="form-group field option-field mb-2 d-inline-block">
+        <ul>
+          <li>Show</li>
+          <li>
+            <select class="custom-select" name="limit">
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+            </select>
+          </li>
+          <li>entries</li>
+        </ul>
+
+      </div>
+    </div>
+    <div class="col-md-6 text-end mt-2">
+      <a href="javascript:void(0)" class="btn btn-success round-btn me-2">
+        <span class="icon-create-task me-2"></span> Create Task
+      </a>
+      <a href="javascript:void(0)" class="btn btn-default round-btn">
+        <span class="icon-remove me-1"></span> Delete [2]
+      </a>
+    </div>
+
+  </div>
+
+  <div class="card-body" style="border: none; background: transparent;  padding:0px;">
+    <table class="table table-bordered table-striped text-center mb-0">
+      <thead>
+        <tr>
+          <th class="border-right" scope="col" style="width:50%;">Creation Date</th>
+          <th class="form" scope="col" style="width:50%;">
+            <label for="" class="chkbox position-relative mt-1">
+              <input id="" name="" value="" type="checkbox">
+              <span class="fake-input position-absolute"></span>
+            </label> Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3-4-2019</td>
+          <td class="form">
+            <label for="" class="chkbox position-relative mt-1">
+              <input id="" name="" value="" type="checkbox">
+              <span class="fake-input position-absolute"></span>
+            </label>
+            <a class="edit-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                class="icon-pencil"></i></a>
+            <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                class="icon-create-task"></i></a>
+            <a class="remove-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button">
+              <span class="icon-remove"></span></a>
+          </td>
+        </tr>
+
+        <tr>
+          <td>3-4-2019</td>
+          <td class="form">
+            <label for="" class="chkbox position-relative mt-1">
+              <input id="" name="" value="" type="checkbox">
+              <span class="fake-input position-absolute"></span>
+            </label>
+            <a class="edit-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                class="icon-pencil"></i></a>
+            <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                class="icon-create-task"></i></a>
+            <a class="remove-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button">
+              <span class="icon-remove"></span></a>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card-footer text-muted">
+    <div class="row">
+      <div class="col-md-6 text-start">
+        <p>Showing 1 to 5 of 337 entries</p>
+      </div>
+      <div class="col-md-6 justify-content-end d-flex">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination mb-0">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">
+                <img src="assets/images/previous.png">
+              </a>
+
+            </li>
+
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">
+                <img src="assets/images/left.png">
+              </a>
+
+            </li>
+
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous">
+                <img src="assets/images/right.png">
+              </a>
+
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next">
+                <img src="assets/images/next.png">
+              </a>
+
+            </li>
+
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- User Group Modal -->
+<div class="modal fade" id="user-group" tabindex="-1" role="dialog" aria-labelledby="user-group" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Creation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form autocomplete="">
+          <div class="form-group row mb-2">
+            <div class="col-md-12">
+              <input class="form-control" placeholder="Creation Date" type="text">
+            </div>
+          </div>
+
+          <div class="form-group row mb-2">
+            <div class="col-md-12">
+              <textarea class="form-control" placeholder="Add Comments" rows="3"
+                style="height:60px !important;"></textarea>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-8 offset-sm-2">
+              <div class="row mb-0">
+                <div class="col-6">
+                  <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button">Cancel</button>
+                </div>
+                <div class="col-6">
+                  <button class="btn bg-green w-100" type="submit">Save</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

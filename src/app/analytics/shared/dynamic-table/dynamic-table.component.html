@@ -1,0 +1,15 @@
+<table class="table table-striped table-sm ">
+  <thead>
+    <tr>
+      <th scope="col" class="text-center p-2" [ngClass]="{'td-header': i== 0}" *ngFor="let column of columns; let i= index">{{column}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of rows; let lastRow = last">
+      <td class="text-center p-2 " [ngClass]="{'td-header': i== 0}" *ngFor="let list of row | keys ; let i=index"><i *ngIf="(i==0) && tableType == 'claim_overview'" class=" fa fa-solid fa-circle fa-xs "
+        [style.color]="row?.color"></i>
+        <span [style.fontWeight]="((lastRow && tableType == 'missing_visits') || (i == 0 && tableType == 'missing_visits')) ? 'bold' : 'normal'" [style.color]="((i == 3) && (tableType == 'claim_overview')) || ((i == 0) && (tableType == 'missing_visits')) ? row?.color : ''">{{row[list]}}</span>
+        </td>
+    </tr>
+  </tbody>
+</table>

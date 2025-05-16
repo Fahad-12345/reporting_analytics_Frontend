@@ -1,0 +1,122 @@
+<div class="row">
+	<div class="col-md-12">
+	   <div class="search-filter my-3">
+		  <form autocomplete="off" [formGroup]="searchForm">
+			 <div class="form">
+				<div class="search-filter-body pb-lg-3">
+				   <div class="row px-2">
+					  <div class="field-block">
+						 <div class="row">
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field mb-lg-1" [ngClass]="{'focused': searchForm.get('bill_id').value != '' && searchForm.get('bill_id').value != null }">
+								  <label class="form-label" for="bill_id">Bill Id</label>
+								  <input type="text" class="form-control form-input" id="bill_id" formControlName="bill_id">
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field mb-lg-1" [ngClass]="{'focused': searchForm.get('bill_date').value != '' && searchForm.get('bill_date').value != null }">
+								  <label class="form-label" for="bill_date">Bill Date (mm/dd/yyyy)</label>
+								  <input type="text" class="form-control form-input" [matDatepicker]="bill_date" id="bill_date" formControlName="bill_date">
+								  <mat-datepicker-toggle [for]="bill_date"></mat-datepicker-toggle>
+								  <mat-datepicker #bill_date></mat-datepicker>
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field mb-lg-1" [ngClass]="{'focused': searchForm.get('specialty').value != '' && searchForm.get('specialty').value != null }">
+								  <label class="form-label" for="specialty">Specialty</label>
+								  <input type="text" class="form-control form-input" id="specialty" formControlName="specialty">
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field mb-lg-1" [ngClass]="{'focused': searchForm.get('provider').value != '' && searchForm.get('provider').value != null }">
+								  <label class="form-label" for="provider">Provider</label>
+								  <input type="text" class="form-control form-input" id="provider" formControlName="provider">
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field mb-lg-1" [ngClass]="{'focused': searchForm.get('practice_location').value != '' && searchForm.get('practice_location').value != null }">
+								  <label class="form-label" for="practice_location">Practice-Location</label>
+								  <input type="text" class="form-control form-input" id="practice_location" formControlName="practice_location">
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field mb-lg-1" [ngClass]="{'focused': searchForm.get('posted_date').value != '' && searchForm.get('posted_date').value != null }">
+								  <label class="form-label" for="posted_date">Posted Date (mm/dd/yyyy)</label>
+								  <input type="text" class="form-control form-input" [matDatepicker]="posted_date" id="posted_date" formControlName="posted_date">
+								  <mat-datepicker-toggle [for]="posted_date"></mat-datepicker-toggle>
+								  <mat-datepicker #posted_date></mat-datepicker>
+							   </div>
+							</div>
+						 </div>
+						 <div class="collapse-basic pt-lg-3" id="collapseBasic" [collapse]="!isCollapsed" [isAnimated]="true">
+						 <div class="row">
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field" [ngClass]="{'focused': searchForm.get('check_date').value != '' && searchForm.get('check_date').value != null }">
+								  <label class="form-label" for="check_date">Check Date (mm/dd/yyyy)</label>
+								  <input type="text" class="form-control form-input" [matDatepicker]="check_date" id="check_date" formControlName="check_date">
+								  <mat-datepicker-toggle [for]="check_date"></mat-datepicker-toggle>
+								  <mat-datepicker #check_date></mat-datepicker>
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field" [ngClass]="{'focused': searchForm.get('check_amount').value != '' && searchForm.get('check_amount').value != null }">
+								  <label class="form-label" for="check_amount">Check Amount</label>
+								  <input type="text" class="form-control form-input" id="check_amount" formControlName="check_amount">
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+								<label class="form-label" for="paid_by">Action Type</label>
+							   <div class="form-group field" [ngClass]="{'focused': searchForm.get('paid_by').value != '' && searchForm.get('paid_by').value != null }">
+								  <select class="form-select" formControlName="paid_by" id="paid_by">
+									 <option>Paid By</option>
+									 <option>2</option>
+								  </select>
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field" [ngClass]="{'focused': searchForm.get('action_type').value != '' && searchForm.get('action_type').value != null }">
+								  <label class="form-label" for="action_type">Action Type</label>
+								  <select class="form-select" formControlName="action_type" id="action_type">
+									 <option>Action Type</option>
+									 <option>2</option>
+								  </select>
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field" [ngClass]="{'focused': searchForm.get('payment_type').value != '' && searchForm.get('payment_type').value != null }">
+								  <label class="form-label" for="payment_type">Payment Type</label>
+								  <input type="text" class="form-control form-input" id="payment_type" formControlName="payment_type">
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field" [ngClass]="{'focused': searchForm.get('created_by').value != '' && searchForm.get('created_by').value != null }">
+								  <label class="form-label" for="created_by">Created By</label>
+								  <input type="text" class="form-control form-input" id="created_by" formControlName="created_by">
+							   </div>
+							</div>
+							<div class="col-12 col-sm-6 col-md-3 col-lg-2">
+							   <div class="form-group field" [ngClass]="{'focused': searchForm.get('updated_by').value != '' && searchForm.get('updated_by').value != null }">
+								  <label class="form-label" for="updated_by">Updated By</label>
+								  <input type="text" class="form-control form-input" id="updated_by" formControlName="updated_by">
+							   </div>
+							</div>
+							<div class="col-md-12 text-center search-filter-btn float-left mb-lg-1">
+							   <button class="btn btn-success mt-0 me-3"> Filter </button>
+							   <button class="btn btn-primary mt-0" (click)="resetCase()" [disabled]="checkInputs()"> Reset</button>
+							</div>
+						 </div>
+					  </div>
+				   </div>
+				   <div class="colps-btn-block">
+					  <button class="btn plus-btn position-relative float-right mt-0" style="right: 0;" (click)="isCollapsed = !isCollapsed"
+					  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+					  [class.btn-success]="isCollapsed" type="button"><span class="" [class.icon-plus]="!isCollapsed"
+					  [class.icon-minus]="isCollapsed"></span></button>
+				   </div>
+				</div>
+			 </div>
+	   </div>
+	   </form>
+	</div>
+ </div>
+ </div>

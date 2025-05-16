@@ -1,0 +1,109 @@
+<div class="row">
+    <div class="col-12 pb-2">
+        <h3>Doctors List</h3>
+        <a routerLink="/front-desk/doctors/add" class="btn btn-primary">Add Doctor</a>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6 edit-block">
+        <div class="form-group field option-field mb-2 d-inline-block">
+            <ul>
+                <li>Show</li>
+                <li>
+                    <!-- <select class="custom-select" name="limit" id="limit" > -->
+                    <select class="custom-select" name="limit" id="limit">
+                        <option [value]="20">Items per page</option>
+                        <option [value]="10" selected>10</option>
+                        <option [value]="20">20</option>
+                        <option [value]="30">30</option>
+                        <option [value]="40">40</option>
+                        <option [value]="50">50</option>
+                        <option [value]="100">100</option>
+                    </select>
+                </li>
+                <li>entries</li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6 text-end mt-2">
+        <!-- <a href="javascript:void(0)" class="btn btn-success round-btn me-2" *ngIf="selection.selected.length">
+                        <span class="icon-create-task me-1"></span>  Create Task ({{selection.selected.length}})
+                    </a> -->
+      
+
+        <a href="javascript:void(0)" class="btn btn-default round-btn" *ngIf="selection.selected.length">
+            <span class="icon-remove me-1"></span> Delete ({{selection.selected.length}})
+        </a>
+    </div>
+
+
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-sm-12">
+        <ngx-datatable class="bootstrap" [rows]="doctors" [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50"
+            [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+            <ngx-datatable-column name="ID" prop="id" [width]="80">
+                <ng-template let-column="column" prop="id" ngx-datatable-header-template>
+                    ID
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <a [routerLink]="['edit', row.id]">{{ value }}</a>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Clinic Name" prop="clinic_name" [width]="200"></ngx-datatable-column>
+            <ngx-datatable-column name="Name" prop="first_name" [width]="200">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    Name
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    {{ row.first_name }} {{ row.middle_name }} {{ row.last_name }}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Cell Phone" prop="cell_phone_no" [width]="100"></ngx-datatable-column>
+            <ngx-datatable-column name="Phone Ext." prop="phone_extension" appOnlyNumeric maxlength="10" [width]="100">
+            </ngx-datatable-column>
+            <ngx-datatable-column name="NPI" prop="npi" [width]="80"></ngx-datatable-column>
+            <ngx-datatable-column name="SSN" prop="ssn" [width]="100"></ngx-datatable-column>
+            <ngx-datatable-column name="Street Address" prop="address" [width]="200">
+                <ng-template ngx-datatable-header-template>
+                    Street Address
+                </ng-template>
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.address + ', ' + row.city + ', ' + row.state + ', ' + row.zip }}
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Actions" sortable="false" prop="id">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <mat-checkbox (change)="$event ? masterToggle($event) : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+                    </mat-checkbox>
+                    Actions
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+
+                    <a class="success p-0" data-original-title="Edit" title="Edit"
+                        routerLink="/front-desk/doctors/edit/{{row.id}}">
+                        <i class="icon-pencil me-2"></i>
+                    </a>
+
+                   
+
+                    <a class="danger p-0" data-original-title="Delete" title="Delete" (click)="onDelete(row.id)">
+                        <i class="icon-remove me-2"></i>
+                    </a>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+</div>

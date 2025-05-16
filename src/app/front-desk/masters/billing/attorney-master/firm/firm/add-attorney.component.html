@@ -1,0 +1,323 @@
+<div class="document-manager add-user px-0 mt-3">
+	<div class="card-header card-header-custom" style="background-color: #909090 !important;">
+		<div class="row align-items-center pt-1">
+			<div class=" col-md-12 pe-0 form">
+				<p class="mb-0 text-start">
+					<span class="text-white ps-3 justify-content-center" style="position: relative;">{{headerText}}
+						Firm</span>
+				</p>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="document-manager add-user px-0">
+
+
+		<div class="card search-filter-block mb-3">
+			<div class="card-body">
+				<form autocomplete="off" [formGroup]="addAttornetForm">
+					<div class="row">
+						<div class="col-lg-12 col-md-12">
+							<div class="form-group field text-start mb-3"
+								[ngClass]="{'focused': addAttornetForm.get('name').value != '' && addAttornetForm.get('name').value != null }">
+								<label class="form-label mb-1" for="name">Firm Name*</label>
+								<input formControlName="name" type="text" id="name" class="form-control form-input" notFirstCharactorSpace>
+								<small class="form-text text-muted danger" *ngIf="addAttornetForm.get('name').errors?.required && 
+				  (addAttornetForm.get('name').dirty || addAttornetForm.get('name').touched)">This field is required
+				</small>
+							</div>
+						</div>
+					</div>
+					<div class="row text-start" *ngIf="submitText == 'Save'">
+						<div class="col-12">
+							<label class="mb-3"><b>*Note:</b> At least one Location
+								is required. Default first location will be primary location
+							</label>
+						</div>
+						<div class="col-12">
+							<button class="btn btn-primary"
+								*ngIf="aclService.hasPermission(userPermissions.master_billing_firm_location_add) && submitText == 'Save'"
+								type="button" [disabled]="!addAttornetForm.get('name').value"
+								(click)="openAddLocation()">
+								<i class="icon-plus-circle me-1"></i> Add Location </button>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12 text-center search-filter-btn my-3">
+
+							<button *ngIf="submitText == 'Update'" (click)="onFirmSubmit()"
+								[disabled]="addAttornetForm.invalid || allLocations.length==0" type="submit"
+								class="btn btn-success mt-1 mt-sm-0 mb-2 mb-sm-0 me-3">
+								{{submitText}}
+							</button>
+							<button class="btn btn-primary mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="CancleForm()">Cancel</button>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+
+
+		<div class="document-content-area mt-3" [hidden]='firmLocationsTable'>
+			<div class="card mb-0">
+				<div class="card-header">
+					<div class="row align-items-center">
+						<div class="col-md-6 pe-0 form">
+							<span>Firm Location(s)</span>
+						</div>
+
+						<div class="col-md-6 text-sm-end">
+							<button (click)="shownButton()" type="button" class="btn slide-btn"
+								[class.btn-primary]="locationTabVisible" [class.btn-success]="!locationTabVisible">
+								<i *ngIf="!locationTabVisible" class="icon-minus"></i>
+								<i *ngIf="locationTabVisible" class="icon-plus"></i>
+							</button>
+						</div>
+					</div>
+
+				</div>
+				<div class="card-body p-3" [hidden]="locationTabVisible">
+					<div class="card data-table border-0 mb-0 p-0 mt-2">
+
+						<app-shared-firms-location [externalPagination]="firmId? true: false"
+							(boolforLocalLocations)="temporayLocations($event)"
+							(dropdownSelectionValue)="dropDownValues($event)"
+							(paginationLocation)="editAddFIrmpagination($event)"
+							[requiredFields] = "['city','zip','state','street_address']"
+							(locationFormValue)="addFIrmLocation($event)" (onSelectionUpdate)="checkboXData($event)"
+							addFirmcontext='addFirm' [loadSpinner]="loadSpin" [allLocations]='allLocations' [totalLocations]="totalElements"
+							(sendLocation)='getLOcationsFromChild($event)' [btnhide]='true' [childData]='childData'
+							[submitbtn]='submitbtn'>
+						</app-shared-firms-location>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<ng-template #firm_location let-modal>
+		<div class="modal-header">
+			<h5 class="modal-title">{{locationTitle}} Location</h5>
+			<button type="button" class="close" data-dismiss="modal" (click)="closeLoacationModel()" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body modal-pt-15">
+			<form autocomplete="" [formGroup]="locationForm">
+				<div class="row">
+
+					<div class="col-md-12">
+						<div class="form-group mb-1"
+							[ngClass]="{'focused': locationForm.get('location_name').value != ''}">
+							<div class="custom-control custom-checkbox my-1 me-sm-2">
+								<input type="checkbox" class="custom-control-input" id="is_main" name="is_main"
+									formControlName="is_main" (click)="setPrimaryLocation($event)" type="checkbox">
+								<label class="custom-control-label" for="is_main"><span style="position: relative;
+							top: 2px;
+						">Set as Primary Location</span></label>
+							</div>
+							<label class="form-label">Location Name*</label>
+							<input type="text" class="form-control mb-0" formControlName="location_name">
+						</div>
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group mb-1">
+							<div class="form-group field mb-0"
+								[ngClass]="{'focused': locationForm.get('street_address').value != ''}">
+								<label class="form-label" for="Street">Street Address</label>
+								<input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+								<input ngx-google-places-autocomplete [options]="{
+						  types: [],
+						  componentRestrictions: { country: 'US' }
+						  }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'location')"
+									formControlName="street_address" type="text" id="address"
+									class="form-control form-input mb-0">
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Suite / Floor</label>
+							<input type="text" class="form-control mb-0" formControlName="apartment_suite">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">City</label>
+							<input type="text" class="form-control mb-0" formControlName="city">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="state">State</label>
+							<!-- <input type="text" class="form-control mb-0" formControlName="state"> -->
+							<ng-select [items]="states" [closeOnSelect]="false" formControlName="state"></ng-select>
+
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Zip</label>
+							<input type="text" class="form-control mb-0" formControlName="zip" appOnlyNumeric
+								maxlength="10" minlength="2">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Phone No</label>
+							<input type="text" class="form-control mb-0" formControlName="phone" minlength="12"
+								maxlength="12" mask="000-000-0000" [dropSpecialCharacters]="false">
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Extension</label>
+							<input type="text" class="form-control mb-0" appOnlyNumeric maxlength="10" minlength="2"
+								formControlName="ext">
+
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Cell No</label>
+							<input type="text" class="form-control mb-0" formControlName="cell" mask="000-000-0000"
+								[dropSpecialCharacters]="false">
+						</div>
+					</div>
+
+				</div>
+
+
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Fax</label>
+							<input type="text" class="form-control mb-0" formControlName="fax" mask='000-000-0000'>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Email</label>
+							<input type="text" class="form-control mb-0" formControlName="email">
+							<small class="form-text text-muted danger"
+								*ngIf="locationForm.get('email').errors?.email && (locationForm.get('email').dirty || locationForm.get('email').touched)">
+								Invalid email address.</small>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="row">
+					<div class="col-12">
+						<h6 class="color-green mb-0 mt-1">Contact Person Information</h6>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">First Name</label>
+							<input type="text" class="form-control mb-0" formControlName="contact_person_first_name">
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Middle Name</label>
+							<input type="text" class="form-control mb-0" formControlName="contact_person_middle_name">
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Last Name</label>
+							<input type="text" class="form-control mb-0" formControlName="contact_person_last_name">
+						</div>
+					</div>
+
+				</div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Phone No</label>
+							<input type="text" class="form-control mb-0" formControlName="contact_person_phone"
+								minlength="12" maxlength="12" mask='000-000-0000' [dropSpecialCharacters]="false">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Extension</label>
+							<input type="text" class="form-control mb-0" appOnlyNumeric maxlength="10" minlength="2"
+								formControlName="contact_person_ext">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Cell No</label>
+							<input type="text" class="form-control mb-0" formControlName="contact_person_cell"
+								mask="000-000-0000">
+						</div>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Fax</label>
+							<input type="text" class="form-control mb-0" formControlName="contact_person_fax"
+								mask='000-000-0000'>
+						</div>
+					</div>
+
+					<div class="col-md-6">
+						<div class="form-group mb-1">
+							<label class="form-label" for="Street">Email</label>
+							<input type="text" class="form-control mb-0" formControlName="contact_person_email">
+							<small class="form-text text-muted danger"
+								*ngIf="locationForm.get('contact_person_email').errors?.email && (locationForm.get('contact_person_email').dirty || locationForm.get('contact_person_email').touched)">
+								Invalid email address.</small>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-12">
+					<div class="form-group row mb-2">
+						<label class="form-label" for="Street">Comments</label>
+						<textarea style="height: 60px !important;" class="form-control" rows="5"
+							formControlName="comments"></textarea>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-12 modal-btn-width text-center">
+						<button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+							(click)="closeLoacationModel()">Cancel</button>
+						<button (click)="onLocationSubmit(locationForm.value)" [disabled]="locationForm.invalid"
+							class="btn btn-success">{{buttonTitle}}</button>
+
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</ng-template>
+	<!-- </div>
+	</div>
+  </div> -->

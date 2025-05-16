@@ -1,0 +1,114 @@
+<div class="cal-supervisor-notifications-week-view">
+    <div class="cal-day-headers">
+    </div>
+    <div class="cal-time-events overflow-drag-front-desk-view-calendar" mwlDroppable (dragEnter)="eventDragEnter = eventDragEnter + 1" (dragLeave)="eventDragEnter = eventDragEnter - 1">
+        <div id="drag-day-view" class="cal-time-label-column" *ngIf="view.hourColumns.length > 0 ">
+            <div *ngFor="let hour of view.hourColumns[0].hours; trackBy:trackByHour; let odd = odd" class="cal-hour" [class.cal-hour-odd]="odd">
+
+                <div *ngFor="let segment of hour.segments; trackBy:trackByHourSegment" [style.height.px]="30" [class.cal-hour-start]="segment.isStart" [class.cal-after-hour-start]="!segment.isStart" [ngClass]="segment.cssClass">
+                    <div class="cal-time">
+                        {{ segment.date | date :datePipeService.hourMinAmPmTimeFormat() }}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="cal-day-columns" [class.cal-resize-active]="timeEventResizes.size > 0" #dayColumns>
+
+            <div class="cal-day-column" [ngStyle]="o===(viewDate.getDay())?
+				{'width':'100%'}:{'position':'relative'}" *ngFor="let column of view.hourColumns; trackBy:trackByHourColumn;let o=index">
+                <div *ngIf="o===(viewDate.getDay())">
+                    <div *ngFor="let timeEvent of column.events; trackBy:trackByDayOrWeekEvent" #event class="cal-event-container" [class.cal-draggable]="timeEvent.event.draggable && timeEventResizes.size === 0" [class.cal-starts-within-day]="!timeEvent.startsBeforeDay"
+                        [class.cal-ends-within-day]="!timeEvent.endsAfterDay" [ngClass]="timeEvent.event.cssClass" [hidden]="timeEvent.height === 0 && timeEvent.width === 0" [style.top.px]="timeEvent.top" [style.height.px]="timeEvent.height" [style.left.%]="timeEvent.left"
+                        [style.width.%]="timeEvent.width" mwlResizable [resizeSnapGrid]="{left: dayColumnWidth, right: dayColumnWidth, top: eventSnapSize || hourSegmentHeight, bottom: eventSnapSize || hourSegmentHeight}" [validateResize]="validateResize"
+                        [allowNegativeResizes]="true" (resizeStart)="timeEventResizeStarted(dayColumns, timeEvent, $event)" (resizing)="timeEventResizing(timeEvent, $event)" (resizeEnd)="timeEventResizeEnded(timeEvent)" mwlDraggable dragActiveClass="cal-drag-active"
+                        [dropData]="{event: timeEvent.event, calendarId: calendarId}" [dragAxis]="{
+              x: timeEvent.event.draggable && timeEventResizes.size === 0,
+              y: timeEvent.event.draggable && timeEventResizes.size === 0
+            }" [dragSnapGrid]="snapDraggedEvents ? {x: dayColumnWidth, y: eventSnapSize || hourSegmentHeight} : {}" [ghostDragEnabled]="!snapDraggedEvents" [validateDrag]="validateDrag" (dragPointerDown)="dragStarted(dayColumns, event, timeEvent)" (dragging)="dragMove(timeEvent, $event)"
+                        (dragEnd)="dragEnded(timeEvent, $event, dayColumnWidth, true)">
+                        <div class="cal-resize-handle cal-resize-handle-before-start" *ngIf="timeEvent.event?.resizable?.beforeStart && !timeEvent.startsBeforeDay" mwlResizeHandle [resizeEdges]="{
+                left: true,
+                top: true
+              }">
+                        </div>
+                        <div class="cal-event time-Event" *ngIf="!timeEvent.event.isUnavailablility && !timeEvent.event.isStart && timeEvent.event.isAppointment" [style.backgroundColor]="timeEvent.event.status ? 'white' : '#'+timeEvent.event.color" [style.borderColor]=" '#'+timeEvent.event.color"
+                            [mwlCalendarTooltip]="timeEvent.event.patientName + ' (' + timeEvent.event.startTime + '-' + timeEvent.event.endTime + ')'" [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate"
+                            [tooltipAppendToBody]="tooltipAppendToBody" [ngbPopover]="openPatientUnavailable" data-container="body" placement="top" (click)="showPatientRecordParent(timeEvent.event)">
+                            <mwl-calendar-event-actions [event]="timeEvent.event" [customTemplate]="eventActionsTemplate">
+                            </mwl-calendar-event-actions>
+                        </div>
+                        <div class="cal-event time-Event" [style.backgroundColor]="timeEvent.event.status ? 'white' : '#'+timeEvent.event.color" [style.borderColor]=" '#'+timeEvent.event.color" data-container="body" [mwlCalendarTooltip]="'Unavailability ' + timeEvent.event.startTime"
+                            [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate" placement="top" [tooltipAppendToBody]="tooltipAppendToBody" *ngIf="timeEvent.event.isUnavailablility && !timeEvent.event.isStart && !timeEvent.event.isAppointment"
+                            [ngbPopover]="check">
+
+                            <ng-template #check>
+                                <div class="popover-top custom-popover-style">
+                                    <div class="popover-header" [ngStyle]="timeEvent.event.approved==0 ?
+							{'background-color': 'lightblue'} : {'background-color': '#'+timeEvent.event.color}">
+                                        <span></span>
+                                        <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                    </div>
+                                    <div class="popover-desc">
+                                        <ul class="list-unstyled mb-0">
+                                            <li>
+                                                <span class="font-bold">Subject:</span> {{timeEvent.event.subject}}</li>
+                                            <li>
+                                                {{timeEvent.event.startDate|date: 'yyyy/MM/dd'}} - {{timeEvent.event.endDate|date: 'yyyy/MM/dd'}}</li>
+                                            <li>
+                                                {{timeEvent.event.startDate|date: 'HH:mm'}} - {{timeEvent.event.endDate|date: 'HH:mm'}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </ng-template>
+                            <mwl-calendar-event-actions [event]="timeEvent.event" [customTemplate]="eventActionsTemplate">
+                            </mwl-calendar-event-actions>
+                        </div>
+
+                        <div class="cal-event un-availabe-appoint" *ngIf="!timeEvent.event.isUnavailablility && timeEvent.event.isStart && !timeEvent.event.isAppointment" [style.backgroundColor]="'#'+timeEvent.event.color" [style.borderColor]=" '#'+timeEvent.event.color" [mwlCalendarTooltip]="'Assignment starts at ' + timeEvent.event.startTime"
+                            [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate" [tooltipAppendToBody]="tooltipAppendToBody">
+                        </div>
+
+                        <div class="cal-event un-availabe-time" *ngIf="!timeEvent.event.isUnavailablility && !timeEvent.event.isStart && !timeEvent.event.isAppointment" [style.backgroundColor]="'#'+timeEvent.event.color" [style.borderColor]=" '#'+timeEvent.event.color" [mwlCalendarTooltip]="'Assignment ends at ' + timeEvent.event.startTime"
+                            [tooltipPlacement]="tooltipPlacement" [tooltipEvent]="timeEvent.event" [tooltipTemplate]="tooltipTemplate" [tooltipAppendToBody]="tooltipAppendToBody">
+                        </div>
+                        <ng-template #openPatientUnavailable>
+                            <div class="popover-top custom-popover-style">
+                                <div class="popover-header" [style.background-color]="'#' + timeEvent.event.color">
+                                    <span class="w-100" title="{{timeEvent.event.firstName }} {{timeEvent.event.patientName }}">
+										<!-- <img class="image-profile" [src]="timeEvent.event.picture"> -->
+										{{timeEvent.event.firstName }}
+										{{timeEvent.event.patientName }}
+									</span>
+                                    <a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+                                </div>
+                                <div class="popover-desc">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>{{timeEvent.event.startTime}} - {{timeEvent.event.endTime}}</li>
+                                        <li>Location: {{timeEvent.event.clinicName}}</li>
+                                        <!-- <li>
+											Room: {{timeEvent.event.room}}
+										</li> -->
+                                        <li>
+                                            Chart No: {{timeEvent.event.chartNo}}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                        <div class="cal-resize-handle cal-resize-handle-after-end" *ngIf="timeEvent.event?.resizable?.afterEnd && !timeEvent.endsAfterDay" mwlResizeHandle [resizeEdges]="{
+                right: true,
+                bottom: true
+              }">
+                        </div>
+                    </div>
+                    <div *ngFor="let hour of column.hours; trackBy:trackByHour; let odd = odd" class="cal-hour" [class.cal-hour-odd]="odd" [style.height.px]="30*hour.segments.length" [ngStyle]="odd ?
+    {'background-color': 'white'} : {'background-color': '#f1f1f1'}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

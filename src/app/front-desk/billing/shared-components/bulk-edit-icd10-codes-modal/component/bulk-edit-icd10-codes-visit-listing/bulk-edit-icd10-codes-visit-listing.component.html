@@ -1,0 +1,237 @@
+
+<div class="card search-filter-block data-table p-0 mt-1">
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-6 edit-block mb-2">
+				<div class="form-group field option-field mb-0 text-start">
+					<ul class="text-capitalize">
+						<li>Show</li>
+						<li><select (change)="pageSizeChange($event)"  [(ngModel)]="page.size" class="custom-select">	
+							<option value="10">10</option>
+								<option value="20">20</option>
+								<option value="30">30</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+							</select>
+						</li>
+						<li>entries</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xl-12 col-lg-12 mb-3">
+				<ngx-datatable class="bootstrap white-space-wrap custom-scroll-x visit-bill-table"
+					[rows]="lstBilling" [scrollbarH]="true" [columnMode]="'force'"
+					[headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+					 [count]="page.totalElements"
+					 
+					 [limit]="page.size"
+					(page)="onPageChange($event)">
+
+					<ngx-datatable-column *ngIf="adminVisit" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Case Id" [width]="55"
+						prop="case_id">
+						<ng-template ngx-datatable-cell-template let-value="value">
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+								ngbTooltip="{{value }}">
+								{{value }}
+							</div>
+						</ng-template>
+					</ngx-datatable-column>
+
+					<ngx-datatable-column *ngIf="adminVisit" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Patient Name" prop="row" [width]="70">
+						<ng-template ngx-datatable-cell-template let-value="row">
+						  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+						  ngbTooltip="{{value?.p_first_name}} {{value?.p_middle_name}}
+						  {{value?.p_last_name}}">
+						  {{value?.p_first_name}} {{value?.p_middle_name}}
+						  {{value?.p_last_name}}
+						</div>
+						</ng-template>
+					  </ngx-datatable-column>
+
+					<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  name="Practice-Loc. Name" [width]="86"
+						prop="practice_location_name">
+						<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+								ngbTooltip="{{value }}">
+								{{row?.practice_location_qualifier }}
+							</div>
+						</ng-template>
+					</ngx-datatable-column>
+					<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider Name" [sortable]="false" prop="row"
+						[width]="60">
+						<ng-template ngx-datatable-cell-template let-value="row">
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+								ngbTooltip="{{value?.doc_first_name}} {{value?.doc_middle_name}}
+	{{value?.doc_last_name}}{{value?.billing_title | AddBillingTitle}}">
+	{{value?.doc_first_name}} {{value?.doc_middle_name}}
+	{{value?.doc_last_name}}{{value?.billing_title | AddBillingTitle}}
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Specialty" prop="speciality_name" [width]="57">
+<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+	<span> {{row?.speciality_qualifier}}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="DOA" prop="accident_date" [width]="40">
+	<ng-template ngx-datatable-cell-template let-value="value">
+	  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+		ngbTooltip="{{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+		<span> {{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+	  </div>
+	</ng-template>
+	</ngx-datatable-column>
+
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Type" prop="appointment_type_name" [width]="48">
+<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+	<span> {{row?.appointment_type_qualifier}}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Insurance Name" prop="insurance_name" [width]="66">
+<ng-template ngx-datatable-cell-template let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+	<span> {{value}}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Date" prop="visit_date" [width]="50">
+<ng-template ngx-datatable-cell-template let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+	ngbTooltip="{{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+	<span> {{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="ICD-10 Codes" prop="visit_session_code" [width]="70">
+
+  <ng-template ngx-datatable-cell-template let-value="value">
+	<div  *ngIf="filterTheCPTCode(value, 1).length>0" class="tooltip-outer" popoverClass="visit-bill-popover" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
+	{{filterTheCPTCode(value, 1)[0]?.code_name}}<span *ngIf="filterTheCPTCode(value,1).length>1">...</span>
+
+	</div>
+	<ng-template #popContent>
+	  <table class="w-100 text-start">
+		<tbody>
+			<tr *ngFor="let item of filterTheCPTCode(value, 1); let x = index">
+				<td><span class="font-bold">{{item.code_name}}</span> - {{item.description}}</td>
+			</tr>
+		 
+		</tbody>
+	  </table>
+	</ng-template>
+</ng-template>
+</ngx-datatable-column>
+
+
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="CPT Codes" prop="visit_session_code" [width]="60">
+>
+
+  <ng-template ngx-datatable-cell-template let-value="value">
+	<div  *ngIf="filterTheCPTCode(value, 2).length>0" class="tooltip-outer" popoverClass="visit-bill-popover" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
+		{{filterTheCPTCode(value, 2)[0].code_name}}<span *ngIf="filterTheCPTCode(value, 2).length>1">...</span>
+	</div>
+
+	<ng-template #popContent>
+	  <table class="w-100 text-start">
+		<tbody>
+			<tr *ngFor="let item of filterTheCPTCode(value, 2); let x = index">
+				<td><span class="font-bold">{{item.code_name}}</span> - {{item.description}}</td>
+			</tr>
+		 
+		</tbody>
+	  </table>
+	</ng-template>
+</ng-template>
+</ngx-datatable-column>
+
+
+
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Claim #" prop="claim_no" [width]="50">
+<ng-template ngx-datatable-cell-template let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+	ngbTooltip="{{value}}">
+	{{value}}
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column *ngIf= "adminVisit" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case Type" prop="case_type_name" [width]="60">
+<ng-template ngx-datatable-cell-template let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+	ngbTooltip="{{value}}">
+	<span> {{value}}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="No. of Days" prop="no_of_days" [width]="50">
+<ng-template ngx-datatable-cell-template let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+	<span> {{value}}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Status" prop="visit_status_name" [width]="47">
+<ng-template ngx-datatable-cell-template let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+	<span> {{value}}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Billable" prop="billable" [width]="46">
+<ng-template ngx-datatable-cell-template let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value===0?'No':'Yes'}}">
+	<span>	{{value===0?'No':'Yes' }}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false"  name="Document Uploaded Status" [width]="110"
+						prop="document_uploaded">
+						<ng-template ngx-datatable-cell-template let-value="value">
+							<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+								ngbTooltip="{{value?'Yes':'No'}}">
+								{{value?'Yes':'No' }}
+							</div>
+						</ng-template>
+					</ngx-datatable-column>
+<ngx-datatable-column [sortable]="false" [canAutoResize]="false" [draggable]="false" [resizeable]="false" name="Last Uploaded Document Date" prop="last_uploaded_document_date" [width]="104">
+<ng-template ngx-datatable-cell-template let-value="value">
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+	ngbTooltip="{{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}">
+	<span> {{value | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+  </div>
+</ng-template>
+</ngx-datatable-column>
+
+
+
+
+<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Actions" sortable="false" prop="id" [width]="86">
+<ng-template let-column="column" ngx-datatable-header-template>
+	<mat-checkbox  (change)="allSelected($event)" [(ngModel)]="allChecked">
+	</mat-checkbox>
+	Actions
+</ng-template>
+<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_create_bill)" (click)="$event.stopPropagation()"
+								[(ngModel)]='row.is_checked'
+								(change)="onChecked($event,row)"
+								[checked]="selection.isSelected(row)">
+							</mat-checkbox>
+							<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="historyStats(row)">
+								<i class="fa fa-history"></i>
+							</a>
+						</ng-template>
+					</ngx-datatable-column>
+				</ngx-datatable>
+			</div>
+		</div>
+	</div>
+
+</div>
+

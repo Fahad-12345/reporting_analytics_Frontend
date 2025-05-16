@@ -1,0 +1,108 @@
+<form class="form" autocomplete="off" [formGroup]="eorForm">
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group mb-2 horizontal-label">
+        <label for="eor_date-data">EOR Date*</label>
+        <div class="d-block position-relative">
+          <input  matInput class="form-control form-input mb-0 date-field" [max]="today" appInputDateMask  
+          [matDatepicker]="date" id="eor_date-data"
+            formControlName="date" [min]="min">
+          <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+          <mat-datepicker #date></mat-datepicker>
+          <small class="form-text text-muted danger"
+            *ngIf="eorForm.get('date').errors?.required && (eorForm.get('date').dirty || eorForm.get('date').touched)">
+			This field is required
+          </small>
+          <small class="form-text text-muted danger" *ngIf="eorForm.errors?.futureDate">
+            Max date should be {{ today | date: dateformateService.slashDateFormat_MM_dd_yyyy() }}
+         </small>
+          <!-- <small class="form-text text-muted danger"
+          *ngIf="eorForm.get('date').errors?.invalid_date && (eorForm.get('date').dirty || eorForm.get('date').touched)">
+		  This field is required
+        </small> -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group mb-2">
+        <label for="amount">EOR Amount*</label>
+        <input type="text" id="amount" class="form-control round currency mb-0" min="1" formControlName="amount"
+          (keydown.space)="$event.preventDefault()" currencyMask [options]="customCurrencyMaskConfig">
+        <i class="fa fa-dollar-sign"></i>
+        <small class="form-text text-muted danger"
+          *ngIf="(eorForm.get('amount').dirty || eorForm.get('amount').touched) && (eorForm.get('amount')?.errors?.max  || eorForm.get('amount')?.errors?.min)">Please
+          enter valid
+          amount!</small>
+        <small class="form-text text-muted danger"
+          *ngIf="eorForm.get('amount').errors?.required && (eorForm.get('amount').dirty || eorForm.get('amount').touched)">
+		  This field is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-2" #eorTypeSelection>
+        <label>EOR Type*</label>
+        <ng-multiselect-dropdown name="eor_type" #eorTypeSelection [settings]="bpDropdownSettingsEor" [placeholder]="'Select EOR Type'"
+          [data]="eorTypeData" formControlName="eor_type_id"  (click)="typeClick()"
+          class="ng-select-ellipsis top-n2 pe-25 d-block handle-arrow" style="margin-bottom: 7px;">
+        </ng-multiselect-dropdown>
+        <small class="form-text text-muted danger" *ngIf="eorForm.get('eor_type_id').errors?.required && typeClicked">
+			This field is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12">
+      <label for="status_id" class="text-capitalize">EOR Status</label>
+      <div class="form-group mb-2" #paymentStatusRef>
+        <ng-multiselect-dropdown id="status_id" name="eor_status_id" [settings]="bpDropdownSettingsEorStatus" (click)="eorStatusClick()"
+          [placeholder]="'Select EOR Status'" [data]="eorStatusCommingData" formControlName="eor_status_id"
+           [class.disabled_custom]="disableEor"
+          class="ng-select-ellipsis top-n2 d-block handle-arrow">
+        </ng-multiselect-dropdown>
+        <small class="form-text text-muted danger"
+          *ngIf="eorForm.get('eor_status_id').errors?.required && eorStatusAction">
+		  This field is required
+        </small>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-2">
+        <label for="eordescription">EOR Description</label>
+        <textarea class="form-control mb-0" rows="3" id="eordescription" formControlName="description"></textarea>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group view-icon mb-3">
+        <label for="file_name">File Name</label>
+        <input class="form-control mb-0" formControlName="file_name" type="text" id="file_name" disabled>
+        <div *ngIf="eorModel.getMediaExist()">
+          <a class="pdf-view view-hov">
+            <i class="icon-eye" (click)="viewDocFile(eorModel.getEorMediaLink())"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mb-2">
+      <label style="vertical-align: middle; margin-top: 0;" for="file" class="pe-1 d-none">Choose File</label>
+      <input type="file" id="file" #file class="file file_style d-none" #pFile (click)="pFile.value = null"
+        (change)="handleFileInput($event.target.files)" accept="application/pdf" />
+      <label (click)="file.click()" for="file-upload" class="custom-file-upload btn btn-success text-white">
+        <i class="fa fa-upload" aria-hidden="true"></i> Upload a File
+      </label>
+      <span class="ms-2" *ngIf="!eorForm?.value?.id" style="word-break: break-all;">{{fileToUpload? fileToUpload.name
+        :null}}</span>
+      <span class="ms-2" *ngIf="eorForm?.value?.id" style="word-break: break-all;">{{fileToUpload? fileToUpload.name :
+        eorModel.getMediaExist() ? fileNameSaveForEdit : '' }} </span>
+    </div>
+
+    <div class="col-12 search-filter-block mt-3">
+      <div class="row justify-content-center search-filter-btn mb-0">
+        <!-- <button class="btn btn-primary ms-1 me-1 cancel" type="button">Cancel</button> -->
+        <button *ngIf="!eorForm?.value?.id" class="btn btn-primary mx-2" (click)="resetEor()"
+          [disabled]="checkInputs() && fileToUpload === null">{{resetTitle}} </button>
+        <button class="btn btn-success mx-2" [disabled]="!eorForm.value.date || !eorForm.valid"
+          (click)="postEor()">{{(eorForm?.value?.id)?'Update':'Save'}}</button>
+
+      </div>
+    </div>
+  </div>
+</form>

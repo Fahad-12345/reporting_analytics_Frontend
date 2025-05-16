@@ -1,0 +1,8 @@
+<div class="column-content layout-fix" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <p id="templatename" contenteditable="false" class="gridster-item-content" *ngIf="layoutService.editorView == true && !object.emptyCell" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+    </p>
+
+    <angular-editor [disabled]="object.selected_linked_ui_component != object.linked_ui" *ngIf="layoutService.editorView == false && !object.emptyCell" class="gridster-item-content text-editor-box rows-{{item.rows}} " id="{{object.uicomponent_name}}Editor"
+        [(obj)]="object" [(ngModel)]="object.statement" (ngModelChange)="statementUpdate()">
+    </angular-editor>
+</div>

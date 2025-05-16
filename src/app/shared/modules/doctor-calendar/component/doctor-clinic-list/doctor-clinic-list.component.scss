@@ -1,0 +1,680 @@
+.custom-btn {
+    width: 100px !important;
+}
+
+.title {
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+.none{
+    opacity: 0;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .btn-reset {
+        padding: 0px;
+        max-width: 22% !important;
+        flex: 0 0 22% !important;
+    }
+    .btn-check {
+        padding: 8px 0px;
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+    }
+    .btn-empty {
+        flex: 0 0 46% !important;
+        max-width: 46% !important;
+    }
+    .checkmark {
+        top: 13px !important;
+    }
+    .check_small {
+        margin-top: 4px !important;
+    }
+    .text {
+        max-width: 96px !important;
+    }
+    .tablet-mode {
+        width: 108% !important;
+    }
+    .reset-btn {
+        flex: 0 0 25%;
+        max-width: 39%;
+    }
+    .date-time {
+        padding-right: 12px !important;
+    }
+    .clinic-bar {
+        margin-left: 7px;
+    }
+    .search-box {
+        margin-right: 22px !important;
+        width: 90% !important;
+    }
+    .doc-bar {
+        margin-left: 0px !important;
+        max-width: 99.666667% !important;
+        width: 100% !important;
+    }
+    .doc-search-bar {
+        margin-right: 26px;
+    }
+    .doc-search {
+        width: 99% !important;
+    }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .btn-reset {
+        padding: 0px;
+        max-width: 22% !important;
+        flex: 0 0 22% !important;
+    }
+    .btn-check {
+        padding: 8px 0px;
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+    }
+    .btn-empty {
+        flex: 0 0 46% !important;
+        max-width: 46% !important;
+    }
+    .search-box {
+        margin-right: 22px !important;
+        width: 96% !important;
+    }
+    .reset-check-btn {
+        flex: 0 0 41.66666667% !important;
+        max-width: 41.66666667% !important;
+    }
+    .checkmark-for-clinic {
+        margin-top: 5px !important;
+    }
+    .checkmark {
+        top: 5px !important;
+    }
+    .doc-img {
+        padding-left: 7px !important;
+    }
+    .bulits {
+        margin-top: 2px !important;
+    }
+    .cli {
+        margin-top: 25px !important;
+    }
+    .small {
+        top: 6px !important;
+    }
+    .tablet-mode {
+        width: 107% !important;
+    }
+    .doc-search {
+        width: 100% !important;
+    }
+    .btn-empty {
+        flex: 0 0 25% !important;
+        max-width: 25% !important;
+    }
+    .rest_class {
+        flex: 0 0 32%;
+        max-width: 32%;
+    }
+    .chk_class {
+        flex: 0 0 35%;
+        max-width: 35%;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .circle {
+        top: 13px !important;
+    }
+    .btn-reset {
+        padding: 7px;
+        max-width: 22% !important;
+        flex: 0 0 22% !important;
+    }
+    .btn-check {
+        padding: 8px 3px;
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+    }
+    .btn-empty {
+        flex: 0 0 39% !important;
+        max-width: 39% !important;
+    }
+    .search-box {
+        margin-right: 22px !important;
+        width: 108% !important;
+    }
+    .clinics-br {
+        flex: 0 0 84.666667% !important;
+        max-width: 84.666667% !important;
+    }
+    .checkmark1 {
+        margin-top: 30px !important;
+    }
+    .large {
+        margin-top: 25px !important;
+    }
+    .doctor-list {
+        width: 105% !important;
+    }
+    .doc-search {
+        width: 100% !important;
+    }
+    .doc-bar {
+        flex: 0 0 93.666667% !important;
+        max-width: 93.666667% !important;
+    }
+    .clinic-bar {
+        max-width: 89.666667% !important;
+    }
+    .date-time {
+        padding-right: 30px !important;
+    }
+}
+
+@media only screen and (min-width: 1400px) {
+    .doc-div {
+        width: 99% !important;
+    }
+    .patitent_name {
+        width: 96.7% !important;
+    }
+    .search-box {
+        margin-right: 22px !important;
+        width: 110% !important;
+    }
+}
+
+.active1 {
+    border-bottom-color: green !important;
+}
+
+.btn-filter {
+    height: 38px;
+    font-weight: 500;
+    padding: 10px;
+}
+
+.btn-filter:hover {
+    border-bottom: 1px solid #006228;
+    color: #34c3ee !important;
+}
+
+.btn-filter-selected {
+    border-bottom: 1px solid #006228;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+
+/* The customcheck */
+
+.customcheck {
+    display: block;
+    position: relative;
+    padding-left: 0;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+}
+
+
+/* Hide the browser's default checkbox */
+
+.customcheck input {
+    opacity: 0;
+    cursor: pointer;
+}
+
+
+/* Create a custom checkbox */
+
+.checkmark {
+    position: absolute;
+    top: auto;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 45px;
+}
+
+.list-group-item:hover,
+.list-group-item:focus {
+    z-index: 0 !important;
+    text-decoration: none !important;
+}
+
+.list-group-item:focus,
+.list-group-item:hover {
+    z-index: 0 !important;
+    text-decoration: none !important;
+}
+
+
+/* On mouse-over, add a grey background color */
+
+.customcheck:hover input~.checkmark {
+    background-color: #02cf32;
+}
+
+
+/* When the checkbox is checked, add a blue background */
+
+.customcheck input:checked~.checkmark {
+    background-color: #02cf32;
+    border-radius: 45px;
+}
+
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+
+/* Show the checkmark when checked */
+
+.customcheck input:checked~.checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+
+.customcheck .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 7px;
+    height: 13px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .btn-reset {
+        padding: 0px;
+        max-width: 22% !important;
+        flex: 0 0 22% !important;
+    }
+    .btn-check {
+        padding: 8px 0px;
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+    }
+    .btn-empty {
+        flex: 0 0 46% !important;
+        max-width: 46% !important;
+    }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .btn-reset {
+        padding: 0px;
+        max-width: 22% !important;
+        flex: 0 0 22% !important;
+    }
+    .btn-check {
+        padding: 8px 0px;
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+    }
+    .btn-empty {
+        flex: 0 0 25% !important;
+        max-width: 25% !important;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .btn-reset {
+        padding: 7px;
+        max-width: 22% !important;
+        flex: 0 0 22% !important;
+    }
+    .btn-check {
+        padding: 8px 3px;
+        max-width: 26% !important;
+        flex: 0 0 26% !important;
+    }
+    .btn-empty {
+        flex: 0 0 39% !important;
+        max-width: 39% !important;
+    }
+}
+
+.btn-info {
+    color: #fff !important;
+}
+
+.active1 {
+    border-bottom-color: green !important;
+}
+
+.btn-filter {
+    height: 38px;
+    padding: 10px;
+}
+
+.btn-filter:hover {
+    border-bottom: 1px solid #006228;
+}
+
+.btn-filter-selected {
+    border-bottom: 1px solid #006228;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+
+/* Create a custom checkbox */
+
+.checkmark {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+    border-radius: 45px;
+}
+
+.list-group-item:hover,
+.list-group-item:focus {
+    z-index: 0 !important;
+    text-decoration: none !important;
+}
+
+.list-group-item:focus,
+.list-group-item:hover {
+    z-index: 0 !important;
+    text-decoration: none !important;
+}
+
+
+/* On mouse-over, add a grey background color */
+
+.customcheck:hover input~.checkmark {
+    background-color: #02cf32;
+}
+
+
+/* When the checkbox is checked, add a blue background */
+
+.customcheck input:checked~.checkmark {
+    background-color: #02cf32;
+    border-radius: 45px;
+}
+
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+
+/* Show the checkmark when checked */
+
+.customcheck input:checked~.checkmark:after {
+    display: block;
+}
+
+
+/* Style the checkmark/indicator */
+
+.customcheck .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 7px;
+    height: 13px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.col {
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+}
+
+.row {
+    margin-left: -10px !important;
+    margin-right: -10px !important;
+}
+
+.list-group-item:hover {
+    box-shadow: rgba(83, 74, 74, 0.2) 0px 1px 5px !important;
+}
+
+.patient-privileges {
+    margin-left: 0px !important;
+    cursor: pointer;
+}
+
+.patitent_name {
+    width: 97% !important;
+    cursor: pointer;
+}
+
+.cur-point {
+    cursor: pointer;
+}
+
+.template-notfound {
+    padding: .4em 0 !important;
+    font-size: .95em !important;
+    line-height: 0.4 !important;
+    border-bottom: 1px solid rgba(230, 230, 230, .7) !important;
+}
+
+.clinic-list-hidden {
+    background-color: white;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid #e5e5e5;
+    height: calc(100vh - 360px);
+}
+
+.clinic-load {
+    padding-left: 0;
+    padding-right: 0;
+    border: 1px solid #d7d3d3;
+    height: 70px;
+    margin: 0px;
+    box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;
+    border-left-width: 6px;
+    border-radius: 4px;
+}
+
+.clinic-name {
+    font-weight: 500;
+    max-width: 100%;
+    // margin-left: 10px !important
+}
+
+.clinic-address {
+    max-width: 100%;
+    font-weight: 400;
+    margin-left: 10px !important;
+}
+
+.checkmark-for-clinic {
+    top: 10px;
+}
+
+.show-filter {
+    background-color: white;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid #e5e5e5;
+    height: calc(100vh - 300px);
+}
+
+.show-filter-doc {
+    padding-left: 0;
+    padding-right: 0;
+    border-top-width: inherit;
+    height: 70px;
+    box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;
+    border-radius: 4px;
+    border-left-width: 6px;
+}
+
+.filter-doc-name {
+    font-weight: 500;
+    max-width: 98px;
+    margin-left: 10px !important
+}
+
+.filter-doc-address {
+    max-width: 100%;
+    font-weight: 400;
+    margin-left: 10px !important;
+}
+
+.show-more-less {
+    width: 50%;
+}
+
+.doctor-hidden-list {
+    background-color: white;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid #e5e5e5;
+    height: calc(100vh - 360px);
+}
+
+.point {
+    cursor: pointer;
+}
+
+.starting-date {
+    padding: 0 !important;
+}
+
+.date-to {
+    margin-top: 6px !important;
+}
+
+.show-doctor-list {
+    border-left: 6px solid #9d9d9d !important;
+    padding-left: 0;
+    padding-right: 0;
+    // height: 70px;
+    border-radius: 4px;
+    border-top-width: inherit;
+    box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;
+}
+
+.doctor-List {
+    height: 88px;
+    float: left;
+    margin-top: -13px;
+    margin-bottom: -12px;
+    width: 6px;
+    border-radius: 3px 0px 0px 3px;
+    background-color: rgb(157, 157, 157);
+}
+
+.doc-profile {
+    height: 60px;
+    width: 57px;
+    margin-top: -7px !important
+}
+
+.main-checkmark {
+    top: 0px !important;
+}
+
+.check-doc-show {
+    padding-left: 0;
+    padding-right: 0;
+    height: 69px;
+    border-radius: 4px;
+    box-shadow: rgba(83, 74, 74, 0.15) 0px 1px 2px;
+    border-radius: 4px;
+}
+
+.doc-check-array-profile {
+    height: 60px;
+    width: 50px;
+    margin-top: -7px !important;
+    margin-left: 4px !important;
+}
+
+.doctor-doc-lists {
+    height: 69px;
+    float: left;
+    margin-top: -13px;
+    margin-bottom: -12px;
+    width: 6px;
+    border-radius: 3px 0px 0px 3px;
+    background-color: rgb(157, 157, 157);
+}
+
+.doc-filter-search {
+    width: 105%;
+    padding-left: 0;
+    padding-right: 0;
+    height: 70px;
+    margin-left: -12px;
+}
+
+.doctor-image {
+    float: left;
+    padding: 0px;
+}
+
+.total-doctors {
+    height: 69px;
+    float: left;
+    margin-top: -12px !important;
+    margin-bottom: -12px !important;
+}
+
+.doc-name-spacialty {
+    text-align: left;
+    float: left;
+    padding-left: 10px;
+}
+
+.chk-boxes {
+    float: right;
+    margin-top: 0px !important;
+    padding-left: 0px
+}
+
+
+.list-group-item+.list-group-item,
+.list-group-item:first-child {
+    border-top-width: 0;
+    border: 1px solid #d7d3d3;
+    border-radius: 4px;
+}
+
+.doc-search-bar input {
+    font-size: 12px;
+}
+
+.autocomplete-container .input-container .x i {
+    color: rgba(0,0,0,.54);
+    font-size: 15px;
+    vertical-align: middle;
+    margin-top: -5px;
+}

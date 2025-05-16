@@ -1,0 +1,486 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="tab-pane fade show active" id="Plan-Type" role="tabpanel" aria-labelledby="Plan-Type'-tab"
+  *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_view)">
+	<div class="d-block text-end">
+		<button type="button" (keydown.enter)="$event.preventDefault()"
+        *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_add)"
+        class="btn btn-default round-btn" href="javascript:void(0)" data-bs-toggle="modal"
+        (click)="plantypeOpenModel(planTypeCreate)">
+			<span class="icon-plus-circle"></span> Add New 
+      </button>
+	</div>
+	<form class="form mb-2" autocomplete="off" [formGroup]="searchPlanType" *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-2" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': searchPlanType.get('plan_type').value != '' && searchPlanType.get('plan_type').value != null }">
+                    <label class="form-label" for="plan_type">Plan Type</label>
+                    <input type="text" id="plan_type" class="form-control form-input" formControlName="plan_type">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchPlanType.get('comments').value != '' && searchPlanType.get('comments').value != null }">
+                    <label class="form-label" for="comments">Comments</label>
+                    <input type="text" id="comments" class="form-control form-input" formControlName="comments">
+                  </div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success" (click)="planTypeSetPage({ offset: 0 });">Filter</button>
+				<button class="btn btn-primary" (click)="planTypeReset()" [disabled]="checkInputs()">Reset</button>
+			</div>
+		</div>
+   </form>
+  <!-- <div class="search-filter mb-2">
+    <div class="d-block">
+      <button type="button" (keydown.enter)="$event.preventDefault()"
+        *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_add)"
+        class="btn btn-default round-btn float-right" href="javascript:void(0)" data-bs-toggle="modal"
+        (click)="plantypeOpenModel(planTypeCreate)">
+		<span class="icon-plus-circle"></span> Add New 
+      </button>
+    </div>
+    <form autocomplete="off" [formGroup]="searchPlanType"
+      *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_filter)">
+      <div class="form">
+        <div class="search-filter-body">
+          <div class="row">
+            <div class="col-xl-10">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchPlanType.get('plan_type').value != '' && searchPlanType.get('plan_type').value != null }">
+                    <label class="form-label" for="plan_type">Plan Type</label>
+                    <input type="text" id="plan_type" class="form-control form-input" formControlName="plan_type">
+                  </div>
+				</div>
+				<div class="col-sm-6">
+                  <div class="form-group field"
+                    [ngClass]="{'focused': searchPlanType.get('comments').value != '' && searchPlanType.get('comments').value != null }">
+                    <label class="form-label" for="comments">Comments</label>
+                    <input type="text" id="comments" class="form-control form-input" formControlName="comments">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-2">
+              <div class="row justify-content-center mb-3 mb-xl-0">
+                <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                  <button class="btn btn-success w-100 me-3" (click)="planTypeSetPage({ offset: 0 });"> Filter
+                  </button>
+                </div>
+                <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                  <button class="btn btn-primary w-100" (click)="planTypeReset()" [disabled]="checkInputs()">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </form>
+  </div> -->
+
+  <div class="card data-table p-0 border-0">
+    <div class="row">
+      <div class="col-12 col-sm-6 edit-block text-start">
+        <div class="form-group field option-field mb-2 d-inline-block">
+          <ul>
+            <li>Show</li>
+            <li>
+              <select class="custom-select" name="limit" id="limit" (change)="planTypePageLimit($event.target.value)" [(ngModel)]="planTypePage.size">
+                <option [value]="10" selected>10</option>
+                <option [value]="20">20</option>
+                <option [value]="30">30</option>
+                <option [value]="40">40</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+              </select>
+            </li>
+            <li>Entries</li>
+          </ul>
+
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+        <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+					Customize Columns
+				</button>
+
+        <!-- <lib-task-manager *ngIf="planTypeSelection.selected.length "
+          selectedProps="{{planTypestringfy(planTypeSelection.selected)}}" type="text" page="plan_type"
+          listCount="{{planTypeSelection.selected.length}}">
+        </lib-task-manager> -->
+
+        <!-- <a href="javascript:void(0)" class="btn btn-default round-btn"
+									(click)="deleteMultiplPlanType()"
+									*ngIf="planTypeSelection.selected.length && aclService.hasPermission(userPermissions.master_billing_plan_type_delete)">
+									<span class="icon-remove me-1"></span>
+									Delete [{{planTypeSelection.selected.length}}]
+								</a> -->
+
+        <!-- <a href="javascript:void(0)"  *ngIf="planTypeSelection.selected.length"
+                         style="color:#fff; padding: 6px 22px; margin-right: 10px !important;  margin-top: 15px; background: #00a650; border-color:#00a650;">
+                            <img class="me-2" style="width:16px;" src="assets/images/task.png"> <span style="font-size: 15px;">
+                              {{planTypeSelection.selected.length}}  Create Task</span>
+                        </a> -->
+      </div>
+    </div>
+    <!--data table starts from here -->
+    <ngx-datatable #planTypeList [rows]="planTypeData" [columnMode]='"force"' class='bootstrap'
+      [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+      [count]="planTypePage.totalElements" [offset]="planTypePage.pageNumber" [limit]="planTypePage.size"
+      [scrollbarH]="true" (page)="planTypeSetPage($event)">
+
+      <ngx-datatable-column name="Plan Type" [sortable]="false" prop="plan_type" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.plan_type ||'N/A'}}" container="body">
+            {{row.plan_type ||'N/A'}}</div>
+        </ng-template>
+        <!-- <ng-template ngx-datatable-cell-template let-row="row"
+									*ngFor="let rowPlanType of planTypeData">
+									{{rowPlanType.planType}}
+								</ng-template> -->
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Comments" [sortable]="false" prop="comments" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.comments ||'N/A'}}" container="body">
+            {{row.comments ||'N/A'}}</div>
+        </ng-template>
+      </ngx-datatable-column>
+	  
+       <ngx-datatable-column name="Actions" [width]="150" [sortable]="false" cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+        <ng-template ngx-datatable-header-template name="Actions">
+          <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_edit)"
+            (change)="$event ? masterPlanTypeToggle() : null"
+            [checked]="planTypeSelection.hasValue() && isPlanTypeSelected()"
+            [indeterminate]="planTypeSelection.hasValue() && !isPlanTypeSelected()" disabled>
+          </mat-checkbox>
+          <!-- <label>
+                           <input id="intake4" name="" value="" type="checkbox">
+                           <span class="fake-input position-absolute"></span>
+                         </label> -->
+          Actions
+
+        </ng-template>
+
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+          <!-- <label for="intake4" class="chkbox position-relative mt-1">
+                           <input id="intake4" name="" value="" type="checkbox">
+                           <span class="fake-input position-absolute"></span>
+                         </label> -->
+          <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_edit)"
+            (click)="$event.stopPropagation()" (change)="$event ? planTypeSelection.toggle(row) : null"
+            [checked]="planTypeSelection.isSelected(row)" disabled>
+          </mat-checkbox>
+
+          <a *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_edit)" class="edit-hov mx-1"
+            ngbTooltip="Edit" container="body" (click)="editPlanTypeRow(editPlanTypeForm,row, rowIndex)" href="javascript:void(0)"
+            role="button"><i class="icon-pencil"></i></a>
+          <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="planTypeHistoryStats(row)">
+            <i class="fa fa-history"></i>
+          </a>
+
+          <!-- <lib-task-manager selectedProps="{{planTypestringfy([row])}}" type="icon" id="{{row.id}}" page="plan_type">
+          </lib-task-manager> -->
+          <!-- <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i class="fa fa-tasks"></i></a> -->
+
+          <!-- <a *ngIf="aclService.hasPermission(userPermissions.master_billing_plan_type_delete)"
+										class="remove-hov mx-1" tooltip="Delete" (click)="deleteOnePlanTypeRecord(row)"
+										href="javascript:void(0)" role="button">
+										<span class="icon-remove"></span></a> -->
+
+          <!-- <button  class="pencil-hov mx-2" 
+                        data-original-title="Edit" 
+                        title="Edit" 
+                      
+                        tooltip="Edit" 
+                        role="button">
+                            <i class="icon-pencil"></i>
+                          </button>
+
+                        <a class="print-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button">
+                           <img src="assets/images/task-complete1.png" style="width: 15px;
+                           margin-top: -3px;">
+                       </a>
+
+                       <a class="delete-hov mx-2" tooltip="Delete" 
+                       href="javascript:void(0)" role="button" 
+                      ><i
+                         class="icon-remove"></i>
+                     </a> -->
+
+
+        </ng-template>
+      </ngx-datatable-column>
+
+    </ngx-datatable>
+    <!-- data table ends here -->
+    <!-- <div class="card-body" style="border: none; background: transparent;  padding:0px;">
+                            <table class="table table-bordered table-striped text-center mb-0">
+                                <thead>
+                                  <tr>
+                                    <th style="width: 50%;" class="border-right" scope="col">Plan Type</th>
+                                    <th class="form" scope="col"> <label for="intake4" class="chkbox position-relative mt-1">
+                                            <input id="intake4" name="" value="" type="checkbox">
+                                            <span class="fake-input position-absolute"></span>
+                                          </label> Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>PPO</td>
+                                    <td class="form">
+                                        <label for="intake4" class="chkbox position-relative mt-1">
+                                          <input id="intake4" name="" value="" type="checkbox">
+                                          <span class="fake-input position-absolute"></span>
+                                        </label>
+                                                <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                                                    class="fa fa-tasks"></i></a>    
+                                          <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button">
+                                                <span class="icon-remove"></span></a>
+                                                <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                  class="icon-pencil"></i></a>
+                                      </td>
+                                  </tr>
+                                  <tr>
+                                      <td>HMO</td>
+                                      <td class="form">
+                                          <label for="intake4" class="chkbox position-relative mt-1">
+                                            <input id="intake4" name="" value="" type="checkbox">
+                                            <span class="fake-input position-absolute"></span>
+                                          </label>
+                                                  <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                                                      class="fa fa-tasks"></i></a>    
+                                            <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button">
+                                                  <span class="icon-remove"></span></a>
+                                                  <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                    class="icon-pencil"></i></a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>Medicare</td>
+                                        <td class="form">
+                                            <label for="intake4" class="chkbox position-relative mt-1">
+                                              <input id="intake4" name="" value="" type="checkbox">
+                                              <span class="fake-input position-absolute"></span>
+                                            </label>
+                                                    <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                                                        class="fa fa-tasks"></i></a>    
+                                              <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button">
+                                                    <span class="icon-remove"></span></a>
+                                                    <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                      class="icon-pencil"></i></a>
+                                          </td>
+                                      </tr>
+
+                                      <tr>
+                                          <td>Dental</td>
+                                          <td class="form">
+                                              <label for="intake4" class="chkbox position-relative mt-1">
+                                                <input id="intake4" name="" value="" type="checkbox">
+                                                <span class="fake-input position-absolute"></span>
+                                              </label>
+                                                      <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                                                          class="fa fa-tasks"></i></a>    
+                                                <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button">
+                                                      <span class="icon-remove"></span></a>
+                                                      <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                        class="icon-pencil"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Vision</td>
+                                            <td class="form">
+                                                <label for="intake4" class="chkbox position-relative mt-1">
+                                                  <input id="intake4" name="" value="" type="checkbox">
+                                                  <span class="fake-input position-absolute"></span>
+                                                </label>
+                                                        <a class="tasks-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button"><i
+                                                            class="fa fa-tasks"></i></a>    
+                                                  <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button">
+                                                        <span class="icon-remove"></span></a>
+                                                        <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                                                          class="icon-pencil"></i></a>
+                                              </td>
+                                          </tr>
+                                </tbody>
+                              </table>
+                      </div> -->
+
+    <!-- <div class="card-footer text-muted">
+                            <div class="row">
+                                <div class="col-md-6 text-start">
+                                        <p>Showing 1 to 5 of 337 entries</p>
+                                </div>
+                                <div class="col-md-6 justify-content-end d-flex">
+                                    <nav aria-label="Page navigation example">
+                                            <ul class="pagination mb-0">
+                                              <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                  <img src="assets/images/previous.png">
+                                                </a>
+                                                
+                                              </li>
+
+                                              <li class="page-item">
+                                                    <a class="page-link" href="#" aria-label="Previous">
+                                                      <img src="assets/images/left.png">
+                                                    </a>
+                                                    
+                                                  </li>
+                                            
+                                              <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                              <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                              <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                              <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                              <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                            
+                                                  <li class="page-item">
+                                                        <a class="page-link" href="#" aria-label="Previous">
+                                                          <img src="assets/images/right.png">
+                                                        </a>
+                                                        
+                                                      </li>
+                                              <li class="page-item">
+                                                    <a class="page-link" href="#" aria-label="Next">
+                                                            <img src="assets/images/next.png">
+                                                        </a>
+                                              
+                                              </li>
+                                          
+                                            </ul>
+                                          </nav>
+                                    </div>
+                            </div>
+                          </div>
+                         -->
+
+  </div>
+</div>
+<ng-template #planTypeCreate let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Add Plan Type</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetModel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form autocomplete="" [formGroup]="planTypeCreateform" (ngSubmit)="onPlanTypeSubmit(planTypeCreateform.value)">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': planTypeCreateform.get('plan_type').value != '' && planTypeCreateform.get('plan_type').value != null }">
+            <label class="form-label">Plan Type*</label>
+            <input type="text" class="form-control mb-0" formControlName="plan_type" notFirstCharactorSpace>
+            <small class="form-text text-muted danger"
+              *ngIf="planTypeCreateform.get('plan_type').errors?.required && 
+                            (planTypeCreateform.get('plan_type').dirty || planTypeCreateform.get('plan_type').touched)">This field is required</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row mb-2">
+        <div class="col-md-12">
+          <div class="form-group field mb-3"
+            [ngClass]="{'focused': planTypeCreateform.get('comments').value != '' && planTypeCreateform.get('comments').value != null }">
+            <label class="form-label">Comments</label>
+            <textarea class="form-control mb-0" rows="3" formControlName="comments" notFirstCharactorSpace></textarea>
+            <small class="form-text text-muted danger"
+              *ngIf="planTypeCreateform.get('comments').errors?.required && 
+                            (planTypeCreateform.get('comments').dirty || planTypeCreateform.get('comments').touched)">Please enter comments!</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 modal-btn-width text-center">
+          <button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+            (click)="resetModel()">Cancel</button>
+          <button type="submit" [disabled]="isDisabledSaveContinue()" class="btn btn-success">Save & Continue</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</ng-template>
+<!-- </div>
+        </div>
+      </div> -->
+<!-- 
+      <div class="modal fade" id="edit-plan-type" tabindex="-1" role="dialog" aria-labelledby="add-insurance" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered add-visit-popup" role="document">
+          <div class="modal-content"> -->
+<ng-template #editPlanTypeForm let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">Edit Plan Type</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetModel()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form autocomplete="" [formGroup]="planTypeEditform" (ngSubmit)="updatePlantypeRow(planTypeEditform.value)">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group field mb-1"
+            [ngClass]="{'focused': planTypeEditform.get('plan_type').value != '' && planTypeEditform.get('plan_type').value != null }">
+            <label class="form-label">Plan Type*</label>
+            <input type="text" class="form-control mb-0" formControlName="plan_type" notFirstCharactorSpace>
+            <small class="form-text text-muted danger"
+              *ngIf="planTypeEditform.get('plan_type').errors?.required && 
+                            (planTypeEditform.get('plan_type').dirty || planTypeEditform.get('plan_type').touched)">This field is required</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row mb-2">
+        <div class="col-md-12">
+          <div class="form-group field"
+            [ngClass]="{'focused': planTypeEditform.get('comments').value != '' && planTypeEditform.get('comments').value != null }">
+            <label class="form-label">Comments</label>
+            <textarea class="form-control" rows="3" formControlName="comments" notFirstCharactorSpace></textarea>
+            <small class="form-text text-muted danger"
+              *ngIf="planTypeEditform.get('comments').errors?.required && 
+                            (planTypeEditform.get('comments').dirty || planTypeEditform.get('comments').touched)">Please enter comments!</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 modal-btn-width text-center">
+          <button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+            (click)="resetModel()">Cancel</button>
+          <button type="submit" [disabled]="isDisabledUpdate()" class="btn btn-success">Update</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

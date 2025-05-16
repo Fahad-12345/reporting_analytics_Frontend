@@ -1,0 +1,90 @@
+<div id="wrapper" class="h-100 login p-0">
+	<ng-progress #ngProgress [direction] = "'ltr+'" [min]="8" [max]="100" [speed]="400" [color]="'#34c3ee'" [spinnerPosition]="'right'" 
+	 [thick]="false" [spinner]="false" [ease]="'linear'"></ng-progress>
+	<div class="container-fluid h-100 px-0">
+		<div class="row align-items-center h-xl-100 h-100 m-0">
+			<!-- main informative part of the site -->
+			<div class="col-lg-9 col-md-8 d-none d-md-block h-100 px-0">
+				<div class="login-block h-100"
+					style="background-image: url(assets/images/image1.jpg); background-size: cover;">
+					<div class="holder text-center">
+						<strong class="logo position-static">
+							<img src="assets/images/logo.svg" alt="Medical Doctor">
+						</strong>
+						<!-- <h1>Welcome to Medical Doctor</h1> -->
+						<!-- <p>Quick Supplies for Patients at Home</p> -->
+					</div>
+				</div>
+			</div>
+
+			<!-- right panel -->
+			<aside class="login-panel col-lg-3 col-md-4 pt-xl-5 pt-lg-5 pt-2">
+				<h1 class="mb-3"><span class="icon-unlock-alt"></span>Login</h1>
+				<form (ngSubmit)="onSubmit()" [formGroup]="loginForm" autocomplete="off" novalidate>
+					<!--  fake fields are a workaround for chrome/opera autofill getting the wrong fields -->
+					<input style="display:none" type="text" name="fakeusernameremembered">
+					<input style="display:none" type="password" name="fakepasswordremembered">
+					<div class="form-group">
+						<label for="name" class="d-none">Email</label>
+						<input class="form-control" type="email" formControlName="email" name="email" autocomplete="nope"
+							placeholder="Email">
+						<small class="form-text text-muted danger"
+							*ngIf="!loginForm.get('email').valid && (loginForm.get('email').dirty || loginForm.get('email').touched)">Please
+							enter valid email!</small>
+					</div>
+					<div class="form-group">
+						<label for="password" class="d-none">Password</label>
+						<input class="form-control" #passwordInputElement [type]="passwordShow ? 'text' : 'password'" formControlName="password"
+							autocomplete="new-password" placeholder="Password" name="password">
+						<small class="form-text text-muted danger"
+							*ngIf="loginForm.get('password').errors?.required && (loginForm.get('password').dirty || loginForm.get('password').touched)">Please
+							enter password!</small>
+						<small class="form-text text-muted danger"
+							*ngIf="(loginForm.get('password').errors?.minlength || loginForm.get('password').errors?.maxlength) && loginForm.get('password').dirty">Password
+							characters length must be between 4 and 24 !</small>
+						<div class="passwordIcon" (click)="passwordAction()">
+							<span  [ngClass]="{'icon-eye-show': passwordShow, 'icon-eye-hide': !passwordShow}" aria-hidden="true"></span>
+						</div>
+					</div>
+
+					<div class="buttons">
+						<div class="btn-holder">
+							<button class="btn btn-primary" #loginBtn type="submit" [disabled]="!loginForm.valid || isLoginDisable">Sign In</button>
+						</div>
+						<!-- <div class="btn-holder">
+							<button class="btn btn-primary" type="button" (click)="onRegister()">Sign Up</button>
+						</div> -->
+					</div>
+					<!-- <a href="javascript:void(0)" class="forgot-link" (click)="onForgotPassword()">Forgot Password?</a> -->
+				</form>
+
+				<!-- bottom sectoin -->
+				<div class="bottom-section pt-4">
+
+					<!-- social networks -->
+					<ul class="list-inline social-networks">
+						<li class="list-inline-item"><a class="facebook" href="javascript:void(0)"><span
+									class="icon-facebook"></span></a></li>
+						<li class="list-inline-item"><a class="twitter" href="javascript:void(0)"><span
+									class="icon-twitter"></span></a></li>
+						<li class="list-inline-item"><a class="instagram" href="javascript:void(0)"><span
+									class="icon-instagram"></span></a></li>
+						<li class="list-inline-item"><a class="linkedin" href="javascript:void(0)"><span
+									class="icon-linkedin"></span></a></li>
+					</ul>
+
+
+					<!-- footer nav -->
+					<nav class="f-nav">
+						<ul class="list-inline">
+							<li class="list-inline-item"><a href="#">Contact Us</a></li>
+							<li class="list-inline-item"><a href="#">About Us</a></li>
+							<li class="list-inline-item"><a href="#">FAQ</a></li>
+						</ul>
+					</nav>
+				</div>
+			</aside>
+		</div>
+	</div>
+</div>
+<!--Login Page Ends-->

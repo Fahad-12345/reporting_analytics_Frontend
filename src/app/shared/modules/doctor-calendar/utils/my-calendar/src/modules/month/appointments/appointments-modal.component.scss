@@ -1,0 +1,191 @@
+  @import "../../../../../../../../../../assets/sass/abstracts/mixins/_tooltip.scss";
+
+.appointment {
+  border: 1px solid #e1e1e1;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.appointment:hover {
+  border: 1px solid #000;
+}
+
+.custom-font {
+  font-size: 14px !important;
+}
+
+.card {
+  .card-header {
+    color: white;
+    border: none;
+    background: #2eb16d;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 1px 15px 2px;
+  }
+  .card-body {
+    border-color: #bfc2bf;
+    padding: 15px;
+
+    .bg-light {
+      background-color: #f2f2f2 !important;
+      margin: 0px;
+      padding: 1px 0px 5px;
+    }
+
+    .bg-white {
+      padding: 1px 0px 4px;
+    }
+
+    label {
+      font-weight: 500;
+      font-size: 13px;
+      margin-bottom: 0px;
+    }
+
+    span {
+      color: #6d6969;
+      font-weight: 400;
+      font-size: 13px;
+      &.color-blue {
+        color: #34c3ee;
+      }
+    }
+
+    .w-40 {
+      width: 39% !important;
+    }
+  }
+}
+
+.profile-outer {
+  flex: 0 0 29.333333%;
+  max-width: 29.333333%;
+}
+
+.appoint-details {
+  flex: 0 0 70.666667%;
+  max-width: 70.666667%;
+}
+
+.profile-image {
+  width: 100%;
+  border: 1px solid #b0b1b1;
+  border-radius: 5px;
+  padding: 7px;
+  height: 90px;
+}
+
+.btn-success {
+  height: 19px;
+  margin-bottom: 2px;
+  border-radius: 3px;
+  padding: 0px 6px 2px !important;
+  font-size: 12px;
+  width: auto;
+
+  &.btn-primary {
+    background: #585958 !important;
+    border-color: #585958 !important;
+  }
+}
+.custom-btn-tooltip {
+  position: relative;
+  margin: 0px 0px 0px 0px;
+
+  .btn-tooltip-top {
+    @include toltip-top();
+    min-width: 200px;
+
+    .btn {
+      margin-right: 5px;
+    }
+  }
+  &:hover .btn-tooltip-top {
+    display: block;
+  }
+  .btn-tooltip-top i {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -12px;
+    width: 24px;
+    height: 12px;
+    overflow: hidden;
+    &::after {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      background-color: #eeeeee;
+      border: 1px solid #34c3ee;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+    }
+  }
+}
+
+::ng-deep .datatable-body-cell-label {
+  white-space: nowrap;
+  width: 95%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+::ng-deep app-appointment-modal .action-icon .datatable-body-cell-label {
+  text-align: left;
+}
+::ng-deep .ngSelectDisabled {
+  .ng-select {
+    pointer-events: none;
+    .ng-select-container {
+      background: #e9ecef !important;
+    }
+  }
+}
+
+::ng-deep .ngx-datatable {
+  .datatable-body {
+    .datatable-scroll {
+      .datatable-row-wrapper {
+        .datatable-body-row {
+          &.datatable-row-even,
+          &.datatable-row-odd {
+            &.row-color {
+              .datatable-row-center {
+                .datatable-body-cell {
+                  background-color: #c8e6c9 !important;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.add-tag-btn {
+  svg {
+    font-size: 0.88rem !important;
+  }
+}
+
+.btn {
+	&.add-tag-btn-disabled {
+		color: #fff !important;
+		border: 1px solid #78676a !important;
+		padding: 0px 6px 2px !important;
+		background: #78676a !important;
+		cursor: not-allowed;
+		pointer-events: auto !important;
+		opacity: 0.65;
+
+		svg {
+			font-size: 0.88rem !important;
+		}
+	}
+}

@@ -1,0 +1,99 @@
+<div class="angular-editor-toolbar" *ngIf="showToolbar">
+    <div class=" angular-editor-toolbar-set" *ngIf="id!='combinePro'">
+        <button type="button" title="Undo" class="angular-editor-button" (click)="triggerCommand('undo')"  tabindex="-1"><i class='fa fa-undo'></i></button>
+        <button type="button" title="Redo" class="angular-editor-button" (click)="triggerCommand('redo')" [hidden]="true" tabindex="-1"><i class='fa fa-repeat'></i></button>
+    </div>
+    <div class="angular-editor-toolbar-set">
+        <button [id]="'bold-'+id" type="button" title="Bold" class="angular-editor-button" (click)="triggerCommand('bold')" [disabled]="htmlMode"  tabindex="-1"><i
+				class='fa fa-bold'></i></button>
+        <button  *ngIf="id!='combinePro' && !layoutService.isShowEditor" [id]="'link-'+id" type="button" class="angular-editor-button" (click)="insertModalOpen(insertLink)" title="Insert Link"   tabindex="-1">
+      <i class="fa fa-link"></i></button>
+        <button [id]="'italic-'+id" type="button" title="Italic" class="angular-editor-button" (click)="triggerCommand('italic')" [disabled]="htmlMode"  tabindex="-1"><i class='fa fa-italic'></i>
+		</button>
+        <button [id]="'underline-'+id" type="button" title="Underline" class="angular-editor-button" (click)="triggerCommand('underline')" [disabled]="htmlMode" tabindex="-1"><i class='fa fa-underline'></i></button>
+        <button [id]="'strikeThrough-'+id" type="button" title="Strikethrough" class="angular-editor-button" (click)="triggerCommand('strikeThrough')" [disabled]="htmlMode" tabindex="-1"><i class='fa fa-strikethrough'></i></button>
+        <button [id]="'subscript-'+id" type="button" title="Subscript" class="angular-editor-button" (click)="triggerCommand('subscript')" [disabled]="htmlMode" tabindex="-1"><i class='fa fa-subscript'></i></button>
+        <button [id]="'superscript-'+id" type="button" title="Superscript" class="angular-editor-button" (click)="triggerCommand('superscript')" [disabled]="htmlMode"  tabindex="-1"><i class='fa fa-superscript'></i></button>
+    </div>
+    <div class="angular-editor-toolbar-set" [hidden]="id.includes('Linking')">
+        <button [id]="'justifyLeft-'+id" type="button" title="Align Left" class="angular-editor-button" (click)="triggerCommand('justifyLeft')" [disabled]="htmlMode"  tabindex="-1"><i class='fa fa-align-left'></i></button>
+        <button [id]="'justifyCenter-'+id" type="button" title="Align Center" class="angular-editor-button" (click)="triggerCommand('justifyCenter')" [disabled]="htmlMode"  tabindex="-1"><i class='fa fa-align-center'></i></button>
+        <button [id]="'justifyRight-'+id" type="button" title="Align Right" class="angular-editor-button" (click)="triggerCommand('justifyRight')" [disabled]="htmlMode" tabindex="-1">
+			<i class='fa fa-align-right'></i></button>
+        <button [id]="'justifyFull-'+id" type="button" title="Justify Full" class="angular-editor-button" (click)="triggerCommand('justifyFull')" [disabled]="htmlMode" tabindex="-1"><i class='fa fa-align-justify'></i></button>
+    </div>
+    <div class="angular-editor-toolbar-set">
+        <button [id]="'indent-'+id" type="button" title="Indent" class="angular-editor-button" (click)="triggerCommand('indent')" [disabled]="htmlMode" style="display:none !important" tabindex="-1"><i
+				class='fa fa-indent'></i></button>
+        <button [id]="'outdent-'+id" type="button" title="Outdent" class="angular-editor-button" (click)="triggerCommand('outdent')" [disabled]="htmlMode" style="display:none !important" tabindex="-1"><i
+				class='fa fa-outdent'></i></button>
+    </div>
+    <div class="angular-editor-toolbar-set">
+        <button [id]="'insertUnorderedList-'+id" type="button" title="Unordered List" class="angular-editor-button" (click)="triggerCommand('insertUnorderedList')" [disabled]="htmlMode" tabindex="-1"><i class='fa fa-list-ul'></i></button>
+        <button [id]="'insertOrderedList-'+id" type="button" title="Ordered List" class="angular-editor-button" (click)="triggerCommand('insertOrderedList')" [disabled]="htmlMode" tabindex="-1"><i class='fa fa-list-ol'></i></button>
+    </div>
+    <div class="angular-editor-toolbar-set">
+        <!-- <button [id]="'link-'+id" type="button" class="angular-editor-button" (click)="insertUrl()" title="Insert Link"   tabindex="-1">
+			<i class="fa fa-link"></i>
+		</button> -->
+        <button [id]="'unlink-'+id" type="button" class="angular-editor-button" (click)="triggerCommand('unlink')" title="Unlink" [disabled]="htmlMode || !linkSelected"  tabindex="-1">
+			<i class="fa fa-chain-broken"></i>
+		</button>
+        <input style="display: none" accept="image/*" type="file" (change)="onFileChanged($event)" #fileInput>
+        <button [id]="'insertImage-'+id" type="button" class="angular-editor-button" (click)="fileInput.click()" title="Insert Image" [disabled]="htmlMode" tabindex="-1"><i
+				class="fa fa-image"></i>
+		</button>
+        <button [id]="'insertVideo-'+id" type="button" class="angular-editor-button" (click)="insertVideo()" title="Insert Video" [disabled]="htmlMode" tabindex="-1"><i
+				class="fa fa-video-camera"></i></button>
+        <button [id]="'insertHorizontalRule-'+id" type="button" title="Horizontal Line" class="angular-editor-button" (click)="triggerCommand('insertHorizontalRule')" [disabled]="htmlMode"  tabindex="-1"><i class="fa fa-minus"></i></button>
+    </div>
+    <div class="angular-editor-toolbar-set">
+        <button [id]="'clearFormatting-'+id" type="button" title="Clear Formatting" class="angular-editor-button" (click)="triggerCommand('removeFormat')" [disabled]="htmlMode" tabindex="-1"><i class='fa fa-remove'></i>
+		</button>
+    </div>
+    <div class="angular-editor-toolbar-set">
+        <button [id]="'toggleEditorMode-'+id" type="button" title="HTML Code" class="angular-editor-button" (click)="triggerCommand('toggleEditorMode')"  tabindex="-1"><i
+				class='fa fa-code'></i></button>
+    </div>
+    <div *ngIf="layoutService.isShowEditor && !layoutService.editorView" class="angular-editor-toolbar-set">
+        <button type="button" title="Alignment" class="angular-editor-button" (click)="alignmentModal()" tabindex="-1"><i class='icon-tasks'></i></button>
+    </div>
+    <div *ngIf="layoutService.isShowEditor && !layoutService.editorView" class="angular-editor-toolbar-set refresh-error-button">
+        <button type="button" class="angular-editor-button" title="Refresh Preview" tabindex="-1" (click)="refreshPreview()">
+        <i class='icon-refresh'></i><a *ngIf="layoutService.previewEdited"><i class="fa fa-exclamation text-danger"></i></a>
+  </button>
+    </div>
+		<div class="angular-editor-toolbar-set">
+        <ae-select title="Font Size" class="select-font-size font-size-display" style="display:inline-block !important;" [options]="fontSizes" [(ngModel)]="fontSize" (change)="setFontSize(fontSize)" [disabled]="htmlMode"
+            tabindex="-1">
+        </ae-select>
+    </div>
+    <div *ngIf="multiplePreviews && multiplePreviews.length>0" class="angular-editor-toolbar-set right-toolbar-item">
+        <select (change)="selectPreview($event)">
+          <option *ngFor="let preview of multiplePreviews; let i = index" value="{{i}}"
+            [selected]="preview.selected == true">
+            {{preview.title}}</option>
+		    </select>
+    </div>
+</div>
+<ng-template #insertLink let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title">Insert Link</h4>
+		<button aria-label="Close" class="close" type="button" data-dismiss="modal"
+		(click)="modal.close('cancel')"><span aria-hidden="true">×</span></button>
+	</div>
+	<div class="modal-body">
+		<label for="url">Enter an https:// URL:</label>
+		<input type="url" name="url" id="url-type-styled-input" class="form-control"
+			   placeholder="https://example.com"
+			   pattern="https://.*" size="30"
+			   [ngModel]="textUrl"
+         (ngModelChange)="changeUrl($event)">
+			   <div class="text-end">
+					<button class="btn btn-outline-secondary" data-dismiss="modal" type="button"
+						(click)="modal.close('cancel')">Cancel</button>
+            <button class="btn bg-green ms-2" [disabled]="textUrl.length<9" type="submit"
+						(click)="insertUrl()">Save</button>
+			</div>
+</div>
+</ng-template>

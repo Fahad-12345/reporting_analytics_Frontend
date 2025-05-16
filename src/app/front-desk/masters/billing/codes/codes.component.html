@@ -1,0 +1,50 @@
+<div class="front-desk-block billing-info master-tabs">
+
+  <div class="card text-center">
+    <div class="card-header border-bottom-0">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_icd_tab)">
+          <a routerLinkActive="active" class="nav-link " routerLink="/front-desk/masters/billing/codes/Icd-codes">ICD-10
+            Codes</a>
+        </li>
+        <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_cpt_tab)">
+          <a routerLinkActive="active" class="nav-link " routerLink="/front-desk/masters/billing/codes/Cpt-codes">CPT
+            Codes</a>
+        </li>
+        <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_tab)">
+          <a routerLinkActive="active" class="nav-link "
+            routerLink="/front-desk/masters/billing/codes/Hcpcs-codes">HCPCS</a>
+        </li>
+        <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_sc_tab)">
+          <a routerLinkActive="active" class="nav-link " routerLink="/front-desk/masters/billing/codes/Fee-Schedule">Fee
+            Schedule</a>
+        </li>
+        <!-- <li class="nav-item" *ngIf="aclService.hasPermission('master_billing_codes_hcpcs_tab')">
+          <a routerLinkActive="active" class="nav-link "
+            routerLink="/front-desk/masters/billing/codes/procedure-codes">Procedure Code</a>
+        </li> -->
+        <!-- <li class="nav-item" *ngIf="aclService.hasPermission('master-billing-codes-fee-sc-tab')">
+          <a routerLinkActive="active" class="nav-link " routerLink="/front-desk/masters/billing/codes/Code-Type">Code
+            Type</a>
+        </li>  -->
+        <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_fee_type_tab)">
+          <a routerLinkActive="active" class="nav-link " routerLink="/front-desk/masters/billing/codes/Fee-Type">Fee
+            Type</a>
+        </li>
+        <li class="nav-item" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_code_type_tab)">
+          <a routerLinkActive="active" class="nav-link " routerLink="/front-desk/masters/billing/codes/Code-Type">Code
+            Type</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="card-body bill-border border-top-0">
+      <div class="tab-content">
+        <router-outlet></router-outlet>
+        <!-- <div class="tab-pane fade" id="Fee" role="tabpanel" aria-labelledby="Fee-tab">
+          <app-fee-schedule-component></app-fee-schedule-component>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>

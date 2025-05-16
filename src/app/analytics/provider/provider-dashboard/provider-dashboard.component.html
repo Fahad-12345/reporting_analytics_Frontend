@@ -1,0 +1,389 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<div class="container" >
+    <div class="header-container-dashboard d-flex align-items-center">
+        <div class="heading">{{pageTitle}}</div>
+        <div *ngIf="isUserAdmin" class="button-container-dashboard ms-auto">
+            <app-dashboard-switch [checkedButton]="this.dashboard.Provider"></app-dashboard-switch>
+        </div>
+      </div>
+      
+
+
+  <app-global-filters
+    (selectedFilterVal)="onCaptureFilterSelectEvent($event)"
+  ></app-global-filters>
+  <app-summery-stats
+    [filters]="filters"
+    *ngIf="filters != undefined"
+  ></app-summery-stats>
+  <div class="row mt-3">
+    <div class="col-6">
+      <div class="card provider">
+        <div class="card-body">
+          <div class="patient-appointment-heading">
+            Appointments
+            <span
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              ngbTooltip="This list provides an overview of appointment types along with corresponding patient details, offering providers a comprehensive view of their appointments within a single window. The information is divided into three distinct sections based on the appointment status: ‘Scheduled,’ ‘Rescheduled’, and ‘Cancelled’. The appointments are calculated according to the “Scheduled Date” Within each section, appointment types are listed alongside patient details such as name, appointment date and time etc. The time filters of ‘1w’ and ‘1m’ are the only ones that are applicable on this table. When a provider selects the ‘1w’ button the table shows the appointments of one week ahead of the current date. When a provider selects the ‘1m’ button the table shows the appointments of one month ahead of the current date."
+              container="body"
+              ><img class="info-graph" src="assets/icons/info.svg" alt="" />
+              <img
+                id="csv-icon"
+                (click)="totalAppointmentsExport()"
+                class="summary-icons"
+                src="assets/icons/share.svg"
+                alt=""
+              />
+            </span>
+          </div>
+          <div class="patient-appointment">
+            <ul
+              ngbNav
+              #nav="ngbNav"
+              [(activeId)]="active"
+              class="provider-tabs"
+            >
+              <li [ngbNavItem]="1">
+                <button ngbNavLink>
+                  <div class="appointment-types-number">
+                    {{
+                      scheduledAppointmentsCount
+                        ? scheduledAppointmentsCount
+                        : 0
+                    }}
+                  </div>
+                  <div class="appointment-types-name">Scheduled</div>
+                </button>
+                <ng-template ngbNavContent>
+                  <div class="patient-appointment-list">
+                    <ul class="list-group">
+                      <li
+                        class="list-group-item"
+                        *ngFor="let appointment of scheduledList"
+                      >
+                        <div class="patient-info-group">
+                          <div class="patient-info">
+                            <div class="patient-name">
+                              <div class="patient-case">
+                                {{ appointment?.case_no }}
+                              </div>
+                              {{
+                                appointment?.patient_name
+                                  ? appointment?.patient_name
+                                  : "Unknown"
+                              }}
+                              <div class="patient-age">
+                                {{
+                                  appointment?.patient_age
+                                    ? appointment?.patient_age +
+                                      " y/o " +
+                                      appointment?.patient_gender
+                                    : "Other"
+                                }}
+                              </div>
+                            </div>
+                            <div class="patient-appointment-details">
+                              Speciality ({{
+                                appointment?.specialty_name
+                                  ? appointment?.specialty_name
+                                  : "N/A"
+                              }}) - Case Type ({{
+                                appointment?.case_type
+                                  ? appointment?.case_type
+                                  : "N/A"
+                              }}) - Visit Type({{
+                                appointment?.visit_type
+                                  ? appointment?.visit_type
+                                  : "N/A"
+                              }})
+                            </div>
+                          </div>
+                          <div
+                            class="appointment-time d-flex align-items-center"
+                          >
+                            {{
+                              appointment?.appointment_date
+                                ? (appointment?.appointment_date
+                                  | date : "dd/MM/yyyy hh:mm a")
+                                : "Unknown"
+                            }}
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="2">
+                <button ngbNavLink class="appointment-scheduled">
+                  <div class="appointment-types-number">
+                    {{
+                      reScheduledAppointmentsCount
+                        ? reScheduledAppointmentsCount
+                        : 0
+                    }}
+                  </div>
+                  <div class="appointment-types-name">Rescheduled</div>
+                </button>
+                <ng-template ngbNavContent>
+                  <div class="patient-appointment-list">
+                    <ul class="list-group">
+                      <li
+                        class="list-group-item"
+                        *ngFor="let appointment of reScheduledList"
+                      >
+                        <div class="patient-info-group">
+                          <div class="patient-info">
+                            <div class="patient-name">
+                              <div class="patient-case">
+                                {{ appointment?.case_no }}
+                              </div>
+                              {{
+                                appointment?.patient_name
+                                  ? appointment?.patient_name
+                                  : "Unknown"
+                              }}
+                              <div class="patient-age">
+                                {{
+                                  appointment?.patient_age
+                                    ? appointment?.patient_age +
+                                      " y/o " +
+                                      appointment?.patient_gender
+                                    : "Other"
+                                }}
+                              </div>
+                            </div>
+                            <div class="patient-appointment-details">
+                              Speciality ({{
+                                appointment?.specialty_name
+                                  ? appointment?.specialty_name
+                                  : "N/A"
+                              }}) - Case Type ({{
+                                appointment?.case_type
+                                  ? appointment?.case_type
+                                  : "N/A"
+                              }}) - Visit Type({{
+                                appointment?.visit_type
+                                  ? appointment?.visit_type
+                                  : "N/A"
+                              }})
+                            </div>
+                          </div>
+                          <div
+                            class="appointment-time d-flex align-items-center"
+                          >
+                            {{
+                              appointment?.appointment_date
+                                ? (appointment?.appointment_date
+                                  | date : "dd/MM/yyyy hh:mm a")
+                                : "Unknown"
+                            }}
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </ng-template>
+              </li>
+              <li [ngbNavItem]="3">
+                <button ngbNavLink>
+                  <div class="appointment-types-number">
+                    {{
+                      cancelledAppointmentsCount
+                        ? cancelledAppointmentsCount
+                        : 0
+                    }}
+                  </div>
+                  <div class="appointment-types-name">Cancelled</div>
+                </button>
+                <ng-template ngbNavContent>
+                  <div class="patient-appointment-list">
+                    <ul class="list-group">
+                      <li
+                        class="list-group-item"
+                        *ngFor="let appointment of cancelledList"
+                      >
+                        <div class="patient-info-group">
+                          <div class="patient-info">
+                            <div class="patient-name">
+                              <div class="patient-case">
+                                {{ appointment?.case_no }}
+                              </div>
+                              {{
+                                appointment?.patient_name
+                                  ? appointment?.patient_name
+                                  : "Unknown"
+                              }}
+                              <div class="patient-age">
+                                {{
+                                  appointment?.patient_age
+                                    ? appointment?.patient_age +
+                                      " y/o " +
+                                      appointment?.patient_gender
+                                    : "Other"
+                                }}
+                              </div>
+                            </div>
+                            <div class="patient-appointment-details">
+                              Speciality ({{
+                                appointment?.specialty_name
+                                  ? appointment?.specialty_name
+                                  : "N/A"
+                              }}) - Case Type ({{
+                                appointment?.case_type
+                                  ? appointment?.case_type
+                                  : "N/A"
+                              }}) - Visit Type({{
+                                appointment?.visit_type
+                                  ? appointment?.visit_type
+                                  : "N/A"
+                              }})
+                            </div>
+                          </div>
+                          <div
+                            class="appointment-time d-flex align-items-center"
+                          >
+                            {{
+                              appointment?.appointment_date
+                                ? (appointment?.appointment_date
+                                  | date : "dd/MM/yyyy hh:mm a")
+                                : "Unknown"
+                            }}
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </ng-template>
+              </li>
+            </ul>
+            <div [ngbNavOutlet]="nav" class="mt-2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card provider">
+        <div class="card-body">
+          <div class="heading-wrap d-flex justify-content-between">
+            <div class="Unfinalized-patient-heading">
+              Unfinalized Visit Stats
+              <span
+                class="tooltip-outer"
+                tooltipClass="table-custom-tooltip"
+                ngbTooltip="The bar graph shows the duration, in terms of days, that visits remain in an unfinalized state, starting from the date of their creation to the current date. The number of ‘Unfinalized Visits’ are calculated according to the time span the user has selected. However, the number of days they have been in an unfinalized state is shown according to the difference between its “Visit Date” and the “Current Date”.  Two reference lines, one yellow and one red, show the time thresholds for finalizing visits. The yellow line denotes a critical period of 20 days, indicating the point at which visits should be addressed. The red line represents a deadline of 30 days, signaling the maximum duration for visits to remain unfinalized."
+                container="body"
+                ><img class="info-graph" src="assets/icons/info.svg" alt="" />
+                <img
+                  id="csv-icon"
+                  (click)="unfinalizedVisitsExport()"
+                  class="summary-icons"
+                  src="assets/icons/share.svg"
+                  alt=""
+                />
+              </span>
+            </div>
+            <div class="unfinalized-thresholds">
+              <div class="threshold1">Critical-20 Days</div>
+              <div class="threshold2">Deadline-30 Days</div>
+            </div>
+          </div>
+          <div class="Unfinalized-line-graph">
+            <canvas id="billStatusAnalysisCanvas">{{
+              billStatusAnalysisChart
+            }}</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-6">
+      <div class="card provider">
+        <div class="card-body">
+          <div class="appointment-graph-heading">
+            Completed Appointment Analysis
+            <span
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              ngbTooltip="The curved line chart shows the stats of completed appointments, offering insights into the distribution of appointment types within the completed appointments category. The completed appointments are further categorized into three distinct types: ‘Initial Evaluation’, ‘Follow-ups’, and ‘Re-Evaluation’. The graph shows the completed appointment count according to the time span selected and further segregates this count into the number of ‘Initial Evaluation’, ‘Follow-Ups’ and ‘Re-Evaluation’ appointments. The count of the appointments is calculated according to the “Scheduled Date”. In addition to visualizing completed appointments, the chart also includes additional information on total appointment counts, as well as the total number of cancelled and completed appointments. 
+                        "
+              container="body"
+              ><img class="info-graph" src="assets/icons/info.svg" alt="" />
+              
+            </span>
+            <div class="appointment-graph-types d-flex">
+              <div class="appointment-graph-type1">
+                IE: {{ initialEvalution ? initialEvalution : 0 }}
+              </div>
+              <div class="appointment-graph-type2">
+                FU: {{ followUp ? followUp : 0 }}
+              </div>
+              <div class="appointment-graph-type3">
+                RE:{{ reEvaluation ? reEvaluation : 0 }}
+              </div>
+            </div>
+            <img
+                  id="csv-icon"
+                  (click)="completedAppointmentsExport()"
+                  class="summary-icons right-padding"
+                  src="assets/icons/share.svg"
+                  alt=""
+                />
+          </div>
+           
+          <div class="appointment-line-graph">
+            <canvas id="appointmentAnalysisCanvas" style="width: 100%"></canvas>
+          </div>
+          <div
+            class="appointment-line-options d-flex justify-content-evenly mt-3"
+          >
+            <div class="appointment-line-options1">
+              Total Appointments:
+              {{ scheduledAppointments ? scheduledAppointments : 0 }}
+            </div>
+            <div class="appointment-line-options2">
+              Total Completed:
+              {{ completedAppointments ? completedAppointments : 0 }}
+            </div>
+            <div class="appointment-line-options3">
+              Total Cancelled:
+              {{ cancelledAppointments ? cancelledAppointments : 0 }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="card provider">
+        <div class="card-body">
+          <div class="unfinalized-details-heading mb-4">
+            Unfinalized Visit Details
+            <span
+              class="tooltip-outer"
+              tooltipClass="table-custom-tooltip"
+              ngbTooltip="The detailed table view presents ‘Unfinalized Visits’ categorized by case types, accompanied by a breakdown of the various reasons contributing to their unfinalized state. The table provides valuable insights into the case types that have not been finalized within the system. The insights are calculated according to the “Visit Date”. Each row in the table represents a distinct case type and each column represents a reason why a case remains unfinalized, including ‘Missing ICD codes’, ‘Missing CPT codes’, and ‘Missing reports. Every visit has the three columns of ICD, CPT and Reports in the database. These columns have a value of true or false. These visits are grouped according to case types and all true values are counted to give the total number of the missing reason. "
+              container="body"
+              ><img class="info-graph" src="assets/icons/info.svg" alt="" />
+              <img
+                id="csv-icon"
+                (click)="unfinalizedVisitsExport()"
+                class="summary-icons"
+                src="assets/icons/share.svg"
+                alt=""
+              />
+            </span>
+          </div>
+          <div class="unfinalized-details-group">
+            <app-dynamic-table
+              [rows]="missingVisitsRows"
+              [columns]="missingVisitsColumns"
+              [tableType]="'missing_visits'"
+            ></app-dynamic-table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

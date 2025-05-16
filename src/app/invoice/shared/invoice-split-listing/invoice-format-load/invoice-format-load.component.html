@@ -1,0 +1,141 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="invoice-format-modal">
+  <div class="invoice-modal-filter">
+    <div class="invoice-sec-left">
+      <form action="" autocomplete="off" [formGroup]="searchForm" >
+        <div class="row">
+          <div class="col-6">
+            <app-ng-select-shareable #invoiceNameSelect   [events]="eventsSubject.asObservable()"
+              [lableName]="'Invoice Name'" 
+              [filterFieldName]="'invoice_name'"
+              [showSelectFieldOnRefresh]="searchForm.get('invoice_name').value" 
+              [showSelectFieldList]="selectedMultipleFieldFiter['invoice_name']"
+              [apiType]="'get'" [bindlable]="'invoice_name'" 
+              [bindId]="'invoice_name'"
+              [showSelectAll] ="true"
+              [showGroupBy] = "false"
+              [showSelectFieldOnRefresh]="searchForm.get('invoice_name').value" 
+              [searchLableName]="'invoice_name'" [conditionalExtraApiParams]="selectedInvoiceObject?.invoice_from_bill?{invoice_category_slug: 'invoice_for_bill'}:{}" [apiPath]="EnumApiPath.InvoiceFormatApiHitUrl"
+              (valueChange)="selectionOnValueChange($event,'invoice_name');"
+              [multiple]="false">
+            </app-ng-select-shareable>
+          </div>
+          <div class="col-6" *ngIf="!selectedInvoiceObject?.invoice_from_bill">
+            <app-ng-select-shareable #invoiceTypeSelect  [events]="eventsSubject.asObservable()"
+            [filterFieldName]="'invoice_category_id'"
+            [showSelectFieldOnRefresh]="searchForm.get('invoice_category_id').value" 
+              [showSelectFieldList]="selectedMultipleFieldFiter['invoice_category_id']"
+              [lableName]="'Invoice Type'" [apiType]="'get'" [bindlable]="'name'" [bindId]="'id'"
+              [showSelectAll] ="true"
+              [showGroupBy] = "true"
+              [searchLableName]="'invoice_category_id'"  [apiPath]="EnumApiPath.Invoice_builder_Invoice_Type_Category"
+              (valueChange)="selectionOnValueChange($event,'invoice_category_id');"
+              [multiple]="false">
+            </app-ng-select-shareable>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="invoice-sec-right d-flex align-items-center">
+      <button type="button" class="btn btn-success filter-invoice-btn" (click)="filterRecords()">
+        Filter 
+      </button>
+      <button type="button" class="btn btn-default create-invoice-btn" (click)="NavigateToFormatCreation()">
+        <i class="icon-plus-circle"></i>
+        Create Invoice 
+      </button>
+    </div>
+  </div>
+  
+  <ngx-datatable class="bootstrap"  [rows]="invoiceFormatList" [scrollbarH]="true" [columnMode]="'force'"
+          [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="10">
+    <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" [width]="340" name="Invoice name" prop="invoice_name">
+    </ngx-datatable-column>
+    <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" [width]="240" name="Invoice type" prop="invoice_category_name">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{row.invoice_category_name=='Invoice For Bill'?'Bill':'Inventory'}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" [width]="140" name="action">
+      <ng-template let-row="row" let-value="value"  ngx-datatable-cell-template>
+        <button (click)="generteInvoice(row,searchBillContent)" class="generate-link">Generate</button>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>
+
+
+
+
+
+
+<ng-template #searchBillContent let-modal1>
+	<div class="modal-header">
+	    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Search Bill
+      </h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal1.dismiss('Cross click');setPage()">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body scroll-control">
+ <div class="row">
+  <div class="col-12">
+    <app-ng-select-shareable 
+    [events]="eventsSubject.asObservable()"  
+    [filterFieldName]="'bill_ids'"
+    (BillList)="recieveBillList($event)"
+	  [showSelectFieldList]="selectedMultipleFieldFiter['bill_ids']"
+    [conditionalExtraApiParams]="conditionalExtraApiParams"
+	   [showSelectFieldOnRefresh]="bill_form.get('bill_ids').value" 
+	   [lableName]="'Bill ID'" 
+     [showSelectAll]="true"
+     [showGroupBy]="true"
+     [bindlable]="'label_id'" 
+	   [bindId]="'id'" 
+     [apiPath]="EnumApiPath.BillsList" [searchLableName]="'bill_no'"
+     (valueChange)="getBillListInvoice($event)"
+	   [multiple]="true"></app-ng-select-shareable> 
+  </div>
+  <!-- (valueChange)="getBillListInvoice($event,'bill_ids')"  -->
+  
+ <div class="col-12">
+  <div class=" d-flex align-items-center justify-content-center">
+    <button type="button" class="btn btn-success filter-invoice-btn" (click)="generateInvoiceForBills(invoiceBuilderContentModal)">
+      Continue 
+    </button>
+ </div>
+ </div>
+ </div>
+	</div>
+</ng-template>  
+
+
+
+
+<ng-template #invoiceBuilderContentModal let-modal>
+	<div class="modal-header">
+	    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Generate invoice</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body scroll-control">
+    <app-invoice-builder #invoiceBuilderComponent [templateId]="templateId" [dontShowToggle] ="true" [disabledFields]="false" [invoice_from_bill]="true" [isMaster]="false" [caseId]="currentCaseId" [comingFrom]="'generate'" [selectedBills]="selectedBills" [selectedFacilityId]="selectedFacilityId"
+		(refreshComponent) = "refreshComponent(searchBillContent);modal.dismiss('Cross click');setpage({ offset: 0 })"
+    (onCanceled)="modal.dismiss('Cross click')"
+		></app-invoice-builder>
+	</div>
+</ng-template> 
+
+
+<ng-template #pdfViewModal let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left">INV- {{invoiceId}}</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');resetListing()">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body">
+		<app-invoice-pdf-view [invoiceId]="invoiceId"></app-invoice-pdf-view>
+	</div>
+</ng-template>

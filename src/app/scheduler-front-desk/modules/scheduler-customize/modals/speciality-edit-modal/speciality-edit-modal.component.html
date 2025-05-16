@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <h4 class="modal-title">Customize Details</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="this.bsModalRef.hide()">&times;</button>
+</div>
+<div class="modal-body">
+	<div class="row">
+		<div class="col-md-12 mb-1" >
+			<label class="title">Name</label>
+			<span container="body" placement="top" tooltipClass="tooltip-outer table-custom-tooltip" ngbTooltip="{{selectedRow.name}}"><input disabled type="text" class="form-control"[(value)]="selectedRow.qualifier"  /></span>
+		</div>
+		<div class="col-md-12 mb-1">
+			<label class="title">Color</label>
+			<!-- <input [disabled]="facilityColorEdit" type="color" class="form-control" (change)="changeClinicColor($event)" [(value)]="chart" /> -->
+			<input  type="color" class="form-control"  (ngModelChange)="setColor($event)"
+			[(ngModel)]="linkColor" />
+		</div>
+		<div class="col-md-12 mb-1">
+			<label class="title">OverBooking</label>
+			<input disabled type="text" class="form-control"[(value)]="selectedRow.over_booking" />
+		</div>
+		<div class="col-md-12">
+			<label class="title">Timeslot</label>
+			<input disabled type="text" class="form-control"[(value)]="selectedRow.time_slot" />
+		</div>
+	</div>
+	<div class="row d-flex justify-content-center mt-3 pt-1">
+		<div class="col-md-3 col-sm-6">
+			<button class="btn btn-outline-secondary w-100" (click)="this.bsModalRef.hide()" data-dismiss="modal" type="button" >Cancel</button>
+		</div>
+		<div class="col-md-3 col-sm-6">
+			<button class="btn btn-success w-100" type="button" (click)="triggerEvent()" >Save</button>
+		</div>
+	
+	</div>
+</div>
+

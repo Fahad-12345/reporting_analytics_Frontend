@@ -1,0 +1,102 @@
+<!-- <busy-loader [loaderSpin]="disableBtn"></busy-loader> -->
+<div class="front-desk-block">
+  <div class="card border-0 w-100 mb-0 p-0 pt-4 mt-0">
+    <div class="card-body form">
+      <div *ngIf="this.mainService.getenableSaveRecordManualSpeciality()" class="row">
+        <div class="col-md-12">
+          <div dropzone [caseId]="templateObj?.case_id" [appointment_location_id]="templateObj?.location_id"
+            [speciality_name]="templateObj?.speciality" [speciality_id]="templateObj?.speciality_id"
+            type='manual-speciality' class="file-upload mt-1 mb-3 px-3">
+            <!-- <file-drop headertext="" (onFileDrop)="dropped($event, content)" [showBrowseBtn]="true"
+            browseBtnClassName="btn btn-success py-1 upload-btn printer-alfa" browseBtnLabel="Upload"> -->
+            <p>Drag and drop files here to
+              <button class="btn btn-success py-1 upload-btn me-3 ms-3">
+                <i></i> <label>
+                  <input (change)="onFileChange($event)" style="display: none;" multiple type="file" />
+                  <i class="icon-upload"></i> Upload
+                </label>
+              </button>
+              <button disabled onclick="scan()" class="btn btn-default py-1 upload-btn color-white">
+                <i class="icon-printer me-1"></i> Scan
+              </button>
+            </p>
+
+            <!-- </file-drop> -->
+          </div>
+        </div>
+      </div>
+
+      <form [formGroup]="form">
+        <div class="row">
+          <div class="col-md-6">
+            <!-- <label>ICD-10 Codes (Maximum 6):</label>
+            <ng-select [closeOnSelect]='false' [maxSelectedItems]="6" [virtualScroll]="true" (keyup)="searchICD($event)" [items]="icd10Codes"
+              formControlName="icd_codes" [multiple]="true" bindLabel="full_name" bindValue="id">
+			</ng-select> -->
+			<app-mat-autocomplete [placeHolder]="'ICD-10 Codes (Maximum 6)'" [disabled]="!mainService.getenableSaveRecordManualSpeciality()" [options]="icd10Codes" (onkeyUp)="searchICD($event)" (onChangeEmitter)="selectedICDCodes($event)"
+			[selectedOptions]="selectedIcdCodes"
+			></app-mat-autocomplete>
+          </div>
+
+          <div class="col-md-6">
+            <!-- <div class="form-group mb-2"
+			  [ngClass]="{'focused': form.get('icd_codes_comment').value != '' && form.get('icd_codes_comment').value != null }"> -->
+			  <div class="form-group mb-2">
+              <!-- <label for="icd_codes_comment">Comments</label> -->
+              <textarea id="icd_codes_comment" type="text" formControlName="icd_codes_comment" placeholder="Comments"
+                class="form-control form-input"></textarea>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <!-- <label>CPT Codes (Maximum 6):</label>
+            <ng-select  [virtualScroll]="true" [closeOnSelect]='false' [maxSelectedItems]="6" (keyup)="searchCPT($event)" [items]="codesCPT" [multiple]="true"
+              bindLabel="full_name" bindValue="id" formControlName="cpt_codes" (change)="selectedCoodes($event)">
+			</ng-select> -->
+			<app-mat-autocomplete [placeHolder]="'CPT Codes (Maximum 6):'" [disabled]="!mainService.getenableSaveRecordManualSpeciality()" [options]="codesCPT" (onkeyUp)="searchCPT($event)" (onChangeEmitter)="selectedCPTCodes($event)"
+			[selectedOptions]="selectedCPTCode"
+			></app-mat-autocomplete>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group field">
+              <!-- <label for="cpt_codes_comment">Comments</label> -->
+              <textarea id="cpt_codes_comment" type="text" formControlName="cpt_codes_comment" placeholder="Comments"
+                class="form-control form-input"></textarea>
+            </div>
+          </div>
+		</div>
+		<div class="row justify-content-center md-provider-sign mb-3">
+			<div class="col-4">
+				<label class="mb-1">Provider Signature</label>
+				<app-signature  [editPad]="mainService.getenableSaveRecordManualSpeciality()" [hide_title]='true' [(selectedId)]="visitSession['doctor_signature_id']" [(signature)]='doctor_signature'></app-signature>
+				<!-- <app-signature-listing class="mt-2" [selectable]="true" [signatures]="doctor_signature_listing"></app-signature-listing> -->
+				<button *ngIf="this.mainService.getenableSaveRecordManualSpeciality()" class='btn btn-primary' (click)="chooseSignatures()">Choose Previous</button>
+			</div>
+			<!-- <div class="col-6">
+			<p class="mb-2">Patient Signature</p>
+				<app-signature [hide_title]='true' [(selectedId)]="visitSession['patient_signature_id']" [(signature)]='patient_signature'></app-signature>
+			</div> -->
+		</div>
+
+        <div class="row">
+          <div *ngIf="this.mainService.getenableSaveRecordManualSpeciality()" class="col-12 d-flex justify-content-center mt-1">
+            <div class="col-md-2">
+              <button  [disabled]="disableBtn" class="btn btn-primary w-100" (click)="update(1)">
+                {{'Save For Later'}}</button>
+            </div>
+            <div class="col-sm-4 col-md-3 col-lg-2">
+              <button [disabled]="disableBtn || form.invalid || !(folder?.files?.length)" class="btn btn-success w-100" (click)="update(2)">
+                {{'Finalize Visit'}}</button>
+            </div>
+		  </div>
+		  
+		  <div class="col-md-12 paging-bar text-center" *ngIf="!mainService.getenableSaveRecordManualSpeciality()">
+			<button href="javascript:void(0)" [disabled]="disableBtn" class="btn btn-primary me-md-2 me-lg-2" (click)="back('back')"><span
+				class="icon-left-arrow me-2"></span> Back </button>
+		  </div>
+
+        </div>
+      </form>
+  </div>
+</div>

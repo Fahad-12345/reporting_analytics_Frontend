@@ -1,0 +1,19 @@
+<nav class="left-nav p-0 link-style">
+	<ul class="list-unstyled">
+	  <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_practice_tab)">
+		<a class="d-block" routerLink="/front-desk/masters/practice/practice/list"
+		  routerLinkActive="active">Practice</a>
+	  </li>
+
+	  <!-- <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_hosiptal_menu)"> -->
+	  <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_hospital_tab)">
+		<a class="d-block" routerLink="/front-desk/masters/practice/hospital" routerLinkActive="active">Hospital</a>
+	  </li>
+	  <li class="button--wayra" *ngIf="aclService.hasPermission(userPermissions.master_practice_referring_physician_menu)">
+		<a class="d-block" (click)="nav('Referring Physician')" [class.active]="router.url.includes('referral')">Referring Physician</a>
+	  </li>
+	  <!-- <li class="button--wayra" routerLinkActive="active">
+		<a [routerLink]="['hospital']">Hospital</a>
+	  </li> -->
+	</ul>
+  </nav>

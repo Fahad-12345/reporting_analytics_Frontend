@@ -1,0 +1,77 @@
+<div class="front-desk-block body-parts-block"
+	*ngIf="aclService.hasPermission(userPermissions.patient_case_list_injury_body_parts_view)">
+	<div class="card border-0 my-0 p-0">
+		<div class="edit-block">
+			<h6 class="color-blue text-start">{{title}}</h6>
+		</div>
+		<div class="card-body card-bg p-3">
+			<div class="form">
+				<div class="row">
+					<div class="col-12 text-end">
+						<a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_injury_body_parts_edit)" class="btn btn-primary round-btn" (click)="AddOther()" href="javascript:void(0)">Add More
+							Body Parts</a>
+					</div>
+				</div>
+				<div class="row justify-content-center">
+					<div class="col-md-3">
+						<div class="fields-holder">
+							<div class="card personal-info-block w-100 mb-3 mb-lg-0 mt-0 py-0 px-0">
+								<perfect-scrollbar>
+									<div class="px-3 pt-2 pb-3">
+										<span class="d-block mb-2">BodyParts</span>
+										<dynamic-form *ngIf="showDynamic" (onReady)="onReady($event)"
+											[fields]="fieldConfig" (submit)="onSubmit($event)">
+										</dynamic-form>
+									</div>
+
+								</perfect-scrollbar>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-9">
+						<div class="card personal-info-block w-100 mb-0 mt-0 py-0 px-0">
+							<perfect-scrollbar>
+								<div class="px-3 pt-2 pb-3">
+									<span class="d-block mb-2" style="text-align:center">{{selectedLable}}</span>
+									<div class="row">
+										<div [ngClass]="{ data:data !=''}" *ngFor="let i of tempArray;let index=index">
+											<!-- {{i|json}}  -->
+											<!-- *ngIf="shouldShowSensations(i)" -->
+											<!-- {{bodyFormArray[index]?.value | json}} -->
+											<div class="col-md-6 col-lg-4 col-xl-3 mb-3" *ngIf="shouldShowSensations(i)">
+												<div class="bordered bodyparts-range">
+													<dynamic-form (onReady)="onBodyReady($event,i)" [fields]="i.form"
+														(submit)="submit($event)">
+													</dynamic-form>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6 col-lg-4 col-xl-4 mb-3 bodypart-other-blcok"
+											*ngFor="let i of otherArray;let index=index">
+											<h6 class="text-other">Other</h6>
+											<div class="bordered bodyparts-range">
+												<button type="button" class="close"
+													(click)="deleteOtherBodyParts(index)" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+												<dynamic-form (onReady)="onOtherFieldReady($event,i)" [fields]="i.form"
+													(submit)="onSubmit($event)">
+												</dynamic-form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</perfect-scrollbar>
+						</div>
+					</div>
+				</div>
+				<div class="row form-btn justify-content-center mt-3">
+					<button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_injury_body_parts_edit)" class="btn btn-primary w-100 mt-1 mb-2 mb-sm-0" (click)='goBack()'><span
+						class="icon-left-arrow me-2"></span>Back</button>
+						<button *ngIf="aclService.hasPermission(userPermissions.patient_case_list_injury_body_parts_edit)" class="btn btn-success w-100 mt-1 mb-2 mb-sm-0" (click)='callingsubmit()'><span
+							class="icon-save-continue me-2"></span>Save & Continue</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

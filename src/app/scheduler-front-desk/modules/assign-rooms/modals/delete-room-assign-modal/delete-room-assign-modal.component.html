@@ -1,0 +1,204 @@
+<!-- modal start -->
+<div class="modal-header" style="background-color: #4b4b4b;color: #fff;padding: 8px 15px;font-size: 18px;">
+	<h4 class="modal-title" style="text-align: center;">Delete Room Assignment</h4>
+	<button style="background-color: #4b4b4b;color: #fff" type="button" class="close" data-dismiss="modal"
+		(click)="activeModal.close()">&times;</button>
+</div>
+<form style="height:100%">
+	<div class="modal-body" style="padding:25px">
+		<div class="row">
+			<div class=" col-sm-4 col-md-4 col-lg-4">
+				<label class="title">Room </label>
+				<input type="text" value="{{roomForDisplay}}" disabled class="form-control" />
+			</div>
+			<div class="col-md-4">
+				<label class="title">Clinic</label>
+				<input type="text" value="{{clinic}}" disabled class="form-control" />
+			</div>
+			<div class="col-md-4">
+				<label class="title">Doctor</label>
+				<input type="text" value="{{doctor}}" disabled class="form-control" />
+			</div>
+		</div>
+		<div class="row ">
+			<div class='col-md-4 assig-tab'>
+				<input
+					style="float: left;padding: 0 !important;margin-top: 7px !important;height: 15px !important;max-width: 7%"
+					type="radio" checked name="radio" (click)="thisAssignment($event)" class="tt form-control "
+					id="Drname" />
+				&nbsp;<label class="title" for="dName">This Assignment</label>
+			</div>
+		</div>
+		<div class="row ">
+			<div class='col-md-4 subseq-assig-tab'>
+				<input
+					style="float: left;padding: 0 !important;margin-top: 7px !important;height: 15px !important;max-width: 7%"
+					name="radio" [disabled]="recId" (click)="allSubsequent($event)" type="radio" class="tt form-control"
+					id="clinicName" />
+				&nbsp;<label class="title" for="cName">All subsequent assignment</label>
+			</div>
+		</div>
+		<hr>
+		<div class="row justify-content-center">
+			<div class="edit-block col-md-12" style="padding-right: 10px !important;padding-left: 10px !important ">
+				<div class="form-group field option-field mb-2 d-inline-block">
+					<ul class="title">
+						<li>Show</li>
+						<li>
+							<select style="height:28px !important" class="custom-select"
+								[ngModelOptions]="{standalone: true}" style="height:28px !important"
+								[(ngModel)]="counter" (change)="checkRows(counter)">
+								<option value="10" selected>10</option>
+								<option value="20">20</option>
+								<option value="30">30</option>
+								<option value="40">40</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+							</select>
+						</li>
+						<li>entries</li>
+					</ul>
+				</div>
+				<a [hidden]="true" href="javascript:void(0)"
+					style="color:#fff;  padding: 7px 22px; margin-top: 9px; background: #34c3ee; border-color:#34c3ee;">
+					<span class="icon-remove me-1" style="font-size: 14px;"></span> <span style="font-size: 15px;">
+						Create Task ( {{numSelected}} )</span>
+				</a>
+				<!-- <a [hidden]="isEnableButtons" href="javascript:void(0)" style="color:#fff; padding: 6px 22px; margin-right: 10px !important;  margin-top: 9px; background: #00a650; border-color:#00a650;">
+								<img class="me-2" style="width:16px;" src="assets/images/task.png"> <span style="font-size: 15px;"> ( {{numSelected}} )</span>
+						</a> -->
+
+			</div>
+			<div class="col-md-12 col-lg-12 col-sm-12">
+				<ngx-datatable class="bootstrap scroll-hide" (page)="pageEvent($event)" [rows]="data"
+					[columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+					[limit]="counter">
+					<ngx-datatable-column [canAutoResize]="true" name="Date" prop="id" [width]="90">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Date
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							{{row.dateTime | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+						</ng-template>
+					</ngx-datatable-column>
+					<ngx-datatable-column [canAutoResize]="true" name="Time" prop="id" [width]="90">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Time
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							{{row.dateTime| date: datePipeService.hourMinAmPmTimeFormat()}}
+						</ng-template>
+					</ngx-datatable-column>
+					<ngx-datatable-column [canAutoResize]="true" name="Appointment Title" prop="id" [width]="90">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Appointment Title
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<ul class="custom-btn-tooltip list-unstyled ms-0">
+								<a class="text-truncate d-block"
+									style="color: black !important; max-width: 110px !important;"
+									href="javascript:void(0)">{{row.appointmentTitle}}</a>
+								<li class="btn-tooltip-top" style="top: -7px;">
+									<span>{{row.appointmentTitle}}</span>
+									<i></i>
+								</li>
+							</ul>
+
+						</ng-template>
+					</ngx-datatable-column>
+					<ngx-datatable-column [canAutoResize]="true" name="Case Id" prop="id" [width]="90">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Case Id
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							{{row.caseId}}
+						</ng-template>
+
+					</ngx-datatable-column>
+					<ngx-datatable-column [canAutoResize]="true" name="Room" prop="id" [width]="70">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Room
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							{{row.room.name}}
+						</ng-template>
+					</ngx-datatable-column>
+					<ngx-datatable-column [canAutoResize]="true" name="Status" prop="id" [width]="70">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							Status
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<ul class="custom-btn-tooltip list-unstyled ms-0">
+								<a class="text-truncate d-block"
+									style="color: black !important;max-width: 110px !important;"
+									href="javascript:void(0)">{{row.appointmentStatus}}</a>
+								<li class="btn-tooltip-top" style="top: -7px;">
+									<span>{{row.appointmentStatus}}</span>
+									<i></i>
+								</li>
+							</ul>
+						</ng-template>
+					</ngx-datatable-column>
+					<ngx-datatable-column [canAutoResize]="true" name="Actions" prop="id" [width]="70">
+						<ng-template let-column="column" ngx-datatable-header-template>
+							<mat-checkbox (change)="allSelected($event)" [(ngModel)]="allChecked"
+								[ngModelOptions]="{standalone: true}"></mat-checkbox>
+							Actions
+						</ng-template>
+						<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+							<mat-checkbox (change)="getId($event,row)" [(ngModel)]="row.isChecked"
+								[ngModelOptions]="{standalone: true}">
+							</mat-checkbox>
+						</ng-template>
+
+					</ngx-datatable-column>
+				</ngx-datatable>
+			</div>
+		</div>
+
+		<div class="row" style="    margin-top: 10px;">
+			<div class="col-sm-2 col-md-2 col-lg-2">
+				<label style="margin-top: 7px">Assignment to: </label>
+			</div>
+			<div class="col-md-4">
+				<select name="" id="" class="form-control" (change)="getRoomId($event)" style="color: #6d6969;">
+					<option *ngFor="let room of roomList">{{room.room.name}}</option>
+				</select>
+			</div>
+			<div class="col-md-4">
+				<button [disabled]="ApplyCheck" class="btn btn-success" style="height: 33px;padding: 4px;width:56%"
+					(click)="assignRoom()">Apply</button>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="modal-footer">
+		<button class="btn bg-green w-100" style="margin-top: 8px;border-radius: 5px;"	 (click)="submit()">
+			Delete
+		</button>
+		<button class="btn btn-outline-secondary w-100" style="border-radius: 5px!important;" (click)="activeModal.close()">
+		Cancel
+		</button>
+	</div> -->
+	<div class="modal-footer col-md-12 pt-0" style="padding: 25px;border: none;">
+		<div class="col-md-4 offset"></div>
+		<!-- <div class="col-md-2" style="    max-width: 20%;flex: 0 0 20%;">
+				<button class="btn bg-green w-100"  style="border-radius: 5px;" (click)="submit()">
+						<span>Delete</span>
+				</button>
+		</div>
+		<div class="col-md-2">
+				<button class="btn btn-outline-secondary w-100" style="border-radius: 5px!important;" (click)="activeModal.close()">
+						<span>Cancel</span>
+				</button>
+		</div> -->
+		<div class="col-md-2">
+			<button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button"
+				(click)="activeModal.close()">Cancel</button>
+		</div>
+		<div class="col-md-2" style="max-width: 20%;flex: 0 0 20%;">
+			<button class="btn bg-green w-100" type="submit" (click)="submit()">Delete</button>
+		</div>
+
+		<div class="col-md-4 offset center"></div>
+	</div>
+</form>

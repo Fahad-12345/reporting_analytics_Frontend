@@ -1,0 +1,51 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{title}} Employer and Insurance Link</h5>
+        <button type="button" (click)="clearForm(false)" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body modal-pt-15">
+        <form class="search-label" autocomplete="" [formGroup]="addEditEmpInsurLinkForm"
+            (ngSubmit)="OnSubmit(addEditEmpInsurLinkForm.getRawValue())">
+            <div class="row">
+                <div class="col-12">
+                    <app-ng-select-shareable [spacingNameClass]="['form-group', 'mb-1']" [lableName]="'Employer Name*'"
+                        [bindlable]="'employer_name'" [searchLableName]="'employer_name'"
+                        [disableField]="emplFieldDisable" (valueChange)="valueSelectionChangeEmpl($event,'employer_id')"
+                        [closeOnSelect]="true" [showSelectFieldList]="selectedMultipleFieldFiter['employer_id']"
+                        [conditionalExtraApiParams]="{'is_verified_employer':1}"
+                        [showSelectFieldOnRefresh]="employer_ids_getter.value" [bindId]="'id'"
+                        [apiPath]="EnumApiPath.EmployerApiPath" [multiple]="false"></app-ng-select-shareable>
+                    <small class="form-text text-muted danger" *ngIf="employer_ids_getter.errors?.required && 
+                              (employer_ids_getter.dirty || employer_ids_getter.touched)">This field is
+                        required</small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <app-ng-select-shareable #insurNgSelect [events]="eventsSubject.asObservable()"
+                        [spacingNameClass]="['form-group', 'mb-1']" [lableName]="'Insurance Name*'"
+                        [updateTooltipData]="true" [bindlable]="'insurance_name'" [searchLableName]="'name'"
+                        [disableField]="insurFieldDisable"
+                        (valueChange)="valueSelectionChangeInsu($event,'billing_insurance_id',!emplFieldDisable)"
+                        [showSelectFieldList]="selectedMultipleFieldFiter['billing_insurance_id']"
+                        [customFontColor]="true" [showSelectFieldOnRefresh]="insurance_ids_getter.value"
+                        [forceApiHitonOpen]="insurAPIHitON" [conditionalExtraApiParams]="getInsurExtraParams()"
+                        [bindId]="'id'" [apiPath]="EnumApiPath.InsuranceShortEnum"
+                        [multiple]="!emplFieldDisable"></app-ng-select-shareable>
+                    <small class="form-text text-muted danger" *ngIf="insurance_ids_getter.errors?.required && 
+                          (insurance_ids_getter.dirty || insurance_ids_getter.touched)">This field is required</small>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12 text-center modal-btn-width">
+                    <button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+                        (click)="clearForm(false)">Cancel</button>
+                    <button type="submit" class="btn btn-success">{{modelSubmit}}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

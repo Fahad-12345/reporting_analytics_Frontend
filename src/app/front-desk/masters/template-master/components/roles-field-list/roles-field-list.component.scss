@@ -1,0 +1,22 @@
+
+.badge{
+    padding: 3px 8px 5px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+
+.tags-outer {
+    overflow: hidden;
+    float: left;
+    white-space: nowrap;
+    width: 90%;
+    text-overflow: ellipsis;
+}
+
+.plus-tag {
+    cursor: pointer;
+    padding: 4px 5px;
+    border-radius: 3px;
+}
+

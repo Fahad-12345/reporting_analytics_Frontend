@@ -1,0 +1,19 @@
+<div class="toggle-switch" *ngIf="this.isUserAdmin">
+       <input type="radio" id="admin" name="userType" value="admin"
+              [checked]="checkedButton === dashboard?.Admin"
+              (change)="navigateToDashboard(dashboard?.Admin)">
+       <label title="Admin Dashboard" for="admin">AD</label>
+       <div *ngIf="(logedInUserType === userType?.PracticeManager || logedInUserType === userType?.Admin) && !isUserDoctor">
+       <input type="radio" id="pm" name="userType" value="pm"
+              [checked]="checkedButton === dashboard?.PracticeManager"
+              (change)="navigateToDashboard(dashboard?.PracticeManager)">
+       <label title="Practice Manager Dashboard" for="pm">PM</label>
+       </div>
+       <div *ngIf="isUserDoctor || logedInUserType === userType?.Admin">
+       <input type="radio" id="provider" name="userType" value="provider"
+              [checked]="checkedButton === dashboard?.Provider"
+              (change)="navigateToDashboard(dashboard?.Provider)">
+       <label title="Provider Dashboard" for="provider">PR</label>
+       </div>
+</div>
+     

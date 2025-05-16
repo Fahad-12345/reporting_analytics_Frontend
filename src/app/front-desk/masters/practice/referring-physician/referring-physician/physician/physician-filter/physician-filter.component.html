@@ -1,0 +1,125 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<form class="form" autocomplete="off" [formGroup]="physicianDetailForm">
+	<div class="ng-check">
+		<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': physicianDetailForm.get('name').value != '' && physicianDetailForm.get('name').value != null }">
+					<label class="form-label" for="name">Referring Physician Name</label>
+					<input type="text" id="name" class="form-control form-input" notFirstCharactorSpace formControlName="name">
+				</div>
+				<div class="form-group">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'clinic_ids'"
+					[showSelectFieldOnRefresh]="physicianDetailForm.get('clinic_ids').value" 
+					[lableName]="'Clinic Name'" [bindlable]="'name'" 
+					[showSelectAll] ="true"
+					[showGroupBy] = "false"  [ngSelectShow]="true"
+					[bindId]="'id'" [apiPath]="EnumApiPath_Referring.GET_CLINICS"  
+					(valueChange)="selectionOnValueChange($event,'clinic_ids')" 
+					[multiple]="true"></app-ng-select-shareable>
+				</div>
+				<div class="form-group" [ngClass]="{'focused': physicianDetailForm.get('npi_no').value != '' && physicianDetailForm.get('npi_no').value != null }">
+					<label class="form-label" for="npi_no">NPI</label>
+					<input type="text" id="npi_no" class="form-control form-input" notFirstCharactorSpace formControlName="npi_no">
+				</div>
+				<div class="form-group" [ngClass]="{'focused': physicianDetailForm.get('license_no').value != '' && physicianDetailForm.get('license_no').value != null }">
+					<label class="form-label" for="license_no">License Number</label>
+					<input type="text" id="license_no" class="form-control form-input" notFirstCharactorSpace formControlName="license_no">
+				</div>
+				<div class="form-group">
+					<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_ids'"
+					[showSelectFieldOnRefresh]="physicianDetailForm.get('speciality_ids').value" 
+					[lableName]="'Specialty'"
+					[showSelectAll] ="true"
+					[showGroupBy] = "true" [bindlable]="'name'"  [ngSelectShow]="true"
+					[bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+					(valueChange)="selectionOnValueChange($event,'speciality_ids')" 
+					[multiple]="true"></app-ng-select-shareable>
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success" (click)="filterPhysician({})">Filter</button>
+				<button class="btn btn-primary" (click)="resetPhysicianList() " [disabled]="physicianFilterResetDisabledCheck()">Reset</button>
+			</div>
+		</div>
+	</div>
+</form>
+<!-- <div class="row">
+	<div class="col-md-12">
+		<div class="card search-filter-block border-0">
+			<form autocomplete="off" [formGroup]="physicianDetailForm">
+				<div class="form">
+					<div class="card-body mb-3">
+						<div class="row mx-0">
+							<div class="field-block">
+								<div class="row" [class.dynamic-collapse]="!isCollapsed">
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': physicianDetailForm.get('name').value != '' && physicianDetailForm.get('name').value != null }">
+											<label class="form-label" for="name">Referring Physician Name</label>
+											<input type="text" id="name" class="form-control form-input"
+												notFirstCharactorSpace formControlName="name">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'clinic_ids'"
+										[showSelectFieldOnRefresh]="physicianDetailForm.get('clinic_ids').value" 
+										[lableName]="'Clinic Name'" [bindlable]="'name'" 
+										[bindId]="'id'" [apiPath]="EnumApiPath_Referring.GET_CLINICS"  
+										(valueChange)="selectionOnValueChange($event,'clinic_ids')" 
+										[multiple]="true"></app-ng-select-shareable>
+										
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': physicianDetailForm.get('npi_no').value != '' && physicianDetailForm.get('npi_no').value != null }">
+											<label class="form-label" for="npi_no">NPI</label>
+											<input type="text" id="npi_no" class="form-control form-input"
+												notFirstCharactorSpace formControlName="npi_no">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<div class="form-group field"
+											[ngClass]="{'focused': physicianDetailForm.get('license_no').value != '' && physicianDetailForm.get('license_no').value != null }">
+											<label class="form-label" for="license_no">License Number</label>
+											<input type="text" id="license_no" class="form-control form-input"
+												notFirstCharactorSpace formControlName="license_no">
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-4 col-lg-3">
+										<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_ids'"
+										 [showSelectFieldOnRefresh]="physicianDetailForm.get('speciality_ids').value" 
+										 [lableName]="'Specialty'" [bindlable]="'name'" 
+										 [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+										 (valueChange)="selectionOnValueChange($event,'speciality_ids')" 
+										 [multiple]="true"></app-ng-select-shareable>
+									</div>
+									<div class="col-md-12 text-center search-filter-btn float-left mb-3">
+										<button class="btn btn-success mt-0 me-3" (click)="filterPhysician({})"> Filter </button>
+										<button class="btn btn-primary mt-0" (click)="resetPhysicianList() "
+										[disabled]="physicianFilterResetDisabledCheck()"> Reset</button>
+									</div>
+
+								</div>
+							</div>
+							<div class="colps-btn-block">
+								<button class="btn plus-btn position-relative float-right mt-0" style="right: 0;"
+									(click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+									aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+									[class.btn-success]="isCollapsed" type="button">
+									<span [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div> -->

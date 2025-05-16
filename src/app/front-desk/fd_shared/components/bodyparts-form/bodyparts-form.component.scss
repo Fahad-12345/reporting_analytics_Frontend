@@ -1,0 +1,33 @@
+.body-parts-block {
+    ::ng-deep .ps-content {
+        height: calc(100vh - 426px) !important;
+		@media screen and (max-width: 575px)  {
+			height: auto !important;
+		}
+	}
+
+    .form-input {
+        width: 60px;
+    }
+}
+
+.data {
+    display: contents;
+}
+
+
+.close {
+    position: absolute;
+    top: 0;
+    opacity: 1;
+    color: #fff;
+    right: 15px;
+}
+
+.text-other {
+    background: #34c3ee;
+    color: #fff !important;
+    padding: 8px;
+    text-align: center;
+    margin-bottom: 0px !important;
+}

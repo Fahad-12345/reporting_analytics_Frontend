@@ -1,0 +1,99 @@
+
+	<table class="w-100">
+		<thead class="example-box e_head">
+		  <tr class="head_row">
+			<td style="width: 60px;"></td>
+			<td>
+			  <label class="label d-inline-block add-class checkbox-btn select-allCheckbox action-label arrange_columns">
+				<input (change)="toggleModalMaster($event)" type="checkbox" [(ngModel)]="checkBoxChecked" />
+				<span class="fake-input ms-3"></span>
+				<span class="fake-label ms-1">Select All</span>
+			  </label>
+			</td>
+			<td *ngIf="verificationSent">
+			  <label class="label d-inline-block add-class checkbox-btn select-allCheckbox action-label arrange_columns">
+				<input (change)="toggleModalMasterSent($event)" type="checkbox" [(ngModel)]="checkBoxSentChecked" />
+				<span class="fake-input ms-3"></span>
+				<span class="fake-label ms-1">Select All</span>
+			  </label>
+			</td>
+		  </tr>
+		</thead>
+	  </table>
+	  <div class="column_page mt-3" #scrollMe id="style-3">
+		<!-- For Verification tab in Created bills -->
+		<div *ngIf="verificationSent" class="d-flex">
+		  <!-- First List of Columns -->
+		  <smooth-dnd-container [autoScrollEnabled]="true" [animationDuration]="400"
+				[dragHandleSelector]="'.column-drag-handle'" (drop)="onDropScroll($event)">
+			<smooth-dnd-draggable *ngFor="let col of modalCols; trackBy:identifyByHeader">
+			  <div class="draggable-item">
+				<table>
+				  <tbody>
+				  <tr>
+					<td style="width: 60px;">
+					  <i class="column-drag-handle fa fa-bars all_Scroll ms-2" aria-hidden="true"></i>
+					</td>
+					<td>
+					  <label class="label d-inline-block checkbox-btn add-class select-allCheckbox action-label arrange_columns">
+						<input type="checkbox" (change)="toggleModal(col,$event)" [checked]="col.checked==true"/>
+						<span class="fake-input"></span>
+						<span class="fake-label">{{col?.header}}</span>
+					  </label>
+					</td>
+				  </tr>
+				  </tbody>
+				</table>
+			  </div>
+			</smooth-dnd-draggable>
+		  </smooth-dnd-container>
+		  <!-- Second List of Columns -->
+		  <smooth-dnd-container [autoScrollEnabled]="true" [animationDuration]="400"
+				[dragHandleSelector]="'.column-drag-handle'" (drop)="onDropScrollSent($event)">
+			<smooth-dnd-draggable *ngFor="let col of modalColsSent; trackBy:identifyByHeader">
+			  <div class="draggable-item">
+				<table>
+				  <tbody>
+				  <tr>
+					<td style="width: 60px;">
+					  <i class="column-drag-handle fa fa-bars all_Scroll ms-2" aria-hidden="true"></i>
+					</td>
+					<td>
+					  <label class="label d-inline-block checkbox-btn add-class select-allCheckbox action-label arrange_columns">
+						<input type="checkbox" (change)="toggleModalSent(col,$event)" [checked]="col.checked==true"/>
+						<span class="fake-input"></span>
+						<span class="fake-label">{{col?.header}}</span>
+					  </label>
+					</td>
+				  </tr>
+				  </tbody>
+				</table>
+			  </div>
+			</smooth-dnd-draggable>
+		  </smooth-dnd-container>
+		</div>
+		<!-- For All Listings except Verification -->
+		<smooth-dnd-container *ngIf="!verificationSent" [autoScrollEnabled]="true" [animationDuration]="400"
+				[dragHandleSelector]="'.column-drag-handle'" (drop)="onDropScroll($event)">
+			<smooth-dnd-draggable *ngFor="let col of modalCols; trackBy:identifyByHeader">
+			  <div class="draggable-item">
+				<table>
+				  <tbody>
+				  <tr>
+					<td style="width: 60px;">
+					  <i class="column-drag-handle fa fa-bars all_Scroll ms-2" aria-hidden="true"></i>
+					</td>
+					<td>
+					  <label class="label d-inline-block checkbox-btn add-class select-allCheckbox action-label arrange_columns">
+						<input type="checkbox" (change)="toggleModal(col,$event)" [checked]="col.checked==true"/>
+						<span class="fake-input"></span>
+						<span class="fake-label">{{col?.header}}</span>
+					  </label>
+					</td>
+				  </tr>
+				  </tbody>
+				</table>
+			  </div>
+			</smooth-dnd-draggable>
+		  </smooth-dnd-container>
+	  </div>

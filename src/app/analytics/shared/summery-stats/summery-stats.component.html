@@ -1,0 +1,362 @@
+<!-- Other content of your component -->
+
+<!-- Modal with Progress Bar -->
+<div class="modal" id="progressModal">
+  <div class="modal-content">
+    <span class="close" (click)="hideProgressModals()">&times;</span>
+    <progress id="progressBar" value="0" max="100"></progress>
+    <span id="progressValue">0%</span>
+  </div>
+</div>
+
+<div class="row mt-2">
+    <ng-container *ngIf="(logedInUserType == userType?.PracticeManager || (isUserDoctor|| (targetedDashboard == this.dashboardType?.Provider)) || (targetedDashboard == this.dashboardType?.PracticeManager)) 
+    && (!isUserAdmin || (targetedDashboard == this.dashboardType?.PracticeManager) || (targetedDashboard == this.dashboardType?.Provider))">
+        <!-- Completed Appointments Card -->
+        <div class="col">
+            <div class="card summary ">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">COMPLETED<br>APPOINTMENTS 
+                        <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the percentage of ‘Total Completed Appointments’ in bold, according to the selected time period. The completed appointments are calculated according to the ‘Scheduled Date’. The amount below that, after 'from', shows the percentage of completed appointments of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show completed appointments for the duration of ‘current date - 30 days’ & the stats below that, after from, will show completed appointments for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative. " container="body">                           
+                            <img  class="summary-icons" src="assets/icons/total-appointment.svg" alt=""> <img id="csv-icon" (click)="completedAppointmentsExport()"  class="summary-icons" src="assets/icons/share.svg" alt="">  
+                        </span>
+                    </div>
+                    <div class="card-percentage">{{summeryStats.Appointment_current| number : '1.2-2'}}%</div>
+                    <div class="card-text d-flex">
+                        <div  class="card-icon d-flex" [ngClass]="getColorClassUp(summeryStats.Appointment_is_Positive,summeryStats.Appointment_changed)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.Appointment_is_Positive,summeryStats.Appointment_changed)"></i>
+                            </div>
+                            <div class="card-text1">{{summeryStats.Appointment_changed}}%</div>
+                        </div>
+                        <div class="card-text2">from {{summeryStats.Appointment_previous | number : '1.2-2'}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="(logedInUserType == userType.PracticeManager || (targetedDashboard == this.dashboardType?.PracticeManager)) && (!isUserAdmin || (targetedDashboard == this.dashboardType?.PracticeManager))">
+        <!-- Average Wait Time Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">AVERAGE WAIT <br> TIME <span style="float:right" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the ‘Average Wait Time’ in bold, according to the selected time period. The average wait time is calculated in minutes, by subtracting the “Scheduled Time” from the “Evaluation Time”, of all appointments that lie within the time span selected by the user. The amount below that, after 'from', shows the average wait time of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show average wait time for the duration of ‘current date - 30 days’ & the stats below that, after from, will show average wait time for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative." container="body">                        <img class="summary-icons" src="assets/icons/average-wait-time.svg" alt=""> 
+                        <img id="csv-icon" (click)="averageWaitTimeExport()"  class="summary-icons" src="assets/icons/share.svg" alt=""> 
+                    </span></div>
+                    <div class="card-percentage">{{summeryStats.WaitTime_current | number : '1.2-2'}} min</div>
+                    <div class="card-text d-flex">
+                        <div class="card-icon d-flex" [ngClass]="getColorClassDown(summeryStats.WaitTime_is_Positive,summeryStats.WaitTime_changed)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.WaitTime_is_Positive,summeryStats.WaitTime_changed)"></i>
+                            </div>
+                            <div class="card-text1">{{(summeryStats.WaitTime_changed)}}%</div>
+                        </div>
+                        <div class="card-text2">from {{summeryStats.WaitTime_previous| number : '1.2-2'}} min</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cancel/No show Rate Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div  class="card-title d-flex justify-content-between">CANCEL/NO SHOW <br> RATE <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the percentage of ‘Cancelled + No show appointments’ in bold, according to the selected time period. The cancel/no shows rate is calculated according to the “Scheduled Date”. The amount below that, after 'from', shows the percentage of cancel/ no show appointments of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show cancel/no show rate for the duration of “current date - 30 days” & the stats below that, after from, will show cancel/no show rate for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative." container="body">                        <img  class="summary-icons" src="assets/icons/no-show.svg" alt=""> 
+                        <img id="csv-icon" (click)="CancelNoShow()"  class="summary-icons" src="assets/icons/share.svg" alt="">
+                    </span></div>
+                    <div class="card-percentage">{{summeryStats.Cancel_current | number : '1.2-2'}}%</div>
+                    <div class="card-text d-flex">
+                        <div class="card-icon-red d-flex" [ngClass]="getColorClassDown(summeryStats.Cancel_is_Positive,summeryStats.Cancel_changed)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.Cancel_is_Positive,summeryStats.Cancel_changed)"></i>
+                            </div>
+                            <div class="card-text1">
+                                {{summeryStats.Cancel_changed}}%
+                            </div>
+                        </div>
+                        <div class="card-text2">from {{summeryStats.Cancel_previous | number : '1.2-2'}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unbilled Visits Card -->
+        <div class="col">
+            <div class="card summary"> 
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">UNBILLED <br> VISITS <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the percentage of “Unbilled Visits” in bold, according to the selected time period. The percentage of unbilled visits is calculated according to the “Visit Date”. The amount below that, after 'from', shows the percentage of unbilled visits of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show unbilled visits for the duration of ‘current date - 30 days’ & the stats below that, after from, will show unbilled visits for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative." container="body">                        <img  class="summary-icons" src="assets/icons/unbilled.svg" alt=""> 
+                        <img id="csv-icon" (click)="unbilledvisitExport()" class="summary-icons" src="assets/icons/share.svg" alt="">
+                    </span></div>
+                    <div class="card-percentage">{{summeryStats.Unbilled_Visit_current | number : '1.2-2'}}%</div>
+                    <div class="card-text d-flex">
+
+                        <div class="card-icon d-flex" [ngClass]="getColorClassDown(summeryStats.Unbilled_is_Positive,summeryStats.Unbilled_Visit_changed)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.Unbilled_is_Positive,summeryStats.Unbilled_Visit_changed)"></i>
+                            </div>
+                            <div class="card-text1">
+                                {{summeryStats.Unbilled_Visit_changed}}%
+                            </div>
+                        </div>
+                        <div class="card-text2">from {{summeryStats.Unbilled_Visit_previous | number : '1.2-2'}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Denial Rate Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">DENIAL <br> RATE<span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the percentage of “Denials” in bold, according to the selected time period. The denial rate is calculated according to the “Billed Date” by using the number of bills that have been denied. The amount below that, after 'from', shows the percentage of denials of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show denial rate for the duration of ‘current date - 30 days’ & the stats below that, after from, will show denial rate for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative." container="body">                        <img  class="summary-icons" src="assets/icons/denial.svg" alt="">  
+                    <img id="csv-icon" (click)="DenialRate()"  class="summary-icons" src="assets/icons/share.svg" alt="">    
+                </span></div>
+                    <div class="card-percentage">{{summeryStats.Denial_Rate_current | number : '1.2-2'}}%</div>
+                    <div class="card-text d-flex">
+
+                        <div class="card-icon d-flex" [ngClass]="getColorClassDown(summeryStats.Denial_is_Positive,summeryStats.Denial_Rate_changed)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.Denial_is_Positive,summeryStats.Denial_Rate_changed)"></i>
+                            </div>
+                        <div class="card-text1">{{summeryStats.Denial_Rate_changed}}%</div>
+                    </div>
+                    <div class="card-text2">
+                        from {{summeryStats.Denial_Rate_previous | number : '1.2-2'}}%
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="isUserAdmin && (targetedDashboard != this.dashboardType?.PracticeManager) && (targetedDashboard != this.dashboardType?.Provider)">
+        <!-- Total Billed Amount Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">
+                        TOTAL BILLED <br> AMOUNT
+                        <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the ‘Total Billed Amount’ in bold, according to the selected time period. The billed amount is calculated according to the ‘Billed Date’. The amount below that, after 'from', shows Total Billed Amount of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show Billed Amount for the duration of ‘current date - 30 days’ & the stats below that, after from, will show Billed Amount for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative.
+                        " container="body">                            
+                        <img id="csv-icon" (click)="totalBilledExport()"  class="summary-icons" src="assets/icons/share.svg" alt=""><img class="summary-icons" src="assets/icons/total-billed-amount.svg " >
+                        </span>
+                    </div>
+                    <div class="card-percentage">${{summeryStats.current_billed | number : '1.2-2'}}</div>
+                    <div class="card-text d-flex">
+                        <div class="card-icon d-flex" [ngClass]="getColorClassUp(summeryStats.isBilledPositive,summeryStats.billed_difference)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.isBilledPositive,summeryStats.billed_difference)"></i>
+                            </div>
+                            <div class="card-text1">{{summeryStats.billed_difference}}%</div>
+                        </div>
+                        <div class="card-text2">from ${{summeryStats.previous_billed | number : '1.2-2'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Total Payments Received Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">
+                        TOTAL PAYMENTS <br> RECIEVED (Checks)
+                        <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the ‘Total Payments Received’ in bold, according to the selected time period. The payment received is the ‘Checked Amount’ calculated according to the ‘Checked Date’. The amount below that, after 'from', shows total payments received of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show total payments received for the duration of ‘current date - 30 days’ & the stats below that, after from, will show total payments received for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative." 
+                        container="body"><img id="csv-icon" (click)="totalPaymentExport()"  class="summary-icons" src="assets/icons/share.svg" alt=""><img class="summary-icons" src="assets/icons/total-payments-recieved.svg">
+                        </span>
+                    </div>
+                    <div class="card-percentage">${{summeryStats.total_payment_received | number : '1.2-2'}}</div>
+                    <div class="card-text d-flex">
+                        <div class="card-icon d-flex" [ngClass]="getColorClassUp(summeryStats.isPaymentPositive,summeryStats.payment_received_difference)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconPaymentClass(summeryStats.isPaymentPositive,summeryStats.payment_received_difference)"></i>
+                            </div>
+                            <div class="card-text1-green">
+                                {{summeryStats.payment_received_difference}}%
+                            </div>
+                        </div>
+                        <div class="card-text2">from ${{summeryStats.previous_payment_received | number : '1.2-2'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- '' : '',card-icon-grey d-flex , , -->
+        <!-- Total Account Receivables Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">
+                        TOTAL ACCOUNT <br> RECEIVABLES
+                        <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the ‘Total Account Receivables’ in bold, according to the selected time period. The account receivable is the ‘Outstanding Amount’ calculated according to the ‘Billed Date’. The amount below that, after 'from', shows total account receivables of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show total account receivables for the duration of ‘current date - 30 days’ & the stats below that, after from, will show total account receivables for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative."
+                         container="body"><img id="csv-icon" (click)="totalAccountReceivableExport()"  class="summary-icons" src="assets/icons/share.svg" alt="">                         
+                        <img class="summary-icons" src="assets/icons/total-account-recievables.svg" >
+                        </span>
+                    </div>
+                    <div class="card-percentage">${{summeryStats.current_account_receivable | number : '1.2-2'}}</div>
+                    <div class="card-text d-flex">
+                        <div class="card-icon d-flex" [ngClass]="getColorClassDown(summeryStats.isReceivablesPositive,summeryStats.account_receivable_difference)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.isReceivablesPositive,summeryStats.account_receivable_difference)"></i>
+                            </div>
+                            <div class="card-text1">
+                                {{summeryStats.account_receivable_difference}}%
+                            </div>
+                        </div>
+                        <div class="card-text2">
+                            from ${{summeryStats.previous_account_receivable | number : '1.2-2'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Interest Amount Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">
+                        TOTAL INTEREST <br> AMOUNT
+                        <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the ‘Total Interest Amount’ in bold, according to the selected time period. The interest amount is calculated according to the ‘Billed Date’. The amount below that, after 'from', shows total interest amount of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show total interest amount for the duration of ‘current date - 30 days’ & the stats below that, after from, will show total interest amount for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative."  
+                        container="body"><img id="csv-icon" (click)="totalInterestExport()"  class="summary-icons" src="assets/icons/share.svg" alt="">                          
+                            <img class="summary-icons" src="assets/icons/interest-amount.svg" >
+                        </span>
+                    </div>
+                    <div class="card-percentage">${{summeryStats.current_interest | number : '1.2-2'}}</div>
+                    <div class="card-text d-flex">
+                        <div [ngClass]="getColorClassUp(summeryStats.isInterestPositive,summeryStats.interest_difference)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.isInterestPositive,summeryStats.interest_difference)"></i>
+                            </div>
+                            <div class="card-text1-green">
+                                {{summeryStats.interest_difference}}%
+                            </div>
+                        </div>
+                        <div class="card-text2">
+                            from ${{summeryStats.previous_interest | number : '1.2-2'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Write Off Amount Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">
+                        TOTAL WRITE OFF <br> AMOUNT
+                        <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the ‘Total Write off Amount’ in bold, according to the selected time period. The write off amount is calculated according to the ‘Billed Date’. The amount below that, after 'from', shows total write off amount of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show total write off amount for the duration of ‘current date - 30 days’ & the stats below that, after from, will show total write off amount for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative."
+                         container="body"> <img id="csv-icon" (click)="totalWriteOffExport()"  class="summary-icons" src="assets/icons/share.svg" alt="">                           
+                            <img class="summary-icons" src="assets/icons/Write-off-amount.svg ">
+                        </span>
+                    </div>
+                    <div class="card-percentage">${{summeryStats.current_writeoff | number : '1.2-2'}}</div>
+                    <div class="card-text d-flex">
+                        <div class="card-icon d-flex" [ngClass]="getColorClassDown(summeryStats.isWriteoffPositive,summeryStats.writeoff_difference)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.isWriteoffPositive,summeryStats.writeoff_difference)"></i>
+                            </div>
+                            <div class="card-text1">
+                                {{summeryStats.writeoff_difference}}%
+                            </div>
+                        </div>
+                        <div class="card-text2">
+                            from ${{summeryStats.previous_writeoff | number : '1.2-2'}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    
+    <ng-container *ngIf="(isUserDoctor|| (targetedDashboard == this.dashboardType?.Provider)) && logedInUserType !== userType.PracticeManager && (!isUserAdmin || (targetedDashboard == this.dashboardType?.Provider))">
+        
+
+        <!-- Cancel/No show Rate Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">CANCELLED <br> APPOINTMENTS <span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the percentage of “Total Cancelled Appointments” in bold, according to the selected time period. The cancelled appointments are calculated according to the “Scheduled Date”. The amount below that, after 'from', shows the percentage of cancelled appointments of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show cancelled appointments for the duration of ‘current date - 30 days’ & the stats below that, after from, will show cancelled appointments for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative." container="body">                        <img src="assets/icons/cancelled-appointment.svg" alt="">
+                        <img id="csv-icon" (click)="cancelledAppointmentsExport()"  class="summary-icons" src="assets/icons/share.svg" alt="">  
+                        </span></div>
+                    <div class="card-percentage">{{summeryStats.Cancel_current | number : '1.2-2'}}%</div>
+                    <div class="card-text d-flex">
+                        <div class="card-icon-red d-flex" [ngClass]="getColorClassDown(summeryStats.Cancel_is_Positive,summeryStats.Cancel_changed)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.Cancel_is_Positive,summeryStats.Cancel_changed)"></i>
+                            </div>
+                            <div class="card-text1">
+                                {{summeryStats.Cancel_changed}}%
+                            </div>
+                        </div>
+                        <div class="card-text2">from {{summeryStats.Cancel_previous | number : '1.2-2'}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unfinalized Visits Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">UNFINALIZED <br> VISITS<span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="This section shows the percentage of ‘Total Unfinalized Visits’ in bold, according to the selected time period. The unfinalized visits are calculated according to the ‘Visit Date’. The amount below that, after 'from', shows the percentage of unfinalized visits of the previous time in accordance to the time selected. For e.g. when the user selects a specific time span of ‘1m’, the stats in bold will show unfinalized visits for the duration of ‘current date - 30 days’ & the stats below that, after from, will show unfinalized visits for the preceding 30 days. The colored value is a percentage comparison between current and previous amounts and the arrow with it shows whether it was a percentage increase or decrease. The green color indicates if the change was positive and the red color indicates if the change was negative." container="body">                        <img src="assets/icons/unfinalized.svg" alt="">
+                        <img id="csv-icon" (click)="unfinalizedVisitsExport()"  class="summary-icons" src="assets/icons/share.svg" alt="">  
+                        </span></div>
+                    <div class="card-percentage">{{summeryStats.Unfinalized_Visit_current | number : '1.2-2'}}%</div>
+                    <div class="card-text d-flex">
+
+                        <div class="card-icon d-flex" [ngClass]="getColorClassDown(summeryStats.Unfinalized_is_Positive,summeryStats.Unfinalized_Visit_changed)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(summeryStats.Unfinalized_is_Positive,summeryStats.Unfinalized_Visit_changed)"></i>
+                            </div>
+                            <div class="card-text1">
+                                {{summeryStats.Unfinalized_Visit_changed}}%
+                            </div>
+                        </div>
+                        <div class="card-text2">from {{summeryStats.Unfinalized_Visit_previous | number : '1.2-2'}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- eRx Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">eRx <br> ORDERS<span  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="A numerical presentation of the current eRx orders in comparison with the previous appointments of the selected time period. This comparison is expressed numerically as a percentage, highlighting any change in the erx orders. The color green is used to signify a positive change, while the color red denotes a negative change. Additionally, arrows accompany the percentage values, visually indicating whether the value has increased or decreased over the selected time period. " container="body">                    <img src="assets/icons/Erx.svg" alt="">
+                    </span></div>
+                    <div class="card-percentage">{{currentDenialRate | number : '1.2-2'}}%</div>
+                    <div class="card-text d-flex">
+
+                        <div class="card-icon d-flex" [ngClass]="getColorClass(5)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(isDenialPositive,changedDenialRate)"></i>
+                            </div>
+                        <div class="card-text1">{{changedDenialRate}}%</div>
+                    </div>
+                    <div class="card-text2">
+                        from {{previousDenialRate | number : '1.2-2'}}%
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks Card -->
+        <div class="col">
+            <div class="card summary">
+                <div class="card-body">
+                    <div class="card-title d-flex justify-content-between">TASKS <span style="float:right" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="A numerical presentation of the current tasks in comparison with the previous appointments of the selected time period. This comparison is expressed numerically as a percentage, highlighting any change in the tasks. The color green is used to signify a positive change, while the color red denotes a negative change. Additionally, arrows accompany the percentage values, visually indicating whether the value has increased or decreased over the selected time period. " container="body">                        <img src="assets/icons/Tasks.svg" alt="">
+                        </span></div>
+                    <div class="card-percentage">{{currentWaitTime | number : '1.2-2'}} %</div>
+                    <div class="card-text d-flex">
+                        <div class="card-icon d-flex" [ngClass]="getColorClass(2)" >
+                            <div  *ngIf="dataAssigned" class="card-icon me-1">
+                                <i [ngClass]="getIconClass(isWaitTimePositive,changedWaitTime)"></i>
+                            </div>
+                            <div class="card-text1">{{(changedWaitTime)}}%</div>
+                        </div>
+                        <div class="card-text2">from {{previousWaitTime | number : '1.2-2'}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

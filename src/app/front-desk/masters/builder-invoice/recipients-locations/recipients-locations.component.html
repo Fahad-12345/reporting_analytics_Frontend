@@ -1,0 +1,43 @@
+<ng-container *ngIf="item">
+  <div class="invoice-name-card">
+    <div class="form-group" >
+      <ul>
+        <li>
+          <i class="fa fa-user-plus" aria-hidden="true"></i>
+        </li>
+        <li class="invoice-list">
+          <span class="title" for="invoice_to_name">{{item?.location_name?item?.location_name:'Name'}}</span>
+        </li>
+      </ul>
+    </div>
+    <div class="form-group" >
+      <ul>
+        <li>
+          <i class="fa fa-map-marker" aria-hidden="true"></i>
+        </li>
+        <li class="invoice-list">
+          <span class="title" for="p_address">
+            {{item?.street_address?item.street_address:item?.street?item.street:''}}{{item && item?.suit_floor?', ':''}}
+            {{item?.suit_floor}}
+            <br>{{item?.city}}{{item && item?.state?', ':''}}
+            {{item?.state}} {{item?.zip}}
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div class="form-group" >
+      <ul>
+        <li>
+          <i class="fa fa-phone" aria-hidden="true"></i>
+        </li>
+        <li class="invoice-list">
+          <span class="title" for="is_enable_invoice_to_phone_number">{{(item?.invoice_to_phone_no?(item?.invoice_to_phone_no | phoneFormatPipe):(item?.phone_no?(item?.phone_no | phoneFormatPipe):(item?.phone?(item?.phone| phoneFormatPipe):'N/A')))}} </span>
+        </li>
+      </ul>
+    </div>
+    <button type="button" class="close" aria-label="Close" (click)="removeRecipient(item)" >
+      <span class="icon-plus" aria-hidden="true"></span>
+    </button>
+  </div>
+</ng-container>
+

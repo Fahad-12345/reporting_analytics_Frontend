@@ -1,0 +1,126 @@
+<div class="row">
+	<div class="col-12 pt-2">
+		<div class="user-info">
+			<div class="row">
+				<div class='col-md-12'>
+					<h4 class="my-0 color-green fs-18">Assignment</h4>
+				</div>
+			</div>
+		</div>
+		<hr class="line-bottom my-2">
+		<div class="row">
+			<div class="col-md-12">
+				<nav class="left-nav p-0 mt-2">
+					<ul class="list-unstyled">
+						<li class="button--wayra active">
+							<a class="d-block" [routerLink]="['/scheduler-front-desk/speciality']">Specialty</a>
+						</li>
+						<li class="button--wayra">
+							<a class="d-block" [routerLink]="['/scheduler-front-desk/doctor']">Provider</a>
+						</li>
+						<li class="button--wayra ">
+							<a class="d-block"
+								[routerLink]="['/scheduler-front-desk/notifications_sup']" *ngIf="aclService.hasPermission(userPermissions.notification_menu)">Notifications</a>
+						</li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+		<div class="row mt-2">
+			<div *ngIf="(aclService.hasPermission(userPermissions.scheduler_assignment_view) || aclService.hasPermission(userPermissions.scheduler_assignment_add_new) ||
+		aclService.hasPermission(userPermissions.scheduler_assignment_edit) || aclService.hasPermission(userPermissions.scheduler_assignment_delete)); else no_assign_speciality_menu" class="col-12 d-flex" style="gap: 10px;">
+					<aside>
+						<app-side-nav side='left' class="position-relative">
+							<div slot='left' class="sidebar-left">
+								<div class="row">
+									<div class="col-md-12 col-sm-6">
+										<form [formGroup]="myForm" novalidate>
+											
+												<mat-calendar (selectedChange)="setDate($event)" [(selected)]="model" [minDate]="minDate"></mat-calendar>
+
+										</form>
+									</div>
+									<div class="col-md-12 col-sm-6">
+										<app-speciality-clinic-list [(clinics)]="clinics" [(tempClinics)]="clinics"
+											[(speciality)]="speciality" (selectClinic)="selectClinic($event)"
+											(selectSpeciality)="selectSpeciality($event)"></app-speciality-clinic-list>
+									</div>
+								</div>
+							</div>
+						</app-side-nav>
+					</aside>
+				
+						<div class="main-calendar overflow-hidden w-100">
+								<!-- (viewDateChange)="fetchEvents()"
+						(viewChange)="fetchEvents()" -->
+						<div class="row">
+						<div class="col-12">
+								<assign-speciality-calendar-header [(view)]="view" [(viewDate)]="viewDate"
+									(changeDatePickerMonthNext)="getMainCalendarCurrentDate($event)"
+									(changeDatePickerMonthPrev)="getMainCalendarCurrentDate($event)" (viewChange)="viewChange($event)"
+									[(isSwapped)]="isSwapped"></assign-speciality-calendar-header>
+									
+									<div class="overflow-drag-assign-speciality speciality-month-calendar " [ngSwitch]="view" [ngClass]="{'scroll-provider-one': calenderClinics.length == 1}">
+										<!-- {{calenderClinics | json}} -->
+										<table class="table-width">
+											<tr>
+												<td *ngFor="let clinic of calenderClinics; let i=index"
+												   
+													[style.min-width]="calenderSpeciality[0].id == 0 ? '620px' : '856px'"
+													style="padding-top: 0px !important; padding-left: 10px;">
+													<div (click)="removeTopEntry(clinic.id)" [hidden]="clinic.id == 0"
+														class="text-center"
+														style="border: 1px solid #e1e1e1; width: 70%; margin-left: 15%;border-radius: 3px;" [ngStyle]="view==='day'?
+															{'min-width': '415px','max-width': '415px','margin-left': '20px' } :
+															view==='week' && calenderClinics.length==1?
+															{'min-width': '667px','max-width': '667px','margin-left': '116px' } :
+															{'margin-left': '15%'}">
+														<div class="col-md-3" [style.background-color]="clinic.color"
+															style="width: 20px; float: left; height: 37px;border-radius: 3px 0px 0px 3px;">
+														</div>
+														
+														<h4 *ngIf="clinic.facility_name else spec"class="text-truncate h4-calender-header" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinic.facility_name}}-{{clinic.name}}">{{clinic?.facility?.qualifier}} - {{clinic.qualifier}}</h4>
+													<ng-template #spec>
+														<h4 class="text-truncate h4-calender-header" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinic.name}}">{{clinic.qualifier}}</h4>
+													</ng-template>
+													</div>
+				
+													<cal-assign-speciality-month-view *ngSwitchCase="'month'" [(viewDate)]="viewDate"
+														[clinicId]="clinic"  
+														[allClinics]="calenderClinics" [(specId)]="calenderSpeciality"
+														[(specAssign)]="specAssign" [(events)]="specAssign" [selectDate]="datePick"
+														[clinicIndex]="i" [swap]="isSwapped" [refresh]="refresh"
+														(childEvent)="removeSideEntry($event)">
+													</cal-assign-speciality-month-view>
+				
+													<cal-assign-speciality-week-view *ngSwitchCase="'week'" [viewDate]="viewDate"
+														[clinicId]="clinic" [swaps]="isSwapped" [(events)]="events"
+														[(specAssign)]="specAssign" (childEvent)="removeSideEntry($event)"
+														[(speciality)]="calenderSpeciality" [weekStartsOn]="weekStartOn"
+														(eventClicked)="eventClicked($event.event)" [clinicIndex]="i">
+													</cal-assign-speciality-week-view>
+				
+													<cal-assign-speciality-day-view *ngSwitchCase="'day'" [viewDate]="viewDate"
+														[events]="events" [swaps]="isSwapped"
+														(eventClicked)="eventClicked($event.event)" [(specAssign)]="specAssign"
+														[clinicId]="clinic" (childEvent)="removeSideEntry($event)"
+														[(speciality)]="calenderSpeciality" [clinicIndex]="i">
+													</cal-assign-speciality-day-view>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+			</div>
+			<ng-template  #no_assign_speciality_menu>
+				<h6 class="col-12 color-red">No Access Permission</h6>
+			</ng-template>
+		</div>
+
+	
+	</div>
+
+</div>

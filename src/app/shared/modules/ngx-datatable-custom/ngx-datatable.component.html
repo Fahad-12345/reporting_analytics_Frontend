@@ -1,0 +1,283 @@
+<!-- <div *ngIf="loadSpin" class="lds-roller">
+  
+  <img src="assets/images/spinner.gif" alt="spinner">
+</div> -->
+
+<!-- <div *ngIf="loadSpin" class="lds-dual-ring"></div> -->
+
+<!-- <div class="form-content pt-4 mt-3">
+  <strong class="sub-title" *ngIf="tableConf?.tableName">{{ tableConf.tableName }}</strong>
+  <ng-container *ngIf="tableConf?.isFilterRequired">
+    <app-ngx-datatable-filters #ngxDatableFilter [filterData]="filterData" [filtersNeeded]="tableConf?.filtersNeeded"
+      (filterObjectEmitter)=" currentPaginator = { page: 1};offset=0;getTableData(formDataFilters = $event); handelDataTableEvents('formDataFilters', $event)">
+    </app-ngx-datatable-filters>
+  </ng-container> -->
+
+
+  <div class="row" style="float: right">
+    <ng-container *ngIf="tableConf?.tableHeaderButtonsRequired">
+      <div *ngFor="let button of tableConf?.tableHeaderButtons" style=" margin-right: 7px">
+        <button [ngClass]="button.btnClass" *ngIf="button.type === 'custom'"
+          (click)="handelCustomEvents(button.method)">{{button.title}}
+          {{button.showCount ? '[' + selection.selected.length + ']' : ''}}
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="tableConf?.isSelectionActionButtonsRequired">
+      <div *ngFor="let button of tableConf?.selectionActionButtons" style="margin-right: 7px" class="pull-right">
+        <button [ngClass]="button.btnClass" *ngIf="selection?.selected.length > 0"
+          [class.disabled]="tableConf.disableSelectionInitially"
+          (click)="handelDataTableEvents(button.method, selection.selected)">{{button.title}}
+          [{{button.showCount ? selection.selected.length : ''}}]
+        </button>
+      </div>
+    </ng-container>
+
+    <!--  </div>
+  <div class="row" *ngIf="tableConf.tableHeaderButtonsRequired" style="float: right">-->
+  </div>
+
+  <ngx-datatable ngx-resize-watcher #myTable class="bootstrap expandable" [externalPaging]="tableConf?.pagination"
+    style="width:100% !important;" [columnMode]="'force'" [count]=tableData?.total [scrollbarH]="true"
+    [headerHeight]="50" [limit]="tableConf?.rowsPerPage" [footerHeight]="50" [rowHeight]="'auto'"
+    [rows]='tableData?.data' [virtualization]="false" (page)="onPage($event)" [offset]="offset">
+    <ng-container *ngFor="let col of tableConf.tableCols;trackBy:identify">
+      <ngx-datatable-column [canAutoResize]="col.canAutoResize" [draggable]="col.draggable" [sortable]="col.sortHead"
+        [resizeable]="col.resizeable" [name]="col.header" [prop]="col.field" [width]="col.width? col.width : 200">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <ng-container *ngIf="col.type === 'string'">
+            {{  value }}
+		  </ng-container>
+		  
+		    <ng-container *ngIf="col.type==='color'">
+
+				
+				
+				<input class="customize-screen" disabled type="color"  value="{{value}}">
+					
+			</ng-container>
+          <ng-container *ngIf="col.type === 'billStatus'">
+            <span [class.red]="(value == '16' || value == 16)"
+              [class.orange]="(value == '18' || value == 18 || value == '17' || value == 17)">
+              {{value }}</span>
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'currency'">
+            {{  (value || 0) | currency }}
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'phone'">
+            {{  value | phone }}
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'date'">
+            {{  value | date: datePipeService.slashDateFormat_MM_dd_yyyy() }}
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'object'">
+            {{getRequiredKeysFromObject(col, value)}}
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'utcPipe'">
+            
+            {{  col?.timeZoneReport ? (value | utcTimeR : value | date:datePipeService.hyphenDateTimeFormat_MM_dd_y_h_mm_AM_PM()) :(value | utcTime : value | date:commonService.hyphenDateTimeFormat_MM_dd_y_h_mm_AM_PM())  }}
+          </ng-container>
+          <ng-container *ngIf="col.type === 'replacement'">
+            {{ (row[col.field] ?row[col.field] :row[col.replacementKey] )| date: datePipeService.slashDateFormat_MM_dd_yyyy() }}
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'link'">
+            <a class="p-0" title="Edit" [routerLink]="[col['link'].replace(':', value)]">
+              {{value}}
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'objectAndLink'">
+            <a class="p-0" title="Edit" [routerLink]="[col['link'].replace(':', value[col['linkKey']])]">
+              {{getRequiredKeysFromObject(col, value)}}
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'twoStatesKeys'">
+              
+            {{value==0? col?.colstate[0]:col?.colstate[1]}}
+          </ng-container>
+
+
+          <ng-container *ngIf="col.type === 'multipleKeys'">
+            <a class="p-0" title="Edit" [routerLink]="[col['link'].replace(':', row[linkKeyRow])]">
+              {{getRequiredMulitpleKeys(col,row, value)}}
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'multipleKeyswithoutLink'">
+              {{getRequiredMulitpleKeys(col,row, value)}}
+           
+          </ng-container>
+
+
+          <ng-container *ngIf="col.type === 'linkImplicit'">
+
+            <a class="p-0" title="Edit" [routerLink]="[col['link'].replace(':', row[col['linkKey']])]">
+              {{value}}
+            </a>
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'badgesArray'">
+            <span *ngFor="let machine of value" class="badge bg-info modal-name">
+              <!--<a title="show body parts">{{machine[col.objectRequiredValues]}}</a>-->
+              <a style="color: #fff" (click)="handelDataTableEvents(col.method, machine)"
+                title="show body parts">{{machine.modal}}</a>
+            </span>
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'array'">
+            <ng-container *ngFor="let val of value">
+              <span style="color: #fff" *ngIf="val" class="badge bg-info modal-name">
+                {{val}}
+              </span>
+            </ng-container>
+
+          </ng-container>
+          <ng-container *ngIf="col.type === 'custom_method'">
+            <a href="javascript:void(0)" (click)="handelDataTableEvents('custom_method',row)"
+            *ngIf="!row.start_time"> {{value}} </a>
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'timeSlots' || col.type === 'timeSlotsEditOnly'">
+            <a href="javascript:void(0)" (click)="handelDataTableEvents('addTimeSlots',row)"
+              *ngIf="!row.start_time">Time Slots </a>
+
+            <span *ngIf="row.start_time"> {{formatTime(row.start_time)}}-{{formatTime(row.end_time)}}
+              <a href="javascript:void(0)" *ngIf="col.canEditTimeSlot"
+                (click)="handelDataTableEvents('addTimeSlots', row)" style="margin-right: 5px"><i
+                  class="fa fa-edit"></i></a>
+
+              <a href="javascript:void(0)" *ngIf="col.type === 'timeSlots' && tableConf?.timeSlotsDelete"
+                (click)="handelDataTableEvents('resetTimeSlot', row)" style="margin-right: 5px"><i
+                  class="fa fa-trash"></i></a>
+            </span>
+
+          </ng-container>
+
+          <ng-container *ngIf="col.type === 'timeSlotSplit'">
+            <span> {{formatTimeSplit(value,0)}}-{{formatTimeSplit(value,1)}}</span>
+          </ng-container>
+
+
+        </ng-template>
+      </ngx-datatable-column>
+    </ng-container>
+
+    <!--   [checkboxAble]="tableConf.checkboxAble"
+     [headercheckboxAble]="true"-->
+
+    <ng-container *ngIf="tableConf.actionColumn">
+      <ngx-datatable-column [canAutoResize]="true" [resizeable]="false" name="Actions" [sortable]="false"
+        [draggable]="false">
+
+        <ng-template let-column="column" ngx-datatable-header-template>
+          <!--=====================ADD Checkbox IN HEADER if CHECKABLE==================================================================-->
+          <!--<label class="label d-inline-block add-class select-allCheckbox action-label" *ngIf="tableConf.checkboxAble">
+            <span class="fake-label d-inline-block align-middle" style="width: calc(100% - 40px);">Actions</span>
+            <input type="checkbox" name="checkbox"/>
+            <span class="fake-input d-inline-block align-middle"></span>
+          </label>-->
+          <!-- <mat-checkbox (change)="$event ? masterToggle('implicitActionOnSelection') : null"
+                         [checked]="selection.hasValue() && isAllSelected()"
+                         [indeterminate]="selection.hasValue() && !isAllSelected()">
+           </mat-checkbox>-->
+          <b *ngIf="!tableConf.actionSelection">{{column.name}}</b>
+          <label *ngIf="tableConf.actionSelection"
+            class="label d-inline-block add-class select-allCheckbox action-label">
+            <span class="fake-label d-inline-block align-middle"
+              style="width: calc(100% - 40px);">{{column.name}}</span>
+            <input (change)="$event ? masterToggle('implicitActionOnSelection') : null"
+              [checked]="selection.hasValue() && isAllSelected()"
+              [disabled]="tableConf.disableSelectionInitially || disableAllCheckboxes"
+              [ngClass]="{indeterminate: selection.hasValue() && !isAllSelected() }" type="checkbox" name="checkbox" />
+            <span class="fake-input d-inline-block align-middle"></span>
+          </label>
+          <!--=====================ADD Checkbox IN HEADER if CHECKABLE==================================================================-->
+        </ng-template>
+
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <ng-container *ngFor="let actionEntity of tableConf.actionEntities">
+            <a [class.custom_comment]="actionEntity['isComment']"
+              [class.disabled]="actionEntity['actionType'] == 'delete' && row[actionEntity['hideDeleteProp']][actionEntity['hideDeleteInnerProp']] == actionEntity['disableDeleteValue'] "
+              href="javascript:void(0)" style="margin-left:6px" *ngIf="actionEntity.type === 'method'"
+              [title]="actionEntity['title']" (click)="handelDataTableEvents(actionEntity['method'], row)">
+              <i [class]="actionEntity['icon']"></i>
+              <span *ngIf="actionEntity['isComment']"
+                class="comments-count badge badge-pill badge-danger">{{row[actionEntity['commentCounterProperty']] ? row[actionEntity['commentCounterProperty']] : 0}}</span>
+            </a>
+            <a href="javascript:void(0)" style="margin-left:6px" *ngIf="actionEntity.type === 'custom'"
+              [title]="actionEntity['title']" (click)="handelCustomEvents(actionEntity['method'], row)">
+              <i [class]="actionEntity['icon']"></i>
+              {{actionEntity['icon'] === '' ? actionEntity['title'] : ''}}
+
+            </a>
+          </ng-container>
+          <!--=====================ADD Checkbox IN Cell if CHECKABLE==================================================================-->
+          <!--<label class="label add-class select-allCheckbox" title="Select Deliveries" *ngIf="row.start_time && tableConf.checkboxAble">
+            <input type="checkbox" [checked]="row.checkBoxChecked" (click)="handelDataTableEvents('implicitActionOnSelection' , [row])" [disabled]="!row.start_time"/>
+            <span class="fake-input"></span>
+          </label>-->
+          <!--<mat-checkbox *ngIf="row[tableConf.conditionalCheckboxField] && tableConf.checkboxAble"-->
+          <!--<mat-checkbox *ngIf=" tableConf.checkboxAble"-->
+          <ng-container *ngIf="tableConf.actionSelection">
+            <mat-checkbox style="color: green;margin-right: -10px;"
+              *ngIf="!tableConf.conditionalCheckboxField || (tableConf.conditionalCheckboxField && row[tableConf.conditionalCheckboxField])"
+              (click)="$event.stopPropagation();handelDataTableEvents('showDisabledMessage', tableConf.disableSelectionInitially)"
+              (change)="handelDataTableEvents('implicitActionOnSelection' , [row], $event)"
+              [checked]="selection.isSelected(row)">
+            </mat-checkbox>
+          </ng-container>
+          <!--=====================ADD Checkbox IN CELL if CHECKABLE========================================================================-->
+        </ng-template>
+
+
+      </ngx-datatable-column>
+
+    </ng-container>
+
+    <!--<div
+      class="datatable-footer-inner"
+      [ngClass]="{'selected-count': selectedMessage}"
+      [style.height.px]="footerHeight">
+      <ng-template
+        *ngIf="footerTemplate"
+        [ngTemplateOutlet]="footerTemplate.template"
+        [ngTemplateOutletContext]="{
+            rowCount: rowCount,
+            pageSize: pageSize,
+            selectedCount: selectedCount,
+            curPage: curPage,
+            offset: offset
+          }">
+      </ng-template>
+      <div class="page-count" *ngIf="!footerTemplate">
+          <span *ngIf="selectedMessage">
+            {{selectedCount?.toLocaleString()}} {{selectedMessage}} /
+          </span>
+        {{rowCount?.toLocaleString()}} {{totalMessage}}
+      </div>
+      <datatable-pager *ngIf="!footerTemplate"
+                       [pagerLeftArrowIcon]="pagerLeftArrowIcon"
+                       [pagerRightArrowIcon]="pagerRightArrowIcon"
+                       [pagerPreviousIcon]="pagerPreviousIcon"
+                       [pagerNextIcon]="pagerNextIcon"
+                       [page]="curPage"
+                       [size]="pageSize"
+                       [count]="rowCount"
+                       [hidden]="!isVisible"
+                       (change)="page.emit($event)">
+      </datatable-pager>
+    </div>-->
+
+
+  </ngx-datatable>
+
+
+

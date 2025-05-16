@@ -1,0 +1,47 @@
+//custom checkbox in customize column
+.checkbox-btn{
+    position: relative;
+    &:nth-child(5){
+        margin-bottom: 0;
+    }
+    input[type="checkbox"] {
+        position: fixed;
+        left: 0;
+        top: 0;
+        opacity: 0;
+				z-index: -1;
+        &:checked {
+            & + .fake-input{
+                &:after {
+					content: "";
+					position: absolute;
+					left: 4px;
+    				top: 1px;
+					border-radius: 0;
+					width: 5px;
+					height: 9px;
+					opacity: 1;
+					border: solid #05a853;
+					border-width: 0 2px 2px 0;
+					transform: rotate(45deg);
+					transform-origin: center;
+				}
+            }
+        }
+    }
+    span{
+		&.fake-input{
+			position: relative;
+			display: inline-block;
+			vertical-align: middle;
+			top: -2px !important;
+			left: 0;
+			width: 0.875rem;
+			height: 0.875rem;
+			border-radius: 0.125rem;
+			border: 1px solid #a7b9b0;
+			background: #fff;
+			// box-shadow: 0px 0px 6px rgb(0 0 0 / 11%);
+		}
+    }
+}

@@ -1,0 +1,12 @@
+@mixin plus-btn-style {
+    margin-top: 3px;
+    padding: 3px;
+    @include media('<xl-widescreen') {
+        padding: 1px;
+        margin-top: 1px;
+    }
+    span {
+        font-size: 1.125rem;
+        line-height: 1.4375rem;
+    }
+}

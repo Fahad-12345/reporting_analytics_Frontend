@@ -1,0 +1,183 @@
+<div class="modal-header" style="background-color: #4b4b4b;color: #fff;padding: 8px 15px;font-size: 18px;">
+    <h4 class="modal-title" style="text-align: center;">Create Room Assignment</h4>
+    <button style="background-color: #4b4b4b;color: #fff" type="button" class="close" data-dismiss="modal" (click)="activeModal.dismiss('Cross click')">&times;</button>
+</div>
+<form style="height:100%" [formGroup]="myForm" (ngSubmit)="submitFormAndClose()">
+    <div class="modal-body" style="padding:25px">
+        <div class=" row container">
+            <div class="col-md 4">
+                <label class="title" for="roomName"></label>
+                <select class="form-select" formControlName="roomName">
+					<option *ngFor="let room of assignRooms; let i=index" value={{room.id}}>{{room.name}}</option>
+				</select>
+            </div>
+
+            <div class="col-md 4">
+                <label class="title" for="clinicname"></label>
+                <select class="form-select" formControlName="clinicName" (change)="changeClinic()">
+					<option *ngFor="let clinic of assignClinics; let i=index" value={{clinic.id}}>{{clinic.name}}
+					</option>
+
+				</select>
+            </div>
+
+            <div class="col-md 4">
+                <label class="title" for="speciality"></label>
+                <select class="form-select" formControlName="doctorName" (change)="changeDoc()">
+					<option *ngFor="let doc of doctors" value={{doc.id}}>
+						{{doc.doctor.first_name}}&nbsp;{{doc.doctor.last_name}}
+					</option>
+
+				</select>
+            </div>
+        </div>
+
+        <div class=" row container">
+            <div class='col-md-3'>
+                <label class="title" for="startdate">Start Date </label>
+                <ejs-datepicker [(value)]='startDate' placeholder='Enter date' (change)="changeStartDate()">
+                </ejs-datepicker>
+            </div>
+            <div class='col-md-3'>
+                <label class="title" for="enddate">End Date </label>
+                <ejs-datepicker [(min)]="minDate" [(value)]='endDate' placeholder='Enter date' (change)="changeEndDate()">
+                </ejs-datepicker>
+            </div>
+            <div class='col-md-3'>
+                <label class="title" for="starttime">Start Time</label>
+                <ejs-timepicker [step]='interval' [(value)]='startTime' (change)="changeStartTime()"></ejs-timepicker>
+            </div>
+            <div class='col-md-3'>
+                <label class="title" for="endtime">End Time </label>
+                <ejs-timepicker [min]="minTime" [step]='interval' [(value)]='endTime' (change)="changeEndTime()">
+                </ejs-timepicker>
+            </div>
+        </div>
+        <div [hidden]="isRecuurenceBefore" class="row container">
+            <div class='col-md-6 col-lg-4 '>
+                <input style="float: left;padding: 0 !important;height: 16px !important;margin-top: 6px;" type="checkbox" name="recurrenceAfter" class="form-control col-md-1" id="recurrenceAfter" (click)="RecurrenceDoc($event)">
+                <label class="title" for="recurrenceAfter">Recurrence</label>
+            </div>
+        </div>
+
+
+
+
+
+
+        <div [hidden]="isShowRecuurenceBefore" class="row container">
+            <div class=" col-md-12 ">
+                <div class="row">
+                    <label class="col-sm-4 col-md-3 col-lg-2  title" style="max-width: 14%;"> Repeat every </label>
+                    <select class="col-md-2 form-control" formControlName="dailyMontlyWeeklyOpt" (ngModelChange)="changeRepeatEvery()">
+						<option *ngFor="let opt of option" value={{opt}}>
+							{{opt}}
+						</option>
+					</select>
+                    <label class="col-md-2 title">on</label>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div [hidden]="isShowRecuurenceBefore" class="row container">
+                    <div [hidden]="isDisableOption" class="col-md-12" style="padding: 0px;">
+                        <div class="row">
+                            <span class="col-md-4 col-lg-3" *ngFor="let days of weekday;let i=index" (click)="changeWeek($event,days[0])">
+								<input
+									style="    float: left; padding: 0 !important; height: 16px !important; margin-top: 8px;"
+									type="checkbox" name="week" class="form-control col-md-2 " id="Mon">
+								<label style="margin-bottom: 0; margin-top: 3px;" for="Mon"
+									class="title">{{days[0].name}}</label>
+							</span>
+                        </div>
+                        <div class="row" [hidden]="true">
+                            <div class="col-md-4">
+                                <input [disabled]="isDisableOption" style="float:left;width: 10% !important;" type="checkbox" name="week" class="form-control col-md-2" id="Thurs" (click)="changeWeek($event,4)">
+                                <label style="margin-top: 3%!important;" for="Thurs">Thursday</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input [disabled]="isDisableOption" style="float:left;width: 10% !important;" type="checkbox" name="week" class="form-control col-md-2 " id="Fri" (click)="changeWeek($event,5)">
+                                <label style="margin-top: 3%!important;" for="Fri">Friday</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input [disabled]="isDisableOption" style="float:left;width: 10% !important;" type="checkbox" name="week" class="form-control col-md-2" id="Sat" (click)="changeWeek($event,6)">
+                                <label style="margin-top: 3%!important;" for="Sat">Saturday</label>
+                            </div>
+
+                        </div>
+                        <div class="row" [hidden]="true">
+                            <div class="col-md-4">
+                                <input [disabled]="isDisableOption" style="float:left;width: 10% !important;" type="checkbox" name="week" class="form-control col-md-2" id="Sun" (click)="changeWeek($event,7)">
+                                <label style="margin-top: 3%!important;" for="Sun">Sunday</label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" [hidden]="isDisableOption">
+            <div [hidden]="isWeekError" style="color:red;" class="error1 col-md-7">
+                *Choose atleast one day
+            </div>
+        </div>
+        <div [hidden]="isShowRecuurenceBefore" class="row container">
+            <div class="col-md-6 col-lg-4 ">
+                <input style="float: left;
+              padding: 0 !important;
+              height: 16px !important;
+              margin-top: 6px;" type="checkbox" name="rangeRecurrence" class="form-control col-md-1 " id="rangeRecurrence" (click)="rangeRecuurence($event)">
+                <label class="title" for="rangeRecurrence">*Range of Recurrence</label>
+            </div>
+        </div>
+
+        <div class="row" [hidden]="hideRangeRec" [ngStyle]="{'color':isRangeRec ? 'grey' : 'black'}">
+            <input class="form-control col-md-1" [disabled]="isRangeRec" checked type="radio" name="rangeRecOption" (click)="endAfter($event)" id="rangeRecOption1" style="max-width: 2%; flex: 0 0 2%;margin-left: 5%;">
+            <label class="title col-md-2" style="margin-top: 6px;max-width: 12%;flex: 0 0 12%;" for="rangeRecOption">End
+				after</label>
+
+            <input formControlName="noOfOccurence" class="form-control col-md-3" style="margin-top:4px; max-width: 16%;flex:0 0 16%;" type="number" min=1 oninput="validity.valid||(value='')">
+            <label class="  col-md-2 title" style="padding-top: 4px;">occurance</label>
+        </div>
+
+        <div class="row" [hidden]="hideRangeRec" [ngStyle]="{'color':isRangeRec ? 'grey' : 'black'}">
+            <input style="max-width: 2%; flex: 0 0 2%;margin-left: 5%;" class="form-control col-md-1 " [disabled]="isRangeRec" type="radio" (click)="endBy($event)" name="rangeRecOption" id="rangeRecOption2">
+            <label class="title col-md-2" style="margin-top: 6px;max-width: 10.9%;flex: 0 0 10.9%;" for="rangeRecOption">End
+				by</label>
+            <div class="col-md-4 col-lg-4" style="margin-top: 0.3rem; max-width: 18.5% !important;">
+                <ejs-datepicker [(value)]='endByDate' [min]='startDate' (change)="changeEndOcurrenceDate()" [enabled]="endByCheck" name="rangeRecOption" placeholder='Enter date'></ejs-datepicker>
+            </div>
+            <div [hidden]="isError" style="color:red;" class="error1 col-md-7">
+                *Kindly choose automatic assign or do not assign
+            </div>
+            <div [hidden]="isUnSuccess" style="color:red;" class="error1 col-md-7">
+                *Kindly choose one option from range of recuurence
+            </div>
+        </div>
+
+
+    </div>
+    <div class="modal-footer col-md-12 pt-0" style="padding: 25px;border: none;">
+        <div class="col-md-4 offset"></div>
+        <!-- <div class="col-md-2" style="max-width: 20%;flex: 0 0 20%;">
+                <button class="btn bg-green w-100" style="border-radius: 5px;" (click)="submitFormAndOpen()">
+                    <span >Add</span>
+                </button>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-outline-secondary w-100" style="border-radius: 5px!important;" (click)="activeModal.close()">
+                    <span >Cancel</span>
+                </button>
+            </div> -->
+        <div class="col-md-2" style="max-width: 20%;flex: 0 0 20%;">
+            <button class="btn bg-green w-100" type="submit" (click)="submitFormAndOpen()">Add</button>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+        </div>
+        <div class="col-md-4 offset center"></div>
+    </div>
+
+</form>

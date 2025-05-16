@@ -1,0 +1,249 @@
+<form [formGroup]="globalFilterSearchForm">
+    <div class="row mt-2 ">
+        <div class="col filters d-flex ">
+            <a href="javascript:void(0);"
+                [ngStyle]="{'pointer-events': !globalFilterSearchForm.controls['time_span_id']?.value ? 'none' : 'inherit'}"
+                [ngClass]="{'active':globalFilterSearchForm.controls['time_span_id']?.value == timeSpanTypeId.OneWeek}"
+                (click)="onSelectTimeSpan(timeSpanTypeId.OneWeek)"
+                class="btn btn-light btn-sm  me-1 week-button d-flex align-items-center">1w</a>
+            <a href="javascript:void(0);"
+                [ngStyle]="{'pointer-events': !globalFilterSearchForm.controls['time_span_id']?.value ? 'none' : 'inherit'}"
+                [ngClass]="{'active':globalFilterSearchForm.controls['time_span_id']?.value == timeSpanTypeId.OneMonth}"
+                (click)="onSelectTimeSpan(timeSpanTypeId.OneMonth)"
+                class="btn btn-light btn-sm   me-1 week-button d-flex align-items-center" >1m</a>
+            <a href="javascript:void(0);"
+                [ngStyle]="{'pointer-events': !globalFilterSearchForm.controls['time_span_id']?.value ? 'none' : 'inherit'}"
+                [ngClass]="{'active':globalFilterSearchForm.controls['time_span_id']?.value == timeSpanTypeId.SixMonth}"
+                (click)="onSelectTimeSpan(timeSpanTypeId.SixMonth)"
+                class="btn btn-light btn-sm  me-1 week-button d-flex align-items-center"  >6m</a>
+            <a href="javascript:void(0);"
+                [ngStyle]="{'pointer-events': !globalFilterSearchForm.controls['time_span_id']?.value ? 'none' : 'inherit'}"
+                [ngClass]="{'active':globalFilterSearchForm.controls['time_span_id']?.value == timeSpanTypeId.OneYear}"
+                (click)="onSelectTimeSpan(timeSpanTypeId.OneYear)"
+                class="btn btn-light btn-sm  me-1 week-button d-flex align-items-center" >1y</a>
+            <a href="javascript:void(0);"
+                [ngStyle]="{'pointer-events': !globalFilterSearchForm.controls['time_span_id']?.value ? 'none' : 'inherit'}"
+                [ngClass]="{'active':globalFilterSearchForm.controls['time_span_id']?.value == timeSpanTypeId.MTD}"
+                (click)="onSelectTimeSpan(timeSpanTypeId.MTD)"
+                class="btn btn-light btn-sm  me-1 week-button d-flex align-items-center justify-content-center " title="Month to Date">MTD</a>
+            <div class="all-dropdowns d-flex">
+                <div class="dropdown me-1">
+                    <div class="form-group btn btn-light months  drops" >
+                        <ng-select (change)="setgranularityEmpty($event)"  [items]="months" bindLabel="name" bindValue="id" [placeholder]="'Month'"
+                            formControlName="month_id" [multiple]="false">
+                        </ng-select>
+                    </div>
+                </div>
+            <div
+                class="btn btn-light btn-sm  me-1 week-button form-group btn btn-light  drops d-flex align-items-center date-style field">
+                <mat-date-range-input [rangePicker]="picker" [max]="maxDate" [min]="minDate">
+                    <input matStartDate placeholder="Start date" readonly formControlName="fromDate">
+                    <input matEndDate placeholder="End date" readonly formControlName="toDate">
+                </mat-date-range-input>
+                <mat-icon matDatepickerToggleIcon
+                    *ngIf="globalFilterSearchForm.controls['fromDate']?.value || globalFilterSearchForm.controls['toDate']?.value"
+                    (click)="clearDate($event)" class="cross-remove me-3">clear</mat-icon>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker>
+                    <mat-datepicker-actions>
+                        <div class="d-flex">
+                            <button class="btn btn-light" mat-raised-button color="primary" matDatepickerApply
+                                (click)="validateGranularity()">Apply</button>
+                        </div>
+                    </mat-datepicker-actions>
+                </mat-date-range-picker>
+            </div>
+            <div class="form-group btn btn-light  drops" *ngIf="isShowGranularity">
+                <ng-select [items]="granalityTypes" [clearable]="false" bindLabel="type" bindValue="id"
+                    formControlName="granularity_type_id" [placeholder]="'Granularity'" [multiple]="false">
+                </ng-select>
+            </div>
+
+
+
+            <div class="dropdown me-1" *ngIf="!(isUserDoctor && !isUserAdmin) && (locations.length > 0) && locationFlagAdded === true">
+                <div class="form-group btn btn-light drops drop-option " >
+                    <ng-select [items]="locations" bindValue="id" [ngClass]="'customClass'"
+                    [groupBy]="'facility'" bindLabel="name"
+                        [placeholder]="'Location:All'" [multiple]="true" [selectableGroup]="true"
+                        [selectableGroupAsModel]="false" [closeOnSelect]="false"
+                        formControlName="facility_location_ids" (change)="onCrossFacilityResetSpeciality($event)">
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:1" >
+                                <span class="ng-value-label">{{(item?.name | truncate : 4) || (item?.facility | truncate : 4)}}</span>
+                                <span class="ng-value-icon right"  (click)="clear(item)" aria-hidden="true" >×</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 1">
+                                <span class="ng-value-label">+ {{items?.length - 1}}</span>
+                            </div>
+                        </ng-template>
+
+                        <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index" >
+                            <div class="facility-names d-flex align-items-center">
+                                
+                                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}" />
+                                <button *ngIf="item$.children[0].value.showLocation === false " class="btn btn-link  seeLocations-font" (click)="OnClickshowLocations($event, item , 1)"><i class="fa fa-solid fa-caret-down caret" ></i></button>
+                                <button *ngIf="item$.children[0].value.showLocation " class="btn btn-link  seeLocations-font" (click)="OnClickshowLocations($event, item, 0)"><i class="fa fa-solid fa-caret-up caret"></i></button>
+                                
+                                <strong class="facility-name" title="{{ item?.facility }}">{{ item?.facility | truncate : 16 }}</strong>
+                                
+                            </div>
+                            <!-- <button *ngIf="item$.children[0].value.showLocation === false " class="btn btn-link mt-2 me-auto seeLocations-font" (click)="OnClickshowLocations($event, item , 1)"><i class="fa fa-solid fa-plus"></i></button>
+                            <button *ngIf="item$.children[0].value.showLocation " class="btn btn-link mt-2 me-auto seeLocations-font" (click)="OnClickshowLocations($event, item, 0)"><i class="fa fa-solid fa-minus"></i></button> -->
+                        </ng-template>
+
+                        <ng-template  ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                            <ng-container *ngIf="item.showLocation">
+                                <div class="location-names d-flex align-items-center">
+                                    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}" />
+                                    <span class="location-name" title="{{ item?.name }}">{{ item?.name }}</span>
+                                </div>
+                            </ng-container>
+                        </ng-template>                        
+                        
+                    </ng-select>
+                </div>
+            </div> 
+
+
+           <!--  <div class="dropdown me-1" *ngIf="logedInUserType != userType.Provider && (locations.length > 0)">
+                <div class="form-group btn btn-light drops drop-option">
+                    <ng-select [items]="locations" bindValue="id" bindLabel="facility"
+                        [placeholder]="'Location:All'" [multiple]="true" [selectableGroup]="false"
+                        [selectableGroupAsModel]="false" [closeOnSelect]="false"
+                        formControlName="facility_location_ids" (change)="onCrossFacilityResetSpeciality($event)">
+                        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                            <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                                <span class="ng-value-label">{{item.name || item.facility}}</span>
+                                <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                            </div>
+                            <div class="ng-value" *ngIf="items.length > 1">
+                                <span class="ng-value-label">+ {{items.length - 1}}</span>
+                            </div>
+                        </ng-template>
+            
+                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                            <div class="facility-names d-flex flex-column">
+                                <div class="d-flex align-items-center">
+                                    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}" />
+                                    <strong class="facility-name">{{ item?.facility }}</strong>
+                                </div>
+                                <button *ngIf="showLocationNames == false" class="btn btn-link mt-2 me-auto" (click)="onSeeMoreClick($event, item)">See More</button>
+                            </div>
+                        </ng-template>
+                        <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                        <div *ngIf="showLocationNames">
+                            <div class="location-names d-flex align-items-center" >
+                                <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" [ngModelOptions]="{standalone: true}" />
+                                <span class="location-name">{{ item?.name }}</span>
+                            </div>
+                          </div>
+                        </ng-template>
+                    </ng-select>
+                </div>
+            </div> -->
+            
+            
+
+
+              
+
+
+                <!-- <div class="dropdown me-1" *ngIf="logedInUserType != userType.Provider && (locations.length > 0)">
+                    <div class="form-group btn btn-light drops drop-option">
+                      <div *ngFor="let facility of locations">
+                        <div class="facility-names d-flex align-items-center" (click)="facility.expanded = !facility.expanded">
+                          <input type="checkbox" [(ngModel)]="facility.expanded" [ngModelOptions]="{ standalone: true }" />
+                          <strong class="facility-name">{{ facility.facility }}</strong>
+                        </div>
+                        <div *ngIf="facility.expanded">
+                          <div *ngFor="let location of facility.locations" class="location-names d-flex align-items-center">
+                            <input type="checkbox" [(ngModel)]="location.selected" [ngModelOptions]="{ standalone: true }" />
+                            <span class="location-name">{{ location.name }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div> -->
+                  
+                  
+                  
+
+                <div class="dropdown me-1 " *ngIf="(specialites.length > 0)">
+                    <div class="form-group btn btn-light  drops" >
+                        <ng-select [items]="specialites" bindLabel="name" bindValue="id" [virtualScroll]="true"
+                            [searchable]="true" [placeholder]="'Specialty'" [multiple]="true" [selectableGroup]="true"
+                            [selectableGroupAsModel]="false" [closeOnSelect]="false"
+                            formControlName="speciality_ids" (change)="onCrossSpecialityResetProvider($event)">
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                                    <span class="ng-value-label">{{item?.name | truncate : 4}}</span>
+                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                </div>
+                                <div class="ng-value" *ngIf="items.length > 1">
+                                    <span class="ng-value-label">+ {{items?.length - 1}}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template ng-option-tmp let-item="item"
+                                let-item$="item$" let-index="index">
+                                <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected" (remove)="onRemove($event)"
+                                    [ngModelOptions]="{standalone: true}" />
+                                {{ item?.name }}
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="dropdown me-1" *ngIf="(caseTypes.length > 0)">
+                    <div class="form-group btn btn-light  drops" >
+                        <ng-select [items]="caseTypes" bindLabel="case_type_name" bindValue="case_type_id"
+                            [placeholder]="'Case Type'" [multiple]="true" [selectableGroup]="true"
+                            [selectableGroupAsModel]="false" [closeOnSelect]="false" formControlName="case_type_ids">
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                                    <span class="ng-value-label">{{item?.case_type_name | truncate : 4}}</span>
+                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                </div>
+                                <div class="ng-value" *ngIf="items.length > 1">
+                                    <span class="ng-value-label">+ {{items?.length - 1}}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+                                    [ngModelOptions]="{standalone: true}" />
+                                {{ item?.case_type_name }}
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="dropdown me-1" *ngIf="!(isUserDoctor && !isUserAdmin && logedInUserType != userType?.PracticeManager) && (providers.length)">
+                    <div class="form-group btn btn-light  drops" >
+                        <ng-select [items]="providers" bindLabel="full_name" bindValue="id" [selectableGroup]="true"
+                            [selectableGroupAsModel]="false" [closeOnSelect]="false" [placeholder]="'Provider:All'"
+                            [multiple]="true" formControlName="provider_ids">
+                            <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                                <div class="ng-value" *ngFor="let item of items | slice:0:1">
+                                    <span class="ng-value-label">{{item?.full_name | truncate : 4}}</span>
+                                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                                </div>
+                                <div class="ng-value" *ngIf="items.length > 1">
+                                    <span class="ng-value-label">+ {{items?.length - 1}}</span>
+                                </div>
+                            </ng-template>
+                            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+                                    [ngModelOptions]="{standalone: true}" />
+                                {{ item?.full_name }}
+                            </ng-template>
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="dropdown me-1 ">
+                    <button (click)="onEmitFilterSelectEvent()"  class="btn btn-success mt-0 me-3" style="min-height: 70%;"> 
+                        <i class="fa fa-solid fa-filter" style="vertical-align: middle;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</form>

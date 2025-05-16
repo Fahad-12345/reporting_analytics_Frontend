@@ -1,0 +1,12 @@
+<ul class="list-unstyled ps-3">
+  <li *ngFor="let dir of directories" class="folder-list" >
+      <!-- <span><input type="checkbox" [checked]="dir.checked" (click)="dir.check()"    /></span>  -->
+      <span (click)="dir.toggle()"><i [ngClass]="{'icon-folder': !dir.expanded, 'icon-folder-open': dir.expanded}"></i> {{ dir.name }}</span>
+      <div *ngIf="dir.expanded">
+          <ul class="list-unstyled ps-3">
+              <li *ngFor="let file of dir.files" class="folder-list"><a href="#">{{file}}</a></li>
+          </ul>
+          <app-tree-view [directories]="dir.directories"></app-tree-view>
+      </div>
+  </li>
+</ul>

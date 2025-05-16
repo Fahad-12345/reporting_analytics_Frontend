@@ -1,0 +1,164 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{title}} Payer Information</h5>
+        <button type="button" (click)="cancel(false)" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" #bodyscroll>
+        <div class="row" *ngIf="!loadSpin">
+            <div class="col-4 mb-0 search-label">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'Insurance Name'"
+                    [bindlable]="'insurance_name'" [charaterLimit]="true" (removeEmitter)="onClearInsurance($event)"
+                    [searchLableName]="'insurance_name'" [updateOnRunTimeValue]="ngSelectedInsurance.asObservable()"
+                    [disableField]="insurFieldDisable" (valueChange)="insuranceSelectionChange($event)"
+                    [closeOnSelect]="true" [conditionalExtraApiParams]="{order:'ASC',order_by:'insurance_name'}"
+                    [showSelectFieldList]="selectInsurance" [mainApiPath]="requestServerpath.billing_api_url"
+                    [showSelectFieldOnRefresh]="payersForm.get('billing_insurance_id').value" [bindId]="'id'"
+                    [apiPath]="EnumApiPath.insuranceApiPath" [multiple]="false"></app-ng-select-shareable>
+            </div>
+            <form [formGroup]="payersForm" *ngIf="!loadSpin">
+                <div class="form payers-form">
+                    <div formArrayName="payersInfo" *ngFor="let payer of payersInfo.controls; let i = index;">
+                        <div *ngIf="!EditMode" class="d-block text-end">
+                            <button *ngIf="!i" class="btn btn-default round-btn" (click)="addPayer(i)"
+                                [disabled]="payersForm.invalid">
+                                <span class="icon-plus-circle"></span>Add New
+                            </button>
+                        </div>
+                        <div class="light-list-striped light-mat-striped mb-3">
+                            <div [formGroupName]="i" class="payers-form-info" #payerSelector>
+                                <div class="form-group field"
+                                    [ngClass]="{'focused': payer.get('payer_id').value != '' && payer.get('payer_id').value != null }">
+                                    <label class="form-label" for="{{'payer_id'+i}}">Payer ID*</label>
+                                    <input formControlName="payer_id" type="text" id="{{'payer_id'+i}}" required
+                                        class="form-control form-input" [maxlength]="50" notFirstCharactorSpace>
+                                    <span class="text-muted danger"
+                                        *ngIf="payer.get('payer_id').value =='' && payer.get('payer_id')['touched']">
+                                        This field is required
+                                    </span>
+                                    <span class="text-muted danger" *ngIf="payer.get('payer_id').errors?.duplicate">
+                                        Payer Id already exists.
+                                    </span>
+                                </div>
+                                <div class="form-group field" [ngClass]="{'focused': payer.get('states').value}">
+                                    <label class="form-label" for="states">States*</label>
+                                    <ng-multiselect-dropdown
+                                        class="multiselect-dropdown-hold arrow-absolute handle-arrow"
+                                        [settings]="dropdownSettings" (click)="dropdownOpenEvent($event,true,i)"
+                                        [disabled]="!showPayersForm" [data]="statesList" 
+                                        [placeholder]="''"  [formControl]="payer?.get('states')">
+                                    </ng-multiselect-dropdown>
+                                    <span class="text-muted danger"
+                                        *ngIf="payer.get('states').errors?.defaultValue && payer.get('states')['touched']">
+                                        This field is required
+                                    </span>
+                                </div>
+                                <div class="form-group field" [ngClass]="{'focused': professional != -1 }">
+                                    <label class="form-label" for="{{'professional'+i}}">Professional</label>
+                                    <select class="form-select form-input text-truncate" [value]="professional"
+                                        formControlName="professional" id="professional" container="body">
+                                        <option [ngValue]="-1">Select</option>
+                                        <option [ngValue]="1">Yes</option>
+                                        <option [ngValue]="0">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group field" [ngClass]="{'focused': institutional != -1 }">
+                                    <label class="form-label" for="{{'institutional'+i}}">Institutional</label>
+                                    <select class="form-select form-input text-truncate" [value]="institutional"
+                                        formControlName="institutional" id="institutional" container="body">
+                                        <option [ngValue]="-1">Select</option>
+                                        <option [ngValue]="1">Yes</option>
+                                        <option [ngValue]="0">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group field" [ngClass]="{'focused': pharmacy_Rx != -1 }">
+                                    <label class="form-label" for="{{'pharmacy_Rx'+i}}">Pharmacy Rx</label>
+                                    <select class="form-select form-input text-truncate" [value]="pharmacy_Rx"
+                                        formControlName="pharmacy_Rx" id="pharmacy_Rx" container="body">
+                                        <option [ngValue]="-1">Select</option>
+                                        <option [ngValue]="1">Yes</option>
+                                        <option [ngValue]="0">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group field" [ngClass]="{'focused': eob_835 != -1}">
+                                    <label class="form-label" for="{{'eob_835'+i}}">EOB/835</label>
+                                    <select class="form-select form-input text-truncate" [value]="eob_835"
+                                        formControlName="eob_835" id="eob_835" container="body">
+                                        <option [ngValue]="-1">Select</option>
+                                        <option [ngValue]="1">Yes</option>
+                                        <option [ngValue]="0">No</option>
+                                    </select>
+                                </div>
+                                <div class="form-group field"
+                                    [ngClass]="{'focused': payer.get('supported_transaction').value != '' && payer.get('supported_transaction').value != null }">
+                                    <label class="form-label trans-label" for="{{'supported_transaction'+i}}">
+                                        <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                            ngbTooltip="Supported Transactions" container="body">
+                                            Supported
+                                            Trans...</span>
+                                    </label>
+                                    <select class="form-select form-input text-truncate"
+                                        formControlName="supported_transaction" id="supported_transaction"
+                                        container="body">
+                                        <option [value]="'835P'">835P
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="form-group field" [ngClass]="{'focused': automotive != -1 }">
+                                    <label class="form-label" for="{{'automotive'+i}}">Automotive*</label>
+                                    <select (change)="onChange($event,'worker_compensation',i)"
+                                        class="form-select form-input text-truncate" [value]="automotive"
+                                        formControlName="automotive" id="automotive" container="body">
+                                        <option [ngValue]="-1">Select</option>
+                                        <option [ngValue]="1">Yes</option>
+                                        <option [ngValue]="0">No</option>
+                                    </select>
+                                    <span class="text-muted danger"
+                                        *ngIf="payer.get('automotive').errors?.defaultValue && payer.get('automotive')['touched']">
+                                        This field is required
+                                    </span>
+                                </div>
+                                <div class="form-group field mb-lg-0"
+                                    [ngClass]="{'focused': worker_compensation != -1}">
+                                    <label class="form-label" for="{{'worker_compensation'+i}}">WC*</label>
+                                    <select (change)="onChange($event,'automotive',i)"
+                                        class="form-select form-input text-truncate"
+                                        formControlName="worker_compensation" [value]="worker_compensation"
+                                        id="worker_compensation" container="body">
+                                        <option [ngValue]="-1">Select</option>
+                                        <option [ngValue]="1">Yes</option>
+                                        <option [ngValue]="0">No</option>
+                                    </select>
+                                    <span class="text-muted danger"
+                                        *ngIf="payer.get('worker_compensation').errors?.defaultValue && payer.get('worker_compensation')['touched']">
+                                        This field is required
+                                    </span>
+                                </div>
+                                <div class="form-btn-plus" *ngIf="!EditMode">
+                                    <button style="background: #4b4b4b;" type="button" (click)="deletePayer(i)"
+                                        class="btn btn-secondary float-right text-white"><i class="fa fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <span class="text-muted danger moveEditmode" 
+                                *ngIf="(payer.get('automotive').errors?.bothNo || payer.get('worker_compensation').errors?.bothNo) && EditMode">
+                                Automotive and W/C both cannot be 'No'.
+                            </span>
+                            <span class="text-muted danger moveNotEditmode"
+                                *ngIf="(payer.get('automotive').errors?.bothNo || payer.get('worker_compensation').errors?.bothNo) && !EditMode">
+                                Automotive and W/C both cannot be 'No'.
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 modal-btn-width text-center">
+                            <button class="btn btn-primary me-3" (click)="cancel(false)" type="button">Cancel</button>
+                            <button (click)="save()" data-dismiss="modal" class="btn btn-success">{{submitbtn}}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>

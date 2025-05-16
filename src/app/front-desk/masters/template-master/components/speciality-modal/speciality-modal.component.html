@@ -1,0 +1,37 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{speciality?.name}}</h4>
+    <button (click)="close()" class="close" type="button"><span>×</span>
+    </button>
+  </div>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form">
+    <div *ngIf="form && form.controls['visit_types']">
+      <p class="texte-center mb-2"><strong>Visit Type</strong></p>
+      <div formArrayName="visit_types" *ngFor="let visittype of form['controls'].visit_types['controls'];let i=index"
+        class="form-group row mb-2">
+        <!-- {{visittype.value | json}} -->
+        <label class="col-sm-3 col-form-label">{{visittype.value.name}}</label>
+        <div [formGroupName]="i" class="col-sm-9">
+
+          <!-- {{speciality['controls'].visit_types['controls'] | json}} -->
+          <ng-select formControlName="fields_controls" [items]='lstRequiredField' [closeOnSelect]="false" bindValue='id'
+            bindLabel='title' multiple='true'>
+          </ng-select>
+        </div>
+      </div>
+
+    </div>
+    <div class="row justify-content-center mt-3">
+      <div class="col-md-3 text-center">
+        <button class="btn btn-outline-secondary w-100 mt-0" (click)="close()" type="submit"> Cancel </button>
+      </div>
+      <div class="col-md-3 text-center">
+        <button [disabled]="disableBtn" (click)="submit(form.value)" class="btn btn-success w-100 mt-0"
+          style="padding: .3rem .4rem !important;" type="button">{{disableBtn? 'Please Wait' : 'Submit'}}</button>
+      </div>
+
+    </div>
+  </form>
+</div>

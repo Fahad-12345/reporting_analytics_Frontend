@@ -1,0 +1,301 @@
+<perfect-scrollbar style="max-height: 100%;">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h1 class="card-title text-white m-0">{{title}} </h1>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                            <div class="form" action="#">
+
+                                <div class="row fields-holder">
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group">
+                                            <span class="d-block">Did anyone live with you at the time of accident?
+                                                *</span>
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <label for="anyOneLive_yes" class="d-block position-relative m-0">
+                                                        <input id="anyOneLive_yes" checked="checked" type="radio"
+                                                            [value]="true" formControlName="anyOneLive"
+                                                            (change)="anyOneLiveToggle(true)">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="anyOneLive_no" class="d-block position-relative m-0">
+                                                        <input id="anyOneLive_no" checked="checked" type="radio"
+                                                            [value]="false" formControlName="anyOneLive"
+                                                            (change)="anyOneLiveToggle(false)">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="!form.get('anyOneLive').valid && (form.get('anyOneLive').dirty || form.get('anyOneLive').touched)">Please
+                                                select one Option!</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row fields-holder" *ngIf="form.get('anyOneLive').value == true">
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('firstName').value != '' && form.get('firstName').value != null }">
+                                            <label for="firstName" class="form-label">First Name *</label>
+                                            <input type="text" id="firstName" class="form-control form-input"
+                                                formControlName="firstName">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('firstName').errors?.required && (form.get('firstName').dirty || form.get('firstName').touched)">This field is required
+											</small>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('firstName').errors?.maxLength && form.get('firstName').touched">Maximum
+                                                characters should be 25!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('middleName').value != '' && form.get('middleName').value != null }">
+                                            <label for="middleName" class="form-label">Middle Name </label>
+                                            <input type="text" id="middleName" class="form-control form-input"
+                                                formControlName="middleName">
+                                            <!-- <small class="form-text text-muted danger" *ngIf="form.get('firstName').errors?.required && (form.get('firstName').dirty || form.get('firstName').touched)">Please enter First Name!</small> -->
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('middleName').errors?.maxLength && form.get('middleName').touched">Maximum
+                                                characters should be 25!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('lastName').value != '' && form.get('lastName').value != null }">
+                                            <label for="lastName" class="form-label">Last Name *</label>
+                                            <input type="text" id="lastName" class="form-control form-input"
+                                                formControlName="lastName">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('lastName').errors?.required && (form.get('lastName').dirty || form.get('lastName').touched)">This field is required
+											</small>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('lastName').errors?.maxLength && form.get('lastName').touched">Maximum
+                                                characters should be 25!</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fields-holder" *ngIf="form.get('anyOneLive').value == true">
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('socialSecurity').value != ''}">
+                                            <label for="socialSecurity" class="form-label">SSN</label>
+                                            <input type="tel" id="socialSecurity" class="form-control form-input"
+                                                mask='000-00-0000' formControlName="socialSecurity"
+                                                [dropSpecialCharacters]="false" [clearIfNotMatch]="true">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="!form.get('socialSecurity').valid && (form.get('socialSecurity').dirty || form.get('socialSecurity').touched)">This field is required
+
+                                                </small>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="(form.get('socialSecurity').errors?.maxlength) && form.get('socialSecurity').dirty">Maximum
+                                                characters should be 10!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('dateOfBirth').value != ''}">
+                                            <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                                            <input type="date" id="dateOfBirth" class="form-control form-input"
+                                                (keydown)="$event.preventDefault()" ngReadonly
+                                                formControlName="dateOfBirth">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="!form.get('dateOfBirth').valid && (form.get('dateOfBirth').dirty || form.get('dateOfBirth').touched)">
+                                                This field is required</small>
+                                            <!-- <small class="form-text text-muted danger" *ngIf="(form.get('socialSecurity').errors?.maxlength) && form.get('socialSecurity').dirty">Maximum characters should be 10!</small> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('relationshipId').value != ''}">
+                                            <label for="dateOfBirth" class="form-label">Relation</label>
+                                            <select class="custom-select" formControlName="relationshipId">
+                                                <option value=""></option>
+                                                <option *ngFor="let relation of relations" [value]="relation.id">
+                                                    {{ relation.type }}</option>
+                                            </select>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="!form.get('relationshipId').valid && (form.get('relationshipId').dirty || form.get('relationshipId').touched)">
+                                                This field is required</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row fields-holder" *ngIf="form.get('anyOneLive').value == 'true'">
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group">
+                                            <span class="d-block">Does this person own a motor vehicle? *</span>
+                                            <ul class="list-inline">
+                                                <li class="list-inline-item">
+                                                    <label for="ownVehicle_yes" class="d-block position-relative m-0">
+                                                        <input id="ownVehicle_yes" checked="checked" type="radio"
+                                                            [value]="true" formControlName="ownVehicle"
+                                                            (change)="togglePersonOwnerVehicleFields(true)">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">Yes</span>
+                                                    </label>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <label for="ownVehicle_no" class="d-block position-relative m-0">
+                                                        <input id="ownVehicle_no" checked="checked" type="radio"
+                                                            [value]="false" formControlName="ownVehicle"
+                                                            (change)="togglePersonOwnerVehicleFields(false)">
+                                                        <span class="fake-input position-absolute"></span>
+                                                        <span class="fake-label d-block">No</span>
+                                                    </label>
+                                                </li>
+                                            </ul>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="!form.get('ownVehicle').valid && (form.get('ownVehicle').dirty || form.get('ownVehicle').touched)">
+                                                This field is required</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fields-holder" *ngIf="form.get('ownVehicle').value == true">
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('personVehicleFirstName').value != '' && form.get('personVehicleFirstName').value != null }">
+                                            <label for="personVehicleFirstName" class="form-label">Person First Name
+                                                *</label>
+                                            <input type="text" id="personVehicleFirstName"
+                                                class="form-control form-input"
+                                                formControlName="personVehicleFirstName">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleFirstName').errors?.required && (form.get('personVehicleFirstName').dirty || form.get('personVehicleFirstName').touched)">
+                                                This field is required</small>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleFirstName').errors?.maxLength && form.get('personVehicleFirstName').touched">Maximum
+                                                characters should be 25!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('personVehicleMiddleName').value != '' && form.get('personVehicleMiddleName').value != null }">
+                                            <label for="personVehicleMiddleName" class="form-label">Middle Name </label>
+                                            <input type="text" id="personVehicleMiddleName"
+                                                class="form-control form-input"
+                                                formControlName="personVehicleMiddleName">
+                                            <!-- <small class="form-text text-muted danger" *ngIf="form.get('firstName').errors?.required && (form.get('firstName').dirty || form.get('firstName').touched)">Please enter First Name!</small> -->
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleMiddleName').errors?.maxLength && form.get('personVehicleMiddleName').touched">Maximum
+                                                characters should be 25!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('personVehicleLastName').value != '' && form.get('personVehicleLastName').value != null }">
+                                            <label for="personVehicleLastName" class="form-label">Last Name *</label>
+                                            <input type="text" id="personVehicleLastName"
+                                                class="form-control form-input" formControlName="personVehicleLastName">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleLastName').errors?.required && (form.get('personVehicleLastName').dirty || form.get('personVehicleLastName').touched)">
+                                          This field is required</small>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleLastName').errors?.maxLength && form.get('personVehicleLastName').touched">Maximum
+                                                characters should be 25!</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fields-holder" *ngIf="form.get('ownVehicle').value == true">
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('personVehicleCellPhone').value != '' && form.get('personVehicleCellPhone').value != null }">
+                                            <label for="personVehicleCellPhone" class="form-label">Cell Phone *</label>
+                                            <input type="text" id="personVehicleCellPhone"
+                                                class="form-control form-input" formControlName="personVehicleCellPhone"
+                                                c [dropSpecialCharacters]="false"
+                                                [clearIfNotMatch]="true">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleCellPhone').errors?.required && (form.get('personVehicleCellPhone').dirty || form.get('personVehicleCellPhone').touched)">
+                                                This field is required</small>
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleCellPhone').errors?.minLength && form.get('personVehicleCellPhone').dirty">Maximum
+                                                characters should be 12!</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('insuranceCompanyName').value != '' && form.get('insuranceCompanyName').value != null }">
+                                            <label for="insuranceCompanyName" class="form-label">Insurance Company Name
+                                                *</label>
+                                            <input type="text" id="insuranceCompanyName" class="form-control form-input"
+                                                formControlName="insuranceCompanyName">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('insuranceCompanyName').errors?.required && (form.get('insuranceCompanyName').dirty || form.get('insuranceCompanyName').touched)">
+                                                This field is required</small>
+                                            <!-- <small class="form-text text-muted danger" *ngIf="form.get('personVehicleMiddleName').errors?.maxLength && form.get('personVehicleMiddleName').touched">Maximum characters should be 25!</small> -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row fields-holder" *ngIf="form.get('ownVehicle').value == true">
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('personVehiclePolicyNo').value != '' && form.get('personVehiclePolicyNo').value != null }">
+                                            <label for="personVehiclePolicyNo" class="form-label">Policy No *</label>
+                                            <input type="text" id="personVehiclePolicyNo"
+                                                class="form-control form-input" formControlName="personVehiclePolicyNo">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehiclePolicyNo').errors?.required && (form.get('personVehiclePolicyNo').dirty || form.get('personVehiclePolicyNo').touched)">
+                                                This field is required</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('personVehicleEffective').value != '' && form.get('personVehicleEffective').value != null }">
+                                            <label for="personVehicleEffective" class="form-label">Effective Date
+                                                *</label>
+                                            <input type="date" id="personVehicleEffective"
+                                                class="form-control form-input"
+                                                formControlName="personVehicleEffective">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleEffective').errors?.required && (form.get('personVehicleEffective').dirty || form.get('personVehicleEffective').touched)">
+                                                This field is required</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group field"
+                                            [ngClass]="{'focused': form.get('personVehicleExpires').value != '' && form.get('personVehicleExpires').value != null }">
+                                            <label for="personVehicleExpires" class="form-label">Expiration Date
+                                                *</label>
+                                            <input type="date" id="personVehicleExpires" class="form-control form-input"
+                                                formControlName="personVehicleExpires">
+                                            <small class="form-text text-muted danger"
+                                                *ngIf="form.get('personVehicleExpires').errors?.required && (form.get('personVehicleExpires').dirty || form.get('personVehicleExpires').touched)">
+                                                This field is required</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row" style="margin-top:20px">
+                                    <div class="col-12">
+                                        <button type="button" class="btn btn-default d-inline-block"
+                                            style="width: auto; min-width: 100px; margin: 0 5px!important;"
+                                            (click)="goBack()">Back</button>
+                                        <button type="submit" class="btn btn-primary d-inline-block"
+                                            style="width: auto; min-width: 100px; margin: 0 5px!important;">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</perfect-scrollbar>

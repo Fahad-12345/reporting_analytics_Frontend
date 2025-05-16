@@ -1,0 +1,27 @@
+<div class="row">
+  <div class="col-md-12 master-user pt-3">
+      <nav class="left-nav p-0">
+          <ul class="list-unstyled">
+            <!-- [class.active]="router.url.includes('/erx/prescriptions-log')" -->
+            <!-- routerLink="/erx/prescriptions-log"   -->
+            <li class="button--wayra" [class.active]="router.url.includes('/reports/prescriptions-log')">
+                  <a class="d-block"    
+                  routerLink="/erx/reports/prescriptions-log">Prescription Logs</a>
+              </li>
+              <li class="button--wayra" [class.active]="router.url.includes('/reports/activity-log')">
+                <a class="d-block"    
+                routerLink="/erx/reports/activity-log">Activity Logs</a>
+            </li>
+            <li class="button--wayra" [class.active]="router.url.includes('/reports/event-log')">
+              <a class="d-block"    
+              routerLink="/erx/reports/event-log">Event Logs</a>
+          </li>
+              
+          </ul>
+      </nav>
+
+      
+      <router-outlet></router-outlet>
+
+  </div>
+</div>

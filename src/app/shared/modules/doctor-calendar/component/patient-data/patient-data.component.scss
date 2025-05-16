@@ -1,0 +1,230 @@
+@media only screen and (min-width: 1200px) {
+	.large_screen {
+		flex: 0 0 5.666667%;
+		max-width: 5.666667%;
+	}
+
+	.cancel-btn {
+		flex: 0 0 44.333333% !important;
+		max-width: 44.333333% !important;
+		margin-left: 40px !important;
+	}
+}
+
+@media only screen and (min-width: 1024px) and (max-width: 1199px) {
+	.large_screen {
+		flex: 0 0 0.0% !important;
+		max-width: 0.0% !important;
+	}
+
+	.tablet {
+		flex: 0 0 50% !important;
+		max-width: 50% !important;
+	}
+
+	.tablet-btn {
+		flex: 0 0 100% !important;
+		max-width: 100% !important;
+	}
+}
+
+.btn-outline-secondary {
+	background-color: white !important;
+	color: #6d6969;
+	border-color: #6c757d;
+}
+.btn-outline-secondary:hover {
+	background-color: #34c3ee !important;
+	color: white
+}
+
+.btn-outline-secondary:active {
+	background-color: #34c3ee !important;
+}
+
+.btn-danger {
+	background-color: #585958;
+	border-color: #585958;
+	width: 130px;
+	height: 35px;
+	margin-top: 15px;
+	margin-bottom: 0;
+	border-radius: 5px;
+	font-weight: 500;
+	font-size: 16px;
+	padding: 7px 15px 7px;
+}
+
+.btn-danger:hover {
+	background-color: #dc3545;
+	border-color: #dc3545;
+}
+
+@media only screen and (min-width: 750px) and (max-width: 899px) {
+	.profile-image {
+		width: 60px !important;
+		height: 65px !important;
+		border: 1px solid #e1e1e1;
+		border-radius: 50%;
+	}
+
+	.text-tab {
+		font-size: 12px !important;
+		padding: 0px 0px 0px 15px;
+	}
+
+	.offset-tab {
+		flex: 0 0 0%;
+		max-width: 0%;
+	}
+
+	.start-tab {
+		flex: 0 0 35%;
+		max-width: 35%;
+		padding: 10px 0 10px 0px !important;
+	}
+
+	.cancel-tab {
+		flex: 0 0 35%;
+		max-width: 35%;
+		padding: 10px 0px 10px 0px !important;
+	}
+
+
+
+	.cancel-center-tab {
+		margin-top: 7px;
+		// margin-left: 53px;
+
+	}
+
+
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1365px) {
+	.profile-image {
+		width: 70px !important;
+		height: 70px !important;
+		border: 1px solid #e1e1e1;
+		border-radius: 50%;
+	}
+
+	.text-tab {
+		font-size: 14px !important;
+		padding: 0px 0px 0px 11px;
+	}
+
+	.start-tab {
+		flex: 0 0 35%;
+		max-width: 35%;
+		padding: 10px 0 10px 0px !important;
+	}
+
+	.cancel-tab {
+		flex: 0 0 35%;
+		max-width: 35%;
+		padding: 10px 0px 10px 0px !important;
+	}
+
+	.offset-tab {
+		flex: 0 0 0%;
+		max-width: 0%;
+	}
+}
+
+@media only screen and (min-width: 1366px) {
+	.profile-image {
+		width: 80px !important;
+		height: 80px !important;
+		border: 1px solid #e1e1e1;
+		border-radius: 50%;
+	}
+}
+
+.top {
+	border: 1px solid #e1e1e1;
+	background-color: #00a650;
+	color: white;
+	font-size: 20px;
+	height: 34px;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
+}
+
+
+
+.text {
+	font-size: 13px;
+}
+
+.details-text {
+	font-size: 15px;
+}
+
+.margin {
+	margin-top: 20px;
+}
+
+.border {
+	border: 1px solid #e1e1e1;
+	border-top: none;
+}
+
+.card {
+	font-size: 13px;
+
+	.card-header {
+		font-size: 18px;
+		padding: 2px 0px;
+		color: #fff;
+	}
+
+	.details-text {
+		font-size: 13px;
+	}
+
+	span {
+		font-size: 13px;
+	}
+
+	.form {
+		[type="checkbox"]:checked~.fake-label {
+			background: transparent;
+			color: #212529;
+			font-size: 13px;
+		}
+
+		.fake-label {
+			background: transparent;
+		}
+
+		.chkbox [type="checkbox"]:checked+.fake-input {
+			border: 1.5px solid #34c3ee;
+		}
+
+		.chkbox .fake-input {
+			border: 1.5px solid #bbbfbb;
+			width: 15px;
+			height: 15px;
+		}
+
+		[type="checkbox"]+.fake-input:before {
+			border-color: #665b5b;
+			top: 51%;
+		}
+	}
+}
+.color-patient{
+	color: #34c3ee ;
+	cursor: pointer;
+}
+.insuarance-patient{
+	color: black !important;
+	max-width: 144px !important;
+}
+.patient-data{
+	top: -7px;
+}
+.total-width{
+	width: 110px;
+}

@@ -1,0 +1,185 @@
+/*
+ * jquery-gpopover
+ * http://github.com/markembling/jquery-gpopover
+ *
+ * A simple jQuery plugin for creating popover elements similar to Google's
+ * new 'apps' launcher/switcher.
+ *
+ * Copyright (c) 2013 Mark Embling (markembling.info)
+ * Licensed under the BSD (3 clause) license.
+ */
+
+
+.popover {
+    background-color: #fff;
+    /* border:1px solid #00a650;
+    border-color: #00a650;
+    border-radius: 2px; */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* display: none; */
+    padding: 10px 8px;
+    position: absolute;
+    z-index: 998;
+    max-width: max-content;
+}
+.popover  ul.list-menu{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    width: 180px;
+}
+.popover ul.list-menu{
+    width: auto !important;
+}
+.popover ul.list-menu li{
+    margin-bottom: -1px;
+}
+ngb-popover-window.bs-popover-bottom-left .arrow {
+    left: 4% !important;
+}
+ .popover ul.list-menu li a{
+    background: #fcfcfc;
+    border: 1px solid #e2e2e2;
+    font-size: 13px !important;
+    color: #888888 !important;
+    display: block !important;
+    padding: 5px 10px;
+    margin: 0 0 -2px !important;
+    line-height: normal;
+}
+ .popover ul.list-menu li a:hover{
+    background: #00a650;
+    border: 1px solid #00a650;
+    color: #fff !important;
+}
+.popover .popover-body{
+	min-width: 240px !important;
+	width: 240px !important;
+}
+
+
+
+
+ .gpopover {
+    background-color: #fff;
+    border:1px solid #00a650;
+    border-color: #00a650;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: none;
+    padding: 10px 8px;
+    position: absolute;
+    z-index: 998;
+    max-width: 200px;
+}
+ .gpopover  ul.list-menu{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+ .gpopover ul.list-menu li{
+    margin-bottom: -1px;
+}
+ .gpopover ul.list-menu li a{
+    background: #fcfcfc;
+    border: 1px solid #e2e2e2;
+    font-size: 13px;
+    color: #888888;
+    display: block;
+    padding: 5px 10px;
+    margin: 0;
+    line-height: normal;
+}
+ .gpopover ul.list-menu li a:hover{
+    background: #00a650;
+    border: 1px solid #00a650;
+    color: #fff;
+}
+
+ .gpopover-arrow {
+    border: 8px solid transparent;
+    border-bottom-color: #FFF;
+    border-top-width: 0;
+    height: 0;
+    position: absolute;
+    width: 0;
+    z-index: 999;
+}
+
+ .gpopover .gpopover-arrow-shadow {
+    border: 8px solid transparent;
+    border-bottom-color: #00a650;
+    border-bottom-color: #00a650;
+    border-top-width: 0;
+    height: 0;
+    position: absolute;
+    width: 0;
+    z-index: 997;
+}
+
+
+ .gpopover#popover-delete {
+    border:1px solid #c1272d;
+    border-color: #c1272d;
+}
+ .gpopover#popover-delete .gpopover-arrow-shadow {
+    border-bottom-color: #c1272d;
+    border-bottom-color: #c1272d;
+}
+
+.popover .popover-view{
+    max-height: 300px;
+    overflow-y: auto;
+}
+ .gpopover#popover-view {
+    max-width: 900px;
+    width: 900px !important;
+    z-index: 999;
+    border-color: #34c3ee;
+    padding: 0;
+}
+ .over-view{
+    z-index: 999;
+    background: #fff;
+}
+ .over-view .popover-header{
+    background: #fcfcfc;
+    padding: 5px 10px;
+    border-bottom: 1px solid #34c3ee;
+}
+ .over-view .popover-header a{
+    color: #888;
+}
+ .over-view .popover-header h4{
+    margin: 4px 0 0;
+}
+ .over-view .popover-body{
+    padding: 20px !important;
+}
+ .gpopover#popover-view:after {
+    content: "";
+    position: fixed;
+    width: 100%;
+    background: #0000001c;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -9;
+}
+ .gpopover#popover-ui-view {
+    max-width: 300px;
+    width: 300px !important;
+    z-index: 999;
+    border-color: #34c3ee;
+    padding: 0;
+}
+ .gpopover#popover-ui-view:after {
+    content: "";
+    position: fixed;
+    width: 100%;
+    background: #0000001c;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: -9;
+}

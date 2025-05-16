@@ -1,0 +1,214 @@
+<div *ngIf="patientPrivileges" class="row mt-2 patient-privileges">
+    <div *ngIf="provCalenderChosen" class="ng-autocomplete patitent_name">
+        <div class="row">
+            <div class="col-md-12">
+                <label class="title">Patient Name</label>
+                <div *ngIf="checkPatient" class="ng-autocomplete " style="width:100%; ">
+                    <form #form="ngForm">
+                        <ng-autocomplete placeHolder="Patient Name" [data]="data" name="patient" [(ngModel)]="patient" [searchKeyword]="keyword" [minQueryLength]="1" (selected)='selectEvent($event)' (inputChanged)='onChangeSearch($event)' (inputFocused)='onFocused($event)' (inputCleared)="clearData($event)"
+                            [itemTemplate]="itemTemplate">
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.name"></a>
+                        </ng-template>
+
+                    </form>
+                </div>
+                <input *ngIf="!checkPatient" type="text" style="    height: 30px !important;" class="form-control" formControlName="patient" [(value)]="patient" disabled />
+            </div>
+            <div class="col-md-12 ">
+                <label class="title">Chart ID</label>
+                <div *ngIf="checkPatient" class="ng-autocomplete" style="width:100%; ">
+                    <form #form="ngForm">
+
+                        <ng-autocomplete placeHolder="Chart ID" name="chartStr" [(ngModel)]="chartStr" [data]="dataChart" [searchKeyword]="keywordChart" [minQueryLength]="1" (selected)='selectEventChart($event)' (inputChanged)='onChangeSearchChart($event)' (inputFocused)='onFocusedChart($event)'
+                            (inputCleared)="clearDataChart($event)" [itemTemplate]="itemTemplateChart">
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplateChart let-item>
+                            <a [innerHTML]="item.id"></a>
+                        </ng-template>
+
+                    </form>
+                </div>
+                <input *ngIf="!checkPatient" type="text" style="    height: 30px !important;" class="form-control" formControlName="chart" [(value)]="chart" disabled />
+            </div>
+            <div class="col-md-12">
+                <label class="title">Case No. </label>
+                <select *ngIf="!caseFormat" class="form-select" (change)="chnageCaseId($event)">
+					<option *ngFor="let case of allCaseIds" value={{case.case_id}}>
+						{{case.case_id}}({{case.case_type}})
+						<span *ngIf="case.accident_date">({{case.accident_date | date: datePipeService.slashDateFormat_MM_dd_yyyy()}})</span>
+					</option>
+				</select>
+                <div *ngIf="caseFormat" class="ng-autocomplete " style="width:100%; ">
+                    <form #form="ngForm">
+
+                        <ng-autocomplete placeHolder="Case No." name="caseStr" [(ngModel)]="caseStr" [data]="dataCase" [searchKeyword]="keywordCase" [minQueryLength]="1" (selected)='selectEventCase($event)' (inputChanged)='onChangeSearchCase($event)' (inputFocused)='onFocusedCase($event)'
+                            (inputCleared)="clearDataCase($event)" [itemTemplate]="itemTemplateCase">
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplateCase let-item>
+                            <a [innerHTML]="item.id"></a>
+                        </ng-template>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row d-flex justify-content-center">
+    <div class="col-md-5 col-sm-5 text-center btn-filter cur-point" (click)="clinicClicked()" [ngClass]="{'btn-filter-selected' : isClinicClicked}">
+        Practice-Location
+    </div>
+    <div class="col-md-3 col-sm-3 text-center btn-filter cur-point" (click)="doctorClicked()" [ngClass]="{'btn-filter-selected' : isDoctorClicked}">
+        Provider
+    </div>
+    <div class="col-md-4 col-sm-4 text-center btn-filter cur-point" (click)="specialityClicked()" [ngClass]="{'btn-filter-selected' : isSpecialityClicked}">
+        Specialty
+    </div>
+</div>
+
+<div class="row assignment-modal text-center mt-2 mb-1">
+    <div *ngIf="isClinicClicked" class="col-md-4 offset-md-4 form px-1">
+        <label class="d-inline-block chkbox position-relative m-0 mb-2 mt-1">
+			<input type="checkbox" id="testclinic" [(ngModel)]="isClinicCheck" (change)="searchClinicByNameByAddress()">
+			<span class="fake-input position-absolute"></span>
+			<label class="fake-label d-block mb-0 py-0" for="testclinic">Filter</label>
+        </label>
+    </div>
+    <div *ngIf="isDoctorClicked" class="col-md-4 offset-md-4 form px-1">
+        <label class="d-inline-block chkbox position-relative m-0 mb-2 mt-1">
+			<input type="checkbox" id="testdoc" [(ngModel)]="isDocCheck"  (change)="searchDocByNameBySpec()">
+			<span class="fake-input position-absolute"></span>
+			<label class="fake-label d-block mb-0 py-0" for="testdoc">Filter</label>
+        </label>
+    </div>
+	<div *ngIf="isSpecialityClicked" class="col-md-4 offset-md-4 form px-1">
+        <label class="d-inline-block chkbox position-relative m-0 mb-2 mt-1">
+			<input type="checkbox" id="testdoc" [(ngModel)]="isSpecCheck" (change)="searchSpecBySpecName()">
+			<span class="fake-input position-absolute"></span>
+			<label class="fake-label d-block mb-0 py-0" for="testdoc">Filter</label>
+        </label>
+    </div>
+</div>
+
+<div *ngIf="isClinicClicked && isClinicCheck">
+    <form #f="ngForm" class="row mb-3">
+        <div class="col-md-12 mb-2">
+            <input type="search" class="form-control" placeholder="Practice-Location Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicName" (keypress)="searchClinicByNameByAddress()" (input)="searchClinicByNameByAddress()" (keydown)="searchClinicByNameByAddress()"
+                (change)="searchClinicByNameByAddress()"  />
+        </div>
+        <div class="col-md-12">
+            <input type="search" class=" form-control" placeholder="Practice-Location Address" [ngModelOptions]="{standalone: true}" [(ngModel)]="clinicAddress" (keypress)="searchClinicByNameByAddress()" (input)="searchClinicByNameByAddress()" (change)="searchClinicByNameByAddress()"
+                (keydown)="searchClinicByNameByAddress()"  />
+        </div>
+    </form>
+</div>
+
+<!-- list of speciality and Clinics -->
+
+<div class="docList">
+    <div id="list">
+        <div class="ps-0 pe-0">
+            <div class="bg-white" style="padding-right: 4px !important;">
+                <div [hidden]="!isClinicClicked" class="w3-ul list-group px-3 pt-2 clinic-list-hidden">
+                    <div class="row w3-bar list-group-item mb-2 clinic-load" (click)="clinicSelect(clinic,i);false" [ngStyle]="{'border-left-color': clinic.color,'border-left-style': 'solid','border-left-width' : '6px'}" *ngFor="let clinic of lstfilterClinics; let i = index">
+
+                        <div class="col-md-10 col-sm-10 text-start float-left" >
+                            <span class="w3-large d-inline-block text-truncate clinic-name point tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                            ngbTooltip="{{clinic.facility_name}}-{{clinic.name}}">{{clinic.facility?.qualifier}}-{{clinic.qualifier}}</span>
+                            <br>
+                            <span class="d-inline-block text-truncate clinic-address point tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                            ngbTooltip="{{clinic.address}} ,{{clinic.city}},{{clinic.state}} {{clinic.zip}}">{{clinic.address}} ,{{clinic.city}},{{clinic.state}} {{clinic.zip}}</span>
+                        </div>
+                        <div class="col-md-2 col-sm-2 bulits float-right">
+                            <label class="customcheck">
+                                <span class="none">H</span>
+								<input type="checkbox" [checked]="clinic.is_checked"
+									(change)="clinicSelect(clinic,i,$event)" />
+								<span class="checkmark checkmark-for-clinic"></span>
+							</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div [hidden]="!isDoctorClicked">
+                    <div [hidden]="!isDocCheck" class="searchWidthForDoctor doc-div">
+                        <form #f="ngForm" class="row doc-search-bar">
+                            <div class="col-md-6 pe-2 ps-2">
+                                <input type="search" class="form-control" placeholder="Provider Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="docName" (keypress)="searchDocByNameBySpec()" (input)="searchDocByNameBySpec()" (keydown)="searchDocByNameBySpec()" (change)="searchDocByNameBySpec()"
+                                    (keyup)="searchDocByNameBySpec()" />
+                            </div>
+                            <div class="col-md-6 ps-0 pe-0">
+                                <input type="search" class="form-control" placeholder="Provider Specialty" [ngModelOptions]="{standalone: true}" [(ngModel)]="docspec" (keypress)="searchDocByNameBySpec()" (input)="searchDocByNameBySpec()" (keydown)="searchDocByNameBySpec()" (change)="searchDocByNameBySpec()"
+                                    (keyup)="searchDocByNameBySpec()" />
+                                <br />
+                            </div>
+                        </form>
+                    </div>
+                    <div  class="w3-ul list-group px-3 pt-2 doctor-hidden-list">
+                        <div (click)="doctorSelect(doc);false" class="row w3-bar list-group-item specItem tablet-mode bar mb-2 show-doctor-list"  *ngFor="let doc of lstfilterDocs; let i=index">
+                            <div class="col-md-3 doc-img-pad doc-img float-left">
+                                <img class="doc-profile" alt="Avatar" src={{doc.URI}}>
+                            </div>
+                            <div class="col-md-7 float-left text-start ps-0 text-truncate">
+                                <span class="w3-large fw-500 clinic-name text-truncate point tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                                ngbTooltip="{{doc?.doctor?.info?.first_name}}{{(doc?.doctor?.info?.middle_name?' '+doc?.doctor?.info?.middle_name:'')}} {{doc?.doctor?.info?.last_name}}{{ doc?.doctor?.billing_title? ', ' + doc?.doctor?.billing_title?.name : '' }}">{{doc?.doctor?.info?.first_name}}{{(doc?.doctor?.info?.middle_name?' '+doc?.doctor?.info?.middle_name:'')}} {{doc?.doctor?.info?.last_name}}<span *ngIf="doc?.doctor?.billing_title != null">, {{ doc?.doctor?.billing_title?.name}}</span></span><br>
+                                <span class="w3-large d-inline-block text-truncate clinic-name point tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                                ngbTooltip="{{doc?.facility_location?.facility?.name}}-{{doc?.facility_location?.name}}">{{doc?.facility_location?.facility?.qualifier}}-{{doc?.facility_location?.qualifier}}</span>
+                                <br>
+                            
+                                <!-- <div *ngFor = "let item of clinics"> -->
+                                    <!-- <div *ngFor="let spec of doc.doctor.specAllArray">    -->
+                                        <span class="w3-large fw-500 text-truncate point tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                                        ngbTooltip="{{doc.doctor.specialities.name}}">{{doc?.doctor?.specialities?.qualifier}}</span>
+                                        <!-- *ngIf = "facilityId == spec.facilityId || isInitial" -->
+                                    <!-- </div> -->
+                                <!-- </div> -->
+                            </div>
+                
+                            <div class="col-md-1 col-sm-1 float-left pt-2 mt-1 pe-3">
+                                <label class="customcheck">
+                                    <input id="selected-Clinic" type="checkbox" [checked]="doc.is_checked"
+                                        (change)="doctorSelect(doc,$event)" />
+                                    <span class="checkmark main-checkmark"></span>
+                                </label>
+                            </div>
+    
+                        </div>
+                    </div>
+                </div> 
+               
+				<div [hidden]="(isSpecialityClicked && !isSpecCheck) || (!isSpecialityClicked && isSpecCheck) || (!isSpecialityClicked && !isSpecCheck) ">
+					<form #f="ngForm" class="row mb-3">
+						<div class="col-md-12 mb-2">
+							<input type="search" class="form-control" placeholder="Speciality Name" [ngModelOptions]="{standalone: true}" [(ngModel)]="specialityName" (ngModelChange)="searchSpecBySpecName()"  />
+						</div>
+						
+					</form>
+				</div>
+
+                <div [hidden]="!isSpecialityClicked" class="w3-ul list-group px-3 pt-2 doctor-hidden-list">
+                    <div (click)="specialitySelect(spec);false" class="row w3-bar list-group-item mb-2 speciality-spec py-0 px-2"  [ngStyle]="{'border-left-color': spec.color,'border-left-style': 'solid','border-left-width' : '6px'}" *ngFor="let spec of lstfilterSpecs  ; let i=index;trackBy: trackByFn;">
+
+                        <div  class="col-md-10 col-sm-10 text-start float-left text-truncate py-3">
+                            <span class="w3-large speciality-name point tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+                            ngbTooltip="{{spec.name}}">{{spec?.qualifier}}</span>
+                        </div>
+                        <div class="col-md-2 col-sm-2 float-right mt-1">
+                            <label class="customcheck">
+								<input id="selected-Clinic" type="checkbox" [checked]="spec.is_checked"
+									(change)="specialitySelect(spec,$event)" />
+								<span class="checkmark checkmark-spec"></span>
+							</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

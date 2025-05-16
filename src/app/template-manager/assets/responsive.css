@@ -1,0 +1,38 @@
+@media screen and (max-width:1024px) {
+    #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .angular-editor-button {
+        padding: 0.2rem;
+    }
+    #template-manager .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size {
+        width: 24px;
+    }
+    .angular-editor-toolbar .angular-editor-toolbar-set ae-select .ae-font .ae-picker-label{
+        min-width: 0;
+        line-height: 21px;
+        padding: 0;
+    }
+    .ae-font .ae-picker-label:before {
+        width: 10px !important;
+    }
+    #template-manager .multi-switch label span {
+        font-size: 9px;
+    }
+
+    #template-manager .property-box .box-body .form-group label.checkbox.d-block {
+        line-height: normal;
+    }
+
+    #template-manager .btn-icons button {
+        padding:0.2rem !important;
+        width: 20px;
+        font-size: 9px !important;
+    }
+    #template-manager .btn-icons button .size-icon {
+        font-size: 9px;
+    }
+    #template-manager .btn-icons button.btn-inline-checkbox {
+        padding: 0.2rem !important;
+        font-size: 9px !important;
+        padding-top: 4px !important;
+        width: auto !important;
+    }
+}

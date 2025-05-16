@@ -1,0 +1,129 @@
+
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div class="front-desk-block billing-info mt-2">
+
+	<div class="d-block text-end">
+		<a [routerLink]="" (click)="AddEditTemplate()" class="btn btn-default round-btn">Add New </a>
+	</div>
+	  <app-filter-template (applyFilterValues)="applyFilter($event)"></app-filter-template>
+    <div class="card data-table p-0 mt-2 ma-datatable-ui">
+      <div class="row">
+        <div class="col-12 col-sm-6 edit-block text-start">
+          <div class="form-group field option-field mb-2 d-inline-block">
+            <ul>
+              <li>Show</li>
+              <li>
+				<select class="custom-select" name="limit" id="limit" id="limit"
+				(change)="pageLimit($event.target.value)" [(ngModel)]="page.size">
+				<option [value]="10" selected>10</option>
+				<option [value]="20">20</option>
+				<option [value]="30">30</option>
+				<option [value]="40">40</option>
+				<option [value]="50">50</option>
+				<option [value]="100">100</option>
+				</select>
+              </li>
+              <li>Entries</li>
+            </ul>
+          </div>
+        </div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+			<button *ngIf="selection.selected.length > 0" type="button"
+			class="btn btn-primary mx-2 mb-2 mb-sm-0 float-right" (click)="onDelete(null,true)">
+			Delete {{selection.selected.length ==  lstTemplate?.length ? 'All' : ''}} [{{selection.selected.length}}]
+		</button>
+		</div>
+      </div>
+	
+	  <ngx-datatable class="bootstrap"  [rows]="lstTemplate"
+	  [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+	  [limit]="page.size" (page)="pageRecord($event)" [count]='page.totalElements' [offset]="page.pageNumber"
+	  [externalPaging]="true" [virtualization]="false"
+	  >
+
+	  <ngx-datatable-column name="Practice Location" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="practice_location_name">
+	  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		 <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+			{{row.facility_qualifier}}-{{row?.facility_location_qualifier}}
+		 </div>
+	  </ng-template>
+	  </ngx-datatable-column>
+	  
+	  <ngx-datatable-column name="Specialty" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="specialty_name">
+	   <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+			 {{row?.specialty_qualifier}}
+		  </div>
+	   </ng-template>
+	   </ngx-datatable-column>
+	   <ngx-datatable-column name="Visit Type" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="visit_type_name">
+		   <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+				 {{row?.visit_type_qualifier}}
+			  </div>
+		   </ng-template>
+		   </ngx-datatable-column>
+	
+	  <ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case Type"
+	  prop="case_type_name" [width]="200">
+	  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+			{{value}}
+		 </div>
+	  </ng-template>
+	  </ngx-datatable-column>
+	  <ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Templates"
+	  prop="template_name" [width]="200" cellClass="action-icon">
+	  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+			{{value}}
+		 </div>
+	  </ng-template>
+	  </ngx-datatable-column>
+	  <ngx-datatable-column name="Assigned On" prop="assigned_on" [width]="200">
+		 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+				{{ value | date: 'MM-dd-yyyy'}}
+			 </div>
+		 </ng-template>
+		 </ngx-datatable-column>
+		   <ngx-datatable-column name="Assigned By" [width]="200" prop="id">
+		 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row && row.first_name ? row.first_name : ''}} {{row && row.middle_name ? row.middle_name : ''}} {{row && row.last_name ? row.last_name : ''}}" container="body">
+				{{row && row.first_name ? row.first_name : ''}} {{row && row.middle_name ? row.middle_name : ''}} {{row && row.last_name ? row.last_name : ''}}
+			 </div>
+		 </ng-template>
+		 </ngx-datatable-column>
+	  <ngx-datatable-column name="Actions" sortable="false" prop="id" cellClass="action-icon"
+	  [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+	  >
+	  <ng-template let-column="column" ngx-datatable-header-template>
+		 <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_speciality_edit)"
+		 (change)="$event ? masterToggle($event) : null" [checked]="selection.hasValue() && isAllSelected()"
+		 [indeterminate]="selection.hasValue() && !isAllSelected()" >
+		 </mat-checkbox>
+		 Actions
+	  </ng-template>
+	  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		 <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+		 [checked]="selection.isSelected(row)" >
+		 </mat-checkbox>
+		 <mat-slide-toggle  class="me-2" ngbTooltip="Default template" container="body" [(ngModel)]="row.is_default" [labelPosition]="'before'" (change)="changeStatusIsDefault(row,$event)"></mat-slide-toggle>
+		 <button [ngClass]="{hiddenControls : row && !row.is_editable}" class="edit-hov mx-1"
+		 ngbTooltip="Edit" container="body" (click)="AddEditTemplate(row)">
+		 <i class="icon-pencil"></i>
+		 </button>
+   
+		 <a [ngClass]="{hiddenControls : row && !row.is_editable}" class="remove-hov mx-1"
+		 ngbTooltip="Delete" container="body"  (click)="onDelete(row.id)">
+			<i class="icon-remove"></i>
+		</a>
+	  </ng-template>
+	  </ngx-datatable-column>  
+	  </ngx-datatable>
+	
+    </div>
+
+  </div>
+ 

@@ -1,0 +1,162 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<!-- <div  *ngIf="aclService.hasPermission(userPermissions.master_inventory_fields_view)"> -->
+<div>
+  <div class="d-block text-end" *ngIf="aclService.hasPermission(userPermissions.master_inventory_fields_add)">
+    <a href="javascript:void(0)" (click)="addUpdateInventory(content, null)" data-bs-toggle="modal" class="btn btn-default round-btn">
+      <span class="icon-plus-circle"></span> Add New </a>
+  </div>
+  <form class="form" autocomplete="off" [formGroup]="searchForm" *ngIf="aclService.hasPermission(userPermissions.master_inventory_fields_filter)">
+    <div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+      <div class="filter-grid-container">
+        <div class="form-group" [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+          <label class="form-label" for="name">Item Name</label>
+          <input type="text" formControlName="name" id="name" [maxLength]="30" class="form-control form-input">
+        </div>
+        <div class="form-group" [ngClass]="{'focused': searchForm.get('description').value != '' && searchForm.get('description').value != null }">
+          <label class="form-label" for="description">Description</label>
+          <input type="text" formControlName="description" id="description" [maxLength]="150" class="form-control form-input">
+        </div>
+        <div class="form-group" [ngClass]="{'focused': searchForm.get('unit_price').value != '' && searchForm.get('unit_price').value != null }">
+          <label class="form-label" for="unit_price">Unit Price $</label>
+          <input type="text" appOnlyNumeric formControlName="unit_price" id="unit_price" [maxLength]="15" class="form-control form-input">
+        </div>
+        <div class="form-group" [ngClass]="{'focused': searchForm.get('quantity').value != '' && searchForm.get('quantity').value != null }">
+          <label class="form-label" for="quantity">Quantity</label>
+          <input type="text" appAppOnlyNumbersWithoutDecimal formControlName="quantity" id="quantity" [maxLength]="15" class="form-control form-input">
+        </div>
+        <div class="form-group" [ngClass]="{'focused': searchForm.get('comment').value != '' && searchForm.get('comment').value != null }">
+          <label class="form-label" for="comment">Comments</label>
+          <input type="text" formControlName="comment" id="comment" [maxLength]="15" class="form-control form-input">
+        </div>
+      </div>
+      <div class="collape-btn">
+        <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button">
+          <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+        </button>
+      </div>
+      <div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+        <button class="btn btn-success" [disabled]="searchForm.invalid" (click)="setPage({ offset: 0 });">Filter</button>
+        <button class="btn btn-primary" [disabled]="checkInputs()" (click)="onResetFilters()">Reset</button>
+      </div>
+    </div>
+  </form>
+  <div class="row mt-3">
+    <div class="col-6 edit-block text-start">
+      <div class="form-group field option-field mb-2 d-inline-block">
+        <ul class="text-capitalize">
+          <li>Show</li>
+          <li>
+            <select class="custom-select" name="limit" id="limit" id="limit" (change)="pageLimit($event.target.value)" [(ngModel)]="page.size">
+              <option [value]="10" selected>10</option>
+              <option [value]="20">20</option>
+              <option [value]="30">30</option>
+              <option [value]="40">40</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+            </select>
+          </li>
+          <li>Entries</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-6  text-sm-end inventory-btn">
+      <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+        Customize Columns
+      </button>
+      <button *ngIf="this.selection.selected.length > 0" type="button" class="btn btn-danger mx-2 mb-2 mb-sm-0 ms-2" (click)="onDeleteInventory()" [disabled]="this.selection.selected.length < 1">
+        <i class="icon-remove me-1"></i> Delete <span *ngIf="this.selection.selected.length > 0">[{{this.selection.selected.length}}]</span>
+      </button>
+    </div>
+  </div>
+  <!-- <div class="data-table"> -->
+  <ngx-datatable class="bootstrap" #inventoryList [rows]="inventories" [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="page.size" (page)="setPage($event)" [count]='page.totalElements' [offset]="page.pageNumber" [externalPaging]="true" [virtualization]="false">
+    <ngx-datatable-column name="Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="name">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name ||'N/A'}} " container="body">
+          {{row.name ||'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Description" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="description">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description || 'N/A'}}" container="body">
+          {{row.description || 'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Unit Price" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="unit_price">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip=" {{row.unit_price ? '$'+ row.unit_price : (row.unit_price==0?'$'+ row.unit_price+'.00' :'N/A')}}" container="body">
+          {{row.unit_price ? '$'+ row.unit_price : (row.unit_price==0?'$'+ row.unit_price+'.00' :'N/A')}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Total Quantity" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="quantity">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.quantity || 'N/A'}}" container="body">
+          {{row.quantity || 'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Available Quantity" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="quantity">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.remaining_quantity || '0'}}" container="body">
+          {{row?.remaining_quantity || '0'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Comments" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="comment">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.comment || 'N/A'}}" container="body">
+          {{row.comment || 'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Actions" sortable="false" prop="id" cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-column="column" ngx-datatable-header-template>
+        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_inventory_fields_delete)" (change)="$event ? masterToggle($event) : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox> Actions
+      </ng-template>
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_inventory_fields_delete)" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)"></mat-checkbox>
+        <button class="edit-hov mx-1" *ngIf="aclService.hasPermission(userPermissions.master_inventory_fields_edit)" ngbTooltip="Edit" container="body" (click)="addUpdateInventory(content,row)">
+          <i class="icon-pencil"></i>
+        </button>
+        <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="inventoryHistoryStats(row)">
+          <i class="fa fa-history"></i>
+        </a>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+</div>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{hasId?'Edit Inventory':'Add Inventory'}}</h4>
+    <button type="button" class="close" aria-label="Close" #modelClose (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <app-add-update-inventory-form [inventoryDetails]="inventorydetail" (formSubmited)="formSubmited($event)"></app-add-update-inventory-form>
+  </div>
+</ng-template>
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

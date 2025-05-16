@@ -1,0 +1,30 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Document PIN</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row fields-holder text-center">
+    <div class="col-12" style="line-height: 1.5;">
+      <p>Successfully pushed document(s) KIOSK.
+        <br>
+        Paste below PIN against <span style="font-weight: bold;">Case ID
+          '{{caseId}}'</span> and <span style="font-weight: bold;">PIN <span
+            class="pin-number">'{{pinNumber}}'</span></span> in KIOSK to access document(s)
+        for signature.
+
+      </p>
+
+
+
+    </div>
+    <!-- <div class="col-12 pt-1 mt-3 mb-2">
+
+    </div> -->
+    <div class="col-12 mt-3">
+      <!-- <button type="button" (click)="modal.dismiss('Cross click')"
+					class="btn btn-outline-secondary">Close</button> -->
+    </div>
+  </div>
+</div>

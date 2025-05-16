@@ -1,0 +1,183 @@
+@import './../../../assets/sass/themes/child-datatable-theme';
+::ng-deep .datatable-row-detail {
+	width: 100% !important;
+  }
+  
+  ::ng-deep .datatable-scroll,
+  ::ng-deep .datatable-header,
+  ::ng-deep .datatable-header-inner {
+	width: 100% !important;
+  }
+  
+  
+  ::ng-deep .verification-sent .datatable-body {
+	overflow-y: hidden;
+  }
+  
+  
+  
+  ::ng-deep .denial-tooltip {
+	max-width: 180px;
+	min-width: 60px;
+  }
+  
+  ::ng-deep .denial-tooltip.bs-tooltip-right .arrow::before,
+  ::ng-deep .denial-tooltip.bs-tooltip-auto[x-placement^="right"] .arrow::before {
+	border-right-color: #fffdfd !important;
+  }
+  
+  .verification {
+	::ng-deep .datatable-row-wrapper {
+	  display: grid !important;
+	}
+  }
+
+  .create-bill-modal{
+    .ngx-datatable{
+        // parent and child datatable start
+        // parent datatable start
+        ::ng-deep &.parent-table{
+            // parent datatable header start
+            .datatable-header{
+                .datatable-header-inner{
+                    .datatable-header-cell{
+                        padding: 0.3rem;    
+                        &:first-child{
+                            border-top-left-radius: 6px;
+                        }
+                        &:last-child{
+                            border-top-right-radius: 6px;
+                        }
+                    }
+                }
+            }
+            // parent datatable body start
+            .datatable-body{
+                .datatable-scroll{
+                    .datatable-row-wrapper{
+                        width: fit-content !important;
+                        .datatable-body-row{
+                            &.datatable-row-even, 
+                            &.datatable-row-odd{
+                                .datatable-row-center{
+                                    .datatable-body-cell{
+                                        background: $create-bill-modal-datatable-body-bg-color !important;
+                                    }
+                                }
+                            }
+                            .datatable-row-center{
+                                .datatable-body-cell{
+                                    background: $parent-datatable-body-bg-color !important;
+                                    border-color: $parent-datatable-body-border-color;
+                                    .datatable-body-cell-label{
+                                        a{
+                                            &.datatable-icon-down, 
+                                            &.datatable-icon-right{
+                                                color: $parent-datatable-body-icon-left-down-arrow-color;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .datatable-row-detail{
+                            border-right: 1px solid $parent-datatable-body-border-right-color;
+                            // Child datatable start
+                            .child-table-border{
+                                overflow: hidden;
+                                padding: 8px 5px 8px 6px;
+                                border-left: 1px solid $child-datatable-main-border-left-color;
+                                border-right: 1px solid $child-datatable-main-border-right-color;
+                                border-bottom: 3px solid $child-datatable-main-border-bottom-color !important;
+                                .child-datatable{
+                                    // Child datatable header start
+                                    .datatable-header{
+                                        .datatable-header-inner{
+                                            .datatable-row-center{
+                                                .datatable-header-cell{
+                                                    border-top: 1px solid $child-datatable-header-border-top-color;
+                                                    border-right: 1px solid $child-datatable-header-border-right-color !important;
+                                                    color: $child-datatable-header-text-color !important;
+                                                    background: $child-datatable-header-bg-color !important;
+                                                    &:first-child{
+                                                        border-top-left-radius: 6px;
+                                                        border-left: 1px solid $child-datatable-header-first-left-border-color !important;
+                                                    }
+                                                    &:last-child{
+                                                        border-top-right-radius: 6px;
+                                                        border-right: 1px solid $child-datatable-header-last-right-border-color !important;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // Child datatable body start
+                                    &.radius-0{
+                                        .datatable-body{
+                                            .datatable-row-wrapper{
+                                                &:last-child{
+                                                    .datatable-body-cell{
+                                                        &:first-child{
+                                                            border-bottom-left-radius: 0;
+                                                        }
+                                                        &:last-child{
+                                                            border-bottom-right-radius: 0;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .datatable-body{
+                                        .datatable-scroll{
+                                            .datatable-row-wrapper{
+                                                .datatable-row-even, 
+                                                .datatable-row-odd{
+                                                    .datatable-row-center{
+                                                        .datatable-body-cell{
+                                                            background: $child-datatable-body-bg-color !important;
+                                                            border-color: $child-datatable-body-border-color;
+                                                        }
+                                                    }
+                                                }
+                                                &:first-child{
+                                                    .datatable-body-row{
+                                                        .datatable-row-center{
+                                                            .datatable-body-cell{
+                                                                border-top: 1px solid $child-datatable-body-border-top-color;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    // Child datatable footer start
+                                    .datatable-footer{
+                                        .datatable-footer-inner{
+                                            background: $child-datatable-footer-bg-color !important;
+                                            .page-count{
+                                                color: $child-datatable-footer-text-color !important;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        &:last-child{
+                            .child-table-border{
+                                border-bottom: transparent !important;
+                            }
+                        }
+                    }
+                }
+            }
+            .datatable-footer{
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+            }
+        }
+    }
+}
+  
+  

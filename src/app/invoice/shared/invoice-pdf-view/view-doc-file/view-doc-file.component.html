@@ -1,0 +1,61 @@
+<div  class="outerDiv">
+  <span class="space-form-left"></span>
+  <button *ngIf="this.selection.selected.length > 0" type="button" class="btn btn-default btn-lg" (click)="onViewClick()" >
+      <i class="icon-eye me-1"></i> View <span *ngIf="this.selection.selected.length > 0">[{{this.selection.selected.length}}]</span>
+  </button>
+</div>
+<ngx-datatable class="bootstrap scroll-hide custom-scroll-x table" [rows]="invoice_to_Details_all" columnMode="flex"
+              [scrollbarH]="false" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="page.size"
+              [externalPaging]="false" [virtualization]="false" [count]="page.totalElements" [offset]="page.pageNumber-1"
+              (page)="changeDocumentPageNumber($event.offset)">
+              <ngx-datatable-column  [flexGrow]="1" name="Name" [minWidth]="310">
+                <ng-template ngx-datatable-cell-template let-row="row" class="asdfasdf">
+                  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name}}">
+                    {{row.name}}
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [flexGrow]="1" name="Actions" sortable="false" prop="id" cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [minWidth]="310">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <mat-checkbox 
+                    (change)="$event ? masterToggle($event) : null" [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()" >
+                </mat-checkbox>
+                Actions
+                </ng-template>
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <mat-checkbox 
+                  (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)" >
+                  </mat-checkbox>
+                  <button  class="edit-hov mx-1" (click)="getInvoiceLink(row)"
+                   ngbTooltip="View" container="body">
+                   <i class="icon-eye"></i>
+                  </button>
+                  <!-- <div class="tooltip-outer" tooltipClass="table-custom-tooltip">
+					          <a  class="view-hov mx-1" href="javascript:void(0)" role="button"><i class="icon-eye"></i></a>
+                  </div> -->
+               </ng-template>
+              </ngx-datatable-column>
+
+              <!-- <ngx-datatable-column name="Actions" [width]="210" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false" cellClass="action-icon count-hold">
+                <ng-template ngx-datatable-header-template name="Actions">
+            
+                  <mat-checkbox 
+                  (change)="$event ? masterToggle() : null" [checked]="Selection.hasValue() && isSelected()"
+                  [indeterminate]="Selection.hasValue() && !isSelected()">
+                  </mat-checkbox>
+                  Actions
+            
+                </ng-template>
+            
+                <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+                  <mat-checkbox 
+                  (click)="$event.stopPropagation()" (change)="$event ? Selection.toggle(row) : null"
+                  [checked]="Selection.isSelected(row)">
+                  </mat-checkbox>
+            
+                </ng-template>
+                </ngx-datatable-column> -->
+
+            </ngx-datatable>

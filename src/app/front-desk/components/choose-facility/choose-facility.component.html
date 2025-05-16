@@ -1,0 +1,27 @@
+<div class="modal-content practice-loc-modal">
+	<!-- *ngIf="aclService.hasPermission(userPermissions.setting_facility_view)" -->
+  <div class="modal-header">
+    <h4 class="modal-title">Practice Location</h4>
+  </div>
+
+  <!--Current Practice: {{stor}}-->
+  <div class="modal-body pt-2">
+    <div class="row" *ngIf="facilites?.facility_locations?.length">
+      <mat-form-field class="col-md-12 my-3" appearance="outline" >
+        <mat-label>Select Location</mat-label>
+        <mat-select [(ngModel)]="facilityitem" multiple (selectionChange)="onPracitceSelectionChange($event)">
+          <mat-option *ngFor="let facility of facilites.facility_locations" [disabled]="shoulddisable(facility.id)"
+            [value]="facility.id">
+            {{facility.facility_full_name}} 
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="col-12 modal-btn-width text-center mt-2">
+        <button class="btn btn-success me-3" type="button" (click)="onSubmit()"
+          [disabled]='facilityitem && !facilityitem.length'>Save</button>
+        <!-- <button (click)="cancel()" class="btn btn-outline-secondary" type="button">Cancel</button> -->
+      </div>
+    </div>
+  </div>
+</div>

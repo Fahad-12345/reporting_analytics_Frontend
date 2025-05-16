@@ -1,0 +1,261 @@
+@import './../../../assets/sass/components/custom-checkbox.scss';
+.pointer-none {
+  pointer-events: none;
+}
+$ng-select-height: 1.875rem;
+::ng-deep .ng-style {
+  label {
+    color: #808382;
+    font: 400 0.875rem/1.0625rem "Poppins", Arial, Helvetica, sans-serif;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .ng-select {
+    .ng-select-container {
+      box-shadow: none !important;
+      z-index: 9 !important;
+      flex-wrap: wrap;
+      min-height: $ng-select-height !important;
+      height: $ng-select-height;
+      .ng-value-container {
+        flex-wrap: nowrap !important;
+        line-height: 1.3;
+        .ng-value {
+          font-size: 0.8rem !important;
+          min-width: auto;
+          max-width: 90%;
+          .ng-value-label {
+            font-size: 12px !important;
+          }
+        }
+      }
+      .ng-input {
+        top: -5px !important;
+        padding-right: 0 !important;
+        input {
+          color: #363535;
+          font: 400 0.8125rem/16px "Poppins", Arial, Helvetica, sans-serif !important;
+        }
+      }
+      .ng-clear-wrapper {
+        height: 100%;
+        top: -4px !important;
+      }
+      .ng-arrow-wrapper {
+        .ng-arrow {
+          top: -2px !important;
+        }
+      }
+      .ng-spinner-loader {
+        margin: -3px 5px 0 0;
+      }
+    }
+    .ng-dropdown-panel {
+      margin: 3px 0 0;
+      max-height: 350px;
+      right: 20px;
+      font: 300 0.75rem/16px "Poppins", Arial, Helvetica, sans-serif;
+      min-width: 12.75rem;
+      padding: 0.438rem 0 0 1.125rem;
+      border-radius: 0.313rem;
+      border-color: #e9e8e8;
+      box-shadow: none;
+      background: #f7f7f7;
+      z-index: 16;
+      &.show {
+        display: block;
+      }
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        inset: 0 0 unset 0;
+        height: 0.188rem;
+        z-index: 9;
+        background: #05a853;
+        border-radius: 0;
+      }
+      .ng-dropdown-panel-items {
+        .ng-option {
+          background: #f7f7f7;
+          color: #8a8686;
+          font-weight: 300 !important;
+          border-bottom: 1px solid #e9e8e8;
+          padding: 0.625rem 0;
+          &:last-child {
+            border: none;
+          }
+          &:active {
+            color: #05a853 !important;
+          }
+          &:hover {
+            color: #05a853 !important;
+          }
+        }
+        &::-webkit-scrollbar {
+          width: 6px;
+        }
+        &::-webkit-scrollbar-track {
+          background: #e9e8e8;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: #8a8686;
+          border-radius: 5px;
+        }
+        &::-webkit-scrollbar-thumb:hover {
+          background: #8a8686;
+        }
+      }
+    }
+    &.ng-select-opened {
+      .ng-arrow-wrapper {
+        .ng-arrow {
+          top: -5px !important;
+        }
+      }
+    }
+  }
+}
+
+.selected {
+  background-color: turquoise;
+  border: 1px solid;
+}
+.loading {
+  ::ng-deep .mat-pseudo-checkbox {
+    opacity: 0 !important;
+  }
+}
+
+::ng-deep.select-style-design {
+  display: block !important;
+  width: 100%;
+  ::ng-deep.mat-mdc-text-field-wrapper {
+    padding-bottom: 0% !important;
+    margin: 0% !important;
+    ::ng-deep.mat-mdc-form-field-flex {
+      padding: 0% !important;
+    }
+    ::ng-deep.mat-mdc-form-field-outline {
+      color: #acacac !important;
+    }
+    ::ng-deep.mat-select-arrow {
+      color: #000 !important;
+      border-left: 4px solid #0000;
+      border-right: 4px solid #0000;
+      border-top: 4px solid;
+    }
+    ::ng-deep.mat-mdc-form-field-infix {
+      padding: 0 !important;
+      border-top: 0.24375em solid transparent !important;
+    }
+  }
+}
+
+.selected-items {
+  .mat-selected {
+    &:last-child {
+      border-bottom: 1px solid #05a853 !important;
+    }
+  }
+}
+
+.sel-wrap {
+  ::ng-deep.mat-select-trigger {
+    display: flex !important;
+    align-items: center !important;
+    ::ng-deep.mat-select-value {
+      max-width: 100% !important;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.search-wrapper {
+  background-color: #fff;
+  .search-style {
+    padding: 0.25rem 1rem !important;
+    font-size: 0.75rem !important;
+    font-weight: 500;
+  }
+}
+
+::ng-deep .mat-mdc-select-panel::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: transparent;
+}
+::ng-deep .mat-mdc-select-panel::-webkit-scrollbar {
+  width: 5px;
+}
+::ng-deep .mat-mdc-select-panel::-webkit-scrollbar:hover {
+  background-color: #f5f5f5;
+}
+::ng-deep .mat-mdc-select-panel::-webkit-scrollbar-thumb {
+  background-color: #888;
+}
+
+::ng-deep .mat-mdc-option {
+  white-space: pre-wrap !important;
+  ::ng-deep.mat-mdc-option-text {
+    line-height: 1.25;
+    .line-wrap {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
+      /*! autoprefixer: ignore next */
+      -webkit-box-orient: vertical;
+    }
+  }
+}
+::ng-deep.mat-mdc-select-panel-wrap {
+  flex-basis: 77% !important;
+}
+::ng-deep .sticky-input {
+  &.demo {
+    position: relative;
+    left: 44px !important;
+    top: 2.25rem !important;
+  }
+  &.mat-mdc-select-panel {
+    position: relative;
+    top: 1.75rem;
+    width: 100% !important;
+    .search-wrapper {
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 999;
+      display: grid;
+      grid-template-columns: 17px 1fr;
+      border-top: 3px solid #05a853;
+      border-bottom: 1px solid #05a853;
+      .mat-mdc-option {
+        height: 42px;
+        &:hover,
+        &.active,
+        &:focus {
+          background-color: #fff;
+          opacity: 1;
+        }
+        .mat-mdc-option-pseudo-checkbox {
+          margin-left: -8px;
+        }
+      }
+      .search-style {
+        padding-left: 28px !important;
+      }
+    }
+  }
+}
+
+.conditional-color-change {
+  color: red !important;
+}
+
+
+  
+
+
+

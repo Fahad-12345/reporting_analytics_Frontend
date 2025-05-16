@@ -1,0 +1,59 @@
+.ngx-datatable.bootstrap .datatable-header .datatable-header-cell div {
+  transform: none !important;
+}
+
+.ngx-datatable.bootstrap .datatable-header .datatable-header-cell div {
+  all: initial;
+  * {
+    all: unset;
+  }
+}
+
+::ng-deep .mat-checkbox-layout {
+  margin-left: 7px;
+  margin-top: 0.5rem;
+  margin-right: 0;
+}
+
+::ng-deep .mat-checkbox-checked.mat-accent .mat-checkbox-background,
+.mat-checkbox-indeterminate.mat-accent .mat-checkbox-background,
+.mat-accent .mat-pseudo-checkbox-checked,
+.mat-accent .mat-pseudo-checkbox-indeterminate,
+.mat-pseudo-checkbox-checked,
+.mat-pseudo-checkbox-indeterminate {
+  background-color: #05a853 !important; /* Red background for example */
+}
+
+.disabled {
+    pointer-events:none;
+    color:#AAA;
+    background:#F5F5F5;
+    opacity: 0.2;
+    // color:black
+}
+// .ngx-datatable .comments-count {
+//     position: absolute;
+//     top: -7px;
+//     right: 36px;
+// }
+.custom_comment {
+      position: relative;
+}
+
+.hide {
+  display: none;
+}
+
+
+.red {
+  color :red;
+}
+.orange {
+color :orange;
+}
+
+
+.ngx-datatable .comments-count {
+  top: -0.6rem;
+  margin-left: -0.5rem;
+}

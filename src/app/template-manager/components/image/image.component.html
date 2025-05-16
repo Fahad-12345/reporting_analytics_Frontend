@@ -1,0 +1,12 @@
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end"><button class="btn btn-default btn-clear" (click)="imageLableClear()">Clear</button></div>
+<div class="column-content" [ngClass]="{'alignment-top': object.alignment == 'top','image-box':object.paths[0],'alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <div *ngIf="object.is_required" class="required-box"></div>
+    <div *ngIf="object.paths[0]" class="text-center">
+        <img id='check' [src]="raw" height="300"
+        [ngClass]="{'disabled-image':(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)}"
+         (click)="openImage()" />
+    </div>
+    <div *ngIf="!object.paths[0]" class="h-100 text-center alignment-center" (click)="openImage()">
+        <span class="d-block">No Image Added</span>
+    </div>
+</div>

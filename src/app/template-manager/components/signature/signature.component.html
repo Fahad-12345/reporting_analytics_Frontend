@@ -1,0 +1,28 @@
+<div class="column-content" [ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+    <textarea type="text" class="form-control" *ngIf="!layoutService.isInstancePreview && !layoutService.editorView" disabled>Signature will be shown in the pdf</textarea>
+    <div class="col-md-12" *ngIf="(layoutService.isInstancePreview || layoutService.editorView) && !layoutService.isShowEditor">
+     <!-- (window:resize)="onResize($event)"> -->
+        <p class="mb-1">{{object.signatureLabel}}
+            <a class="success p-0 float-right" data-original-title="Edit" title="Edit"(click)="editSignature()">
+                <i class="icon-pencil me-2"></i>
+            </a>
+        </p>
+        <!-- [width]="width" 
+        [height]="height"  -->
+        <!-- *ngIf="!modalOpen" -->
+        <app-signature  
+            [editPad]="!object.previousSignature && false" 
+            [editable]="!object.previousSignature && false" 
+            (signatureCleared)="clearedSignature()" 
+            (signatureChange)="signatureChanged($event)" 
+            [showButtons]="false"
+            [hide_title]='true' [(selectedId)]="object.signature_id" 
+            [(signature)]='object.signature' 
+            [(link)]="object.signaturelink"
+            [(signatures)]='object.signature_listing' 
+            (signaturePointsChanged)='signaturePointsChanged($event)' 
+            [(signaturePoint)]="object.signaturePoints">
+        </app-signature>
+        <button *ngIf="object.signature_type==docSig"  class="btn btn-primary" (click)="chooseSignatures()">Choose Previous</button>
+    </div>
+</div>

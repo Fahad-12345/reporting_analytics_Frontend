@@ -1,0 +1,76 @@
+ngx-datatable {
+    max-height: 70vh !important;
+    // overflow-y: scroll !important;
+    // overflow-x: hidden !important;
+  }
+  .bold-row {
+    font-weight: bold;
+  }
+  ::-webkit-scrollbar {
+    width: 0px; /* Remove scrollbar space */
+    background: transparent; /* Optional: just in case, to fully remove scrollbar */
+}
+  // :host ::ng-deep .bootstrap {
+  //   .datatable-body {
+  //     .datatable-scroll {
+  //       overflow-x: hidden !important;       
+  //       cursor: pointer;
+  //     }
+  //   } 
+  // }
+
+
+  :host ::ng-deep .ngx-datatable {
+    max-height: 70vh !important;
+    .datatable-body {
+      .datatable-scroll {
+        overflow-x: hidden !important;
+        cursor: pointer;
+      }
+    }
+  }
+
+
+
+
+.ngx-datatable.datatable-body.ng-binding a {
+  text-decoration: underline; /* Remove default underline */
+}
+
+.ngx-datatable.datatable-body.cell-content a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+  // :host ::ng-deep ngx-datatable .hover-pointer {
+  //   cursor: pointer;
+  //  }
+  // #hover-pointer {
+  //   cursor: pointer;
+  //   text-decoration: underline;
+  // }
+  .summary-footer {
+    display: flex;
+    margin-top: -1.4%;
+    padding: 18px;
+    background-color: #c0d4d5; 
+  }
+  .summary-column {
+    font-weight: bold;
+    margin-top: -12px;
+    position: absolute;
+    font-size: 13px;
+    // margin-inline: 40px;
+    // margin-left: 10px;
+  }
+
+ 
+.cell-content:hover{
+  color: blue !important;
+  text-decoration: underline;
+}
+
+.ngx-datatable.datatable-body .cell-content.disabled {
+  color: #999; /* Adjust the color for disabled cells */
+  pointer-events: none; /* Disable pointer events */
+  opacity: 0.6; /* Optionally reduce opacity to indicate disabled state */
+}

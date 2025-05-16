@@ -1,0 +1,36 @@
+
+<perfect-scrollbar>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h1 class="card-title text-white m-0">{{title}}</h1>
+                </div>
+                <div class="card-body">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+                        <div class="form" action="#">
+
+                            <div class="row fields-holder">
+                                <div class="col-xl-12 col-lg-12">
+                                    <div class="form-group field" [ngClass]="{'focused': form.get('name').value != ''}">
+                                        <label for="name" class="form-label">Title</label>
+                                        <input type="text" id="name" class="form-control form-input" formControlName="name">
+                                        <small class="form-text text-muted danger" *ngIf="form.get('name').errors?.required && (form.get('name').dirty || form.get('name').touched)">Please enter Provider Name!</small>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                          <div class="row" style="margin-top:20px">
+                              <div class="col-12">
+                                  <button type="button" class="btn btn-default d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" (click)="goBack()">Back</button>
+                                  <button type="submit" class="btn btn-primary d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;">Submit</button>
+                              </div>
+                          </div>
+                      </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</perfect-scrollbar>

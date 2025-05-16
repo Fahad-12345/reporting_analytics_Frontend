@@ -1,0 +1,54 @@
+.center {
+    flex: 0 0 31.333333%;
+    max-width: 31.333333%;
+}
+
+.title {
+    color: #212529;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 0rem !important;
+}
+
+// textarea {
+//     max-width: 82%;
+//     height: 62px !important;
+//     resize: none;
+// }
+
+.btn-outline-secondary {
+    background-color: white !important;
+    color: #6d6969;
+    border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #34c3ee !important;
+    color: white
+}
+
+.btn-outline-secondary:active {
+    background-color: #34c3ee !important;
+}
+
+.modal-header .close {
+    padding: 0rem !important;
+    margin: 0rem 0rem 0rem auto !important;
+    font-size: 18px;
+    padding: 8px 15px;
+}
+
+select {
+    + span {
+        &.text-muted {
+            position: inherit;
+            // bottom: 0;
+        }
+    }
+}
+
+.modal-footer {
+    button {
+        min-width: 120px;
+    }
+}

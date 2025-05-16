@@ -1,0 +1,298 @@
+<busy-loader *ngIf="openAsModal" [loaderSpin]="loadSpin"></busy-loader>
+<div class="modal-header" *ngIf="!onlyView && openAsModal">
+	<h4 class="modal-title" id="modal-basic-title">{{'Transportation'}}</h4>
+	<button type="button" class="close" aria-label="Close" (click)="closeModel()">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div [ngClass]="{'modal-body':!onlyView && openAsModal}" class="modal-pt-15">
+	<form [formGroup]="transportationForm" (ngSubmit)="onSubmit(transportationForm)">
+		<div class="row">
+			<div class="col-lg-6 trans-form" formGroupName='pickupForm'>
+				<div class="row trans-form-hold">
+					<div class="col-12 radio-block">
+						<span class="radio-title"><strong>Pick Up Type</strong></span>
+					</div>
+					<div class="col-12 transport-radio-btns">
+						<ul class="drop-off-padding">
+							<li>
+								<label class="fake-label-radio-check" for="NoPickUpRequired{{openAsModal}}">
+									<input type="radio" appEnhanceRadio [oldValue]="pickUpForm.get('type').value"
+										formControlName="type" [value]='DoctorCalendarEnum.no_pick_up'
+										id="NoPickUpRequired{{openAsModal}}">
+									<span class="fake-radio-button"></span>
+									<span class="fake-label ms-2">No Pick-Up Required</span>
+								</label>
+							</li>
+							<li>
+								<label class="fake-label-radio-check" for="FromHome{{openAsModal}}">
+									<input type="radio" appEnhanceRadio [oldValue]="pickUpForm.get('type').value"
+										formControlName="type" [value]='DoctorCalendarEnum.from_home'
+										formControlName="type" id="FromHome{{openAsModal}}">
+									<span class="fake-radio-button"></span>
+									<span class="fake-label ms-2">From Home</span>
+								</label>
+							</li>
+							<li *ngIf="!physician_id === false">
+								<label class="fake-label-radio-check" for="FromMedicalOffice{{openAsModal}}">
+									<input type="radio" appEnhanceRadio [oldValue]="pickUpForm.get('type').value"
+										formControlName="type" [value]='DoctorCalendarEnum.from_medical_office'
+										formControlName="type" id="FromMedicalOffice{{openAsModal}}">
+									<span class="fake-radio-button"></span>
+									<span class="fake-label ms-2">From Medical Office</span>
+								</label>
+							</li>
+							<li *ngIf="!physician_id === true">
+								<label class="fake-label-radio-check disabled" for="FromMedicalOffice{{openAsModal}}">
+									<input type="radio" appEnhanceRadio [oldValue]="pickUpForm.get('type').value"
+										formControlName="type" [value]='DoctorCalendarEnum.from_medical_office'
+										formControlName="type" id="FromMedicalOffice{{openAsModal}}" disabled>
+									<span class="fake-radio-button bg-gray-radio"></span>
+									<span class="fake-label ms-2">From Medical Office</span>
+								</label>
+							</li>
+							<li>
+								<label class="fake-label-radio-check" for="other{{openAsModal}}">
+									<input type="radio" appEnhanceRadio [oldValue]="pickUpForm.get('type').value"
+										formControlName="type" [value]='DoctorCalendarEnum.other' formControlName="type"
+										id="other{{openAsModal}}">
+									<span class="fake-radio-button"></span>
+									<span class="fake-label ms-2">Other</span>
+								</label>
+							</li>
+						</ul>
+					</div>
+					<div *ngIf="pickUpForm.get('type').value===DoctorCalendarEnum.from_home || (pickUpForm.get('type').value===DoctorCalendarEnum.from_medical_office && physician_id) "
+						class="col-8"
+						[ngClass]="pickUpForm.get('type').value===DoctorCalendarEnum.from_medical_office?'col-8':'col-12'">
+						<div class="form-group mb-1"
+							[ngClass]="{'focused': pickUpForm.get('pick_up_address').value != '' && pickUpForm.get('pick_up_address').value != null }">
+							<label class="form-label">Pick-up Address</label>
+							<input type="text" formControlName="pick_up_address" class="form-control form-input mb-0"
+								notFirstCharactorSpace />
+							<small class="form-text text-muted danger" *ngIf="pickUpForm.get('pick_up_address').errors?.required && 
+								  (pickUpForm.get('pick_up_address').dirty ||
+								  pickUpForm.get('pick_up_address').touched)">
+								This field is required</small>
+						</div>
+					</div>
+					<div class="col-4"
+						*ngIf="(pickUpForm.get('type').value===DoctorCalendarEnum.from_medical_office) && physician_id">
+						<div class="form-group mb-1"
+							[ngClass]="{'focused': pickUpForm.get('phone').value != '' && pickUpForm.get('phone').value != null }">
+							<label class="form-label">Phone no</label>
+							<input class="form-control mb-0" disabled formControlName="phone" type="text"
+								mask='000-000-0000'>
+							<small class="form-text text-muted danger"
+								*ngIf="(pickUpForm.get('phone').value && pickUpForm.get('phone').value.length > 0 && pickUpForm.get('phone').value.length < 10) && pickUpForm.get('phone').touched">
+								Invalid Format: 000-000-0000
+							</small>
+						</div>
+					</div>
+					<div class="row transport-input"
+						*ngIf="pickUpForm.get('type').value===DoctorCalendarEnum.other || (pickUpForm.get('type').value===DoctorCalendarEnum.from_medical_office && !physician_id)">
+						<div class="col-md-4">
+							<div [ngClass]="openFrom == 'softPatient' ? 'form-group mb-4 focused' : 'form-group mb-1'">
+								<label class="form-label" for="Street">Street Address*</label>
+								<input style="display: none" type="text" name="street_address" autocomplete="off" />
+								<input ngx-google-places-autocomplete [options]="{
+							types: [],
+							componentRestrictions: { country: 'US' }
+							}" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event,pickUpForm)"
+									formControlName="street_address" type="text" id="address"
+									class="form-control form-input mb-0"
+									title="{{pickUpForm.get('street_address').value}}">
+								<small class="form-text text-muted danger"
+									*ngIf="pickUpForm.get('street_address').errors?.required && (pickUpForm.get('street_address').dirty || pickUpForm.get('street_address').touched)">
+									This field is required.</small>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" [ngClass]="openFrom == 'softPatient' ? 'mb-4 focused' : 'mb-1'">
+								<label class="form-label">Suite/Floor</label>
+								<input class="form-control mb-0" formControlName="suit" type="text" maxlength='50'>
+								<small class="form-text text-muted danger"
+									*ngIf="pickUpForm.get('suit').errors?.required && (pickUpForm.get('suit').dirty || pickUpForm.get('suit').touched)">
+									This field is required.</small>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group mb-1"
+								[ngClass]="{'focused': pickUpForm.get('phone').value != '' && pickUpForm.get('phone').value != null }">
+								<label class="form-label">Phone no</label>
+								<input class="form-control mb-0" formControlName="phone" type="text"
+									mask='000-000-0000'>
+								<small class="form-text text-muted danger"
+									*ngIf="(pickUpForm.get('phone').value && pickUpForm.get('phone').value.length > 0 && pickUpForm.get('phone').value.length < 10) && pickUpForm.get('phone').touched">
+									Invalid Format: 000-000-0000
+								</small>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" [ngClass]="openFrom == 'softPatient' ? 'mb-4 focused' : 'mb-1'">
+								<label class="form-label">City</label>
+								<input class="form-control mb-0" formControlName="city" type="text">
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" [ngClass]="openFrom == 'softPatient' ? 'mb-4 focused' : 'mb-1'">
+								<label class="form-label">State</label>
+								<ng-select [items]="states" formControlName="state" [closeOnSelect]="false">
+								</ng-select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" [ngClass]="openFrom == 'softPatient' ? 'mb-4 focused' : 'mb-1'">
+								<label class="form-label">Zip</label>
+								<input class="form-control mb-0" formControlName="zip" type="text">
+								<small class="form-text text-muted danger"
+									*ngIf="(pickUpForm.get('zip').touched || pickUpForm.get('zip').dirty) && pickUpForm.get('zip').errors?.pattern">
+									{{zipFormatMessage.format_usa}}</small>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<label class="title">Comments</label>
+						<textarea class="form-control" style="height:60px !important;color: #6d6969;"
+							formControlName="comments" placeholder="No Comment Yet">
+						</textarea>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-6 trans-form" formGroupName='dropoffForm'>
+				<div class="row trans-form-hold">
+					<div class="col-12 radio-block">
+						<span class="radio-title"><strong>Drop Off Type</strong> </span>
+					</div>
+					<div class="col-12 transport-radio-btns">
+						<ul class="drop-off-padding">
+							<li>
+								<label class="fake-label-radio-check" for="NodropoffRequired">
+									<input type="radio" appEnhanceRadio [oldValue]="dropOffForm.get('type').value"
+										formControlName="type" formControlName="type"
+										[value]='DoctorCalendarEnum.no_drop_off' id="NodropoffRequired">
+									<span class="fake-radio-button"></span>
+									<span class="fake-label ms-2">No Drop-off Required</span>
+								</label>
+							</li>
+							<li>
+								<label class="fake-label-radio-check" for="DropOffFromHome">
+									<input type="radio" appEnhanceRadio [oldValue]="dropOffForm.get('type').value"
+										formControlName="type" [value]='DoctorCalendarEnum.from_home'
+										formControlName="type" id="DropOffFromHome">
+									<span class="fake-radio-button"></span>
+									<span class="fake-label ms-2">To Home</span>
+								</label>
+							</li>
+							<li>
+								<label class="fake-label-radio-check" for="DropOffFromMedicalOffice">
+									<input type="radio" appEnhanceRadio [oldValue]="dropOffForm.get('type').value"
+										formControlName="type" [value]='DoctorCalendarEnum.from_medical_office'
+										formControlName="type" id="DropOffFromMedicalOffice">
+									<span class="fake-radio-button"
+										[ngStyle]="{'background': !physician_id ? '#b1bac0' : ''}"></span>
+									<span class="fake-label ms-2">To Medical Office</span>
+								</label>
+							</li>
+							<li>
+								<label class="fake-label-radio-check" for="DropOffOther">
+									<input type="radio" appEnhanceRadio [oldValue]="dropOffForm.get('type').value"
+										formControlName="type" [value]='DoctorCalendarEnum.other' formControlName="type"
+										id="DropOffOther">
+									<span class="fake-radio-button"></span>
+									<span class="fake-label ms-2">Other</span>
+								</label>
+							</li>
+						</ul>
+					</div>
+					<div class="col-12"
+						*ngIf="dropOffForm.get('type').value===DoctorCalendarEnum.from_home || dropOffForm.get('type').value===DoctorCalendarEnum.from_medical_office && physician_id">
+						<div class="form-group mb-1"
+							[ngClass]="{'focused': dropOffForm.get('dropoff_address').value != '' && dropOffForm.get('dropoff_address').value != null }">
+							<label class="form-label">Drop-off Address</label>
+							<input type="text" formControlName="dropoff_address" class="form-control form-input mb-0"
+								notFirstCharactorSpace />
+							<small class="form-text text-muted danger" *ngIf="dropOffForm.get('dropoff_address').errors?.required && 
+								  (dropOffForm.get('dropoff_address').dirty ||
+								  dropOffForm.get('dropoff_address').touched)">
+								This field is required</small>
+						</div>
+					</div>
+					<div class="row transport-input"
+						*ngIf="dropOffForm.get('type').value===DoctorCalendarEnum.other || (dropOffForm.get('type').value===DoctorCalendarEnum.from_medical_office && !physician_id)">
+						<div class="col-md-4">
+							<div [ngClass]="openFrom == 'softPatient' ? 'form-group mb-4 focused' : 'form-group mb-1'">
+								<label class="form-label" for="Street">Street Address*</label>
+								<input style="display: none" type="text" name="street_address" autocomplete="off" />
+								<input ngx-google-places-autocomplete [options]="{
+								  types: [],
+								  componentRestrictions: { country: 'US' }
+								  }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event,dropOffForm)"
+									formControlName="street_address" type="text" id="address"
+									class="form-control form-input mb-0"
+									title="{{dropOffForm.get('street_address').value}}">
+								<small class="form-text text-muted danger"
+									*ngIf="dropOffForm.get('street_address').errors?.required && (dropOffForm.get('street_address').dirty || dropOffForm.get('street_address').touched)">
+									This field is required.</small>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" [ngClass]="openFrom == 'softPatient' ? 'mb-4 focused' : 'mb-1'">
+								<label class="form-label">Suite/Floor</label>
+								<input class="form-control mb-0" formControlName="suit" type="text" maxlength='50'>
+								<small class="form-text text-muted danger"
+									*ngIf="dropOffForm.get('suit').errors?.required && (dropOffForm.get('suit').dirty || dropOffForm.get('suit').touched)">
+									This field is required.</small>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group mb-1"
+								[ngClass]="{'focused': dropOffForm.get('phone').value != '' && dropOffForm.get('phone').value != null }">
+								<label class="form-label">Phone no</label>
+								<input class="form-control mb-0" formControlName="phone" type="text"
+									mask='000-000-0000'>
+								<small class="form-text text-muted danger"
+									*ngIf="(dropOffForm.get('phone').value && dropOffForm.get('phone').value.length > 0 && dropOffForm.get('phone').value.length < 10) && dropOffForm.get('phone').touched">
+									Invalid Format: 000-000-0000
+								</small>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" [ngClass]="openFrom == 'softPatient' ? 'mb-4 focused' : 'mb-1'"><label class="form-label">City</label>
+								<input class="form-control mb-0" formControlName="city" type="text" maxlength='50'>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" [ngClass]="openFrom == 'softPatient' ? 'mb-4 focused' : 'mb-1'"><label class="form-label">State</label>
+								<ng-select [items]="states" formControlName="state" [closeOnSelect]="false"></ng-select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-group" [ngClass]="openFrom == 'softPatient' ? 'mb-4 focused' : 'mb-1'"><label class="form-label">Zip</label>
+								<input class="form-control mb-0" formControlName="zip" type="text">
+								<small class="form-text text-muted danger"
+									*ngIf="(dropOffForm.get('zip').touched || dropOffForm.get('zip').dirty) && dropOffForm.get('zip').errors?.pattern">
+									{{zipFormatMessage.format_usa}}</small>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<label class="title">Comments</label>
+						<textarea class="form-control" style="height:60px !important;color: #6d6969;"
+							formControlName="comments" placeholder="No Comment Yet">
+
+						</textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row mt-2">
+			<div class="col-md-12 modal-btn-width text-center">
+				<button *ngIf="!onlyView && openAsModal" class="btn btn-primary me-3" (click)="closeModel()"
+					type="button">{{onlyView?'Close':'Cancel'}}</button>
+				<button *ngIf="!onlyView && openAsModal" [disabled]="transportationForm.invalid" class="btn btn-success"
+					type="submit">{{'Save'}} </button>
+			</div>
+		</div>
+	</form>
+</div>

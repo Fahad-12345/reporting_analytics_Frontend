@@ -1,0 +1,246 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_view)">
+  	<div class="d-block text-end">
+		<a *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_add)" href="javascript:void(0)"
+			(click)="save(employmentTypeModal)" data-target="#user-group" data-bs-toggle="modal"
+			class="btn btn-default round-btn">
+			<span class="icon-plus-circle"></span> Add New
+		</a>
+	 </div>
+	 <form class="form" action="" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_filter)" autocomplete="off" [formGroup]="searchForm">
+		  <div class="search-filter search-filter-bg-light filter-grid grid-2" [class.hide-remaining-search-filter]="!isCollapsed">
+			  <div class="filter-grid-container">
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+					<label class="form-label" for="EmploymentType">Employment Type</label>
+					<input type="text" id="EmploymentType" class="form-control form-input" formControlName="name">
+                </div>
+				<div class="form-group" [ngClass]="{'focused': searchForm.get('description').value != '' && searchForm.get('description').value != null }">
+					<label class="form-label" for="comments">Comments</label>
+					<input type="text" id="comments" class="form-control form-input" formControlName="description">
+                </div>
+			  </div>
+			  <div class="collape-btn">
+				  <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				  [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				  [class.btn-success]="isCollapsed" type="button">
+					  <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				  </button>
+			  </div>
+			  <div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				  <button class="btn btn-success" (click)="setPage({ offset: 0 })">Filter</button>
+				  <button class="btn btn-primary" (click)="resetFilter()" [disabled]="checkInputs()">Reset</button>
+			  </div>
+		  </div>
+	 </form>
+  <!-- <div class="d-block">
+    <a *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_add)" href="javascript:void(0)"
+      (click)="save(employmentTypeModal)" data-target="#user-group" data-bs-toggle="modal"
+      class="btn btn-default round-btn float-right">
+      <span class="icon-plus-circle"></span> Add New
+    </a>
+  </div>
+  <form action="" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_filter)" autocomplete="off"
+    [formGroup]="searchForm">
+    <div class="form">
+      <div class="search-filter-body">
+        <div class="row">
+          <div class="col-xl-10">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group field"
+                  [ngClass]="{'focused': searchForm.get('name').value != '' && searchForm.get('name').value != null }">
+                  <label class="form-label" for="EmploymentType">Employment Type</label>
+                  <input type="text" id="EmploymentType" class="form-control form-input" formControlName="name">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group field"
+                  [ngClass]="{'focused': searchForm.get('description').value != '' && searchForm.get('description').value != null }">
+                  <label class="form-label" for="comments">Comments</label>
+                  <input type="text" id="comments" class="form-control form-input" formControlName="description">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-2">
+            <div class="row justify-content-center mb-3 mb-xl-0">
+              <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                <button class="btn btn-success w-100 me-3" (click)="setPage({ offset: 0 })"> Filter
+                </button>
+              </div>
+              <div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+                <button class="btn btn-primary w-100" (click)="resetFilter()" [disabled]="checkInputs()">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </form> -->
+</div>
+
+<div class="card data-table p-0 mt-2" *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_view)">
+  <div class="row">
+    <div class="col-12 col-sm-6 edit-block">
+      <div class="form-group field option-field mb-2 d-inline-block">
+        <ul>
+          <li>Show</li>
+          <li>
+            <select [(ngModel)]="this.page.size" class="custom-select" name="limit" id="limit" (change)="PageLimit($event.target.value)">
+              <option [value]="10" >10</option>
+              <option [value]="20">20</option>
+              <option [value]="30">30</option>
+              <option [value]="40">40</option>
+              <option [value]="50">50</option>
+              <option [value]="100">100</option>
+            </select>
+          </li>
+          <li>Entries</li>
+        </ul>
+
+      </div>
+    </div>
+    <div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+      <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+				Customize Columns
+			</button>
+
+      <!-- <lib-task-manager
+        *ngIf="selection.selected.length && aclService.hasPermission(userPermissions.master_user_emp_type_create_task)"
+        selectedProps="{{stringify(selection.selected)}}" type="text" page="Patient"
+        listCount="{{selection.selected.length}}">
+      </lib-task-manager> -->
+
+      <!-- <a href="javascript:void(0)" (click)="bulkDelete()" class="btn btn-default round-btn"
+        *ngIf="selection.selected.length && aclService.hasPermission(userPermissions.master_user_emp_type_delete)">
+        <span class="icon-remove me-1"></span> Delete [{{selection.selected.length}}]
+      </a> -->
+    </div>
+  </div>
+
+  <ngx-datatable #empTypeList [rows]="employmentTypes" [columnMode]='"force"' class='bootstrap'
+    [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true" [limit]="page.size" (page)="setPage($event)"
+    [count]='page.totalElements' [offset]="page.pageNumber" [virtualization]="false" [externalPaging]="true">
+    <ngx-datatable-column name="Employment Type" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+	 prop="name">
+	 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name ||'N/A'}}" container="body">
+          {{row.name ||'N/A'}}</div>
+	  </ng-template>
+	  
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Comments" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+ 	prop="description">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description ||'N/A'}}" container="body">
+          {{row.description ||'N/A'}}</div>
+      </ng-template>
+
+      <!-- <ng-template ngx-datatable-cell-template *ngFor="let employ of getEmploymentBy">
+        {{data.description}}
+      </ng-template> -->
+
+    </ngx-datatable-column>
+  
+    <ngx-datatable-column name="Actions" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+ 	cellClass="action-icon">
+      <ng-template ngx-datatable-header-template name="Actions" let-rowIndex="rowIndex">
+        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_edit)"
+          (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()" disabled>
+        </mat-checkbox>
+        Actions
+      </ng-template>
+
+      <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+        <mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_edit)"
+          (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)" disabled>
+        </mat-checkbox>
+
+        <a *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_edit)" class="edit-hov mx-1"
+          (click)="edit(employmentTypeModal, row)" ngbTooltip="Edit" container="body" href="javascript:void(0)" role="button"><i
+            class="icon-pencil"></i></a>
+
+        <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="employmentTypeHistoryStats(row)">
+          <i class="fa fa-history"></i>
+        </a>
+
+        <!-- <lib-task-manager *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_create_task)"
+          selectedProps="{{stringify([row])}}" type="icon" id="{{row.id}}" page="Patient">
+        </lib-task-manager> -->
+        <!-- 
+        <a *ngIf="aclService.hasPermission(userPermissions.master_user_emp_type_delete)" class="remove-hov mx-1"
+          (click)="deleteOne(row.employment_type_id)" tooltip="Delete" href="javascript:void(0)" role="button"><i
+            class="icon-remove"></i></a> -->
+
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+
+</div>
+
+<!-- User Group Modal -->
+<ng-template #employmentTypeModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{headerText}}</h5>
+    <button type="button" class="close" data-dismiss="modal" (click)="closeModal()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form [formGroup]="employmentTypeForm" (ngSubmit)="onSubmit()">
+      <div class="form-group row mb-1" [ngClass]="{'focused': employmentTypeForm.get('name').value != ''}">
+        <div class="col-md-12">
+          <label class="form-label">Employment Type Name*</label>
+          <input class="form-control mb-0" formControlName="name" placeholder="" type="text" notFirstCharactorSpace>
+          <small class="form-text text-muted danger"
+            *ngIf="employmentTypeForm.get('name').errors?.required && (employmentTypeForm.get('name').dirty || employmentTypeForm.get('name').touched)">
+            This field is required</small>
+        </div>
+      </div>
+
+      <div class="form-group row mb-2" [ngClass]="{'focused': employmentTypeForm.get('description').value != ''}">
+        <div class="col-md-12">
+          <label class="form-label">Comments</label>
+          <textarea class="form-control" id="EmploymentBy" formControlName="description" placeholder=""
+            rows="3"></textarea>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 modal-btn-width text-center">
+          <button class="btn btn-primary me-3" data-dismiss="modal" type="button"
+          (click)="closeModal()">Cancel</button>
+          <button class="btn btn-success" type="submit"
+            [disabled]="disableBtn || !employmentTypeForm.valid">{{ submitText  }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

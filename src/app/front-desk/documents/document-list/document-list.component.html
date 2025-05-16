@@ -1,0 +1,65 @@
+<div class="col-md-12 mt-0 px-0">
+	<div class="card">
+		<div class="card-header folder-upload-file px-0">
+			<div dropzone [hasPermission]="aclService.hasPermission(userPermissions.patient_case_list_docs_upload)" [folder]="folder" [patientId]="patientId" [caseId]="caseId" class="row align-items-center">
+			 <!-- <ngx-file-drop headertext="" #FileUpload (onFileDrop)="rawDropped($event, content, folder.id)"> -->
+			<!-- <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector"  [hasPermission]="aclService.hasPermission(userPermissions.patient_case_list_docs_upload)" [folder]="folder" [patientId]="patientId" [caseId]="caseId" class="row align-items-center"> -->
+				<div class="col-10 pe-0 ps-3">
+					<mat-checkbox type="checkbox"
+						[disabled]="(folder.selection.selected.length == folder.files?.length && folder.files?.length > 0 )|| isParentChecked"
+						(change)="deepCheckFile($event)" [checked]="folder.isFolderSelected">
+					</mat-checkbox>
+
+					<div class="tooltip-outer d-inline-block">
+						<ul class="d-inline-block list-unstyled mb-0" tooltipClass="table-custom-tooltip"
+							[ngbTooltip]="tipContent">
+							<ng-container *ngIf="folder && folder.folder_name && folder.folder_name.length > 0">
+						
+								<span *ngFor=" let tree of folder.tree_path;let i = index"
+									(click)='getselectedFolderFiles(tree)'>
+									 {{
+									    i===0?
+										tree.qualifier:tree.name}}{{i!=treepathlength ?'>':''}} 
+								</span>
+							</ng-container>
+
+							<ng-template #tipContent>
+								<span *ngFor=" let tree of folder.tree_path;let i = index"
+									(click)='getselectedFolderFiles(tree)'>
+									{{tree.name}}{{i!=treepathlength ?'>':''}}
+								</span>
+							</ng-template>
+						
+<!-- 
+							 <li class="btn-tooltip-top text-center"
+							*ngIf="getCount(folder) && folder && folder.folder_name && (folder.folder_name.length > 11 ||  (folder.selection.selected.length > 1 || folder.isFolderSelected))">
+							<span>{{folder && folder.folder_name && folder.folder_name}}</span>
+							<i></i>
+						</li> -->
+						</ul>
+					</div>
+					
+				</div>
+				 
+				<div class="col-2 text-end ps-0 pe-4" style="padding-right: 10px;">
+					<button type="button" class="close pb-2" aria-label="Close" (click)="removeFolder(folder)">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+		<!-- </ng-template> -->
+		<!-- </ngx-file-drop> -->
+			<!--</file-drop>  -->
+		</div>
+		<div class="card-body mt-0">
+			<app-document-shared-listing [selectedFilesList] ="selectedFilesList" [showFolders]="showFolders" [PreviewedFile]="PreviewedFile" [folder]="folder" [folderList]="folderList"
+				[parentSelection]="parentSelection" [folderId]="folderId" [selectedTags]="selectedTags"
+				[caseId]="caseId" [lstFolder]="folderList"
+				(viewFile)="viewFile($event)" 
+				[folders]="folders"
+				(refreshFolderFiles) ="refreshFolderFile($event)"
+				(documentUpdated) ="documentUpdated($event)"
+				style="width:100%;">
+			</app-document-shared-listing>
+		</div>
+
+	</div>

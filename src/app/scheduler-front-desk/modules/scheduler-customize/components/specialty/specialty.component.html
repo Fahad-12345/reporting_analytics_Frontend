@@ -1,0 +1,114 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div *ngIf='aclService.hasPermission(this.userPermissions.scheduler_customize_speciality_color_view);else not_scheduler_customize_speciality_color_view' >
+<app-table-filter *ngIf='aclService.hasPermission(this.userPermissions.customize_speciality_filter)' [filtersNeeded]="filter" (resetButtonEmitter)="fetchTableData(createDefaultParams())" (filterFieldEmitter)="applyFilter($event)"></app-table-filter>
+
+<div class="col-12 col-sm-6 edit-block">
+	<div class="form-group field option-field mb-2 d-inline-block">
+		<ul>
+			<li>Show</li>
+			<li>
+				<!-- <select class="custom-select" name="limit" id="limit" > -->
+				<select class="custom-select" name="limit"  id="limit"
+
+				(change)="entryCountSelection($event.target.value)"
+					>
+					<!-- <option [value]="20">Items per page</option> -->
+					<option [value]="10">10</option>
+					<option [value]="20">20</option>
+					<option [value]="30">30</option>
+					<option [value]="40">40</option>
+					<option [value]="50">50</option>
+					<option [value]="100">100</option>
+				</select>
+			</li>
+			<li>Entries</li>
+		</ul>
+	</div>
+</div>
+<div class="text-end mb-2">
+	<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+		Customize Columns
+	</button>
+	<a *ngIf="deleteSelectedSpeciality.length>0" (click)="deleteAllClinics()" class="btn btn-danger ms-2" href="javascript:void(0)">
+		<span class="icon-remove me-1"></span> Delete [{{deleteSelectedSpeciality.length}}]
+	</a>
+</div>
+
+
+<ngx-datatable class="bootstrap scroll-hide custom-scroll-x" #specialityList [rows]="specialtyRowData" [scrollbarH]="true" [columnMode]="'force'" [headerHeight]="50"
+		[virtualization]="false" [footerHeight]="50" [externalPaging]="true" [rowHeight]="'auto'" [limit]="limit" [count]="totalRecord"  (page)='onPageChange($event)'  [offset]="specialityOffset">
+		
+        <ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Name" prop="name" [width]="60" [sortable]="false">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" container="body" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">
+					{{row?.qualifier}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Time Slot" prop="time_slot" [width]="60" [sortable]="false">
+		</ngx-datatable-column>
+        <ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Over Booking No." prop="over_booking" [width]="90" [sortable]="false">
+		</ngx-datatable-column>
+		
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Color" prop="Color" [width]="80" [sortable]="false">
+		
+
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<input class="customize-screen" disabled type="color" value="{{row.color}}">
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Action"  [width]="80">
+
+			<ng-template let-column="column" ngx-datatable-header-template  >
+		 
+				<mat-checkbox *ngIf='aclService.hasPermission(this.userPermissions.customize_speciality_color_edit)' [checked]="isHeaderSelected" (change)="selectAll($event)">
+					  </mat-checkbox>
+			  Actions
+			</ng-template>
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				
+				<mat-checkbox *ngIf='aclService.hasPermission(this.userPermissions.customize_speciality_color_edit)' [(ngModel)]="row.checked" [checked]="row.checked" (change)="onChange(row,$event)">
+				</mat-checkbox>
+			<a *ngIf='aclService.hasPermission(this.userPermissions.customize_speciality_color_edit)' class="edit-hov mx-1" ngbTooltip="Edit" container="body"
+			  (click)="actionButtonHandler('edit',row)"
+				 
+				role="button"><i class="icon-pencil"></i></a>
+				<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="specialtyHistoryStats(row)">
+					<i class="fa fa-history"></i>
+				</a>
+			<a *ngIf='aclService.hasPermission(this.userPermissions.customize_speciality_color_edit)' class="view-hov mx-1" ngbTooltip="Reset" container="body"
+			(click)="actionButtonHandler('delete',row)"
+								 role="button">
+				<span class="icon-remove"></span></a>
+
+
+			  </ng-template>
+        </ngx-datatable-column>
+		
+		</ngx-datatable>
+	</div>
+	<ng-template #not_scheduler_customize_speciality_color_view>
+		<h6 class="col-12 color-red">No Access Permission</h6>
+	</ng-template>
+
+	<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+		[config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+			  <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+			  <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+			</div>
+			<div class="modal-footer justify-content-center">
+			  <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+			  <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+			</div>
+		  </div>
+		</div>
+	</div>

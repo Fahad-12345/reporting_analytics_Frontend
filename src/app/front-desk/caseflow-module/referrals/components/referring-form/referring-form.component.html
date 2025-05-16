@@ -1,0 +1,16 @@
+<div class="pull-right custom-tooltip-hov edit-block mt-3"
+    *ngIf="aclService.hasPermission('patient-case-list-referrals-physical-information-view')">
+    <a *ngIf="aclService.hasPermission('patient-case-list-referrals-physical-information-edit') && case?.is_finalize"
+        tooltip="Edit" (click)="enableRefForm(enableflag)">
+        <i class="icon-pencil"></i>
+    </a>
+</div>
+
+<div class="card card-bg w-100 mt-0"
+    *ngIf="aclService.hasPermission('patient-case-list-referrals-physical-information-view')">
+    <h6 class="color-blue d-inline-block mb-3">
+        {{ title }}
+    </h6>
+    <dynamic-form [fields]="fieldConfig" (onReady)="onReady($event)" (submit)="submit($event)">
+    </dynamic-form>
+</div>

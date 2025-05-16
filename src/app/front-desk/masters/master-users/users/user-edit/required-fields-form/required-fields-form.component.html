@@ -1,0 +1,47 @@
+<div class="modal-header">
+  <h5 class="modal-title">Required Fields For Input</h5>
+  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="resetModel()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body modal-pt-15">
+  <form autocomplete="" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group field mb-1"
+          [ngClass]="{'focused': form.get('visit_type_id').value != '' && form.get('visit_type_id').value != null }">
+          <label for="visit_type_id" class="form-label">Visit Type*</label>
+          <!-- <input type="text" class="form-control mb-0" formControlName="visit_type_id"> -->
+          <ng-select formControlName="visit_type_id" [items]="lstVisitTypes" [closeOnSelect]="false" bindLabel="name" bindValue="id">
+          </ng-select>
+          <!-- <small class="form-text text-muted danger" *ngIf="form.get('visit_type_id').errors?.required && 
+                          (form.get('visit_type_id').dirty || form.get('visit_type_id').touched)">Please enter
+            Name!</small> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row mb-2">
+      <div class="col-md-12">
+        <div class="form-group field mb-3"
+          [ngClass]="{'focused': form.get('fields_control_ids').value != '' && form.get('fields_control_ids').value != null }">
+          <label for="description" class="form-label">Fields Controls</label>
+          <ng-select formControlName="fields_control_ids" [items]="lstFieldControls" [closeOnSelect]='false' bindLabel="title" bindValue="id"
+            multiple='true'></ng-select>
+          <!-- <textarea class="form-control mb-0" rows="3" formControlName="fields_control_ids"></textarea> -->
+          <!-- <small class="form-text text-muted danger" *ngIf="form.get('fields_control_ids').errors?.required && 
+                          (form.get('fields_control_ids').dirty || form.get('fields_control_ids').touched)">Please enter
+            comments!</small> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 modal-btn-width text-center">
+        <button type="button" class="btn btn-primary me-3" data-dismiss="modal"
+          (click)="resetModel()">Cancel</button>
+          <button type="submit" [disabled]="form.invalid" class="btn btn-success">Add</button>
+      </div>
+    </div>
+  </form>
+</div>

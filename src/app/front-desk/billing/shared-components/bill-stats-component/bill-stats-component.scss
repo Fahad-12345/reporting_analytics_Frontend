@@ -1,0 +1,29 @@
+.tabs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-rows: clamp(100px, calc(6.5vw + 7px), 125px);
+  gap: 1.172vw;
+  #{&}-item {
+    border: 1px solid #c3c4c3;
+    border-radius: 7px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100px;
+    box-shadow: rgba(157, 152, 152, 0.2) 0px 2px 8px 0px;
+    p {
+      color: #34c3ee;
+      font-size: clamp(16px, calc(1.095vw + 3px), 22px);
+      font-weight: 500;
+      text-transform: capitalize;
+      margin-bottom: 10px;
+      white-space: nowrap;
+    }
+    span {
+      font-size: clamp(15px, calc(0.99vw + 3px), 19px);
+      font-weight: 400;
+    }
+  }
+}

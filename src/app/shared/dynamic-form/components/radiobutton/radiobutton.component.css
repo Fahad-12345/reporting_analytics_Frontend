@@ -1,0 +1,7 @@
+.class{
+    position: relative !important;
+    /* left: 0; */
+    /* top: 0; */
+    opacity: 1 !important;
+    z-index: 1;
+}

@@ -1,0 +1,119 @@
+%d-flex-center{
+	display: flex;
+	align-items: center;
+}
+.w-fit-div {
+	width: fit-content;
+    margin-left: auto;
+}
+
+::ng-deep.datatable-body-cell{
+    // width: 0 !important;
+    .datatable-body-cell-label{
+        width: 100% !important;
+    }
+}  
+
+::ng-deep.case-data {
+	border-radius: 0.36rem 0 0.36rem 0.36rem !important;
+	&.fixed-header {
+		.datatable-header {
+			.datatable-header-cell {
+                white-space: pre-wrap !important;
+                @extend %d-flex-center;
+                justify-content: center;
+                .datatable-header-cell-label,
+				.datatable-header-cell-template-wrap {
+					line-height: 0.9125rem !important;
+                    @extend %d-flex-center;
+					justify-content: center;
+                    flex-wrap: wrap;
+					padding:  2px 0;
+					label {
+						&.mat-checkbox-layout {
+							margin-bottom: 0;
+						}
+					}
+				}
+			}
+			
+		}
+	}
+}
+::ng-deep .badge-holder {
+	&.case-align {
+		.datatable-body-cell-label {
+			flex-wrap: wrap;
+		}
+	}
+	.datatable-body-cell-label {
+		@extend %d-flex-center;
+		justify-content: space-between;
+		.badge-info{
+			&.wrap-text{
+				max-width: 79%;
+				@media screen and (min-width:768px) {
+					max-width: 74%;
+					
+				}
+			}
+		}
+	}
+}
+
+::ng-deep .case-data{
+	.datatable-body-cell-label {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		label {
+			&.mat-checkbox-layout {
+				margin-bottom: 0;
+				margin-right: 5px;
+			}
+		}
+	}
+}
+
+
+.case-header{
+    font-size: 2.00rem;
+    font-weight: bold;
+}
+.case-badge {
+	padding: 0 0 0 4px;
+}
+button{
+	&.btn{
+		&.btn-success,
+		&.btn-danger{
+			&.round-btn{
+				margin-bottom: -2px !important;
+				svg {
+					&.svg-inline--fa {
+						&.fa-file-excel {
+								margin-right: 0.55rem !important;
+							
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+button{
+	&.btn{
+		&.btn-success{
+			&.round-btn{
+				margin-right: -4px !important;
+			}
+		}
+	}
+}
+
+.case-search{
+	.search-filter-body{
+		border-radius: 0.36rem 0 0.36rem 0.36rem !important;
+	}	
+}

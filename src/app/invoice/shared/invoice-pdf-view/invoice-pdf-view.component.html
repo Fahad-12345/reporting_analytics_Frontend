@@ -1,0 +1,19 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<tabset >
+  <tab *ngIf="isInsuranceTab" heading="Insurance ({{insuranceCount}})" (selectTab)="beforeChange('insurance')">
+    <app-view-doc-file [invoiceId]="invoiceId" [invoice_to_Details_all]="invoice_to_Details_all" [invoice_to_label]="invoice_to_label"></app-view-doc-file>
+  </tab>
+  <tab *ngIf="isEmployerTab" heading="Employer ({{employerCount}})" (selectTab)="beforeChange('employer')">
+    <app-view-doc-file [invoiceId]="invoiceId" [invoice_to_Details_all]="invoice_to_Details_all" [invoice_to_label]="invoice_to_label"></app-view-doc-file>
+  </tab>
+  <tab *ngIf="isLawyerTab" heading="Firm ({{firmCount}})" (selectTab)="beforeChange('firm')">
+    <app-view-doc-file [invoiceId]="invoiceId" [invoice_to_Details_all]="invoice_to_Details_all" [invoice_to_label]="invoice_to_label"></app-view-doc-file>
+  </tab>
+  <tab *ngIf="isPatientTab" heading="Patient (1)" (selectTab)="beforeChange('patient')">
+    <app-view-doc-file [invoiceId]="invoiceId" [invoice_to_Details_all]="invoice_to_Details_all" [invoice_to_label]="invoice_to_label"></app-view-doc-file>
+  </tab>
+  <tab *ngIf="isOtherTab" heading="Other (1)" (selectTab)="beforeChange('other')">
+    <app-view-doc-file [invoiceId]="invoiceId" [invoice_to_Details_all]="invoice_to_Details_all" [invoice_to_label]="invoice_to_label"></app-view-doc-file>
+  </tab>
+  </tabset>

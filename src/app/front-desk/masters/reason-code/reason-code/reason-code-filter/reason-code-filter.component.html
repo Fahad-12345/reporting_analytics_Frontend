@@ -1,0 +1,55 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="search-filter-body mt-3">
+	<form class="form" autocomplete="off" [formGroup]="reasonDetailForm">
+		<div class="row">
+			<div class="col-xl-10">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="form-group field"
+							[ngClass]="{'focused': reasonDetailForm.get('code').value != '' && reasonDetailForm.get('code').value != null }">
+							<label class="form-label" for="code">Code
+							</label>
+							<input type="text" id="code" class="form-control form-input"
+								notFirstCharactorSpace formControlName="code">
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group field"
+							[ngClass]="{'focused': reasonDetailForm.get('reason_code_category_id').value != '' && reasonDetailForm.get('reason_code_category_id').value != null }">
+							<label class="form-label" for="reason_code_category_id">Reason Code Category Name
+							</label>
+							<ng-select (keyup)="searchReasonCodeCategory($event)"
+								(open)="reasonCodeCategoryListsEmtpy()"
+								(change)="selectReasonCodeCategoryID($event)" [closeOnSelect]="false">
+								<ng-option *ngFor="let category of reasonCodeCategoriesLists"
+									[value]="category.id">
+									{{category.name}}
+								</ng-option>
+							</ng-select>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="form-group field"
+							[ngClass]="{'focused': reasonDetailForm.get('description').value != '' && reasonDetailForm.get('description').value != null }">
+							<label class="form-label" for="description">Description</label>
+							<input type="text" id="description" class="form-control form-input"
+								notFirstCharactorSpace formControlName="description">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-2">
+				<div class="row justify-content-center mb-3 mb-xl-0">
+					<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+						<button class="btn btn-success w-100 me-3" (click)="filterReason({})"> Filter
+						</button>
+					</div>
+					<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+						<button class="btn btn-primary w-100" (click)="resetReasonCodeList() "
+						[disabled]="reasonCodeFilterResetDisabledCheck()"> Reset</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>

@@ -1,0 +1,43 @@
+
+<!-- <table  style="margin-left: 11px;width:97%" class="table table-striped" [mfData]="data" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <thead style="background-color:#34c3ee;color:white;font-size:14px !important;font-weight: 400!important;">
+    <tr>
+        <th><input type="checkbox" id="selectAll" [(ngModel)]="selectAll"  (change)="onSelectionChange($event)" /></th>
+        <th style="width: 20%">
+            <mfDefaultSorter by="date">Date</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+            <mfDefaultSorter by="time">Time </mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+            <mfDefaultSorter by="chart">Chart #</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+            <mfDefaultSorter by="patient">Patient</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+              <mfDefaultSorter by="doctor">Doctor</mfDefaultSorter>
+        </th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let appointment of mf.data; let idx = index  ">
+        <td style="color: #6d6969;"><input type="checkbox" [checked]="appointment.isChecked" (click)="getId($event,appointment)" /></td>
+        <td style="color: #6d6969;">{{appointment.dateTime | date: 'MM/dd/yyyy'}}</td>
+        <td style="color: #6d6969;">{{appointment.dateTime | date: 'HH:mm'}}</td>
+        <td style="color: #6d6969;">{{appointment.patientId}}</td>
+        <td style="color: #6d6969;">{{appointment.lastName }}</td>
+        <td style="color: #6d6969;" *ngIf="appointment.doctorName" >{{appointment.doctorName}}</td>
+        <td style="color: #6d6969;" *ngIf="!appointment.doctorName" >NIL</td>
+    </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+
+          <td colspan="12" style="color: #6d6969;">
+              <mfBootstrapPaginator class="clr"></mfBootstrapPaginator>
+          </td>
+      </tr>
+    </tfoot>
+  </table> -->

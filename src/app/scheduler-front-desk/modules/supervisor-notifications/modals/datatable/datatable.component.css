@@ -1,0 +1,6 @@
+.paging_full_numbers a.paginate_button {
+  color: rgb(201, 97, 97) !important;
+}
+.paging_full_numbers a.paginate_active {
+  color: #fff !important;
+}

@@ -1,0 +1,17 @@
+@import '../../../../../../../assets/sass/abstracts/variables/colors';
+.practice-status {
+    .form-select,
+    :where(textarea.form-control) {
+      font-size: 13px;
+      font-weight: 500;
+      min-height: 30px !important;
+      border-radius: .26rem;
+      padding: 4px 10px;
+      border: 1px solid $dark-silver;
+      color: $emperor;
+      background-color: $hint-of-red;
+    }
+    .btn-width {
+      min-width: 175px !important;
+    }
+  }

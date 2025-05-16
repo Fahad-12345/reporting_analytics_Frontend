@@ -1,0 +1,57 @@
+.btn-outline-secondary {
+	background-color: white !important;
+	color: #6d6969;
+	border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+	background-color: #34c3ee !important;
+	border-color: #34c3ee;
+	color: white;
+}
+
+.btn-outline-secondary:active {
+	background-color: #34c3ee !important;
+}
+.required
+{
+	color : red;
+	font-size : 12px
+}
+
+
+.form-control {
+	margin-bottom: 5px !important;
+}
+
+.title {
+    color: #212529;
+	font-weight: 500;
+	font-size: 13px;
+    margin-bottom: 0rem !important;
+}
+
+::ng-deep.cpt-text{
+	span {
+		&.ng-value-label {
+			&.tooltip-outer {
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
+				@media screen and (max-width:768px) {
+					max-width: 75px;
+				}
+			}
+		}
+	}
+}
+
+::ng-deep.update-app-form{
+	form{
+		.form-group {
+			&.field {
+				margin-bottom: 0.25rem !important;
+			}
+		}
+	}
+}

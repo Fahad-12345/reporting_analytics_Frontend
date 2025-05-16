@@ -1,0 +1,21 @@
+$bg_text_classes:(
+    primary: #34c3ee,
+    success: #00a650,
+    danger: #dc3545,
+    white: #ffffff,
+    gray: #f7f7f7,
+    blue: #34c3ee,
+    red: #c50e24,
+    green: #00a650,
+);
+@each $bg_text_classes_name, $val in $bg_text_classes{
+    .bg-#{"" + $bg_text_classes_name + ""} {
+      background: #{$val} !important;
+    }
+    .text-#{"" + $bg_text_classes_name + ""} {
+      color: #{$val} !important;
+    }
+    .color-#{"" + $bg_text_classes_name + ""} {
+        color: #{$val} !important;
+    }
+}

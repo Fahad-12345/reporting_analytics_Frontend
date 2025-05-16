@@ -1,0 +1,85 @@
+<form class="form mb-3" [formGroup]="verificationSentForm">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group horizontal-label mb-2">
+				<label for="verificationDate" class="text-capitalize">Verification Date*</label>
+				<div class="d-block position-relative">
+					<input  matInput class="form-control form-input mb-0 date-field" [max]="today" formControlName="date" appInputDateMask [min]="minDate"
+					[appMaskDate]="verificationSentForm.get('date').value"
+
+						[matDatepicker]="verificationDate" id="verificationDate">
+					<mat-datepicker-toggle matSuffix [for]="verificationDate"></mat-datepicker-toggle>
+					<mat-datepicker #verificationDate></mat-datepicker>
+					<small class="form-text text-muted danger"
+						*ngIf="verificationSentForm.get('date').errors?.required && (verificationSentForm.get('date').dirty || verificationSentForm.get('date').touched)">
+						This field is required
+					</small>
+					<small class="form-text text-muted danger" *ngIf="verificationSentForm.errors?.futureDate">
+						Max date should be {{ today | date: dateformateService.slashDateFormat_MM_dd_yyyy() }}
+					</small>
+					<small class="form-text text-muted danger"
+					*ngIf="verificationSentForm.get('date').errors?.invalid_date && (verificationSentForm.get('date').dirty || verificationSentForm.get('date').touched)">
+					This field is required
+					</small>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-12">
+			<div class="form-group mb-2">
+				<label for="denial_reason" class="text-capitalize">Verification Description*</label>
+				<textarea type="text" class="form-control form-input mb-0" formControlName="description"
+					rows="3"></textarea>
+			</div>
+		</div>
+
+	</div>
+	<div class="row align-items-center">
+		<div class="col-12">
+			<div class="form-group mb-2">
+				<label for="action_type">File Name</label>
+				<textarea class="form-control mb-0" type="text" [value]="file_Name" formControlName="file_name" 
+				rows="3" disabled></textarea>
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="form-group mb-2" *ngIf="verificatioEditModel.getLink()">
+				<label for="action_type">Sent PDF
+				<a class="pdf-view view-hov">
+					<i class="icon-eye" (click)="viewDocFile(verificatioEditModel.getLink())"></i></a>  </label>
+			</div>
+		</div>
+		<div class="col-md-12 mt-2 mb-1">
+			<label style="vertical-align: middle; margin-top: 0;" for="file" class="pe-1 d-none">Choose File</label>
+			<input type="file" id="file" #file class="file file_style d-none"
+				(change)="handleFileInput($event.target.files)" #pFile (click)="pFile.value = null" accept="application/pdf" />
+			<label (click)="file.click()" for="file-upload" class="custom-file-upload btn btn-success text-white">
+				<i class="fa fa-upload" aria-hidden="true"></i> Upload a File
+			</label>
+			<span class="ms-2" style="word-break: break-all;">{{fileToUpload? fileToUpload.name :null}}</span>
+		</div>
+	</div>
+	<div class="col-12 search-filter-block mt-3">
+		<div class="row search-filter-btn mb-0" [ngClass]="{'justify-content-center': !currentBill?.addBulkReply, 'justify-content-start': currentBill?.addBulkReply}">
+			<button class="btn btn-primary mx-1 save-btn" type="button" (click)="resetForm()"
+				[disabled]=" !verificationSentForm.value.date &&  !verificationSentForm.value.description && fileToUpload === null"
+				*ngIf="!verificationSentForm.value.id">Clear</button>
+			<button class="btn btn-success mx-1 save-btn"
+				[disabled]="!verificationSentForm.valid || !verificationSentForm.value.date || disabledFormBtn "
+				(click)="saveVerificationSent('save')">{{verificationSentForm.value.id ? 'Update': 'Save'}}</button>
+	
+			<button class="btn btn-success mx-1 pom-gen" *ngIf="currentBill?.addBulkReply"
+				[disabled]="!verificationSentForm.valid || !verificationSentForm.value.date || disabledFormBtn "
+				(click)="saveVerificationSent('pom')">{{verificationSentForm.value.id ? 'Update': 'Save & Generate POM'}}</button>
+		</div>
+	</div>
+	
+</form>
+<div class="verification-progress">
+	<div class="progress progress-slider">
+		<div class="progress-bar" role="progressbar" [ngStyle]="{'width': UploadProgress+'%'}"
+			aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">{{UploadProgress}}% Complete
+		</div>
+	</div>
+</div>
+

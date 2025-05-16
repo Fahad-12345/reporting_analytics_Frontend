@@ -1,0 +1,94 @@
+<div class="col-12 h-100">
+    <perfect-scrollbar>
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" autocomplete="off">
+        <div class="row mb-3">
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h1 class="card-title text-white m-0">Referral Form</h1>
+                    </div>
+                    <div class="card-body">
+                        <!-- <div class="form" action="#"> -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <a (click)="addReferral()" class="btn btn-primary text-white"><i class="icon-plus me-2"></i> Add New</a>
+                                </div>
+                            </div>
+                            <div class="row" formArrayName="referredBy" *ngFor="let refer of form['controls'].referredBy['controls']; let i=index;">
+                                <div [formGroupName]="i" class="col-12">
+                                    <!-- <a class="remove-btn position-absolute" style="top: 0; left: 0;" (click)="removeReferral(i)"><i class="icon-remove"></i></a> -->
+                                    <div class="row mt-3">
+                                        <div class="col-xl-6 col-lg-12 ps-4">
+                                            <a class="remove-btn position-absolute" style="top: 34%; left: 0;" (click)="removeReferral(i)"><i class="icon-remove"></i></a>
+                                            <div class="form-group field option-field mb-2">
+                                                <label for="{{i}}" class="form-label">Referred By *</label>
+                                                <select class="custom-select" formControlName="id">
+                                                    <option value="">Referred By</option>
+                                                    <option *ngFor="let referral of allReferrals" value="{{ referral.id }}">{{ referral.name }}</option>
+                                                </select>
+                                                <!-- <small class="form-text text-muted danger" *ngIf="!form.get('refferedById').valid && (form.get('refferedById').dirty || form.get('refferedById').touched)">This field is required!</small> -->
+
+                                                <!-- <small class="form-text text-muted danger" *ngIf="form.get('refferedById').errors?.required && (form.get('refferedById').dirty || form.get('refferedById').touched)">Please select Referral!</small> -->
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6 col-lg-12">
+                                            <div class="form-group">
+                                                <label for="description-{{i}}" class="form-label">description *</label>
+                                                <input type="text" id="description-{{i}}" class="form-control form-input"  formControlName="name">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!-- </div>     -->
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h1 class="card-title text-white m-0">Advertisment Form</h1>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <a (click)="addAdvertisement()" class="btn btn-primary text-white"><i class="icon-plus me-2"></i> Add New</a>
+                            </div>
+                        </div>
+                        <div class="row fields-holder" formArrayName="advertisementBy" *ngFor="let refer of form['controls'].advertisementBy['controls']; let i=index;">
+                            <div [formGroupName]="i" class="col-12">
+                                <div class="row mt-3">
+                                    <div class="col-xl-6 col-lg-12 ps-4">
+                                        <a class="remove-btn position-absolute" style="top: 34%; left: 0;" (click)="removeAd(i)"><i class="icon-remove"></i></a>
+                                        <div class="form-group field">
+                                            <label for="{{i}}" class="form-label">Advertisement *</label>
+                                            <select class="custom-select" formControlName="id">
+                                                <option value="">Advertisment Whice One:</option>
+                                                <option *ngFor="let ad of allAds" value="{{ ad.id }}">{{ ad.name }}</option>
+                                            </select>
+                                            <!-- <small class="form-text text-muted danger" *ngIf="form.get('advertisementById').errors?.required && (form.get('advertisementById').dirty || form.get('advertisementById').touched)">Please select Referral!</small> -->
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6 col-lg-12">
+                                        <div class="form-group">
+                                            <label for="description-{{i}}" class="form-label">description *</label>
+                                            <input type="text" id="description-{{i}}" class="form-control form-input"  formControlName="name">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-top:20px">
+            <div class="col-12">
+                <button type="button" class="btn btn-default d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" (click)="goBack()">Back</button>
+                <button type="submit" class="btn btn-primary d-inline-block" style="width: auto; min-width: 100px; margin: 0 5px!important;" [disabled]="disableBtn">{{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+            </div>
+        </div>
+    </form>
+
+    </perfect-scrollbar>
+</div>

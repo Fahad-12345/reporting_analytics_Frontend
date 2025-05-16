@@ -1,0 +1,275 @@
+<div class="row">
+    <div class="col-12 pt-2">
+        <div class="user-info">
+            <div class="row">
+                <div class='col-md-12'>
+                    <h4 class="mt-1 color-green">Waiting List</h4>
+                </div>
+            </div>
+        </div>
+        <hr class="line-bottom">
+        <div class="row" *ngIf="aclService.hasPermission(userPermissions.schedule_waiting_list_front_desk_view)">
+            <br>
+            <div class="col-md-12 mb-1">
+                <div class="card search-filter-block mt-2 border-0">
+                    <form [formGroup]="myForm">
+                        <div class="card-body">
+                            <div class="row m-0">
+                                <div class="table-fields">
+                                    <div class="row">
+                                        <div class="col-md-3 form-group input-field">
+                                            <select class="form-select select" formControlName="specialityName">
+												<option *ngFor="let spec of assignSpecialities" value={{spec.id}}>
+													{{spec.name}}</option>
+											</select>
+                                        </div>
+                                        <div class="col-md-3 form-group input-field">
+                                            <select class="form-select select" formControlName="doctorName">
+												<option *ngFor="let doc of assignDoctor" value={{doc.user_id}}>
+													{{doc.first_name}}&nbsp;{{doc.middle_name}}&nbsp;{{doc.last_name}}
+												</option>
+											</select>
+                                        </div>
+                                        <div class="col-md-3 form-group input-field">
+                                            <select class="form-select select" formControlName="clinicName">
+												<option *ngFor="let clinic of assignClinics" value={{clinic.id}}>
+													{{clinic.name}}
+												</option>
+											</select>
+                                        </div>
+                                        <div class="col-md-3 form-group input-field">
+                                            <select class="form-select select" formControlName="priorityName">
+												<option *ngFor="let priority of assignPriority" value={{priority.id}}>
+													{{priority.description}}
+												</option>
+											</select>
+                                        </div>
+                                        <div class="col-md-3 form-group input-field">
+                                            <ejs-datepicker [enabled]="false" [(value)]="startDate" placeholder='Enter date (mm/dd/yyyy)'></ejs-datepicker>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="plus-btn-width">
+                                    <button [hidden]="!isOpenFilters" class="btn plus-btn float-right mt-0 btn-primary" (click)="openAndCloseFilters()">
+										<span class="icon-plus"></span>
+									</button>
+                                    <button [hidden]="isOpenFilters" class="btn plus-btn float-right mt-0 btn-success" (click)="openAndCloseFilters()">
+										<span class="icon-minus"></span>
+									</button>
+                                </div>
+                            </div>
+                            <div class="row" [hidden]="isOpenFilters">
+                                <div class="col-md-12 text-center search-filter-btn">
+                                    <button class="btn btn-success mt-0 me-3" type="submit" (click)="applyFilter()" [disabled]="!aclService.hasPermission(userPermissions.schedule_waiting_list_front_desk_filter)">
+										Filter
+									</button>
+                                    <button class="btn btn-primary mt-0" type="button" (click)="resetFilters()">
+										Reset</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card data-table p-0 mt-1 mb-0 data-table-btn border-0" *ngIf="aclService.hasPermission(userPermissions.schedule_waiting_list_front_desk_view)">
+            <div class="row">
+                <div class="edit-block col-md-6">
+                    <div class="form-group field option-field mb-2 d-inline-block">
+                        <ul>
+                            <li>Show</li>
+                            <li>
+                                <select class="custom-select" [(ngModel)]="counter" (change)="changeNoOfEntries(counter)">
+									<option value="10" selected>10</option>
+									<option value="20">20</option>
+									<option value="30">30</option>
+									<option value="40">40</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+								</select>
+                            </li>
+                            <li>entries</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end mt-2">
+                    <a [hidden]="true" class="btn btn-success round-btn" href="javascript:void(0)"><span
+							class="icon-create-task me-1"></span>
+						Create Task [{{numSelected}}]
+					</a>
+                    <a [hidden]="isEnableButtons" (click)="deleteAllPatients()" class="btn btn-danger round-btn ms-2" href="javascript:void(0)">
+                        <span class="icon-remove me-1"></span>Delete [{{numSelected}}]
+                    </a>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [count]="counter" [rows]="data" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" (page)="changePage($event)" [limit]="counter" [scrollbarH]="true" [offset]="pageNumber-1">
+                        <ngx-datatable-column [canAutoResize]="true" name="Patient" prop="id" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Patient
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.first_name}}&nbsp;{{row.middle_name}}&nbsp;{{row.last_name}}">
+                                    {{row.first_name}}&nbsp;{{row.middle_name}}&nbsp;{{row.last_name}}
+                                </div>
+
+                                <!-- <ul class="custom-btn-tooltip list-unstyled ms-0">
+								<a class="text-truncate d-block"
+									style="color: black !important;max-width: 144px !important;"
+									href="javascript:void(0)">{{row.first_name}}&nbsp;{{row.middle_name}}&nbsp;{{row.last_name}}</a>
+								<li class="btn-tooltip-top" style="top: -7px;">
+									<span>{{row.first_name}}&nbsp;{{row.middle_name}}&nbsp;{{row.last_name}}</span>
+									<i></i>
+								</li>
+							</ul> -->
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Chart No" prop="id" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Chart No
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="text-truncate">{{row.chartNo}}</div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Waiting List Priority" prop="lastName" [width]="120">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Waiting List Priority
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description}}">
+                                    {{row.description}}
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Provider" prop="lastName" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Provider
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div *ngIf="row.docId!=null" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.docFirstName}}&nbsp;{{row.docMiddleName}}&nbsp;{{row.docLastName}}">
+                                    {{row.docFirstName}}&nbsp;{{row.docMiddleName}}&nbsp;{{row.docLastName}}
+                                </div>
+
+                                <!-- <ul *ngIf="row.docId!=null" class="custom-btn-tooltip list-unstyled ms-0">
+								<a class="text-truncate d-block"
+									style="color: black !important;max-width: 144px !important;"
+									href="javascript:void(0)">{{row.docFirstName}}&nbsp;{{row.docMiddleName}}&nbsp;{{row.docLastName}}</a>
+								<li class="btn-tooltip-top" style="top: -7px;">
+									<span>{{row.docFirstName}}&nbsp;{{row.docMiddleName}}&nbsp;{{row.docLastName}}</span>
+									<i></i>
+								</li>
+							</ul> -->
+
+                                <div *ngIf="row.docId==null" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.docName}}">
+                                    {{row.docName}}
+                                </div>
+
+                                <!-- <ul *ngIf="row.docId==null" class="custom-btn-tooltip list-unstyled ms-0">
+								<a class="text-truncate" style="color: black !important;max-width: 144px !important;"
+									href="javascript:void(0)">{{row.docName}}</a>
+							</ul> -->
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Specialty" prop="lastName" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Specialty
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.speciality}}">
+                                    {{row.speciality}}
+                                </div>
+                                <!-- <ul class="custom-btn-tooltip list-unstyled ms-0">
+								<a class="text-truncate d-block"
+									style="color: black !important;max-width: 144px !important;"
+									href="javascript:void(0)">{{row.speciality}}</a>
+								<li class="btn-tooltip-top" style="top: -7px;">
+									<span>{{row.speciality}}</span>
+									<i></i>
+								</li>
+							</ul> -->
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column name="Practice" prop="lastName" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Location
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.clinicName}}">
+                                    {{row.clinicName}}
+                                </div>
+
+                                <!-- <ul class="custom-btn-tooltip list-unstyled ms-0">
+								<a class="text-truncate d-block"
+									style="color: black !important;max-width: 113px !important;"
+									href="javascript:void(0)">{{row.clinicName}}</a>
+								<li class="btn-tooltip-top" style="top: -7px;">
+									<span>{{row.clinicName}}</span>
+									<i></i>
+								</li>
+							</ul> -->
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Patient Status" prop="firstName" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Patient Status
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="text-truncate">{{row.patientStatus}}</div>
+                            </ng-template>
+
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Patient Ahead" prop="firstName" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Patient Ahead
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="text-truncate">{{row.patientsAhead}}</div>
+                            </ng-template>
+
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Free slots" prop="firstName" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Free slots
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="text-truncate">{{row.freeSlots}}</div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Wait Time" prop="firstName" [width]="100">
+                            <ng-template let-column="column" ngx-dattable-header-template>
+                                Wait Time
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <div class="text-truncate">{{row.delay}}</div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Action" prop="id" [width]="80" cellClass="action-icon">
+                            <ng-template let-column="column" ngx-datatable-header-template>
+                                <mat-checkbox (change)="allSelected($event)" [(ngModel)]="allChecked">
+                                </mat-checkbox>
+                                Actions
+                            </ng-template>
+                            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                <mat-checkbox (change)="particularSelected(row,$event)" [(ngModel)]="row.isChecked">
+                                </mat-checkbox>
+                                <button [disabled]="row.deleteDisable" (click)="deletePatient(row)" class="remove-hov mx-1" role="button" tooltip="Delete" type=button>
+									<i class="icon-remove"></i>
+								</button>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+        <div class="row" *ngIf="!aclService.hasPermission(userPermissions.schedule_waiting_list_front_desk_view)">
+            <div class="col-md-12">
+                <h6 class="my-0 color-red">No Access Permission</h6>
+            </div>
+        </div>
+    </div>
+
+</div>

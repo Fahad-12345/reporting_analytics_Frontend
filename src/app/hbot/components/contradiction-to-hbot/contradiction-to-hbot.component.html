@@ -1,0 +1,23 @@
+<!-- <busy-loader [loaderSpin]="disableBtn"></busy-loader> -->
+
+
+<div class="section-frame reduce-height border-0 pb-4">
+  <perfect-scrollbar>
+    <dynamic-form (onReady)="onReady($event)" class="col-md-12 contra-hbot" [fields]="fieldConfig"
+      (submit)="submit($event,false)">
+    </dynamic-form>
+
+  </perfect-scrollbar>
+
+  <div class="paging-bar form-btn text-center mb-1 pt-1">
+	<button href="javascript:void(0)" [disabled]="disableBtn" class="btn btn-primary me-md-2 me-lg-2" (click)="back('back')"><span
+		class="icon-left-arrow me-2"></span> Back </button>
+
+		<button href="javascript:void(0)" *ngIf="this.mainService.getenableSaveRecordHbot()" [disabled]="disableBtn" type="submit" class="btn btn-info me-md-2 me-lg-2"
+		(click)="next(true)"><span class="icon-save-continue me-2"></span> Save For Later</button>
+		
+		<button *ngIf="this.mainService.getenableSaveRecordHbot()" href="javascript:void(0)" [disabled]="disableBtn" type="submit" class="btn btn-success me-md-2 me-lg-2"
+        (click)="next(false)"><span class="icon-save-continue me-2"></span> Save & Continue</button>
+</div>
+
+</div>

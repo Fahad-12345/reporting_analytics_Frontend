@@ -1,0 +1,531 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="tab-pane fade show active" role="tabpanel" aria-labelledby="firm-tab"
+	*ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_view)">
+	<div id='firm'>
+		<div class="d-block text-end" *ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_add)">
+			<button *ngIf='hideAddButton' class="btn btn-default round-btn" (click)="addInsuranceModal()">
+				<span class="icon-plus-circle"></span>Add New
+			</button>
+		 </div>
+		 <form class="form" [formGroup]="insuranceFilterForm" (keydown.enter)="setPage({offset: 0})" (ngSubmit)="setPage({offset: 0},true)" autocomplete="off" *ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_filter)">
+			<div class="ng-check">
+				<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+					<div class="filter-grid-container">
+						<div class="form-group" [ngClass]="{'focused': insuranceFilterForm.get('insurance_name').value != '' && insuranceFilterForm.get('insurance_name').value != null }">
+							<label class="form-label" for="insurance_name">Insurance Name</label>
+							<input type="text" formControlName="insurance_name" id="insurance_name" class="form-control form-input">
+						</div>
+						<div class="form-group" [ngClass]="{'focused': insuranceFilterForm.get('insurance_code').value != '' && insuranceFilterForm.get('insurance_code').value != null }">
+							<label class="form-label" for="Code">Insurance Code</label>
+							<input type="text" id="Code" formControlName="insurance_code" class="form-control form-input">
+						</div>
+						<div class="form-group" [ngClass]="{'focused': insuranceFilterForm.get('location_name').value != '' && insuranceFilterForm.get('location_name').value != null }">
+							<label class="form-label" for="location">Location Name</label>
+							<input type="text" id="location" formControlName="location_name" class="form-control form-input">
+						</div>
+						<div class="form-group" [ngClass]="{'focused': insuranceFilterForm.get('email').value != '' && insuranceFilterForm.get('email').value != null }">
+							<label class="form-label" for="Contact">Email</label>
+							<input type="text" formControlName="email" id="Contact" class="form-control form-input">
+						</div>
+						<div class="form-group" [ngClass]="{'focused': insuranceFilterForm.get('fax').value != '' && insuranceFilterForm.get('fax').value != null }">
+							<label class="form-label" for="Fax">Fax</label>
+							<input type="text" id="Fax" formControlName="fax" mask="000-000-0000" class="form-control form-input">
+						</div>
+						<div class="form-group" [ngClass]="{'focused': insuranceFilterForm.get('phone_no').value != '' && insuranceFilterForm.get('phone_no').value != null}">
+							<label class="form-label" for="cell">Phone No</label>
+							<input type="text" mask="000-000-0000" formControlName="phone_no" id="cell" class="form-control form-input">
+						</div>
+						<div class="form-group">
+							<app-ng-select-shareable [events]="eventsSubject.asObservable()"
+								[lableName]="'Clearinghouse Name'" [bindlable]="'label_id'" [searchLableName]="'name'"
+								[showSelectAll] ="true"
+								[showGroupBy] = "true"
+								[bindId]="'id'" [apiPath]="EnumApiPath.CH_name_List" [charaterLimit]="true"
+								(valueChange)="selectionOnValueChange($event,'clearing_house_ids')"
+								[multiple]="true"></app-ng-select-shareable>
+						</div>
+						<div class="form-group">
+								<app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'Payer ID'"
+								[bindlable]="'payer_id'" [searchLableName]="'payer_id'" [bindId]="'payer_id'" [charaterLimit]="true"
+								[showSelectAll] ="true"
+								[showGroupBy] = "false"
+								(valueChange)="selectionOnValueChange($event,'payer_ids')"
+								[apiPath]="EnumApiPath.CH_Payers_List" [multiple]="true"></app-ng-select-shareable>
+						</div>
+					</div>
+					<div class="collape-btn">
+						<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+						[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+						[class.btn-success]="isCollapsed" type="button">
+							<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+						</button>
+					</div>
+					<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+						<button class="btn btn-success">Filter</button>
+						<button class="btn btn-primary" (click)="resetInsuranceFilterForm();InsuranceShown =! InsuranceShown" [disabled]="checkInputs()">Reset</button>
+					</div>
+				</div>
+			</div>
+	   </form>
+
+
+		<!-- <div class="d-block" *ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_add)">
+			<button *ngIf='hideAddButton' class="btn btn-default round-btn float-right" (click)="addInsuranceModal()">
+				<span class="icon-plus-circle"></span>Add New</button>
+		</div>
+		<form [formGroup]="insuranceFilterForm" (keydown.enter)="setPage({offset: 0})"
+			(ngSubmit)="setPage({offset: 0},true)" autocomplete="off"
+			*ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_filter)">
+			<div class="form">
+				<div class="search-filter-body" [class.pb-3]="!isCollapsed">
+					<div class="row px-2">
+						<div class="field-block">
+							<div class="row pb-1">
+								<div class="col-12 col-sm-6 col-md-4">
+									<div class="form-group field mb-0"
+										[ngClass]="{'focused': insuranceFilterForm.get('insurance_name').value != '' && insuranceFilterForm.get('insurance_name').value != null }">
+										<label class="form-label" for="insurance_name">Insurance
+											Name</label>
+										<input type="text" formControlName="insurance_name" id="insurance_name"
+											class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-4">
+									<div class="form-group field mb-0"
+										[ngClass]="{'focused': insuranceFilterForm.get('insurance_code').value != '' && insuranceFilterForm.get('insurance_code').value != null }">
+										<label class="form-label" for="Code">Insurance Code</label>
+										<input type="text" id="Code" formControlName="insurance_code"
+											class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-4">
+									<div class="form-group field mb-0"
+										[ngClass]="{'focused': insuranceFilterForm.get('location_name').value != '' && insuranceFilterForm.get('location_name').value != null }">
+										<label class="form-label" for="location">Location Name</label>
+										<input type="text" id="location" formControlName="location_name"
+											class="form-control form-input">
+									</div>
+								</div>
+							</div>
+							<div class="row collapse-basic pt-3 mb-3" id="collapseBasic" [collapse]="!isCollapsed"
+								[isAnimated]="true">
+								<div class="col-12 col-sm-6 col-md-4 d-inline-block float-left">
+									<div class="form-group field"
+										[ngClass]="{'focused': insuranceFilterForm.get('email').value != '' && insuranceFilterForm.get('email').value != null }">
+										<label class="form-label" for="Contact">Email
+										</label>
+										<input type="text" formControlName="email" id="Contact"
+											class="form-control form-input">
+									</div>
+								</div>
+
+								<div class="col-12 col-sm-6 col-md-4 d-inline-block float-left">
+									<div class="form-group field"
+										[ngClass]="{'focused': insuranceFilterForm.get('fax').value != '' && insuranceFilterForm.get('fax').value != null }">
+										<label class="form-label" for="Fax">Fax</label>
+										<input type="text" id="Fax" formControlName="fax" mask="000-000-0000"
+											class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-12 col-sm-6 col-md-4 d-inline-block float-left">
+									<div class="form-group field"
+										[ngClass]="{'focused': insuranceFilterForm.get('phone_no').value != '' && insuranceFilterForm.get('phone_no').value != null}">
+										<label class="form-label" for="cell">Phone No</label>
+										<input type="text" mask="000-000-0000" formControlName="phone_no" id="cell"
+											class="form-control form-input">
+									</div>
+								</div>
+								<div class="col-md-12 text-center search-filter-btn float-left ma-md-0">
+									<button type="submit" class="btn btn-success mt-0 me-3"> Filter </button>
+									<button type="button"
+										(click)="resetInsuranceFilterForm();InsuranceShown =! InsuranceShown"
+										class="btn btn-primary mt-0" [disabled]="checkInputs()"> Reset</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="colps-btn-block" *ngIf="InsuranceShown">
+							<button class="btn plus-btn btn-primary float-right mt-0" type="button"
+								[class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed"
+								(click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+								aria-controls="collapseBasic">
+								<span [class.icon-plus]="!isCollapsed"
+									[class.icon-minus]="isCollapsed"></span></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form> -->
+
+		<div class="card search-filter-block mt-1">
+			<div *ngIf="showform">
+				<app-insurance-form #insu1 [id]='id' (childForm)="getDataFromChild($event)"></app-insurance-form>
+			</div>
+		</div>
+	</div>
+
+	<div class="document-content-area">
+		<div class="select-all-document overflow-hidden">
+			<div class="edit-block float-left">
+				<div class="form-group field option-field mb-2 d-inline-block">
+					<ul>
+						<li>Show</li>
+						<li>
+							<select (change)="insurancePageLimit($event.target.value, $event)" class="custom-select"
+								name="limit" [(ngModel)]="page.size">
+								<option selected [value]="10">10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="float-right d-flex justify-content-end align-items-center mb-1">
+				<div class="d-inline-block" *ngIf="getSelectedInsurances().length > 0 ">
+					<!-- <a class="btn btn-success color-white mb-0"><span class="icon-create-task"></span>
+						Create Task [{{getSelectedInsurances().length}}]</a> -->
+					<!-- <a class="btn btn-default color-white" (click)="deleteMultipleInsurances()"><span
+													class="icon-remove"></span> Delete
+												[{{getSelectedInsurances().length}}]</a> -->
+				</div>
+				<!-- <p class="mt-1 mb-0 d-inline-block">
+					<mat-checkbox (change)="checkAllInsurance($event)" [checked]="allInsuranceChecked">
+					</mat-checkbox>
+					<span style="position: relative; top: 1px;">Check all</span>
+				</p> -->
+			</div>
+		</div>
+
+		<div class="card mb-0 ma-body-list">
+			<div class="card-header card-header-custom">
+				<div class="row align-items-center h-100">
+					<div class="col-3 pe-0 form">
+						<p class="mb-0 text-start ps-2">
+							<mat-checkbox (change)="checkAllInsurance($event)" [checked]="allInsuranceChecked" disabled>
+							</mat-checkbox>
+							<span class="text-white ps-1 justify-content-center d-inline-block" style="position: relative;">Insurance
+								Name</span>
+						</p>
+					</div>
+					<div class="col-8">
+						<ul class="list-unstyled social-icon-block " style="font-weight: 600;">
+							<li class="text-white ps-4 w-26 ">Insurance Code </li>
+							<li class="text-white ps-4 w-26 " style="padding-left: 2.25rem !important;">Electronic</li>
+							<li class="text-white ps-4 w-26 " style="padding-left: 4.25rem !important;">Manual</li>
+							<!-- <li class="text-white ps-3 w-25">Cell No </li>
+							<li class="text-white ps-2 w-25">Fax</li>
+							<li class="text-white ps-0 w-25">Email</li> -->
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-body pb-0 card-body-custom" style="border-radius: 0">
+
+				<!-- *ngFor="let insurance of lstInsurance;let insuranseIndex=index" class="card mb-3" -->
+
+				<div *ngFor="let insurance of lstInsurance;let insuranseIndex=index" class="card mb-3">
+					<div class="card-header" style="padding: 0px 0.9375rem !important;">
+						<div class="row align-items-center">
+							<div class="col-3 pe-0 form text-start">
+								<mat-checkbox (change)="selectInsurance(insurance)" [checked]="insurance.isSelected" disabled>
+								</mat-checkbox>
+								<ul class="d-inline-block custom-btn-tooltip list-unstyled ms-0"
+									style="font-size: 0.875rem; font-weight: 500;">
+									<ng-container
+										*ngIf="insurance && insurance.insurance_name && insurance.insurance_name.length > 0">
+										{{insurance && insurance.insurance_name && insurance.insurance_name.length > 26 ? insurance.insurance_name.substring(0, 26)+'...' : insurance.insurance_name}}
+									</ng-container>
+									<li class="btn-tooltip-top text-center"
+										*ngIf="insurance && insurance.insurance_name && insurance.insurance_name.length > 26">
+										<span>{{insurance.insurance_name}}</span>
+										<i></i>
+									</li>
+								</ul>
+							</div>
+
+							<div class="col-3">
+								<ul class="list-unstyled social-icon-block">
+									<li class="w-25">
+										<img style="width:1rem;" src="assets/images/code.svg">
+										<ul class="d-inline-block custom-btn-tooltip list-unstyled">
+											<div
+												*ngIf="insurance && insurance.insurance_code && insurance.insurance_code.length > 0">
+												{{insurance && insurance.insurance_code && insurance.insurance_code.length > 14 ? insurance.insurance_code.substring(0, 14)+'...' : insurance.insurance_code}}
+											</div>
+											<div *ngIf="!insurance.insurance_code">
+											N/A
+											</div>
+											<li class="btn-tooltip-top text-center"
+												*ngIf="insurance && insurance.insurance_code && insurance.insurance_code.length > 14">
+												<span>{{insurance && insurance.insurance_code && insurance.insurance_code}}</span>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+							<div class="col-3">
+								<mat-checkbox id="electornic" [checked]="insurance.electronic" [disabled]="true"></mat-checkbox>
+							</div>
+							<div class="col-1">
+								<mat-checkbox id="manual" [checked]="insurance.manual" [disabled]="true"></mat-checkbox>
+							</div>
+							<div class="col-2 text-end">
+								<button (click)="updateInsurance(insurance,insuranseIndex);triggerScrollTo('firm')"
+									 type="button"
+									*ngIf=" aclService.hasPermission(userPermissions.master_billing_insurance_edit)"
+									class="btn btn-outline-secondary">
+									<span class="icon-pencil"></span> Edit
+								</button>
+
+								<!-- <button  (click)="deleteInsurance(insurance)" type="button"
+												class="btn btn-outline-secondary">
+												<span class="icon-remove"></span> Delete
+											</button> -->
+
+								<button
+									[disabled]="insurance &&insurance.insurance_locations && insurance.insurance_locations.length<1"
+									(click)="toggleInsuranceCardDetail(insuranseIndex)" type="button"
+									class="btn slide-btn" [class.btn-primary]="!insurance.isOpen"
+									[class.btn-success]="insurance.isOpen">
+									<i style="background: none;" *ngIf="insurance.isOpen" class="ml-0 icon-minus"></i>
+									<i style="background: none;" *ngIf="!insurance.isOpen"
+										class="ml-0 icon-plus p-0"></i>
+								</button>
+
+							</div>
+						</div>
+
+					</div>
+
+					<div *ngIf="insurance.isOpen" class="card-body p-3 border-top-0">
+						<div class="card data-table border-0 mb-0 p-0">
+							<div class="row">
+								<div class="col-12">
+									<div class="edit-block float-left">
+										<div class="form-group field option-field mb-0 d-inline-block">
+											<ul>
+												<li>Show</li>
+												<li>
+
+													<select (change)="setInsurancePageLimit(insurance,$event)"
+														class="custom-select" name="limit">
+														<option selected [value]="10">10</option>
+														<option [value]="20">20</option>
+														<option [value]="30">30</option>
+														<option [value]="40">40</option>
+														<option [value]="50">50</option>
+														<option [value]="100">100</option>
+													</select>
+												</li>
+												<li class="text-capitalize">entries</li>
+											</ul>
+
+										</div>
+									</div>
+									<div class="float-right mt-2">
+										<div class="d-inline-block"
+											*ngIf="getCheckedLocationsFromInsurance(insuranseIndex).length > 0 ">
+											<!-- <a href="javascript:void(0)" class="btn btn-success round-btn me-2">
+												<span class="icon-create-task me-1"></span> Create Task
+												[{{getCheckedLocationsFromInsurance(insuranseIndex).length}}]
+											</a> -->
+
+											<!-- <a href="javascript:void(0)"
+														(click)="deleteMultipleLocations(insurance)"
+														class="btn btn-default round-btn">
+														<span class="icon-remove me-1"></span> Delete
+														[{{getCheckedLocationsFromInsurance(insuranseIndex).length}}]
+													</a> -->
+
+										</div>
+										<button (keydown.enter)="$event.preventDefault()"
+											class="btn btn-primary round-btn ms-2"
+											*ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_location_add )"
+											(click)="editLocation(null,insurance,insuranseIndex)" type="button"><i
+												class="icon-plus-circle"></i>
+											Add
+											Location</button>
+									</div>
+								</div>
+							</div>
+
+
+							<ngx-datatable class="ngx-datatable bootstrap white-space-wrap custom-scroll-x"
+								[rows]="getInsuranceWithoutMainLocation(insurance)" [scrollbarH]="true"
+								[columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+								[limit]="insurance.pageLimit || 10">
+
+								<ngx-datatable-column name="Location Name" prop="location_name" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.location_name || 'N/A'}}" container="body">
+											{{row.location_name || 'N/A'}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Code" prop="location_code" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										{{row.location_code || 'N/A'}}
+									</ng-template>
+								</ngx-datatable-column>
+
+								<ngx-datatable-column name="Street Address" prop="street_address" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<!-- <div *ngIf="row.street_address || row.apartment_suite "> -->
+											<div  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.street_address || 'N/A'}}">
+												{{row.street_address || 'N/A'}}
+											  </div>
+											  <div *ngIf="row.apartment_suite" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip=",{{row.apartment_suite || 'N/A'}}">
+												,{{row.apartment_suite || 'N/A'}}
+											  </div>
+											<!-- <span *ngIf="row.street_address">{{row.street_address}}</span>
+											<span *ngIf="row.apartment_suite">,{{row.apartment_suite}}</span> -->
+										<!-- </div> -->
+										<!-- 
+										<span *ngIf="row.city">{{row.city }},</span>
+										<span *ngIf="row.state">{{row.state}},</span> {{row.zip}} -->
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="City" prop="city" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.city || 'N/A'}}" container="body">
+											{{row.city || 'N/A'}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="State" prop="state" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.state || 'N/A'}}" container="body">
+											{{row.state || 'N/A'}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Zip" prop="zip" [width]="80" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										{{row.zip || 'N/A'}}
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Email" prop="email" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.email || 'N/A'}}" container="body">
+											{{row.email || 'N/A'}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Fax" prop="contact_person_fax" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.fax || 'N/A' | phoneFormatPipe}}" container="body">
+										{{row.fax || 'N/A' | phoneFormatPipe}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Phone No" prop="contact_person_phone_no" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.phone_no || 'N/A' | phoneFormatPipe}}" container="body">
+											{{row.phone_no || 'N/A' | phoneFormatPipe}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Clearinghouse Name" prop="payer" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.payer?.clearingHouse?.name || 'N/A'}}" container="body">
+											{{row?.payer?.clearingHouse?.name || 'N/A'}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Payer ID" prop="payer" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.payer?.payer_id || 'N/A'}}" container="body">
+											{{row?.payer?.payer_id || 'N/A'}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Supported Transactions" prop="payer" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false">
+									<ng-template ngx-datatable-cell-template let-row="row">
+										<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.payer?.supported_transaction || 'N/A'}}" container="body">
+											{{row?.payer?.supported_transaction || 'N/A'}}</div>
+									</ng-template>
+								</ngx-datatable-column>
+								<ngx-datatable-column name="Action" [width]="100" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+									<ng-template ngx-datatable-header-template>
+										<!-- <label>
+															  <input id="intake4" name="" value="" type="checkbox">
+															  <span class="fake-input position-absolute"></span>
+															</label> -->
+										<!-- <label class="chkbox position-relative mt-1" for="checkall">
+														<input id="checkall"
+															(click)="checkInsuranceAllLocation(insurance,$event)"
+															name="" type="checkbox" value=""
+															[checked]="getCheckedLocationsFromInsurance(insuranseIndex).length == insurance.insurance_locations.length"><span
+															class="fake-input position-absolute"></span></label> -->
+										<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_location_edit)" (change)="checkInsuranceAllLocation(insurance,$event)"
+											[checked]="(getCheckedLocationsFromInsurance(insuranseIndex).length == insurance.insurance_locations.length) && insurance.insurance_locations.length>0" disabled>
+										</mat-checkbox>
+										Actions
+
+									</ng-template>
+
+									<ng-template ngx-datatable-cell-template let-row="row">
+											<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_location_edit)" (change)="checkLocation(row,$event)"
+												[checked]="row.isChecked" disabled>
+											</mat-checkbox>
+											<!-- 
+														<label class="chkbox position-relative mt-1"
+															for="location-{{insurance.id}}{{row.id}}"> -->
+
+											<!-- <input id="location-{{insurance.id}}{{row.id}}"
+																[checked]="row.isChecked"
+																(click)="checkLocation(row,$event)" name=""
+																type="checkbox" value=""><span
+																class="fake-input position-absolute"></span></label> -->
+											<a class="edit-hov mx-1"
+												(click)="editLocation(row,insurance,insuranseIndex,false)"
+												href="javascript:void(0)" role="button" ngbTooltip="Edit"
+												*ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_location_edit)" triggers="mouseenter:mouseleave">
+												<i class="icon-pencil"></i></a>
+
+												<a class="edit-hov mx-1"
+												(click)="editLocation(row,insurance,insuranseIndex,true)"
+												href="javascript:void(0)" role="button" ngbTooltip="View"
+												*ngIf="aclService.hasPermission(userPermissions.master_billing_insurance_location_edit)" triggers="mouseenter:mouseleave">
+												<i class="icon-eye"></i></a>
+												<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="insuranceHistoryStats(row)">
+													<i class="fa fa-history"></i>
+												</a>
+									
+
+									</ng-template>
+								</ngx-datatable-column>
+							</ngx-datatable>
+						</div>
+					</div>
+				</div>
+				<div class="mb-3" *ngIf="lstInsurance && lstInsurance.length==0">
+					{{result}}
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- (pageChanged)="pageChanged($event)" -->
+	<div class="custom-pagination text-capitalize" *ngIf="lstInsurance && lstInsurance.length > 0">
+		<span>{{page.totalElements}} total </span>
+		<div *ngIf="lstInsurance && lstInsurance.length &&( page.totalElements > page.size)">
+			<!-- <pagination [boundaryLinks]="true" [(ngModel)]="page.pageNumber" [totalItems]="page.totalElements" previousText="" nextText=""
+				firstText="" lastText="" (pageChanged)="pageChanged($event)" [itemsPerPage]="page.size">
+
+			</pagination> -->
+			<!-- <pagination [boundaryLinks]="true"  ngModel="page.pageNumber" [totalItems]="page.totalElements" previousText="" nextText="" firstText=""
+			lastText="" (pageChanged)="pageChanged($event)" [itemsPerPage]="page.size"> </pagination> -->
+			<pagination [boundaryLinks]="true" [(ngModel)]="page.pageNumber" [totalItems]="page.totalElements" 
+			[itemsPerPage]="page.size" (pageChanged)="setPage({offset:$event.page - 1},true)"
+			previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+			[maxSize]="page.maxPaginationContentSize"
+			></pagination>
+		<!-- </pagination> -->
+			
+		</div>
+	</div>
+
+
+
+

@@ -1,0 +1,21 @@
+<div [ngClass]="field.classes">
+	<div class="form-group">
+		<div class="radio-block" [formGroup]="group">
+			<span class="radio-label" for="id">{{field.label}}</span>
+			<ul class="list-inline">
+				<li class="list-inline-item" *ngFor="let option of field.options;let index=index">
+					<label [for]="id + index" class="d-block position-relative m-0">
+						<input type="radio" appEnhanceRadio [oldValue]="group.controls[field.name].value"
+							[formControlName]="field.name" [name]="field.name"  [id]="id + index" [value]="option.value" [alt]="option.label">
+						<span class="fake-input position-absolute"></span>
+						<span class="fake-label d-block">{{option.label}}</span>
+					</label>
+				</li>
+			</ul>
+		</div>
+		<div *ngFor="let validation of field.validations">
+			<small class="form-text text-muted danger"
+				*ngIf="group.get(field.name).hasError(validation.name) && group.get(field.name).touched">{{validation.message}}</small>
+		</div>
+	</div>
+</div>

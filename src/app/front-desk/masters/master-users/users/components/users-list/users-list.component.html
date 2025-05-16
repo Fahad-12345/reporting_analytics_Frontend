@@ -1,0 +1,303 @@
+<!-- <div class="front-desk-block patient-profile user-list pt-5">
+      <div class="user-info">
+        <div class="row">
+          <div class="col-md-12">
+            <h4 class="mt-1 color-green">Users List</h4>
+          </div>
+
+        </div>
+      </div>
+      <hr class="line-bottom">
+
+      <div class="card search-filter-block mt-3" style="padding:0px; border:none;">
+        <div class="edit-block">
+          <a href="javascript:void(0)" style="color:#fff; background: #34c3ee; border-color:#34c3ee;">
+            <span style="font-size: 15px;">Add New</span> <span
+              class="fa fa-plus-circle ms-2"></span>
+          </a>
+        </div>
+        <form action="" autocomplete="off">
+          <div class="form">
+            <div class="card-body">
+              <div class="row m-0">
+                <div style="width: 95%; float:left;">
+                  <div class="row">
+                    <div class="col-lg-3 col-md-12">
+                      <div class="form-group field">
+                        <label class="form-label" for="FirstName">First Name</label>
+                        <input type="text" id="FirstName" class="form-control form-input">
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-md-12">
+                      <div class="form-group field">
+                        <label class="form-label" for="LastName">Last Name</label>
+                        <input type="text" id="LastName" class="form-control form-input">
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-md-12">
+                      <div class="form-group field">
+                        <label class="form-label" for="Role">Role</label>
+                        <input type="text" id="Role" class="form-control form-input">
+                      </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-12">
+                      <div class="form-group field">
+                        <label for="dob" class="form-label">DOB</label>
+                        <input type="text" id="dob" onfocus="(this.type='date')" onfocusout="(this.type='text')"
+                          class="form-control form-input">
+                        <img src="assets/images/dob.png" alt="">
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <div style="width: 5%;">
+                  <button class="btn plus-btn float-right mt-0" type="button"><span class="icon-plus"></span></button>
+                </div>
+              </div>
+
+               <div class="row">
+                                <div class="col-md-12 text-center search-filter-btn">
+                                    <button class="btn btn-success mt-0 me-3"> Filter </button>
+                                    <button class="btn btn-primary mt-0"> Reset</button>
+                                  </div>
+                             </div> 
+
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <div class="card data-table p-0 mt-3" style="border:none;">
+        <div class="row">
+          <div class="edit-block col-md-6">
+            <div class="form-group field option-field mb-2 mt-2 d-inline-block">
+              <ul>
+                <li>Show</li>
+                <li>
+                  <select class="custom-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5" selected>5</option>
+                  </select>
+                </li>
+                <li>entries</li>
+              </ul>
+
+            </div>
+
+
+          </div>
+          <div class="col-md-6 text-end data-table-btn">
+            <lib-task-manager type="text"></lib-task-manager>
+            <button type="button" class="btn btn-outline-primary mt-0 mb-3"><i class="icon-remove me-2"></i>
+              Delete</button>
+          </div>
+        </div>
+        <div class="card-body" style="border: none; background: transparent;  padding:0px;">
+          <table class="table table-bordered table-striped text-center mb-0">
+            <thead>
+              <tr>
+                <th class="border-right" scope="col">User ID</th>
+                <th class="border-right" scope="col">First Name</th>
+                <th class="border-right" scope="col">Last Name</th>
+                <th class="border-right" scope="col">DOB</th>
+                <th class="border-right" scope="col">Email</th>
+                <th class="border-right" scope="col">Role</th>
+                <th class="border-right" scope="col">Created On</th>
+                <th class="border-right" scope="col">Created By</th>
+                <th class="border-right" scope="col">Status</th>
+
+                <th scope="col" class="form"> <label for="intake4" class="chkbox position-relative mt-1">
+                    <input id="intake4" name="" value="" type="checkbox">
+                    <span class="fake-input position-absolute"></span>
+                  </label> Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="color-blue">156</td>
+                <td>John</td>
+                <td>Adam</td>
+                <td>03-12-1989</td>
+                <td>www.ovadamd.com</td>
+                <td class="color-blue">Super Admin</td>
+                <td>04-03-2019 07:56:19 AM</td>
+                <td>04-03-2019 07:56:19 PM</td>
+                <td></td>
+                <td class="form">
+                  <label for="intake4" class="chkbox position-relative mt-1">
+                    <input id="intake4" name="" value="" type="checkbox">
+                    <span class="fake-input position-absolute"></span>
+                  </label>
+                  <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                      class="icon-pencil"></i></a>
+               
+                  <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                      class="icon-remove"></i></a>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="color-blue">156</td>
+                <td>John</td>
+                <td>Adam</td>
+                <td>03-12-1989</td>
+                <td>www.ovadamd.com</td>
+                <td class="color-blue">Super Admin</td>
+                <td>04-03-2019 07:56:19 AM</td>
+                <td>04-03-2019 07:56:19 PM</td>
+                <td></td>
+                <td class="form">
+                  <label for="intake4" class="chkbox position-relative mt-1">
+                    <input id="intake4" name="" value="" type="checkbox">
+                    <span class="fake-input position-absolute"></span>
+                  </label>
+                  <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                      class="icon-pencil"></i></a>
+                  <a class="file-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button">
+                    <span class="fa fa-tasks"></span></a>
+                  <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                      class="icon-remove"></i></a>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="color-blue">156</td>
+                <td>John</td>
+                <td>Adam</td>
+                <td>03-12-1989</td>
+                <td>www.ovadamd.com</td>
+                <td class="color-blue">Super Admin</td>
+                <td>04-03-2019 07:56:19 AM</td>
+                <td>04-03-2019 07:56:19 PM</td>
+                <td></td>
+                <td class="form">
+                  <label for="intake4" class="chkbox position-relative mt-1">
+                    <input id="intake4" name="" value="" type="checkbox">
+                    <span class="fake-input position-absolute"></span>
+                  </label>
+                  <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                      class="icon-pencil"></i></a>
+                  <a class="file-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button">
+                    <span class="fa fa-tasks"></span></a>
+                  <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                      class="icon-remove"></i></a>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="color-blue">156</td>
+                <td>John</td>
+                <td>Adam</td>
+                <td>03-12-1989</td>
+                <td>www.ovadamd.com</td>
+                <td class="color-blue">Super Admin</td>
+                <td>04-03-2019 07:56:19 AM</td>
+                <td>04-03-2019 07:56:19 PM</td>
+                <td></td>
+                <td class="form">
+                  <label for="intake4" class="chkbox position-relative mt-1">
+                    <input id="intake4" name="" value="" type="checkbox">
+                    <span class="fake-input position-absolute"></span>
+                  </label>
+                  <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                      class="icon-pencil"></i></a>
+                  <a class="file-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button">
+                    <span class="fa fa-tasks"></span></a>
+                  <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                      class="icon-remove"></i></a>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="color-blue">156</td>
+                <td>John</td>
+                <td>Adam</td>
+                <td>03-12-1989</td>
+                <td>www.ovadamd.com</td>
+                <td class="color-blue">Super Admin</td>
+                <td>04-03-2019 07:56:19 AM</td>
+                <td>04-03-2019 07:56:19 PM</td>
+                <td></td>
+                <td class="form">
+                  <label for="intake4" class="chkbox position-relative mt-1">
+                    <input id="intake4" name="" value="" type="checkbox">
+                    <span class="fake-input position-absolute"></span>
+                  </label>
+                  <a class="pencil-hov mx-2" tooltip="Edit" href="javascript:void(0)" role="button"><i
+                      class="icon-pencil"></i></a>
+                  <a class="file-hov mx-2" tooltip="Task" href="javascript:void(0)" role="button">
+                    <span class="fa fa-tasks"></span></a>
+                  <a class="delete-hov mx-2" tooltip="Delete" href="javascript:void(0)" role="button"><i
+                      class="icon-remove"></i></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-footer text-muted">
+          <div class="row">
+            <div class="col-md-6">
+              <p>Showing 1 to 5 of 337 entries</p>
+            </div>
+            <div class="col-md-6 justify-content-end d-flex">
+              <nav aria-label="Page navigation example">
+                <ul class="pagination mb-0">
+                  <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                      <img src="assets/images/previous.png">
+                    </a>
+
+                  </li>
+
+                  <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                      <img src="assets/images/left.png">
+                    </a>
+
+                  </li>
+
+                  <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#">4</a></li>
+                  <li class="page-item"><a class="page-link" href="#">5</a></li>
+
+                  <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                      <img src="assets/images/right.png">
+                    </a>
+
+                  </li>
+                  <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                      <img src="assets/images/next.png">
+                    </a>
+
+                  </li>
+
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <footer>
+        <div class="row">
+          <div class="col-md-12 text-center">
+            <p>Copyrights@ovada.com</p>
+          </div>
+        </div>
+      </footer>
+
+    </div> -->
+
+<app-users-listing></app-users-listing>

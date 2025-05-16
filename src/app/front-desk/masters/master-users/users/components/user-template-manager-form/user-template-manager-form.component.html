@@ -1,0 +1,81 @@
+
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">{{this.Edit?'Edit Template':'Add Template'}}</h4>
+		<button type="button" class="close" aria-label="Close" (click)="close()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+
+	<div class="modal-body template-form">
+	
+		<form [formGroup]="templateManagerForm" (ngSubmit)="onSubmit(templateManagerForm.value)">
+			<div class="row form">
+				<div class="col-12">
+					<div class="form-group mb-1"
+						[ngClass]="{'focused': templateManagerForm.get('visit_type').value != '' && templateManagerForm.get('visit_type').value != null }">
+						<label for="visit_type" class="form-label">Visit Type*</label>
+						<input id="visit_type" type="text" [attr.disabled]=true formControlName="visit_type" class="form-control form-input mb-0" />
+						<small class="form-text text-muted danger" *ngIf="templateManagerForm.get('visit_type').errors?.required && 
+						(templateManagerForm.get('visit_type').dirty ||
+						templateManagerForm.get('visit_type').touched)">
+							Visit Type is required field.</small>
+					</div>
+				</div>
+				<!--  *ngIf="available_specialities && available_specialities.length > 0" -->
+
+				<div class="col-12 mt-1" >
+					<!-- class="form-group mt-4 mb-1" -->
+
+					<div class="form-group field mb-1 mt-3"
+						[ngClass]="{'focused': templateManagerForm.get('case_type_ids').value != '' && templateManagerForm.get('case_type_ids').value != null}">
+						<label for="case_type_ids" class="form-label">Case Type</label>
+						<!-- <select class="custom-select" formControlName="case_type_ids"
+							id="case_type_ids"
+							>
+							<option  value=""></option>
+							<option *ngFor="let caseType of caseTypeData"  [value]="caseType.id">{{caseType.name}}</option>
+							
+						</select> -->
+
+						<mat-select multiple formControlName="case_type_ids" (selectionChange)="getTemplates()"  panelClass="template-panel">
+							<mat-option *ngFor="let caseType of caseTypeData" [value]="caseType.id">
+								{{caseType.name}}
+							</mat-option>
+						  </mat-select>
+						<!-- {{server_apps?.name}} -->
+					</div>
+					<!-- <option value="" disabled>Choose your selection</option> -->
+				</div>
+
+
+				<div class="col-12 mt-1" >
+					<!-- class="form-group mt-4 mb-1" -->
+
+					<div class="form-group field mb-1 mt-3"
+						[ngClass]="{'focused': templateManagerForm.get('template_id').value != '' && templateManagerForm.get('template_id').value != null}">
+						<label for="template_id" class="form-label">Template</label>
+						<mat-select formControlName="template_id" panelClass="template-panel">
+							<mat-option *ngFor="let template of filteredTemplateOptions" [value]="template.template_id">
+							  {{template.template_name}}
+							</mat-option>
+						  </mat-select>
+						  <small class="form-text text-muted danger" *ngIf="templateManagerForm.get('template_id').errors?.required && 
+						(templateManagerForm.get('template_id').dirty ||
+						templateManagerForm.get('template_id').touched)">
+							Template is required field.</small>
+
+					</div>
+					<!-- <option value="" disabled>Choose your selection</option> -->
+				</div>
+			</div>
+
+			<div class="row mt-3">
+				<div class="col-md-12 modal-btn-width text-center">
+					<button class="btn btn-primary me-3" (click)="close()" type="button"
+						>Cancel</button>
+						<button class="btn btn-success" type="submit"
+						[disabled]="templateManagerForm.invalid || isLoading">Save & Continue</button>
+				</div>
+			</div>
+		</form>
+	</div>

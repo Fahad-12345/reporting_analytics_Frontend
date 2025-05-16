@@ -1,0 +1,131 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<app-visit-report-filters [showFilterFields]="showFilterFiled" (onResetClickedEmitter)="resetButtonHandler()" (filterFieldEmitter)="applyFilter($event)"></app-visit-report-filters>
+<div class="report buttons d-flex justify-content-end mb-3">
+    <div class=" column-reports-button">
+        <button type="button" class="btn btn-default mx-2 mb-2  mb-sm-0 " (click)="openCustomoizeColumn()">
+            Customize Columns
+        </button>
+    </div>
+    <div class="export-reports-button">
+        <button type="button" (click)="generateExcel()" class="btn btn-success mx-2 mb-2  mb-sm-0 ">
+            <i class="fa fa-file-excel"></i> Export Detail Report
+        </button>
+    </div>
+</div>
+
+
+<div class="nf-reports">
+
+	<ngx-datatable class="bootstrap" [columnMode]='"force"'  [rowHeight]="'auto'" [scrollbarH]="true" #visitReportTable
+		[virtualization]="false" [footerHeight]="0" [externalPaging]="false" [rows]="rowData" [externalPaging]="false">
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case ID" prop="case_id"
+			[width]="80">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case Type"
+			prop="case_type" [width]="80">
+
+
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Practice-Location"
+			prop="practice_location" [width]="140" cellClass="action-icon">
+
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Patient Name"
+			prop="patient_name" [width]="80">
+
+		</ngx-datatable-column>
+		
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Provider name"
+			prop="provider_name" [width]="100">
+
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Speciality"
+			prop="speciality" [width]="80">
+
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Type"
+			prop="visit_type" [width]="80">
+
+		</ngx-datatable-column>
+
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="DOA"
+			prop="doa" [width]="80">
+
+		</ngx-datatable-column>
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Date"
+			prop="visit_date" [width]="80">
+		</ngx-datatable-column>
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="No. Of Days"
+			prop="no_of_days" [width]="80">
+
+		</ngx-datatable-column>
+		
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Status"
+			prop="status" [width]="80">
+
+		</ngx-datatable-column>
+
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+			name="ICD-10 Codes" prop="icd_code_status" [width]="100">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<div>
+					<mat-icon *ngIf="row.icd_code_status == 1" style="color: green">check_circle</mat-icon>
+					<mat-icon *ngIf="row.icd_code_status != 1" style="color: red">cancel</mat-icon>
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+
+
+
+		<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+			name="CPT Codes" prop="cpt_code_status" [width]="100">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<div>
+					<mat-icon *ngIf="row.cpt_code_status == 1" style="color: green">check_circle</mat-icon>
+					<mat-icon *ngIf="row.cpt_code_status != 1" style="color: red">cancel</mat-icon>
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+
+		
+
+	<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+			name="Report Uploaded" prop="report_uploaded_status" [width]="100">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<div>
+					<mat-icon *ngIf="row.report_uploaded_status" style="color: green">check_circle</mat-icon>
+					<mat-icon *ngIf="!row.report_uploaded_status" style="color: red">cancel</mat-icon>
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+
+	
+<!-------------Customise table column Modal Template----------------------->
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+		[config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+			  <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+			  <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+			</div>
+			<div class="modal-footer justify-content-center">
+			  <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+			  <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+			</div>
+		  </div>
+		</div>
+	</div>

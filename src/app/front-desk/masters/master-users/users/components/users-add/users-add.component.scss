@@ -1,0 +1,14 @@
+.disabled-medical-identifier {
+    ::ng-deep .tab-container{
+	.nav-tabs {
+		.nav-item {
+			&:last-child {
+				pointer-events: none;
+            }
+            .nav-link {
+                pointer-events: none;
+            }
+		}
+    }
+}
+}

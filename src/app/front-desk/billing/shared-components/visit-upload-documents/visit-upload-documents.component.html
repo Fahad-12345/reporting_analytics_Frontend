@@ -1,0 +1,69 @@
+
+<form [formGroup]="uploadForm" (ngSubmit)="onSubmitUploadForm(uploadForm.value)">
+  <div *ngIf="files?.length == 1" class="col-12">
+    <div class="form-group row fields-holder align-items-center mb-3"
+      [ngClass]="{'focused': uploadForm.get('file_title').value != ''}">
+      <label for="file_title" class="col-md-4 form-label">Document Name *</label>
+      <div class="col-md-8">
+        <input type="text" id="file_title" class="form-control form-input mb-0" formControlName="file_title"
+          placeholder="Enter Document Name">
+      </div>
+      <!-- <small class="form-text text-muted danger offset-md-4 ps-2"
+        *ngIf="uploadForm.get('file_title').errors?.required && (uploadForm.get('file_title').dirty || uploadForm.get('file_title').touched)">Please
+        enter doucment name!</small>
+      <small class="form-text text-muted danger offset-md-4 ps-2"
+        *ngIf="uploadForm.get('file_title').errors?.maxLength?.requiredLength==100">Maximum characters
+        should be 100!</small> -->
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="form-group align-items-center row fields-holder mb-3"
+      [ngClass]="{'focused': uploadForm.get('tags').value != ''}">
+      <label for="tags" class="form-label col-md-4" style="padding-left:10px !important;">Enter
+        Tags</label>
+      <div class="col-md-8">
+        <tag-input formControlName="tags" [addOnBlur]='true' [addOnPaste]='true' [blinkIfDupe]='true'
+          (onBlur)=onTextChange($event) theme='bootstrap3-info' [separatorKeyCodes]='[32]'>
+        </tag-input>
+      </div>
+      <!-- <small class="form-text text-muted danger offset-md-4 ps-2"
+        *ngIf="uploadForm.get('tags').errors?.required && (uploadForm.get('tags').dirty || uploadForm.get('tags').touched)">Please
+        enter Tags!</small>
+      <small class="form-text text-muted danger offset-md-4 ps-2"
+        *ngIf="uploadForm.get('tags').errors?.maxLength?.requiredLength==100">Maximum characters
+        should be 100!</small> -->
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="row align-items-center">
+      <label for="folder_name" class="col-sm-4 form-label"> Folder Name *</label>
+      <div class="col-sm-8">
+        <input type="text" id="folder_name" class="form-control form-input mb-0" formControlName="folder_name" readonly>
+        <!-- <select class="custom-select" (change)="getSubFoldersByFolderId($event.target.value)"
+            formControlName="folder_name" id="folder_name" [disabled]="folderId"> -->
+        <!-- <option [value]=""> </option>
+            <ng-container *ngFor="let folder of folderList">
+              <option [value]="folder.id"> {{ folder.folder_name }}</option>
+            </ng-container> -->
+        <!-- </select> -->
+      </div>
+      <!-- <small class="form-text text-muted danger offset-md-4 ps-2"
+          *ngIf="uploadForm.get('folder_name').errors?.required && (uploadForm.get('folder_name').dirty || uploadForm.get('folder_name').touched)">Please
+          select folder!</small> -->
+    </div>
+  </div>
+
+  <div class="col-sm-8 offset-sm-4 mt-3">
+    <div class="row">
+      <div class="col-8">
+        <button class="btn btn-success w-100" type="submit" [disabled]="uploadForm.invalid || disableBtn"><span
+            class="icon-save-continue me-2"></span>
+          {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+      </div>
+      <!-- <div class="col-4">
+        <button type="button" (click)="_closeModal($event)" class="btn btn-outline-secondary w-100">Close</button>
+      </div> -->
+    </div>
+  </div>
+
+</form>

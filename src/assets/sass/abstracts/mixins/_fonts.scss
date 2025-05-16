@@ -1,0 +1,59 @@
+// font-size convert to rem
+@mixin font-size($pxSize) {
+    font-size: calc($pxSize / $base-px-value) + rem;
+}
+
+// font-weight mixin
+@mixin font-weight($weight) {
+    $weights: (
+      light: $light,
+      regular: $regular,
+      medium: $medium,
+      semi-bold: $semi-bold,
+      bold: $bold,
+      black: $black
+    );
+    
+    $output: $weight;
+    @if map-has-key($weights, $weight) {
+      $output: map-get($weights, $weight);
+    }
+    
+    font-weight: $output;
+}
+
+// font-weight, font-size, line-height, font-family
+@mixin font(){
+	@include font-weight(regular);
+	@include font-size(15px);
+	line-height: 1.2;
+	font-family: $font-family;
+}
+
+
+// @font-face {
+//   font-family: 'Poppins';
+//   src: url('assets/fonts/Poppins-Light.woff2') format('woff2'),
+//       url('assets/fonts/Poppins-Light.woff') format('woff');
+//   font-weight: 300;
+//   font-style: normal;
+//   font-display: swap;
+// }
+
+// @font-face {
+//   font-family: 'Poppins';
+//   src: url('assets/fonts/Poppins-Regular.woff2') format('woff2'),
+//       url('assets/fonts/Poppins-Regular.woff') format('woff');
+//   font-weight: 400;
+//   font-style: normal;
+//   font-display: swap;
+// }
+
+// @font-face {
+//   font-family: 'Poppins';
+//   src: url('assets/fonts/Poppins-Medium.woff2') format('woff2'),
+//       url('assets/fonts/Poppins-Medium.woff') format('woff');
+//   font-weight: 500;
+//   font-style: normal;
+//   font-display: swap;
+// }

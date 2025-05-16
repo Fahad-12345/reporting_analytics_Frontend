@@ -1,0 +1,12 @@
+li.folder-list {
+    position: relative;
+}
+
+li.folder-list:after {
+    content: '';
+    position: absolute;
+    left:2px;
+    top:5px;
+    bottom: 6px;
+    border-left: 1px dotted black;
+}

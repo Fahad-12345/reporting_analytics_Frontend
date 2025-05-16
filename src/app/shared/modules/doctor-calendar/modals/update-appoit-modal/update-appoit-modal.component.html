@@ -1,0 +1,226 @@
+<!-- modal start -->
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+
+<div class="modal-header">
+    <h4 class="modal-title">Update Apt.</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close(false)">&times;</button>
+</div>
+
+<div class="modal-body update-app-form" >
+    <form [formGroup]="myForm">
+        <div class="row" *ngIf = "hidetitle">
+            <div class="col-md-12">
+                <label class="title" title="Appointment Title">Apt. Title</label>
+                <input type="text" [(value)]="appTitle" [(ngModel)]="appTitle" class="form-control" formControlName="appoint_title" />
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Patient Name <em>*</em></label>
+                <input type="text" style="background-color:#e9ecef!important;" [(value)]="patient" disabled class="form-control" />
+                
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Chart ID<em >*</em></label>
+                <input type="text" style="background-color:#e9ecef!important;" [(value)]="chart" disabled class="form-control"  />
+                
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Case No.<em >*</em></label>
+                <input type="text" style="background-color:#e9ecef!important;" disabled class="form-control" [(value)]="case" />
+                
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <!-- <label class="title">Apt.Date<em >*</em></label> -->
+                <!-- <ejs-datepicker placeholder='Start Date' [(value)]='startDate' (change)="changeDate()"></ejs-datepicker> -->
+				<app-mat-date-picker-sharedable [classesName]="['form-group','date-field', 'vertical-label-cross']" [lableName]="'Apt.Date*'" (valueChange)="onChangeAptDate($event)" [defaultDate]="startDate" [placeholder]="'Start Date'" ></app-mat-date-picker-sharedable>
+
+                <small class ="text-muted danger"   *ngIf = "date_check">This field is required </small>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Apt.Time<em >*</em></label>
+                <ejs-timepicker [min]="minStartTime" [max]="maxEndTime" [step]='interval' [(value)]='startTime' placeholder="Start Time" (change)="changeTime()">
+                </ejs-timepicker>
+                <small class ="text-muted danger"   *ngIf = "time_check">This field is required </small>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Duration<em >*</em></label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="duration">
+                    <select class="form-select" formControlName="duration" (change)="changeDuration()">
+                        <option *ngFor="let timeSlot of timeSlot" value={{timeSlot}}>{{timeSlot}}
+                        </option>
+                    </select>
+                </span>
+                
+            </div>
+        <!-- </div> -->
+       
+        <!-- <div class="row"> -->
+
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Visit Type<em >*</em></label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="selectedvisitType?.name">
+                    <select class="form-select" formControlName="visitTypeName" (change)="getAppointmentType($event)">
+                        <option *ngFor="let visit of visitType; trackBy:identify" value={{visit.id}} 
+                        title = "{{visit.name}}"
+    
+                        
+                        >  {{visit?.qualifier}} </option>
+                    </select>
+                </span>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Practice-Location<em >*</em></label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" ngbTooltip="{{selectedClinic?.facility_name}}-{{selectedClinic?.name}}">
+                    <select class="form-select" formControlName="clinicName" (change)="clinicChange($event)">
+                        <option value="" selected>N/A</option>
+                        <option *ngFor="let clinic of clinics; trackBy:identify" value={{clinic.id}}
+                        title="{{clinic.facility_name}}-{{clinic.name}}"
+                        >{{clinic?.facility?.qualifier}}-{{clinic?.qualifier}}</option>
+                    </select>
+                </span>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Specialty<em >*</em></label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="selectedSpecialty?.name">
+                    <select class="form-select" formControlName="specAptInput" (change)="specialityChange($event)"> 
+                        <option value="" selected>N/A</option>
+                        <option value={{spec.id}} *ngFor="let spec of specialityList; trackBy:identify"
+                        title = "{{spec.name}}">
+                            {{spec.qualifier}}
+                        </option>
+                    </select>
+                </span>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Provider</label>
+                <span *ngIf="docIdForDocAssn!=0" class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                    <select class="form-select" formControlName="docName">
+                        <option value="" selected>N/A</option>
+                        <option value={{doc.doctor_id}} *ngFor="let doc of allDoc ; trackBy:identify">
+                            {{doc?.doctor?.userBasicInfo?.first_name}} {{doc?.doctor?.userBasicInfo.middle_name}} 
+                            {{doc?.doctor?.userBasicInfo?.last_name}}{{doc?.doctor && doc?.doctor?.medicalIdentifiers && doc?.doctor?.medicalIdentifiers?.billingTitle && doc?.doctor?.medicalIdentifiers?.billingTitle?.name? 
+								", "+doc?.doctor?.medicalIdentifiers?.billingTitle?.name :''}}
+                        </option>
+                    </select>
+                </span>
+                <span *ngIf="docIdForDocAssn==0" class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                    <select *ngIf="docIdForDocAssn==0" class="form-control" formControlName="docName">
+                        <option value="" selected>N/A</option>
+                        <option [(value)]="doc.doctor_id" *ngFor="let doc of allDoc ; trackBy:identify">
+                            {{doc?.doctor?.userBasicInfo?.first_name}} {{doc?.doctor?.userBasicInfo?.middle_name}} 
+                            {{doc?.doctor?.userBasicInfo?.last_name}}{{doc?.doctor && doc?.doctor?.medicalIdentifiers && doc?.doctor?.medicalIdentifiers?.billingTitle && doc?.doctor?.medicalIdentifiers?.billingTitle?.name? 
+								", "+doc?.doctor?.medicalIdentifiers?.billingTitle?.name :''}}
+                        </option>
+                    </select>
+                </span>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Confirmation Status<em >*</em></label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                    <select class="form-select" formControlName="confirmationName" [disabled] = "visit_status">
+                        <option value={{confirm.id}} *ngFor="let confirm of confirmData ; trackBy:identify" >
+                            {{confirm.appointmentConfirmationStatus}}
+                        </option>
+                    </select>
+                </span>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <label class="title">Apt. Priority<em >*</em></label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="priority">
+                    <select style="background-color:#e9ecef!important;" class="form-control" disabled formControlName="priority" [(ngModel)]="priority">
+                        <option [(value)]="priority">{{priority}} </option>
+                    </select>
+                </span>
+                
+            </div>
+
+			<div class="col-md-6"> 
+				<div class="form-group field mb-1 cpt-plc-hold search-label">
+					<app-ng-select-shareable [events]="eventsSubjectPhysicians.asObservable()"  [filterFieldName]="'physician_id'"
+										[showSelectFieldList]="showSelectFieldList['physician_id']"
+										[maxLengthName] = "95" [ngSelectShow]="true"
+										 [showSelectFieldOnRefresh]="myForm.get('physician_id').value" 
+										 [lableName]="selectedSpecialtyKey == 'diagnostic' ? 'Referring Physician*' : 'Referring Physician'" [bindlable]="'refferingOfficeName'" [searchLableName]="'physician_id'"
+										 [bindId]="'id'" [apiPath]="ReferringPhysician_LocationListing" 
+										 (valueChange)="selectionOnValueChange($event,myForm,'physician_id')" 
+										 [multiple]="false"   ></app-ng-select-shareable>
+                                         <small class ="text-muted danger" *ngIf = "(selectedSpecialtyKey == 'diagnostic' && !myForm.get('physician_id').value &&  btnSubmit)">This field is required </small>
+					</div>	
+			</div>
+
+			<div [hidden]="!enableCptCodes" class="col-md-6">
+				<div class="form-group field mb-1 cpt-plc-hold cpt-text search-label">
+					<app-ng-select-shareable [events]="eventsSubjectCpt.asObservable()" #cptCodesShareAble [maxLengthName]="95"  [filterFieldName]="'cpt_codes_ids'"
+										[showSelectFieldList]="showSelectFieldList['cpt_codes_ids']" [ngSelectShow]="true"
+										 [showSelectFieldOnRefresh]="myForm.get('cpt_codes_ids').value" 
+										 [lableName]="'CPT Codes'" [bindlable]="'NameDescription'" [searchLableName]="'cpt_codes_ids'" 
+										 [bindId]="'id'" [apiPath]="EnumApiPath.getCptListByVisitType"  [conditionalExtraApiParams]="{'visit_type_id':myForm.get('visitTypeName').value}"
+										 (valueChange)="selectionOnValueChange($event,myForm,'cpt_codes_ids')" (touched)="getTouched($event)" 
+										 [multiple]="allowMultiCPTs" [forceApiHitonOpen]="apidefaulthit" [closeOnSelect]='false' [disableField]="myForm.get('visitTypeName').value?false:true" ></app-ng-select-shareable> 
+					</div>	
+			</div>
+
+			<div class="col-md-3 " [hidden]="!enableReadingProvider">
+				<div class="form-group field mb-1 cpt-plc-hold search-label">
+					<app-ng-select-shareable #readingProviderControl [events]="eventsSubjectReadingProvider.asObservable()"  [filterFieldName]="'reading_provider_id'"
+										[showSelectFieldList]="showSelectFieldList['reading_provider_id']"
+										 [showSelectFieldOnRefresh]="myForm?.get('reading_provider_id')?.value"  [ngSelectShow]="true"
+										 [lableName]="'Reading Provider'" [bindlable]="'full_name'" [searchLableName]="'reading_provider_id'"
+										 [bindId]="'id'" [apiPath]="EnumApiPath.getProviders" [conditionalExtraApiParams]="{'reading_provider':1,'order': OrderEnum.ASC}"
+										 (valueChange)="selectionOnValueChange($event,myForm,'reading_provider_id')" 
+										 [multiple]="false" [closeOnSelect]='false' [disableField]="myForm.get('visitTypeName').value?false:true"></app-ng-select-shareable> 
+					</div>	
+			</div>
+
+			<div class="col-md-2" *ngIf="selectedSpecialtyKey=='diagnostic'">
+				<mat-checkbox formControlName="cd_image" class="col-md-12 form-control mt-4">CD(Image)</mat-checkbox>
+
+			</div>
+
+			<div class="col-12">
+                <label class="title">Comments</label>
+                <textarea style="height:60px !important" class="form-control" [(ngModel)]="comment" [(value)]="comment" formControlName="comment">
+        		</textarea>
+            </div>
+
+        </div>
+		<!-- <div class="row d-flex justify-content-end mt-1 mb-1 ng-star-inserted">
+			<div  class="col-md-3"><button  class="btn btn-secondary w-100" (click)="openTransportation()" type="button">Transportation </button></div>
+		</div> -->
+
+		<div class="row">
+			<!-- <h5>Transportation</h5>  -->
+			<div class='col-md-2 recurrence-tab form ps-0'>
+				<label class="d-inline-block chkbox position-relative mt-2 mb-3 pt-1">
+					<input id="is_transportation" type="checkbox" formControlName="is_transportation" (change)="onTransportationChange($event)">
+					<span class="fake-input position-absolute"></span>
+					<label class="fake-label d-block mb-0" for="is_transportation">
+					   Transportation
+					</label>
+				</label>
+			</div>
+				<app-transportation-modal *ngIf="myForm.get('is_transportation').value"  #transportationComponent class="col-12" [patientId]='patientId' [physician_id]="this.myForm.get('physician_id').value" [transportationFormObj]='transportationForm' [clinic_location_id]="clinic_location_id" [openAsModal]="false"></app-transportation-modal>
+		</div>
+        <!-- <div class="row">
+            <div class="col-12">
+                <label class="title">Comments</label>
+                <textarea style="height:60px !important" class="form-control" [(ngModel)]="comment" [(value)]="comment" formControlName="comment">
+        </textarea>
+            </div>
+        </div> -->
+        <div class="row d-flex justify-content-center mt-3" >
+
+            <div class="col-md-2" *ngIf = "hidetitle">
+                <button class="btn btn-secondary w-100" type="button" data-dismiss="modal" (click)="activeModal.close()">
+					Cancel
+				</button>
+            </div>
+            <div class="col-md-2" >
+                <button class="btn btn-success w-100" type="submit" (click)="updateAppointment()">
+					Save
+				</button>
+            </div>
+        </div>
+    </form>
+</div>

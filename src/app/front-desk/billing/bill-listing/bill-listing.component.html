@@ -1,0 +1,805 @@
+<tabset class="generic-gap" #tabset>
+  <!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+  <tab heading="Bills"  #billTab (selectTab) = "selectBillsList()">
+    <div  class="card search-filter-block border-0" *ngIf="!genertePacketScreen && aclService.hasPermission(userPermissions.patient_case_list_billing_view)">
+      <app-billisting-filter #billListFilterComponent [receivedData]="sharedData" [caseId]="caseId" (filterData)="filterData($event)" (resetSelectedRecord)="resetSelectedRecord($event)" [adminBilling]="adminBilling" [formFiledValue]="formFiledValue" [formFiledListOfValue]="formFiledListOfValue"></app-billisting-filter>
+    </div>
+    
+    <app-stats-component *ngIf="!adminBilling" [caseId]="caseId" [billTotalDetails]="billDetailTotal"></app-stats-component>
+
+    <div class="row">
+      <div class="col-2 col-sm-2 edit-block text-start">
+        <div class="form-group field option-field mb-2 d-inline-block">
+          <ul>
+          <li>Show</li>
+          <li>
+            <select class="custom-select" name="limit" id="limit" [(ngModel)]="page.size" (change)="pageLimit($event.target.value)">
+            <option [value]="10" selected>10</option>
+            <option [value]="20">20</option>
+            <option [value]="30">30</option>
+            <option [value]="40">40</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+            </select>
+          </li>
+          <li>entries</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-10 text-sm-end btn-train">
+        <button *ngIf="!genertePacketScreen && e_bills_list.length && manual_selected" (click)="bulkMoveToManual()"  class="btn btn-info mb-2 mb-sm-0" type="button">
+          Move To Manual Bills<span *ngIf="e_bills_list.length"> [{{e_bills_list?.length}}]</span>
+        </button>
+        <button *ngIf="!genertePacketScreen && e_bills_list.length && manual_selected" (click)="PushToClearinghouse()"  class="btn btn-info mb-2 mb-sm-0" type="button">
+          <i class="fa fa-home" aria-hidden="true"></i> Push To Clearinghouse<span *ngIf="e_bills_list.length"> [{{e_bills_list?.length}}]</span>
+        </button>
+        <button *ngIf="!genertePacketScreen && adminBilling" (click)="generatePacket()" [disabled]="!(allBillEventData.length>0)"
+          type="button"    class="btn btn-primary mb-2 mb-sm-0">
+           Packet <span *ngIf="allBillEventData.length!=0"> [{{allBillEventData?.length}}]</span>
+         </button>
+        <button *ngIf="!genertePacketScreen" [disabled]="!(allBillEventData.length>1)"
+          (click)="addBulkPayment(bulkPaymentModel)" type="button" class="btn btn-success">
+          Bulk Payment <span *ngIf="allBillEventData.length!=0"> [{{allBillEventData?.length}}]</span>
+        </button>
+        <button *ngIf="!genertePacketScreen" [disabled]="allBillEventData.length==0" type="button"
+        class="btn btn-default text-white me-0 mb-2 mb-sm-0"
+          (click)="generateBillEnvelopePacketPom('invoice', updateBillLinkWithPacketGenerate)">
+          <i class="icon-plus-circle"></i>
+          Generate Invoice <span *ngIf="allBillEventData.length!=0"> [{{allBillEventData.length}}]</span>
+        </button>
+        <button *ngIf="!genertePacketScreen" type="button"
+          (click)="generateBillEnvelopePacketPom('envelope', updateBillLinkWithPacketGenerate)"
+          class="btn btn-primary mb-2 mb-sm-0" [disabled]="allBillEventData.length==0">
+          Generate Envelope <span *ngIf="allBillEventData.length!=0"> [{{allBillEventData.length}}]</span>
+        </button>
+        <button *ngIf="genertePacketScreen || !adminBilling" [disabled]="allBillEventData.length==0" type="button"
+          (click)="generateBillEnvelopePacketPom('packet', updateBillLinkWithPacketGenerate)"
+          class="btn btn-primary mb-2 mb-sm-0">
+          Generate Packet <span *ngIf="allBillEventData.length!=0"> [{{allBillEventData.length}}]</span>
+        </button>
+        <button *ngIf="!genertePacketScreen" type="button" [disabled]="allBillEventData.length==0"
+          (click)="generateBillEnvelopePacketPom('pom', updateBillLinkWithPacketGenerate)"
+          class="btn btn-warning text-white me-0 mb-2 mb-sm-0">
+          Generate POM <span *ngIf="allBillEventData.length!=0"> [{{allBillEventData.length}}]</span>
+        </button>
+        <button *ngIf="!genertePacketScreen" [disabled]="allBillEventData.length==0" type="button"
+          (click)="generateBillEnvelopePacketPom('delete-bill')" class="btn btn-danger mb-2 mb-sm-0">
+          <i class="icon-remove"></i> Delete Bill <span *ngIf="allBillEventData.length!=0">
+            [{{allBillEventData.length}}]</span>
+        </button>
+
+        <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+          Customize Columns
+       </button>
+    
+        <button *ngIf="!genertePacketScreen" type="button" (click)="generateBillEnvelopePacketPom('excel')"
+          class="btn btn-success mb-2 mb-sm-0">
+          <i class="fa fa-file-excel"></i> Export To CSV
+        </button>
+      </div>
+    </div>
+    <div class="card data-table border-0 p-0" [class.d-none]="!aclService.hasPermission(userPermissions.patient_case_list_billing_view)">
+	<ngx-datatable #maintable class="bootstrap bill-listing-table" [rows]="billComingData" [columnMode]='"force"'
+		[footerHeight]="50" [rowHeight]="'auto'" [virtualization]="false" [externalPaging]="true" [scrollbarH]="true"
+		[count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" (page)="setpage($event)">
+		<ngx-datatable-column name="Bill No" prop="bill_label" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100" [minWidth]="100">
+		<ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+			<div *ngIf="!aclService.hasPermission(userPermissions.patient_case_list_billing_view_bill_details)" container="body" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+			ngbTooltip="{{row?.label_id}}">
+			<span href="javascript:void(0)"> {{row?.label_id}}</span>
+			</div>
+			<div *ngIf="aclService.hasPermission(userPermissions.patient_case_list_billing_view_bill_details)" container="body" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+			ngbTooltip="{{row?.label_id}}">
+			<a class="underline-hov" href="javascript:void(0)" (click)="getSingleBill(row)"> {{row?.label_id}}</a>
+			</div>
+		</ng-template>
+		</ngx-datatable-column>
+
+      <ngx-datatable-column name="Bill Date" prop="bill_date" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100" [minWidth]="100">
+      <ng-template ngx-datatable-cell-template let-value="value">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+        {{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+        </div>
+      </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="adminBilling" name="DOA" prop="accident_date" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100" [minWidth]="100">
+        <ng-template ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+          {{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+          </div>
+        </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column *ngIf="adminBilling" name="Case ID" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="case_id" [width]="80">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <a  class="tooltip-outer underline-hov" container="body" tooltipClass="table-custom-tooltip"
+              ngbTooltip="{{value}}"  [routerLink]="['/front-desk/cases/edit/'+row?.case_id+'/patient/patient_summary']">
+              {{value}} 
+            </a>
+          </ng-template>
+        </ngx-datatable-column>
+
+      <ngx-datatable-column *ngIf="!genertePacketScreen && adminBilling" name="Case Type" prop="case_type" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100">
+        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.case_type_name}}">
+          {{row?.case_type_name}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <!-- for future use do not remove this -->
+      <!-- <ngx-datatable-column *ngIf="!genertePacketScreen" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Visit Type" prop="appointment_type_name" [width]="80">
+        <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+          <div *ngFor="let visit of row?.visit_sessions; let isLast = last" class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{visit?.appointment_type?.name ? visit?.appointment_type?.name : ''}}{{!isLast ? ', ' : ''}}">
+            <span>
+              {{visit?.appointment_type?.qualifier ? visit?.appointment_type?.qualifier : ''}}{{!isLast ? ', ' : ''}}
+            </span>
+          </div>
+        </ng-template>
+      </ngx-datatable-column> -->
+      <ngx-datatable-column *ngIf="adminBilling" name="Patient Name" [width]="100" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="patient_name">
+        <ng-template let-row="row" ngx-datatable-cell-template >
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.patient_first_name}} {{row?.patient_middle_name?row.patient_middle_name:''}}
+          {{row?.patient_last_name}}">
+          {{row?.patient_first_name}}
+          {{row?.patient_middle_name?row.patient_middle_name:''}}
+          {{row?.patient_last_name}}
+          </div>
+        </ng-template>
+    </ngx-datatable-column>
+      <ngx-datatable-column name="Specialty" prop="speciality" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100">
+        <ng-template ngx-datatable-cell-template let-row = "row" let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.speciality_name}}">
+          {{row?.speciality_qualifier}}
+          </div>
+        </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column *ngIf="!genertePacketScreen" name="Practice-Location" prop="practice_location" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="130">
+          <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.facility_location_name}}">
+          {{row?.facility_location_qualifier}}
+          </div>
+          </ng-template>
+        </ngx-datatable-column>
+      <ngx-datatable-column name="Provider" prop="provider_name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.doctor_name}}{{row?.billing_title| AddBillingTitle}}">
+          {{row?.doctor_name}}{{row?.billing_title | AddBillingTitle}}
+        </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Visit Date" [width]="100" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="date_of_service">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.from_date | date:commonService.slashDateFormat_MM_dd_yyyy() }}{{commonService.signBetweenDates()}}{{row?.to_date | date:commonService.slashDateFormat_MM_dd_yyyy()}}">
+          {{row?.from_date | date:commonService.slashDateFormat_MM_dd_yyyy()}}{{commonService.signBetweenDates()}}{{row?.to_date | date:commonService.slashDateFormat_MM_dd_yyyy()}}
+          </div>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Bill To" [width]="120" [sortable]="false" [canAutoResize]="true" prop="bill_to" [draggable]="false" [resizeable]="false" [sortable]="false" cellClass="action-icon count-hold">
+        <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+          <div  *ngIf="row?.bill_recipients?.length>0" class="tooltip-outer" popoverClass="visit-bill-popover" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
+          {{getRecipatentName(row?.bill_recipients[getRecipatentIndex(row?.bill_recipients)],row)}}<span *ngIf="row?.bill_recipients?.length>1">...</span>
+          </div>
+          <ng-template #popContent >
+            <table class="w-100 text-start"> 
+            <tbody>
+              <tr>
+                <td class="border-right"><span class="font-bold"> Recipient Type Name </span></td>
+                <td><span class="font-bold"> Recipient Name </span></td>
+              </tr>
+              <tr *ngFor="let item of row?.bill_recipients; let x = index">
+                <td *ngIf="item?.recipient" class="border-right"> {{item.recipient_type_name | titlecase}}</td>
+                <td *ngIf="item?.recipient"> {{getRecipatentName(item,row)}}</td>
+              </tr>
+            </tbody>
+            </table>
+          </ng-template>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Billed Amount" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+	[resizeable]="false" prop="bill_amount">
+	<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+		<span>
+			{{(value || 0 )| currency}}
+		</span>
+	</ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="Paid Amount" [width]="110" [sortable]="false" [canAutoResize]="true" [resizeable]="false" prop="paid_amount">
+          <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+            <span>
+            {{(value || 0 )| currency}}
+            </span>
+          </ng-template>
+        </ngx-datatable-column>
+      <ngx-datatable-column name="Outstanding Amount" [width]="150" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="outstanding_amount">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <span>
+          {{(value || 0 )| currency}}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!genertePacketScreen" name="Write-off" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="write_off_amount">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <span>
+          {{(value || 0 )| currency}}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!genertePacketScreen" name="OverPayment" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="over_amount">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <span>
+          {{(value || 0 )| currency}}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!genertePacketScreen" name="Interest" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="interest_amount">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <span>
+          {{(value || 0 )| currency}}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Bill Status" [width]="100" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_status">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.bill_status_name}}">
+            {{row?.bill_status_name}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="E-Bill Status" [width]="100" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="e_bill_status">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+            {{value}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!genertePacketScreen" name="Eor Status" [width]="100" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="eor_status">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.eor_status_name}}">
+          {{row?.eor_status_name}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+		<ngx-datatable-column *ngIf="!genertePacketScreen" name="Denial Status" [width]="100" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="denial_status">
+			<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.denial_status_name}}">
+				{{row?.denial_status_name}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column *ngIf="!genertePacketScreen" name="Verification Status" [width]="130" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="verification_status">
+			<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.verification_status_name}}">
+				{{row?.verification_status_name}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!genertePacketScreen" name="Payment Status" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="payment_status">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.payment_status_name}}">
+          {{row?.payment_status_name}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="genertePacketScreen" name="Created By" [width]="120" [sortable]="true" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="created_by_full_name">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+            {{value}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!genertePacketScreen" name="Denial Type" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+				[resizeable]="false" prop="denial_type" cellClass="action-icon" [width]="130">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<span *ngFor="let type of row?.denials?.[0]?.denial_type" class="badge bg-info modal-name">{{type?.name}}</span>
+				</ng-template>
+			</ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!genertePacketScreen" name="Firm Name" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="firm_name">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.firm_name}}">
+          {{row?.firm_name}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column *ngIf="!genertePacketScreen" name="Attorney Name" [width]="110" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="attorney_name">
+        <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+          <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.attorney_name}}">
+          {{row?.attorney_name}}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Actions" prop="actions" [width]="genertePacketScreen ? 150 : 350" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [sortable]="false" cellClass="action-icon count-hold">
+        <ng-template ngx-datatable-header-template name="Actions">
+          <label class="label checkbox-btn d-inline-block add-class select-allCheckbox action-label">
+            <input type="checkbox" name="selectAll" [(ngModel)]="overAllTableChecked"
+                [checked]="overAllTableChecked" (click)="selectAll($event)" />
+            <span class="fake-input d-inline-block align-middle"></span>
+            <span class="fake-label d-inline-block align-middle"
+                style="margin-left: 0.25rem; color: #fff;">Actions</span>
+          </label>
+        </ng-template>
+        <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+          <label class="custom-checkbox">
+            <input name="{{row.id}}" type="checkbox" [checked]="row.checkBoxChecked == true"
+              (click)="checkedSingle($event,row,rowIndex);"/>
+            <span class="fake-input"></span>
+          </label>
+          <span *ngIf="!genertePacketScreen">
+            <a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_billing_pdfs_view)" class="file-hov mx-1" ngbTooltip="pdf" container="body" (click)="getBillDocuments(row)" href="javascript:void(0)" role="button">
+              <i class="icon-pdf"></i>
+            </a>
+            <a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_billing_edit_bill)" class="edit-hov mx-1" ngbTooltip="Edit" container="body" (click)="getSingleBill(row,null,'edit')" href="javascript:void(0)" role="button">
+              <i class="icon-pencil"></i>
+            </a>
+            <a class="edit-hov mx-1" href="javascript:void(0)" ngbTooltip="Payment"  (click)="openPaymentModal(row , paymentContent)" container="body">
+              <span class="fa fa-credit-card"></span>
+              <span class="comments-count badge badge-pill badge-danger">{{row?.payment_count}}</span>
+            </a>
+            <a class="edit-hov mx-1" href="javascript:void(0)" (click)="openVerificationModal(row, verificaitionContent)" ngbTooltip="Verification" container="body">
+              <span class="fa fa-check"></span>
+              <span class="comments-count badge badge-pill badge-danger">{{row?.verification_count}}</span>
+            </a>
+            <a class="edit-hov mx-1" href="javascript:void(0)" (click)="openDenialModal(row , denialContent)" ngbTooltip="Denial" container="body">
+              <span class="fa fa-file-excel"></span>
+              <span class="comments-count badge badge-pill badge-danger">{{row?.denial_count}}</span>
+            </a>
+            <a class="edit-hov mx-1" href="javascript:void(0)" (click)="openEorModal(row, eorContent)" ngbTooltip="EOR" container="body">
+              <span class="fa fa-exchange-alt"></span>
+              <span class="comments-count badge badge-pill badge-danger">{{row?.eor_count}}</span>
+            </a>
+            <a *ngIf="aclService.hasPermission(userPermissions.patient_case_list_billing_view_comments)" class="view-hov mx-1" ngbTooltip="Comment" container="body" (click)="getCommentsBilling(row,'commment')" href="javascript:void(0)" role="button">
+              <span class="icon-commets"></span>
+              <span class="comments-count badge badge-pill badge-danger">{{row?.comment_count}}</span>
+            </a>
+            <a class="remove-hov mx-1" ngbTooltip="Delete" container="body" href="javascript:void(0)" (click)="onDeleteBill({ids: [row?.id]}, row)">
+              <i class="icon-remove"></i>
+            </a>
+            <a [disabled]= "row?.bill_type == 1" [ngClass]="[(row?.bill_type == 1) ? 'paper-icon-sent mx-1':'paper-icon-disabled mx-1']"  [ngbTooltip]="(row?.bill_type == 1) ? 'Push To Clearinghouse':''" (click)="PushToClearinghouse(row,row?.bill_type == 1,$event)" container="body" href="javascript:void(0)" >
+              <i class="fa fa-paper-plane" aria-hidden="true"></i>
+            </a>
+            <a [disabled]="row?.bill_type === eBillEnum" [ngClass]="[(row?.bill_type === eBillEnum) ? 'paper-icon-sent mx-1':'paper-icon-disabled mx-1']"  [ngbTooltip]="(row?.bill_type === eBillEnum) ? 'Move To Manual Bills':''" (click)="bulkMoveToManual(row,row?.bill_type === eBillEnum,$event)" container="body" href="javascript:void(0)" >
+              <span>
+                <img class="move-bill-icon" [src]="source" alt="move-bill">
+              </span>
+            </a>
+            <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="billingHistoryStats(row,row?.bill_type === eBillEnum)">
+              <i class="fa fa-history"></i>
+            </a>
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+    </div>
+    <ng-template #billDetailsModel let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Bill Details</h5>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="col-md-12 px-0">
+      <ul class="list-unstyled bill-detail-list mt-2">
+        <li>{{alllist.kiosk_case.patient?.first_name}} {{alllist.kiosk_case.patient?.middle_name}}
+        {{alllist.kiosk_case.patient?.last_name}}-{{alllist.kiosk_case.patient?.id}}-{{caseId}}</li>
+        <li> {{alllist?.id}} - {{alllist?.bill_date | date: commonService.slashDateFormat_MM_dd_yyyy()}} - {{alllist?.speciality?.name}} -
+        {{alllist.visit_sessions[0]?.doctor.first_name}}
+        {{alllist.visit_sessions[0]?.doctor.middle_name}}
+        {{alllist.visit_sessions[0]?.doctor.last_name}}</li>
+      </ul>
+      <app-bill-details [billingDetails]='billingDetails'></app-bill-details>
+      </div>
+      <div class="form-label text-end mb-1 mt-3">
+      <h6 class="form-label text-end mb-1">Total Amount: <span class="text-success">
+        {{(totalAmount || 0 )| currency}}</span></h6>
+      </div>
+    </div>
+
+    </ng-template>
+    <ng-template #documenttable let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Bill <strong>{{id}}</strong> Documents</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+      (click)="ngOnDestroy();modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <tabset>
+
+        <tab  id="patient" *ngIf="patienDocument && patienDocument!=null" heading="Patient {{patienDocument?.recipient?.first_name}}
+        {{patienDocument?.recipient?.middle_name}}
+        {{patienDocument?.recipient?.last_name}}">
+        <app-billing-document-listing [patienDocument]='patienDocument'></app-billing-document-listing>
+        </tab>
+          <tab  *ngFor="let item of multipleInsuranceDocument" heading="Insurance {{item?.recipient?.insurance_name}}" id="{{item.recipient?.insurance_name}}">
+            <app-billing-document-listing [InsuranceDocument]='item'></app-billing-document-listing>
+          </tab>
+         <tab *ngIf="AttorneyDocument && AttorneyDocument !=null"  heading="{{attorney_firm_name ? 'Firm ' + attorney_firm_name  : ''}}">
+          <app-billing-document-listing [AttorneyDocument]='AttorneyDocument'></app-billing-document-listing>
+         </tab>          
+         <tab    *ngFor="let item of employerDocument" heading="Employer {{item?.recipient?.employer_name}}" id="Employer {{item.recipient?.employer_name}}">
+          <app-billing-document-listing [employerDocument]='item'></app-billing-document-listing>
+        </tab>
+      </tabset>
+      
+    </div>
+    </ng-template>
+    <div class="modal fade" bsModal #caseCommentsModal="bs-modal" [config]="{backdrop: 'static'}"
+      tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+    <div class="modal-dialog modal-lg" style="min-height: calc(100% - 4rem);">
+      <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-static-name" class="modal-title pull-left">Comments</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="caseCommentsModal.hide();setpage({ offset: this.page.pageNumber });">
+        <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body bg-gray">
+        <app-comments #caseComments [caseId] = "currentCaseId" [objectId] = "currentBillId" ></app-comments>
+      </div>
+      </div>
+    </div>
+    </div>
+  </tab>
+
+  <tab *ngIf="!genertePacketScreen"  heading="EOR" (selectTab) = "selectEor()" >
+    <app-bill-filter  [caseId]="caseId" [formFiledValue]="formFiledValue" [formFiledListOfValue]="formFiledListOfValue"  #eorbillFilterComponent  [adminBilling] ="adminBilling" [field]="'EOR'"  ></app-bill-filter>
+    <app-stats-component *ngIf="!adminBilling" [caseId]="caseId" [billTotalDetails]="billDetailTotal" ></app-stats-component>
+    <app-eor-list-split [eorbillFilterComponent]="eorbillFilterComponent" [eorFormSplit]="true" [eorHideColumn] ="true" [adminBilling] ="adminBilling" (getChangePageData) = "getChangePageData($event)"  #eorSplitListComponent ></app-eor-list-split>
+  </tab>
+
+  <tab *ngIf="!genertePacketScreen" heading="Denial" (selectTab) = "selectDenial()">
+    <app-bill-filter [caseId]="caseId"  [adminBilling] ="adminBilling" [field]="'Denial'" [formFiledValue]="formFiledValue" #denialbillFilterComponent [formFiledListOfValue]="formFiledListOfValue" ></app-bill-filter>
+    <app-stats-component *ngIf="!adminBilling" [caseId]="caseId"  [billTotalDetails]="billDetailTotal"></app-stats-component>
+    <app-denial-list-split [denialbillFilterComponent]="denialbillFilterComponent" [denialFormSplit]="true" [denialColumnHide] ="true" [adminBilling] ="adminBilling" (onChangeDataDenial) = "onChangeDataDenial($event)" #denailListComponent></app-denial-list-split>
+  </tab>
+
+  <tab *ngIf="!genertePacketScreen" heading="Verification" (selectTab) = "selectVerification()" >
+    <app-bill-filter [caseId]="caseId" [adminBilling] = "adminBilling" [field]="'Verification'" [formFiledValue]="formFiledValue" [formFiledListOfValue]="formFiledListOfValue"  #verificationbillFilterComponent></app-bill-filter>
+    <app-stats-component *ngIf="!adminBilling" [caseId]="caseId"  [billTotalDetails]="billDetailTotal"></app-stats-component>
+    <app-verification-filter-listing-view 
+    (addManualAppealEmitter) ="addManualAppeal($event)"
+    [verificationbillFilterComponent]="verificationbillFilterComponent"
+    [currentVerificationRecived]="currentVerificationRecived" [adminBilling] ="adminBilling"
+    (onChangeDataVerification) = "onChangeDataVerification($event)"  #verificationListComponent></app-verification-filter-listing-view>
+    <!-- <app-verification-sent-list-split   #verificationListComponent></app-verification-sent-list-split> -->
+  </tab>
+
+  <tab *ngIf="!genertePacketScreen" heading="Payment"  (selectTab) = "selectPayments()" >
+    <app-bill-filter  [caseId]="caseId" [adminBilling] ="adminBilling" [field]="'Payment'" [formFiledValue]="formFiledValue" [formFiledListOfValue]="formFiledListOfValue"  #paymentbillFilterComponent ></app-bill-filter>
+    <app-stats-component *ngIf="!adminBilling" [caseId]="caseId"  [billTotalDetails]="billDetailTotal"></app-stats-component>
+    <app-payment-list-split #paymentSplitList [showPaymentColumn] ="true" (moveToInvoiceEmitter)= "moveToInvoiceTabEmitter($event)" [adminBilling] ="adminBilling"  (changePaymentData) ="changePaymentDataCase($event)" [editForm]="true"></app-payment-list-split>
+  </tab>
+
+  <tab *ngIf="!genertePacketScreen" heading="Invoice"  (selectTab) = "selectInvoice()" >
+    <app-bill-filter [adminBilling] ="adminBilling" [field]="'Invoice'" [formFiledValue]="formFiledValue" [formFiledListOfValue]="formFiledListOfValue" ></app-bill-filter>
+    <app-invoice-split-listing [adminBilling] ="adminBilling" #invoiceListingComponent [showInvoiceColumn] ="true"  (changeInvoiceData) ="changeInvoiceDataCase($event)" [editForm]="true" (openPaymentModalEvent)="openPaymentModal($event,paymentContent, 'invoice')"></app-invoice-split-listing>
+  </tab>
+</tabset>
+
+
+<ng-template #invoiceBuilderContentModal let-modal>
+<div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Generate invoice</h4>
+  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');setpage({ offset: 0 })">
+  <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body scroll-control">
+  <app-invoice-builder (unselectbills)="unselectbills()" #invoiceBuilderComponent [templateId]="templateId" [dontShowToggle] ="true" [disabledFields]="false" [invoice_from_bill]="true" [isMaster]="false" [caseId]="currentCaseId" [comingFrom]="'generate'" [selectedBills]="selectedBills" [selectedFacilityId]="selectedFacilityId"
+  (refreshComponent) = "refreshComponent($event);modal.dismiss('Cross click');setpage({ offset: 0 })"
+  (onCanceled) ="modal.dismiss('Cross click');setpage({ offset: 0 })"
+  ></app-invoice-builder>
+</div>
+</ng-template>
+
+  <!-- 
+  <div bsModal #paymentModal="bs-modal" class="modal fade payment-modal" tabindex="-1"
+      role="dialog" aria-labelledby="dialog-sizes-name1" [config]="{backdrop: 'static'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Payments</h4>
+        <button type="button" class="close pull-right" (click)="paymentModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    <app-payment-form #paymentFormComponent [currentBill] = "currentBill"></app-payment-form>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <div bsModal #denialModal="bs-modal" class="modal fade payment-modal" tabindex="-1"
+      role="dialog" aria-labelledby="dialog-sizes-name1" [config]="{backdrop: 'static'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Denial</h4>
+        <button type="button" class="close pull-right" (click)="denialModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    <app-denial-form #denialFormComponent (getChangePageDataDenial) = "getChangePageDataDenial($event)" [currentBill] = "currentBill" ></app-denial-form>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div bsModal #eorModal="bs-modal" class="modal fade payment-modal" tabindex="-1"
+      role="dialog" aria-labelledby="dialog-sizes-name1" [config]="{backdrop: 'static'}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">EOR</h4>
+        <button type="button" class="close pull-right" (click)="eorModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+    <app-eor-form #eorFormComponent (getChangePageDataEor) = "getChangePageDataEor($event)" [currentBill] ="currentBill"></app-eor-form>
+      </div>
+    </div>
+  </div>
+  </div> -->
+
+<ng-template #eorContent let-modal>
+  <div class="modal-header">
+      <h4 id="dialog-sizes-name1" class="modal-title pull-left">EOR</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');setpage({ offset: this.page.pageNumber })">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body scroll-control">
+    <app-bill-detail-sharedble [currentBill]="currentBill"></app-bill-detail-sharedble>
+    <app-eor-form #eorFormComponent (getChangePageDataEor) = "getChangePageDataEor($event)" [currentBill] ="currentBill"></app-eor-form>
+  </div>
+</ng-template>
+
+  <ng-template #denialContent let-modal>
+    <div class="modal-header">
+        <h4 id="dialog-sizes-name1" class="modal-title pull-left">Denial</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');setpage({ offset: this.page.pageNumber })">
+      <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body scroll-control">
+      <app-bill-detail-sharedble [currentBill]="currentBill"></app-bill-detail-sharedble>
+      <app-denial-form #denialFormComponent (getChangePageDataDenial) = "getChangePageDataDenial($event)" [currentBill] = "currentBill" ></app-denial-form>
+    </div>
+  </ng-template>
+
+  <ng-template #verificaitionContent let-modal>
+  <div class="modal-header">
+      <h4 id="dialog-sizes-name1" class="modal-title pull-left">Verification</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');setpage({ offset: this.page.pageNumber })">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body scroll-control">
+    <!-- {{currentBill |json}} -->
+    <app-bill-detail-sharedble [currentBill]="currentBill"></app-bill-detail-sharedble>
+    <app-verification-form (addManualAppeal) ="addManualAppealVerificationView($event)" (genertePomEnvelope) = "generateBillEnvelopePacketPom($event, updateBillLinkWithPacketGenerate)"   (getChangePageDataDenial) = "getChangePageDataDenial($event)" [currentBill] = "currentBill" ></app-verification-form>
+  </div>
+  </ng-template>
+
+  <ng-template #verificaitionSentContent let-modal >
+  <div class="modal-header">
+      <h4 id="dialog-sizes-name1" class="modal-title pull-left">Reply Verification</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');setpage({ offset: this.page.pageNumber })">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body scroll-control">
+    <app-verification-form-sent (saveVerificationEmitter) = "saveVerificationEmitter($event)"  [currentBill] = "currentBill" [selected_bills]="selected_bills"></app-verification-form-sent>
+  </div>
+  </ng-template>
+
+  <ng-template #paymentContent let-modal>
+    <div class="modal-header">
+      <h4 id="dialog-sizes-name1" class="modal-title pull-left">Payments</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click'); closePayment();">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <app-bill-detail-sharedble [currentBill]="currentBill" [type]="paymentInstanceType"></app-bill-detail-sharedble>
+      <app-payment-form #paymentFormComponent  [selectedBill]="selectedBill" (changePaymentData)="changePaymentData($event)" [type]="paymentInstanceType" (billListingRefreshOnPaymentAdd)="billListingRefreshOnPaymentAdd($event)"  (moveToInvoiceTabEmitter)= "moveToInvoiceTabEmitter($event)" [currentBill]="currentBill"></app-payment-form>
+    </div>
+  </ng-template>
+
+  <ng-template #reciptentModal let-modal>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Recipient Details</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ngx-datatable class="bootstrap" [rows]="billingReciptentdata" [columnMode]='"force"'
+    [footerHeight]="50" [rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true"
+  >
+
+    <ngx-datatable-column name="Bill No" [sortable]="false" prop="bill_id" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{currentBill?.label_id}}" container="body">
+          {{currentBill?.label_id}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Recipient Type Name" [sortable]="false" prop="recipient_type_name" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer text-capitalize" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.recipient_type_name}}" container="body">
+          {{row.recipient_type_name}}</div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Recipient Name" [sortable]="false" prop="recipient" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{getRecipatentName(row,row)}}" container="body">
+          {{getRecipatentName(row,row)}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+    
+  </div>
+  </ng-template>
+
+  <ng-template #updateBillLinkWithPacketGenerate let-modal>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Generate {{actionNameOfGenrate | titlecase}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="alert alert-danger custom-padding-alert my-3 text-justify" role="alert">
+      <strong><i class="fas fa-exclamation-triangle text-danger"></i></strong> Alert! It looks like case info (Insurance Name/Location/Claim No/WCB No/Policy No/DOA) has been updated. Please regenerate the bill before generating the POM/Envelope/Packet
+      </div>
+    <ngx-datatable class="bootstrap" [rows]="updateBillListOfDetails" [columnMode]='"force"'
+    [footerHeight]="50" [rowHeight]="'auto'" [virtualization]="false" [scrollbarH]="true">
+    <ngx-datatable-column name="Case ID" [sortable]="false" prop="case_id" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer text-capitalize" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+          <a class="underline-hov" (click)="moveToCaseInfo(value)">
+            {{value}}
+          </a></div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Bill No" [sortable]="false" prop="label_id" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}" container="body">
+          <a class="underline-hov" (click)="moveToBill(row)">
+            {{value}}
+          </a></div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Patient Name"  [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+      <ng-template let-row="row" ngx-datatable-cell-template >
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.patient_first_name}} 	{{row?.patient_middle_name?row.patient_middle_name:''}}
+        {{row?.patient_last_name}}">
+        {{row?.patient_first_name}}
+        {{row?.patient_middle_name?row.patient_middle_name:''}}
+        {{row?.patient_last_name}}
+        </div>
+      </ng-template>
+  </ngx-datatable-column>
+
+  <ngx-datatable-column name="Bill Date" prop="bill_date" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" >
+    <ng-template ngx-datatable-cell-template let-value="value">
+      <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+      {{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+      </div>
+    </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Billed Amount"  [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_amount">
+      <ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+        <span>
+        {{(value || 0 )| currency}}
+        </span>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+  </div>
+  </ng-template>
+
+  <div class="modal fade" bsModal #invoiceFormatsModal="bs-modal" [config]="{backdrop: 'static'}"
+  tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+  <div class="modal-dialog modal-lg" style="min-height: calc(100% - 4rem);">
+  <div class="modal-content">
+  <div class="modal-header">
+    <h4 id="dialog-static-name" class="modal-title pull-left">Generate Invoice</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="invoiceFormatsModal.hide()">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-invoice-format-load #invoiceFormatLoad [selectedInvoiceObject] = "selectedInvoiceObject" (openInvoiceBuilderEvent)="openInvoiceBuilderEvent($event,invoiceBuilderContentModal)"  ></app-invoice-format-load>
+  </div>
+  <!-- [caseId] = "currentCaseId" [objectId] = "currentBillId" -->
+    </div>
+  </div>
+  </div>
+
+  <ng-template #pdfViewModal let-modal>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">INV- {{invoiceId}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');">
+    <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-invoice-pdf-view [invoiceId]="invoiceId"></app-invoice-pdf-view>
+  </div>
+  </ng-template>
+
+<ng-template #bulkPaymentModel let-modal>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Bulk Payments</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click'); closePayment();">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body bulk-payment-modal-body">
+    <app-bill-detail-sharedble (emitAddBill)="getEmitData($event)" (restoreBills)="restoreBills($event)" (updateBillCount)="updateBillCount($event)"  [currentBill]="currentBills" [billType]="billType" [type]="paymentInstanceType"></app-bill-detail-sharedble>
+    <app-payment-form #paymentFormComponent [removeEvent]="eventOnRemoveBill" [bulkBills]="allBillEventData" [billType]="billType" [selectedBill]="selectedBill" (changePaymentData)="changePaymentData($event)" [type]="paymentInstanceType" (billListingRefreshOnPaymentAdd)="billListingRefreshOnPaymentAdd($event)"  (moveToInvoiceTabEmitter)= "moveToInvoiceTabEmitter($event)" ></app-payment-form>
+  </div>
+</ng-template>
+
+<ng-template #recipientsModal let-modal>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Bill Recipients</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class = "row"> 
+      <div class = "col-12 mb-2">
+        <span>Please Select Recipients:</span>
+      </div>
+    <div class = "col-3">
+      <mat-checkbox [disabled]="disablePat" (change)="onSelectRecipients($event.checked, 1)"> Patient</mat-checkbox>
+    </div>
+    <div class = "col-3">
+      <mat-checkbox [disabled]="disableIns" (change)="onSelectRecipients($event.checked, 3)"> Insurance</mat-checkbox>
+    </div>
+    <div class = "col-3">
+      <mat-checkbox [disabled]="disableEmp" (change)="onSelectRecipients($event.checked, 2)"> Employer</mat-checkbox>
+    </div>
+    <div class = "col-3">
+      <mat-checkbox [disabled]="disableFirm" (change)="onSelectRecipients($event.checked, 4)"> Firm</mat-checkbox>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-md-12 modal-btn-width text-center">
+      <button class="btn btn-success" (click)="onSaveRecipients()">Save</button>
+    </div>
+  </div>
+  </div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

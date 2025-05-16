@@ -1,0 +1,90 @@
+<div class="modal-header">
+    <h4 class="modal-title">Add to Waiting List</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+
+<div class="modal-body">
+    <form>
+        <!-- <div class="row">
+            <div class="col-md-12">
+                <label class="title">Apt.Title</label>
+                <input type="text" class="form-control" value="{{titleofAppointment}}" />
+            </div>
+        </div> -->
+        <div class="row">
+
+            <div class="col-md-4">
+                <label class="title">Case Type</label>
+                <select class="form-select" [ngModelOptions]="{standalone: true}" [(ngModel)]="caseTypeId">
+					<option value={{case.case_type}} *ngFor="let case of caseTypes">{{case.case_type}}</option>
+				</select>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Apt.Priority</label>
+                <select class="form-select" (change)="changeAppointmentPriority($event)" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedAppointmentPriorityId">
+					<option value={{prio.id}} *ngFor="let prio of priorityArray">{{prio.description}}</option>
+				</select>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Apt.Type</label>
+                <select class="form-select" (change)="changeAppointmentType($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="typeForAppointment">
+					<option value={{type.id}} *ngFor="let type of typeArray">{{type.description}} </option>
+				</select>
+            </div>
+        </div>
+
+        <div class="row ">
+            <div class="col-md-4">
+                <label class="title">Location</label>
+                <select class="form-select" [(ngModel)]="selectedClinicId" [ngModelOptions]="{standalone: true}" (change)="clinicChange($event)">
+					<option value="0" selected>Clinic</option>
+					<option *ngFor="let clinic of clinics" value={{clinic.id}}>{{clinic.name}}</option>
+				</select>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Specialty</label>
+                <select class="form-select" [(ngModel)]="spec" [ngModelOptions]="{standalone: true}" (change)="specialityChange($event)">
+					<option value="0" selected>Specialty</option>
+					<option *ngFor="let spec of speciality" value={{spec.id}}>{{spec.name}}</option>
+				</select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="title">Provider</label>
+                <select class="form-select" [ngModelOptions]="{standalone: true}" (change)="doctorChange($event)" [(ngModel)]="selectedDoctorId">
+					<option *ngFor="let doc of doctors" value={{doc.docId}}>{{doc.doctorName}}</option>
+				</select>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label class="title">Waiting Slots</label>
+                <input type="text" class="form-control" value="{{waitingSlots}}" readonly>
+
+            </div>
+            <div class="col-md-4">
+                <label class="title">Open Slots</label>
+
+                <input type="text" class="form-control" value="{{freeSlots}}" readonly>
+
+            </div>
+
+            <div class="col-md-4">
+                <label class="title">Waiting List Priority </label>
+                <select class="form-select" [ngModelOptions]="{standalone: true}" [(ngModel)]="selectedPriorityId" (change)="changeAppointmentPriorityWaitingList($event)">
+					<option value={{wp.id}} *ngFor="let wp of waitingPriorityArray">{{ wp.description}}</option>
+				</select>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center mt-3">
+            <div class="col-md-2">
+                <button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-success w-100" type="submit" (click)="addToWaitingList()">Add</button>
+            </div>
+
+        </div>
+    </form>
+</div>

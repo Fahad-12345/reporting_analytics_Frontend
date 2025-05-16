@@ -1,0 +1,44 @@
+$nth_child:(
+    1199.98: 3,
+	991.98: 2,
+    575.98: 1
+);
+@mixin nth_child_dynamic {
+	@each $nth_child , $value in $nth_child{
+		@media (max-width: #{$nth_child}px){
+			&:not(:nth-child(-n + #{$value})) {
+				display: none;
+			}
+		}
+	}
+}
+.card-body{
+	.field-block{
+		.dynamic-collapse{
+			div{
+				@include nth_child_dynamic();
+			}
+		}
+	}
+}
+.currency {
+	.fa-dollar-sign {
+		position: absolute;
+		bottom: 9px;
+		left: 10px;
+		font-size: 14px;
+		color: #5e5b5b;
+	}
+	.form-label {
+		left: 1.5rem;
+	}
+	&.focused {
+		.form-label {
+			margin-left: -1.5rem !important;
+		}
+	}
+	.form-control {
+		padding-left: 20px !important;
+	}
+}
+

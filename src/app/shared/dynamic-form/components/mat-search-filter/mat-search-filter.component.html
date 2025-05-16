@@ -1,0 +1,56 @@
+<!-- <form class="example-form" [formGroup]="group"> -->
+		<!-- <mat-label>{{label}}</mat-label> -->
+		<mat-form-field class="example-chip-list mat-cr-ui" appearance="outline">
+			<mat-label>{{label}}</mat-label>
+	<input
+	(keyup)="onKeyUp($event.target.value)"
+	  #searchInput
+	  [formControl]="searchControl"
+	  [matAutocomplete]="auto"
+	  [disabled] ="disabled"
+	  matInput 
+	  
+	  >
+<!-- <mat-form-field class="example-chip-list" > -->
+	<!-- <mat-chip-list #chipList aria-label="Fruit selection" >
+	
+	  <input
+	  [placeholder]="label"
+	  (keyup)="onKeyUp($event.target.value)"
+		#searchInput
+		[formControl]="searchControl"
+		[matAutocomplete]="auto"
+		
+		
+		[matChipInputFor]="chipList"
+		[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+		[disabled] ="disabled"
+		>
+		(optionSelected)="selected($event)"
+	</mat-chip-list> -->
+	<mat-autocomplete #auto="matAutocomplete" class="mat-cr-ui" >
+		<div #divToScroll class="main-panel" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="50"
+		(scrolled)="onScroll()" [scrollWindow]="false">
+	  <mat-option *ngFor="let option of filteredOptions|async " [value]="option">
+		<mat-checkbox class="mx-0" #checks [checked]="option.selected" (change)="changeSelection($event,option)"  (click)="$event.stopPropagation()">
+		<span *ngIf="toHighlight" [innerHTML]="(option?.description?option?.name+'-'+option.description:option?.name) | highlight: toHighlight : searchControl.value"></span>
+		<span  *ngIf="!toHighlight" [innerHTML]="option?.description?option?.name+'-'+option.description:option?.name"></span>
+	</mat-checkbox>
+	  </mat-option>
+	  </div>
+	</mat-autocomplete>
+	</mat-form-field>
+
+<!-- </form> -->
+  
+  <div class="chip-list-outer">
+	<mat-chip
+	*ngFor="let option of selectedOptions"
+	[selectable]="selectable"
+	[removable]="removable"
+	[disabled] = "disabled"
+	(removed)="remove(option)">
+	{{option?.description?option.name+'-'+option?.description:option.name }}
+	<mat-icon matChipRemove *ngIf="removable" >cancel</mat-icon>
+  </mat-chip>
+	</div>

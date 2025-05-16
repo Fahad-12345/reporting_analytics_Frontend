@@ -1,0 +1,11 @@
+<div class="column-content alignment-center"
+	[ngClass]="{'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+	<div *ngIf="object.path" class="text-center">
+		<img id='check' [src]="raw" height="300" class="img-fluid"
+		[ngStyle]="object.width>=0 ? {'width': object.width + '%', 'height': 'auto'} : {'width': '100%'}" (click)="openImage()" />
+	</div>
+	<div *ngIf="!object.path" class="h-100 text-center alignment-center" (click)="openImage()">
+		<span class="d-block">No Image Added</span>
+	</div>
+</div>
+<canvas id="temp" hidden>

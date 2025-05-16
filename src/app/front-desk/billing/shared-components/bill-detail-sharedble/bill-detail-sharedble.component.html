@@ -1,0 +1,173 @@
+<div class="bulk-add-bill">
+	<button class="btn btn-default text-white mb-2" *ngIf="billType=='bulkPayment'" [disabled]="isEventTrigger || isPaymentVerified" (click)="addNewBill()">Add Bill</button>
+</div>
+<div class="row" > 
+	<div class="datatable-footer-none scroll-controll-lg datatable-overflow">
+		<ngx-datatable class="bootstrap bulk-add-bill-table" [rows]="currentBill.length?currentBill:[currentBill]" [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'" 
+		[scrollbarH]="true" [virtualization]="false" >
+		<ngx-datatable-column *ngIf= "type==='invoice'" name="Invoice ID" [minWidth]="83 "[width]="83" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="invoice_id" >
+			<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+					{{value}}
+				</div>
+			</ng-template>
+	</ngx-datatable-column>
+		<ngx-datatable-column *ngIf= "type==='invoice'" name="Bill IDs" [minWidth]="83 "[width]="83" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_label_ids">
+			<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value?value:'N/A'}}">
+					{{value?value:'N/A'}}
+				</div>
+			</ng-template>
+	</ngx-datatable-column>
+	  <ngx-datatable-column *ngIf= "type==='invoice'" name="Invoice Date" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="invoice_date" [minWidth]="90" [width]="90">
+		  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+				{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+			  </div>
+			</ng-template>
+	  </ngx-datatable-column>
+
+  
+		<ngx-datatable-column *ngIf= "type==='bill'" name="Bill ID" [minWidth]="73 "[width]="73" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="label_id">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+						{{value}}
+					</div>
+				</ng-template>
+		</ngx-datatable-column>
+		  <ngx-datatable-column *ngIf= "type==='bill'" name="Bill Date" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_date" [minWidth]="68" [width]="68">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+					{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+				  </div>
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="Case ID" *ngIf="billType=='bulkPayment'" prop="case_id" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [minWidth]="60" [width]="60">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+				{{value}}
+				</div>
+			</ng-template>
+			</ngx-datatable-column>
+		  <ngx-datatable-column name="Specialty" prop="speciality_name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [minWidth]="80" [width]="80">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.speciality_name || row?.speciality_names || 'N/A'}}">
+				{{row?.speciality_qualifier || row?.speciality_qualifiers || 'N/A'}}
+				</div>
+			</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Provider" *ngIf="(type!='invoice')" prop="doctor_name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [minWidth]="90" [width]="90">
+				<ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value?value:row.doctor_first_name}} {{value?'':(row.doctor_middle_name?row.doctor_middle_name:'')}}
+				{{value?'':row.doctor_last_name}}{{row?.billing_title| AddBillingTitle}}">
+				{{value?value:row.doctor_first_name}} {{value?'':(row.doctor_middle_name?row.doctor_middle_name:'')}}
+				{{value?'':row.doctor_last_name}} {{row?.billing_title| AddBillingTitle}}
+				</div>
+				</ng-template> 
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Provider" *ngIf="(type=='invoice')"  prop="doctor_name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [minWidth]="90" [width]="90">
+				<ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value?value:'N/A'}}{{row?.billing_title| AddBillingTitle}}">
+				{{value?value:'N/A'}}{{row?.billing_title| AddBillingTitle}}
+				</div>
+				</ng-template> 
+			</ngx-datatable-column>
+		  <!-- <ngx-datatable-column name="Practice-Loc" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="row" [width]="183">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value?.facility_location_name}}" container="body">
+					{{value?.facility_location_name}}
+				</div>
+			</ng-template>
+		  </ngx-datatable-column> -->
+		  <ngx-datatable-column name="Patient Name" *ngIf="billType=='bulkPayment'" prop="" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false"  [width]="80" [minWidth]="80">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row.patient_first_name?row.patient_first_name:''}} {{row.patient_middle_name?row.patient_middle_name:''}} {{row.patient_last_name?row.patient_last_name:''}} ">
+				{{row.patient_first_name?row.patient_first_name:''}}  
+				{{row.patient_middle_name?row.patient_middle_name:''}}  
+				{{row.patient_last_name?row.patient_last_name:''}}  
+				</div>
+			</ng-template>
+			</ngx-datatable-column>
+		  <ngx-datatable-column name="{{(type=='invoice'?'Practice':'Practice Location')}}" prop="facility_location_name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [minWidth]="90" [width]="100">
+				<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+					<div class="tooltip-outer" *ngIf= "type==='invoice'" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.facility_name}}">
+					{{row?.facility_qualifier}}
+					</div>
+					<div class="tooltip-outer" *ngIf= "type==='bill'" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+						{{row?.facility_location_qualifier}}
+					</div>
+				</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Payment Status" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="payment_status" cellClass="action-icon" [minWidth]="80" [width]="80">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.payment_status_name? row.payment_status_name:'N/A'}}" container="body">
+					{{row.payment_status_name? row.payment_status_name:'N/A'}}
+				</div>
+		  </ng-template>
+		</ngx-datatable-column>
+		  <ngx-datatable-column *ngIf= "type==='bill'" name="DOS" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="" [minWidth]="90" [width]="90" cellClass="white-space-wrap">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer text-nowrap" tooltipClass="table-custom-tooltip" ngbTooltip="" container="body" ngbTooltip="{{row?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy()}} {{commonService.signBetweenDates()}} {{row?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+						{{row?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy()}} {{commonService.signBetweenDates()}} {{row?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+					</div>
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column  *ngIf= "type==='bill'" name="Bill Status" [minWidth]="76" [width]="76" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_status_name">
+			<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value?value:row.bill_status}}">
+					{{value?value:row.bill_status}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		  <ngx-datatable-column *ngIf= "type==='bill'" name="Billed Amount" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_amount" [minWidth]="87" [width]="110">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column *ngIf= "type==='invoice'" name="Invoice Amount" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="amount_due" [minWidth]="87" [width]="110">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				{{value || 0 | currency}}
+			  </ng-template>
+		</ngx-datatable-column>
+		  <ngx-datatable-column name="Paid" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="paid_amount" [minWidth]="84" [width]="100">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		
+		  <ngx-datatable-column name="Outstanding" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="outstanding_amount" [minWidth]="90" [width]="90">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="Write-off" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="write_off_amount" [minWidth]="69" [width]="70">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="Over Payment" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="over_amount" style="white-space: nowrap !important;" [minWidth]="80" [width]="80">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="Interest" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="interest_amount" [minWidth]="60" [width]="60">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value || 0 | currency}}">
+					{{value || 0 | currency}}
+					</div>
+				</ng-template>
+		  </ngx-datatable-column>
+
+		  <ngx-datatable-column name="Actions" *ngIf="billType=='bulkPayment'" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="" [minWidth]="65" [width]="65">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" >
+					  <button class="remove-hov action-delete mx-1" ngbTooltip="Delete" [disabled]="isEventTrigger || isPaymentVerified" container="body" (click)="deleteBill(row)">
+						<i class="icon-remove"></i>
+					</button>
+					</div>
+				</ng-template>
+		  </ngx-datatable-column>
+  
+		</ngx-datatable>
+	</div>
+  </div>

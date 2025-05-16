@@ -1,0 +1,80 @@
+<div *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_edit)">
+    <div class="modal-header">
+        <h4 class="modal-title">Update Provider Assignment</h4>
+        <button type="button" class="close" data-dismiss="modal" (click)="activeModal.dismiss('Cross click')">&times;</button>
+    </div>
+    
+    <div class="modal-body assignment-modal">
+        <form [formGroup]="myForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="title" for="clinicname">Practice-Location*</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left">
+                        <input type="text" class="form-control" formControlName="clinicname">
+                    </span>
+                </div>
+                <div class="col-md-4">
+                    <label class="title" for="speciality">Provider*</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                        <input type="text" class="form-control" formControlName="speciality">
+                    </span>
+                </div>
+                <div class="col-md-4">
+                    <label class="title" for="speciality">Speciality*</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                        <input type="text" class="form-control" formControlName="speciality_name">
+                    </span>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class='col-md-4'>
+                    <!-- <label class="title" for="startdate">{{Start Date*}} </label> -->
+                    <!-- <ejs-datepicker [enabled]="!preCheckDate" [(value)]='startDate' placeholder='Enter date' (change)="changeStartDate()"></ejs-datepicker> -->
+                    <app-mat-date-picker-sharedable [classesName]="['form-group', 'vertical-label-cross']" [lableName]="'Start Date*'"  (valueChange)="onChangeStartDate($event)"  [defaultDate]="startDate"  [placeholder]="'Enter date'"[disabled]="preCheckDate"></app-mat-date-picker-sharedable>
+    
+                    <span *ngIf="!startDate" class="req-date">
+                        This field is required
+                    </span>
+                </div>
+                <!-- <div class='col-md-3'>
+                    <label class="title" for="enddate">End Date </label>
+                    <ejs-datepicker [enabled]="!preCheckDate" [(value)]='endDate' placeholder='Enter date'
+                        (change)="changeEndDate()"></ejs-datepicker>
+                </div> -->
+                <div class='col-md-4'>
+                    <label class="title" for="starttime">Start Time*</label>
+                    <ejs-timepicker [min]="minStart" [max]="maxEnd" strictMode=true [step]='interval' [(value)]='startTime' (change)="changeStartTime()">
+                    </ejs-timepicker>
+                    <span *ngIf="startTimeRequired" class="req-date">
+                        This field is required
+                    </span>
+                </div>
+                <div class='col-md-4'>
+                    <label class="title" for="endtime">End Time* </label>
+                    <ejs-timepicker [min]="minStart" [max]="maxEnd" strictMode=true [step]='interval' [(value)]='endTime' (change)="changeEndTime()">
+                    </ejs-timepicker>
+                    <span *ngIf="endTimeRequired" class="req-date">
+                        This field is required
+                    </span>
+                    <span *ngIf="endTimewrtStart" class="req-date">
+                        Pick end time with respect to start
+                    </span>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center mt-4">
+                <div class="col-md-2">
+                    <button class="btn btn-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">
+                        Cancel
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-success w-100" type="submit" [disabled]="startTimeRequired || endTimeRequired " (click)="submitFormAndOpen()">
+                        Update 
+                    </button>
+                </div>
+    
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+<ng-template #openErrorModal let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left"> {{modelTitle | titlecase}}</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body">
+		<div class="alert alert-danger custom-padding-alert my-3 text-start break-word" role="alert">
+			<strong><i class="fas fa-exclamation-triangle text-danger"></i></strong>
+			 {{errorMessage}}
+
+		  </div>
+
+		  <ngx-datatable
+        class="material"
+        [rows]="rows"
+        [columnMode]="'force'"
+        [footerHeight]="50"
+        rowHeight="auto"
+        [reorderable]="false"
+		[virtualization]="false"
+		[scrollbarH]="true"
+		[rowClass]="getRowClass"
+      >
+	 
+	  <ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case No." prop="caseId" [width]="60">
+		<ng-template let-column="column" ngx-dattable-header-template>
+		  Case No
+		</ng-template>
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			 <a class="underline-hov" (click)="navigateTo(row.id);modal.dismiss('Cross click')"
+			*ngIf="aclService.hasPermission(userPermissions.patient_case_list_edit_case);else disableCaseNo">{{ row.id }}</a>
+			<ng-template #disableCaseNo>
+				<span>{{ row.id }}</span>
+			</ng-template>
+			
+		</ng-template>
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<span  
+			  *ngIf="!aclService.hasPermission(userPermissions.patient_case_list_edit_case)">{{ row.id }}</span>
+		  </ng-template>
+	  </ngx-datatable-column>
+	  <ngx-datatable-column>
+		<ng-template let-column="column" ngx-datatable-header-template>
+			Patient Name
+		</ng-template>
+		<ng-template let-row="row" ngx-datatable-cell-template>
+			{{row?.patient? row.patient.first_name:''}} {{row?.patient? row.patient.last_name:''}}
+		</ng-template>
+	</ngx-datatable-column>
+	<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Chart ID" prop="chart_id" [width]="80">
+		<ng-template let-column="column" ngx-dattable-header-template>
+		  Chart ID
+		</ng-template>
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		  <!-- <a mask='000-00-0000' [routerLink]="['/front-desk/patients/profile/', value]"> -->
+		  <a  class="underline-hov" (click)="modal.dismiss('Cross click')" [routerLink]="['/front-desk/patients/profile/', row.patient_id]">
+			<!-- {{ value | phoneFormatPipe }} -->
+			{{ value | ssnFormatPipe}}
+		  </a>
+		</ng-template>
+	  </ngx-datatable-column>
+	<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case Type"
+    prop="caseType.name" [width]="100">
+	<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+		<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.caseType?.name}}">
+		  {{row?.caseType?.name}}</div>
+	  </ng-template>
+	</ngx-datatable-column>
+	
+	<ngx-datatable-column [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Accident Date"  prop="caseAccidentInformation.accident_date"
+            [width]="60">
+
+            <ng-template let-column="column" ngx-datatable-header-template>
+              DOA
+            </ng-template>
+            <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value? (value | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}">
+              {{value? (value | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+              </div> 
+            </ng-template>
+          </ngx-datatable-column>
+	
+	<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false" name="Case Status"
+    prop="case_status.name"  [width]="80"></ngx-datatable-column>
+	<ngx-datatable-column [canAutoResize]="true" [draggable]="false"   prop="deleted_at" [resizeable]="false" name="Action"  [width]="60">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<i [class]="actionClassBind(value)"></i>
+		</ng-template>
+	</ngx-datatable-column>
+      </ngx-datatable>
+	  
+	</div>
+</ng-template>

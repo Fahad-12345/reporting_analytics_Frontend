@@ -1,0 +1,100 @@
+<div class="row justify-content-center" style="margin-bottom: 1rem !important">
+        <div class="edit-block col-md-12" style="padding-right: 10px !important;padding-left: 10px !important; ">
+                <div class="form-group field option-field mb-2 d-inline-block">
+                        <ul>
+                                <li>Show</li>
+                                <li>
+                                        <select [(ngModel)]="counter" (change)="checkRows(counter)"
+                                                style="height:28px !important;" class="custom-select">
+                                                <option value="10" selected>10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="40">40</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                        </select>
+                                </li>
+                                <li>Entries</li>
+                        </ul>
+                </div>
+        </div>
+        <div class="col-md-12 col-lg-12 col-sm-12 datatable-tooltip">
+                <ngx-datatable class="bootstrap scroll-hide" [rows]="data" [columnMode]="'force'" [headerHeight]="50"
+                        [footerHeight]="50" [rowHeight]="'auto'" [limit]="counter">
+                        <ngx-datatable-column [canAutoResize]="true" name="Date" prop="id" [width]="90">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                        Date
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+									 {{row.start_date_time | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+
+                                </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Time" prop="id" [width]="90">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                        Time
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+									{{row.start_date_time| date: datePipeService.hourMinAmPmTimeFormat()}}
+
+                                </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Provider" prop="id" [width]="90">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                        Provider
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                                {{row?.doctor_basic_information?.first_name}} {{row?.doctor_basic_information?.middle_name?row?.doctor_basic_information?.middle_name:''}} {{row?.doctor_basic_information?.last_name}}
+                                </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Practice" prop="id" [width]="90">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                       Practice-Location
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <!-- <div class="col-md-12 col-lg-12 col-sm-12" style="margin-top:5px">
+                                                {{row.clinicName}}
+                                        </div> -->
+                                        <div class="tooltip-outer"
+										 tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.facility_location_detail?.facility?.name}}-{{row?.facility_location_detail?.name}}"
+										 >
+											<!-- {{row?.facility_location_detail?.qualifier}} -->
+											{{row?.facility_location_detail?.facility?.qualifier}}-{{row?.facility_location_detail?.qualifier}} 
+
+                                        </div>
+
+                                </ng-template>
+
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Speciality" prop="id" [width]="70">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                        Specialty 
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                             
+
+												<div class="tooltip-outer"
+												tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.speciality_name}}"
+												>
+												   {{row?.speciality_qualifier}}
+											   </div>
+                                </ng-template>
+
+                        </ngx-datatable-column>
+                        <ngx-datatable-column [canAutoResize]="true" name="Actions" prop="id" [width]="70">
+                                <ng-template let-column="column" ngx-datatable-header-template>
+                                        Actions
+                                </ng-template>
+                                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <a class=" btn clock-hov" role="button" tooltip="Add"
+                                                style="height: 25px;padding: 0 6px; margin-top: 8px;"
+                                                (click)="Save(row)">
+                                                <i class="fas fa-plus"></i>
+                                        </a>
+                                </ng-template>
+
+                        </ngx-datatable-column>
+                </ngx-datatable>
+        </div>
+
+</div>

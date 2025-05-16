@@ -1,0 +1,93 @@
+<div class="modal-header">
+    <h4 class="modal-title">Appointment Details</h4>
+    <button type="button" class="close" data-dismiss="modal" (click)="activeModal.close()">&times;</button>
+</div>
+<form [formGroup]="myForm">
+    <div class="modal-body"> 
+
+        <div class="row">
+            <div class="col-md-4">
+                <label class="title">Patient Name</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left">
+                    <input type="text" class="form-control" formControlName="patient" />
+                </span>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Chart ID</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left">
+                    <input type="text" class="form-control" formControlName="chart" />
+                </span>
+			</div>
+			<div class="col-md-4">
+                <label class="title">Case No.</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left">
+                    <input type="text" class="form-control" formControlName="caseId" />
+                </span>
+            </div>
+        </div>
+         <div class="row">
+            <div class="col-md-4">
+                <label class="title">Practice-Location</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="details.clinicName">
+                    <input type="text" class="form-control" [value]="details.practiceLocationQualifier" 
+                    disabled />
+                </span>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Specialty</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" [ngbTooltip]="details.speciality">
+                    <input type="text" class="form-control" [value]="details.specialityQualifier"
+                    title="{{details.speciality}}"
+                    disabled />
+                </span>
+            </div>
+            <div class="col-md-4">
+                <label class="title">Provider</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left">
+                    <input type="text" class="form-control" [value]="details.doctor" 
+                    title="{{details.doctor}}"
+                    disabled />
+                </span>
+            </div>
+        </div>
+        <div class="row">
+			<div class="col-md-4">
+                <label class="title">Appt.Date</label>
+                <input type="text" class="form-control" [value]="this.details.startDateTime| date: datePipeService.slashDateFormat_MM_dd_yyyy()" disabled />
+            </div>
+            <div class="col-md-4">
+                <label class="title">Appt.Time</label>
+                <input type="text" class="form-control" [value]="this.details.startDateTime| date: datePipeService.hourMinAmPmTimeFormat()" disabled />
+            </div>
+            <div class="col-md-4">
+                <label class="title">Duration</label>
+                <input type="text" class="form-control" [value]="details.timeSlot" disabled />
+            </div>
+        </div> 
+        <div class="row">
+			 <div class="col-md-4">
+                <label class="title">Cancelled Date</label>
+                <input type="text" class="form-control" [value]="this.details.deletedAt| date: datePipeService.slashDateFormat_MM_dd_yyyy()" disabled />
+            </div>
+            <div class="col-md-4">
+                <label class="title">Cancelled Time</label>
+                <input type="text" class="form-control" [value]="this.details.deletedAt| date: datePipeService.hourMinAmPmTimeFormat()" disabled />
+            </div>
+            <div class="col-md-4">
+                <label class="title">Deleted by</label>
+                <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                    <input type="text" class="form-control" [value]="details.deletedBy.name" disabled />
+                </span>
+            </div>
+        </div>
+        <div class="row">     
+            <div class="col-md-12">
+                <label class="title">Cancellation Reason</label>
+                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+                        <textarea class="form-control" formControlName="comment" [value]="details.cancelled_comments" disabled>
+                        </textarea>
+                    </span>
+            </div>
+        </div>
+    </div>
+</form>

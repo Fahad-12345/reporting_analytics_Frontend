@@ -1,0 +1,175 @@
+<div class="pull-right custom-tooltip-hov edit-block mt-3"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_personal_information_personal_view)">
+    <a *ngIf="case?.is_finalize && aclService.hasPermission(userPermissions.patient_case_list_personal_information_personal_edit)"
+        href="javascript:void(0)" data-original-title="Edit" tooltip="Edit" (click)="enableForm(enableflag)">
+        <i class="icon-pencil"></i>
+    </a>
+</div>
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="card card-bg w-100 mb-0 mt-0"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_personal_information_personal_view)">
+    <div class="pb-0">
+        <dynamic-form #_component [fields]="fieldConfig" (submit)="onSubmit($event)" (onReady)="onReady($event)" ></dynamic-form>
+        <ng-container *ngIf="allAllergiesList.length">
+            <div *ngFor="let item of allAllergiesList; let i = index;">
+                <div class="pt-allergy">
+                    <div class="allergy-header">
+                        <h5 class="allergy-title">Allergy Type<span>:&nbsp;{{item.name}}</span></h5>	
+                    </div>
+                    <div class="allergy-btn">
+                        <a class="btn btn-default" style="height: 25px;" href="javascript:void(0)" (click)="openAddEditAllergyModal(item,'add')">
+                            <span  class="icon-plus-circle"></span> 
+                            Add Allergy
+                        </a>
+                        <button class="close" type="button" (click)="onCancel(i,item.allergy_type_id)">
+                            <span class="icon-plus"></span>
+                        </button>
+                    </div>
+                </div>
+                <ngx-datatable class="bootstrap" [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'"
+				[scrollbarH]="true" [rows]="item.allergies">
+				<ngx-datatable-column name="Allergy" prop="allergy" [sortable]="false"
+					[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="200">
+					<ng-template ngx-datatable-cell-template let-value="value">
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+							ngbTooltip="{{(value?.name) || 'N/A'}}">
+							{{value?.name || 'N/A'}}
+						</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Reaction" prop="selectedReactionsTooltipDisp" [sortable]="false"
+					[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="200">
+					<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+							ngbTooltip="{{value || 'N/A'}}">
+							{{value ||'N/A'}}
+						</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Severity" prop="severity" [sortable]="false"
+					[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100">
+					<ng-template ngx-datatable-cell-template let-value="value">
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+							ngbTooltip="{{(value?.name) || 'N/A'}}">
+							{{value?.name || 'N/A'}}
+						</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Status" prop="status" [sortable]="false"
+					[canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="80">
+					<ng-template ngx-datatable-cell-template let-value="value">
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+							ngbTooltip="{{(value?.name) || 'N/A'}}">
+							{{value?.name ? value?.name : 'N/A'}}
+						</div>
+					</ng-template>
+				</ngx-datatable-column>
+				<ngx-datatable-column name="Actions" [width]="100" [sortable]="false" cellClass="action-icon">
+					<ng-template ngx-datatable-header-template name="Actions">
+						Actions
+					</ng-template>
+					<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+						<a *ngIf="item.allergies.length > 1" ngbTooltip="Delete" container="body" (click)="onRowDelete(i,rowIndex)" class="remove-hov mx-1">
+							<i class="icon-remove"></i>
+						</a>
+						<a class="edit-hov mx-1" ngbTooltip="Edit" container="body" href="javascript:void(0)" (click)="openAddEditAllergyModal(item,'edit',row,rowIndex)"> 
+							<i class="icon-pencil"></i>
+						</a>
+					</ng-template>
+				</ngx-datatable-column>
+			</ngx-datatable>
+            </div>
+        </ng-container>
+        <div class="row form-btn justify-content-center mt-3">
+            <button  class="btn btn-primary btn-block mt-1 mt-sm-0 mb-2 mb-sm-0" (click)="goBack()"><i
+                class="icon-left-arrow me-2"></i> Cancel</button>
+            <button class="btn btn-success btn-block mt-1 mt-sm-0 mb-2 mb-sm-0"  (click)="onSubmit()"><i
+                class="icon-save-continue me-2"></i> Save & Continue</button>
+        </div>
+    </div>
+</div>
+<ng-template #addEditAllergyInfoModel let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left">Allergy Info</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="close('addEditAllergyInfoModel')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body">						
+	  <form [formGroup]="addAllergyInfoForm" (ngSubmit)="onSubmitAllergy(addAllergyInfoForm)">
+		<div class="row ">
+		  <div class="col-6">
+			<div class="form-group mb-1">
+			  <app-ng-select-shareable 
+						[bindlable]="'name'"
+					    [bindId]="'id'"
+						[filterSelectedItemsFilter]="filterSelecteditems"
+						[filterItemsIdsArray]="filterItemsIdsArrayAllergy"
+						[conditionalParamsOnly]="true"
+                        [closeOnSelect]="true"
+                        [showSelectFieldList] = "addAllergyInfoForm.get('allergy').value ?[addAllergyInfoForm.get('allergy').value] : null"
+						[showSelectFieldOnRefresh]="addAllergyInfoForm.get('allergy_id').value"
+						[lableName]="'Allergy*'"
+						[conditionalExtraApiParams]="extraparams"
+						[mainApiPath]="requestServerpath.erx_fd_api"
+						(valueChange)="onSelectionChange($event,'allergy')"
+						[apiPath]="EnumApiPath.GET_ALLERGY_ERX"
+						[multiple]="false">
+			</app-ng-select-shareable>
+			</div>
+		  </div>
+		  <div class="col-6">
+			<div class="form-group mb-1">
+			  <app-ng-select-shareable #NgSelectReaction
+						[bindlable]="'name'"
+					    [bindId]="'id'"
+						[lableName]="'Reactions'"
+						[conditionalParamsOnly]="true"
+				        [showSelectFieldOnRefresh]="addAllergyInfoForm.get('reaction_ids').value"
+						[conditionalExtraApiParams]="extraparams"
+                        [showSelectFieldList] = "addAllergyInfoForm.get('reactions').value"
+						[mainApiPath]="requestServerpath.erx_fd_api"
+						[apiPath]="EnumApiPath.GET_ALLERGY_REACTIONS_ERX"
+						(valueChange)="onSelectionChange($event,'reaction')"
+						[multiple]="true">
+			</app-ng-select-shareable>
+			</div>
+		  </div>
+		  <div class="col-6">
+			<div class="form-group mb-1">
+				<app-ng-select-shareable
+					[bindlable]="'name'"
+					[bindId]="'id'"
+					[lableName]="'Severity'"
+					[lists]="lstAllergySeverity"
+					[showSelectFieldOnRefresh]="addAllergyInfoForm.get('severity_id').value"
+					(valueChange)="onSelectionChange($event,'severity')"
+					[multiple]="false">
+			    </app-ng-select-shareable>
+			</div>
+		  </div>
+		  <div class="col-6">
+			<div class="form-group mb-1">
+				<app-ng-select-shareable
+					[bindlable]="'name'"
+					[bindId]="'id'"
+					[lableName]="'Status'"
+					[lists]="lstAllergyStatuses"
+					[showSelectFieldOnRefresh]="addAllergyInfoForm.get('status_id').value"
+					(valueChange)="onSelectionChange($event,'status')"
+					[multiple]="false">
+			    </app-ng-select-shareable>
+			</div>
+		  </div>
+		</div>
+		<div class="row">
+		  <div class="col-md-12 modal-btn-width text-center mt-3">
+              <button class="btn btn-primary me-2" (click)="close('addEditAllergyInfoModel')" type="button"
+                 >Cancel</button>
+			<button class="btn btn-success" type="submit"
+			   [disabled]="!addAllergyInfoForm.valid">{{hasId?'Update':'Save'}}</button>
+		  </div>
+		</div>
+	  </form>	
+	</div>
+</ng-template>

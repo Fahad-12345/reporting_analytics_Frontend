@@ -1,0 +1,182 @@
+<div [ngClass]="field.classes">
+	<!-- <div class="form-group search-label" [formGroup]="group" -->
+	<div id="ngSelectDropdown" #ngSelectOuter class="form-group ng-check" [formGroup]="group"
+		[class.focused]="group.get(field.name).value != '' && group.get(field.name).value != null || fieldFocused">
+		<label class="form-label" *ngIf="field.label" [for]="id">{{field.label}}</label>
+		<ng-select class="ng-label" *ngIf="field.configs?.max" [closeOnSelect]="!field.multiple" [virtualScroll]="true"
+			[typeahead]="field?.onTypeahead$" groupBy="is_select" [clearSearchOnAdd]="true" [selectableGroup]="true"
+			[selectableGroupAsModel]="false" (clear)="onClearEvent($event)" (open)="onOpenEvent($event)" [id]="id"
+			(scrollToEnd)="onScrollToEndEvent($event)" [formControlName]="field.name" [items]="field.items"
+			[multiple]="field.multiple" (blur)="onBlurEvent($event)" (focus)="onFocusEvent($event)"
+			[bindLabel]="field.bindLabel" [bindValue]="field.bindValue" [ngClass]="field.classes"
+			[maxSelectedItems]="field.configs?.max" [clearOnBackspace]="false" [searchable]="!field.configs?.dropdownSearch" #ngSelectComponent>
+
+			<ng-template ng-header-tmp *ngIf="field.configs?.dropdownSearch">
+				<div class=" has-feedback">
+						 <input
+						 class="form-control"
+						 type="text"
+						 placeholder="Search"
+						 [formControl]="textSearch"
+						 (input)="ngSelectComponent.filter($event.target.value)"
+						/>
+				</div>
+			</ng-template>
+
+			<ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+				<input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" /> Select All
+			</ng-template>
+			<ng-template *ngIf="field.multiple" ng-multi-label-tmp let-items="items" let-clear="clear">
+				<div class="ng-value ng-label" *ngFor="let item of (appendIcon ? items.slice(0, appendCounter) : items)">
+					<span class="ng-value-label"> {{item[field?.bindLabel]}}</span>
+					<span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+				</div>
+				<div class="ng-value bg-none ng-numbers" *ngIf="appendIcon && (items?.length - appendCounter) > 0">
+					<span class="ng-value-label border-0">+{{items?.length - appendCounter}}</span>
+				</div>
+			</ng-template>
+			<ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index" let-search="searchTerm" class="condition">
+				<span [ngClass]="{'conditional-color-change': (customFontColor && item['realObj']['isLinked'])}"
+					class="ng-option-label border-0 tooltip-outer " tooltipClass="table-custom-tooltip"
+					[ngbTooltip]="item.name" container="body" [ngOptionHighlight]="search">
+				</span>
+				<div class="checkbox-btn">
+					<input id="item-{{index}}" type="checkbox" [checked]="item$.selected" />
+					<span  class="fake-input"></span>
+					<span  class="fake-label">
+						{{field?.qualifierBoolean?item[field?.bindQualifierLabel]:item[field?.bindLabel]}}
+					</span>
+				</div>
+			</ng-template>
+		</ng-select>
+		<ng-select class="ng-label" *ngIf="!field.configs?.max && !field.configs?.add_tag" [closeOnSelect]="!field.multiple"
+			[virtualScroll]="true" (clear)="onClearEvent($event)" [typeahead]="field?.onTypeahead$"
+			(blur)="onBlurEvent($event)" (focus)="onFocusEvent($event)" (keyup)="keyDownEvent($event)"
+			(remove)="remove($event)" (add)="add($event)" [id]="id" [formControlName]="field.name" [items]="field.items"
+			[multiple]="field.multiple" [trackByFn]="trackByFn" groupBy="is_select" [selectableGroup]="true"
+			[selectableGroupAsModel]="false" [clearSearchOnAdd]="true" (scrollToEnd)="onScrollToEndEvent($event)"
+			(change)="getChange($event)" [bindLabel]="field.bindLabel" [bindValue]="field.bindValue"
+			[ngClass]="field.classes" (open)="onOpenEvent($event)" [clearOnBackspace]="false" [searchable]="!field.configs?.dropdownSearch" #ngSelectComponent>
+			
+			<ng-template ng-header-tmp *ngIf="field.configs?.dropdownSearch">
+				<div class=" has-feedback" >
+						 <input
+						 class="form-control"
+						 type="text"
+						 placeholder="Search"
+						 [formControl]="textSearch"
+						 (input)="ngSelectComponent.filter($event.target.value)"
+						/>
+				</div>
+			</ng-template>
+
+			<!-- select All -->
+			<ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+				<div class="checkbox-btn">
+					<input type="checkbox" [checked]="item$.selected">
+					<span  class="fake-input"></span>
+					<span  class="fake-label">Select All</span>
+				</div>
+			</ng-template>
+
+			<!-- Dropdown options with tool tip-->
+			<ng-template  ng-option-tmp let-item="item" let-item$="item$" let-index="index" let-search="searchTerm" class="condition">
+				<div class="checkbox-btn">
+					<input id="item-{{index}}" type="checkbox" [checked]="item$.selected" />
+					<span  class="fake-input"></span>
+					<span  class="fake-label">
+						<span [ngClass]="{'conditional-color-change': (customFontColor && item['realObj']['isLinked'])}"
+						class="ng-option-label border-0 tooltip-outer " tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{item[field?.bindTooltipLabel]}}" container="body" [ngOptionHighlight]="search">
+						{{field?.qualifierBoolean?item[field?.bindQualifierLabel]:item[field?.bindLabel]}}
+						</span>
+
+					</span>
+				</div>
+			</ng-template>
+
+			<!-- showing one option and the rest on hover, like +4-->
+			<ng-template *ngIf="field.multiple" ng-label-tmp ng-multi-label-tmp let-items="items" let-clear="clear">
+				<div class="ng-value ng-label" *ngFor="let item of (appendIcon ? items.slice(0, appendCounter) : items)">
+					<span class="ng-value-label tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{item[field?.bindTooltipLabel]}}" container="body">
+						{{
+						field?.qualifierBoolean?item[field?.bindQualifierLabel]:
+						(item[field?.bindLabel] && item[field?.bindLabel].length > 12) ?
+						item[field?.bindLabel] : item[field?.bindLabel] }}
+					</span>
+					<span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+				</div>
+				<div class="ng-value bg-none ng-numbers" *ngIf="appendIcon && (items?.length - appendCounter) > 0">
+					<span class="ng-value-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{selectedItemDisplay}}" container="body">+{{items?.length - appendCounter}}
+					</span>
+				</div>
+			</ng-template>
+			<!-- <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+        	<span class="ng-option-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip" [ngbTooltip]="item[field?.bindTooltipLabel]" container="body" [ngOptionHighlight]="search">
+						
+			 {{field?.qualifierBoolean?item[field?.bindQualifierLabel]:item[field?.bindLabel]}}
+			</span>
+      		</ng-template> -->
+		</ng-select>
+
+		<ng-select #tagngSelect *ngIf="!field.configs?.max && field.configs?.add_tag" [closeOnSelect]="!field.multiple"
+			[virtualScroll]="true" (clear)="onClearEvent($event)" [typeahead]="field?.onTypeahead$"
+			(blur)="onBlurEvent($event)" (focus)="onFocusEvent($event)" (keyup)="keyDownEvent($event)" [id]="id"
+			[formControlName]="field.name" [items]="field.items" [multiple]="field.multiple"
+			(scrollToEnd)="onScrollToEndEvent($event)" [selectableGroup]="true" [selectableGroupAsModel]="false"
+			[bindLabel]="field.bindLabel" [bindValue]="field.bindValue" [addTag]="addTagFn" [ngClass]="field.classes"
+			(open)="onOpenEvent($event)" groupBy="is_select" [clearOnBackspace]="false" [clearSearchOnAdd]="true" [searchable]="!field.configs?.dropdownSearch" #ngSelectComponent>
+
+			<ng-template ng-header-tmp *ngIf="field.configs?.dropdownSearch">
+				<div class=" has-feedback" >
+						 <input
+						 class="form-control"
+						 type="text"
+						 placeholder="Search"
+						 [formControl]="textSearch"
+						 (input)="ngSelectComponent.filter($event.target.value)"
+						/>
+				</div>
+			</ng-template>
+
+			<ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+				<input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" /> Select All
+			</ng-template>
+			<ng-template *ngIf="field.multiple" ng-multi-label-tmp let-items="items" let-clear="clear">
+				<div class="ng-value ng-label" *ngFor="let item of (appendIcon ? items.slice(0, appendCounter) : items)">
+					<span class="ng-value-label">{{item[field?.bindLabel]}}</span>
+					<span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+				</div>
+				<div class="ng-value bg-none ng-numbers" *ngIf="appendIcon && (items?.length - appendCounter) > 0">
+					<span class="ng-value-label border-0">+{{items?.length - appendCounter}}</span>
+				</div>
+			</ng-template>
+			<ng-template ng-label-tmp let-item="item">
+				{{item[field?.optionSelected ?? field?.bindLabel]}}
+			</ng-template>
+			<ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index" let-search="searchTerm" class="condition">
+				<div class="checkbox-btn">
+					<input id="item-{{index}}" type="checkbox" [checked]="item$.selected" />
+					<span  class="fake-input"></span>
+					<span  class="fake-label">
+						<span [ngClass]="{'conditional-color-change': (customFontColor && item['realObj']['isLinked'])}"
+						class="ng-option-label border-0 tooltip-outer " tooltipClass="table-custom-tooltip"
+						ngbTooltip="{{item[field?.bindTooltipLabel]}}" container="body" [ngOptionHighlight]="search">
+						{{field?.qualifierBoolean?item[field?.bindQualifierLabel]:(field?.bindConcatinationIsAllow)? item?.customBind : item[field?.bindLabel]}}
+						</span>
+
+					</span>
+				</div>
+			</ng-template>
+		</ng-select>
+		<!-- <span *ngIf="group.controls[field.name].errors">
+      {{group.controls[field.name].errors | json}}
+  </span> -->
+		<div *ngFor="let validation of field.validations">
+			<small class="form-text text-muted danger"
+				*ngIf="group.get(field.name).hasError(validation.name) && group.get(field.name).touched">{{validation.message}}</small>
+		</div>
+	</div>
+</div>

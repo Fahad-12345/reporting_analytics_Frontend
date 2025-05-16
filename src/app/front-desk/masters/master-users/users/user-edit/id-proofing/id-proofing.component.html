@@ -1,0 +1,21 @@
+<div class="card">
+	<div class="card-body">
+		<nav class="left-nav p-0">
+			<ul class="list-unstyled">
+				<li class="button--wayra">
+					<a class="d-block" [routerLink]="'proofing-information'" routerLinkActive="active"
+						[class.active]="router.url.includes('proofing-information')" routerLinkActive="active">Proofing
+						Information</a>
+				</li>
+				<li class="button--wayra">
+					<a class="d-block" [routerLink]="'history'" routerLinkActive="active"
+						[class.active]="router.url.includes('history')" routerLinkActive="active">History</a>
+				</li>
+				<li *ngIf="isShowManageAccountBtn" class="button--wayra">
+					<a class="d-block" (click)="manageAccount()"  [ngClass] = "{'disabledAnchor': isDisableManageAccountBtn == true}">Manage Account</a>
+				</li>
+			</ul>
+		</nav>
+		<router-outlet></router-outlet>
+	</div>
+</div>

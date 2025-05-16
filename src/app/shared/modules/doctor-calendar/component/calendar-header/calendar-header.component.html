@@ -1,0 +1,61 @@
+<div class="row text-center mb-3 justify-content-end">
+    <div class="col-lg-6 col-xl-3">
+        <div class="btn-group text-center mt-1">
+            <div class="previous-date" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="viewDateChange.emit(viewDate)" (click)="sendDataPrev(viewDate)" title="Previous Month">
+                <i class="fa fa-caret-left"></i> </div>
+            <div class="text-truncate date-show" mwlCalendarToday>
+                {{ viewDate | calendarDate:(view + 'ViewTitle'):locale:0 }}
+            </div>
+            <div class="next-date" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="viewDateChange.next(viewDate)" (click)="sendDataNext(viewDate)" title="Next Month">
+                <i class="fa fa-caret-right"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-3 col-xl-2">
+        <nav class="left-nav p-0 mt-2">
+            <ul class="list-unstyled text-md-center text-lg-start">
+                <li *ngIf="noteButton && isProvCalendarChosen" class="button--wayra " (click)="addNote(viewDate)">
+                    <button aria-label="Add Note" class="d-block btn btn-outline-success-sch">Add Note</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-md-6 col-lg-3 col-xl-2">
+        <nav class="left-nav p-0 mt-2">
+            <ul class="list-unstyled text-md-center text-lg-end text-xl-start">
+                <li *ngIf="unavailabilityButton && isProvCalendarChosen" class="button--wayra " (click)="addUnavailability(viewDate)">
+                    <button aria-label="Unavailability" class="d-block btn btn-outline-success-sch me-lg-0 me-xl-2">Unavailability</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class=" col-md-9 col-lg-7 col-xl-3 justify-content-lg-center justify-content-xl-start btn-group">
+        <nav class="left-nav p-0 mt-2">
+            <ul class="list-unstyled">
+                <li *ngIf="isProvCalendarChosen" class="button--wayra " (click)="viewChangeFun('month')">
+                    <button aria-label="Month" class="d-block btn btn-outline-success-sch" [class.active]="view === 'month'">Month</button>
+                </li>
+                <li class="button--wayra" (click)="viewChangeFun('week')">
+                    <button aria-label="Week" class="d-block btn btn-outline-success-sch" [class.active]="view === 'week'">Week</button>
+                </li>
+                <li class="button--wayra" (click)="viewChangeFun('day')">
+                    <button aria-label="Day" class="d-block btn btn-outline-success-sch" [class.active]="view === 'day'">Day</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-md-3 col-lg-5 col-xl-2 justify-content-lg-end justify-content-xl-start btn-group month-week-day">
+        <nav class="left-nav p-0 mt-3" style="display: inline;" *ngIf="view != 'month'">
+            <label class="pe-1">Slot: </label>
+            <select aria-label="Select" class="list-unstyled" (change)="hourChangeFun($event)" >
+				<option class="button--wayra" *ngFor="let slot of hourSegmentsList"
+					[class.active]="slot == 60/hourSegments" [selected]="slot == 60/hourSegments">
+                    <!-- <a class="d-block" >{{slot}}</a> -->
+                    {{slot}}
+				</option>
+            </select>
+           
+        </nav>
+    </div>
+    
+</div>

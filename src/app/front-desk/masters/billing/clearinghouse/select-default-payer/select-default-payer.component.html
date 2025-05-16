@@ -1,0 +1,92 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Select Default Payer</h5>
+    </div>
+    <div class="modal-body modal-pt-15 ">
+        <ng-container *ngIf="defaultPayerInfo.length">
+            <div *ngFor="let item of defaultPayerInfo; let i = index;">
+                <div class="pt-payer">
+                    <div class="payer-header">
+                        <h5 class="payer-title">Insurance Name<span>:&nbsp;{{item?.insurance?.insurance_name}}</span>
+                        </h5>
+                    </div>
+                    <div class="payer-header">
+                        <h5 class="payer-title">Location Name<span>:&nbsp;{{item.location_name}}</span></h5>
+                    </div>
+                    <div class="payer-header">
+                        <h5 class="payer-title">State Name<span>:&nbsp;{{item?.state?.name}}</span></h5>
+                    </div>
+                </div>
+                <table class="table table-bordered table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th [width]="10">CH Name</th>
+                            <th [width]="10">Payer ID</th>
+                            <th [width]="10">Professional</th>
+                            <th [width]="10">Institutional</th>
+                            <th [width]="10">Automotive</th>
+                            <th [width]="10">WC</th>
+                            <th [width]="10">EOB/835</th>
+                            <th [width]="10">Supported Transaction</th>
+                            <th [width]="10">Pharmacy Rx</th>
+                            <th [width]="10">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="item.payers.length">
+                            <tr *ngFor="let payer of item.payers; let j = index;">
+                                <td>
+                                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                        ngbTooltip=" {{(payer?.clearinghouse?.name) || 'N/A' }}">
+                                        {{payer?.clearinghouse?.name || 'N/A'}}</span>
+                                </td>
+                                <td>
+                                    <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                                        ngbTooltip=" {{(payer?.payer_id) || 'N/A' }}">
+                                        {{payer?.payer_id || 'N/A'}}</span>
+                                </td>
+                                <td>
+                                    {{payer.professional?'Y':payer.professional == 0 ? 'N':'N/A'}}
+                                </td>
+                                <td>
+                                    {{payer.institutional?'Y':payer.institutional == 0 ? 'N':'N/A'}}
+                                </td>
+                                <td>
+                                    {{payer.automotive?'Y':payer.automotive == 0 ? 'N':'N/A'}}
+                                </td>
+                                <td>
+                                    {{payer.worker_compensation?'Y':payer.worker_compensation == 0 ? 'N':'N/A'}}
+                                </td>
+                                <td>
+                                    {{payer.eob_835?'Y':payer.eob_835 == 0 ? 'N':'N/A'}}
+                                </td>
+                                <td>
+                                    {{payer.supported_transaction || 'N/A'}}
+                                </td>
+                                <td>
+                                    {{payer.pharmacy_Rx?'Y':payer.pharmacy_Rx == 0 ? 'N':'N/A'}}
+                                </td>
+                                <td>
+                                    <mat-radio-button [name]="i + 'rd'" (click)="setDefaultPayer(payer,i)"
+                                        [disabled]="item.payers.length === 1" [value]="payer.is_default_payer"
+                                        [checked]="item.payers.length === 1">
+                                    </mat-radio-button>
+                                </td>
+                        </ng-container>
+                        <ng-container *ngIf="!(item.payers.length)">
+                            <div class="empty-row">
+                                No payer exists against the Insurance location.
+                            </div>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </ng-container>
+        <div class="row">
+            <div class="col-md-12 modal-btn-width text-center">
+                <button (click)="save()" data-dismiss="modal" class="btn btn-success">Save & Continue</button>
+            </div>
+        </div>
+    </div>
+</div>

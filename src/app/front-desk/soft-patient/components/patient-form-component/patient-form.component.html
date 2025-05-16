@@ -1,0 +1,45 @@
+
+
+<div class="front-desk-block">
+	<div class="card mb-0 mt-3 border-0 p-0">
+		<div class="card-body">
+			<dynamic-form [fields]="fieldConfig" (submit)="submit($event)">
+			</dynamic-form>
+
+		</div>
+	</div>
+</div>
+
+
+<ng-template #duplicatePatientModal let-modal>
+	<div class="modal-header">
+		 <!-- <i   [ngClass]="duplicate_patient_is_active?'fas fa-check-circle fa-lg text-success':'fa fa-exclamation-triangle fa-lg text-danger'"></i> -->
+		<h4 id="dialog-sizes-name1" class="modal-title pull-left">Duplicate Patient</h4>
+	  <button type="button" class="close" aria-label="Close" (click)="close()">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+	<div class="modal-body">
+	  <div class = "row"> 
+			<div class = "col-12">
+				<span class="font-bold me-1">Patient Name:</span>
+				<span>{{currentPatientDuplicate?.patient?.personal?.first_name}} {{currentPatientDuplicate?.patient?.personal.middle_name?currentPatientDuplicate?.patient?.personal.middle_name:''}} {{currentPatientDuplicate?.patient?.personal?.last_name}}</span>
+			</div>
+			<div class = "col-12">
+				<span class="font-bold me-1">DOB:</span>
+				<span>{{currentPatientDuplicate?.patient?.personal?.dob | date: commonService.slashDateFormat_MM_dd_yyyy() }}</span>
+			</div>
+			<div class = "col-12">
+				<span class="font-bold me-1">Cell Phone:</span>
+				<span>{{currentPatientDuplicate?.patient?.contact_information?.patient?.cell_phone | phoneFormatPipe }}</span>
+			</div>
+	  </div>
+	  <div class="row mt-3">
+		  <div class="col-md-12 modal-btn-width text-center">
+			<button class = "btn btn-default me-sm-3 mb-2 mb-sm-0" (click) ="newPatient()"> I'm New Patient </button>
+			  <button class = "btn btn-success" (click) = "existingPatient()"> Yes, Thats Me  </button>
+		  </div>
+	  </div>
+		
+	</div>
+</ng-template>

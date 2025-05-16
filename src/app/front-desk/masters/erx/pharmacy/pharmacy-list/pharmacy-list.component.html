@@ -1,0 +1,248 @@
+<!-- <app-erx-menu></app-erx-menu> -->
+<div class="col-12 user-info pt-1 px-0">
+	<h4 class="my-0 color-green">Pharmacy</h4>
+</div>
+<hr class="line-bottom">
+<app-pharmacy-filter (onFilterPharmacyList)="get_filtered_data($event)"></app-pharmacy-filter>
+<div class="data-table">
+	<div class="row mt-2">
+		<div class="col-12 col-sm-6 edit-block text-start">
+			<div class="form-group field option-field mb-2 d-inline-block">
+				<ul>
+					<li>Show</li>
+					<li>
+						<select class="custom-select" name="limit" id="limit"
+							(change)="set_pharmacy_page_size($event.target.value)" [(ngModel)]="pharmacyPage.size">
+							<option [value]="10" selected>10</option>
+							<option [value]="20">20</option>
+							<option [value]="30">30</option>
+							<option [value]="40">40</option>
+							<option [value]="50">50</option>
+							<option [value]="100">100</option>
+						</select>
+					</li>
+					<li>Entries</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+			<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+				Customize Columns
+			</button>
+		</div>
+	</div>
+	<ngx-datatable class="bootstrap" #pharmacyList [rows]="pharmacy_list?.result?.data" [columnMode]='"force"' [footerHeight]="50"
+		[rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+		[count]="pharmacy_list?.result?.total" (page)="set_pharmacy_page_number($event)" [offset]="pharmacy_offSet" [limit]="pharmacyPage.size">
+		<ngx-datatable-column name="NCPDPID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="ncpdp_id" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.ncpdp_id ? row.ncpdp_id : 'N/A'}}" container="body">
+					{{row.ncpdp_id ? row.ncpdp_id : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Store Number" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="store_no" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.store_no ? row.store_no : 'N/A'}}" container="body">
+					{{row.store_no ? row.store_no : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Organization Name" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="organization_name" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.organization_name ? row.organization_name : 'N/A'}}" container="body">
+					{{row.organization_name ? row.organization_name : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Pharmacy Type" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+		[resizeable]="false" prop="erx_organization_types" [width]="200" cellClass="action-icon">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<span *ngIf="value?.length > 0;else emptyPharmacyTypes">
+				<span *ngFor="let num of value" class="badge badge-info">
+					{{num?.organization_type?.name}}
+				</span>
+			</span>
+			<ng-template #emptyPharmacyTypes>
+				N/A
+			</ng-template>
+		</ng-template>
+	</ngx-datatable-column>
+		<ngx-datatable-column name="Address Line1" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="address_line1" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.address_line1 ? row.address_line1 : 'N/A'}}" container="body">
+					{{row.address_line1 ? row.address_line1 : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Address Line2" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="address_line2" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.address_line2 ? row.address_line2 : 'N/A'}}" container="body">
+					{{row.address_line2 ? row.address_line2 : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="City" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="city" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.city ? row.city : 'N/A'}}" container="body">
+					{{row.city ? row.city : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="State Province" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="state_province" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.state_province ? row.state_province : 'N/A'}}" container="body">
+					{{row.state_province ? row.state_province : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Postal Code" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="postal_code" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.postal_code ? row.postal_code : 'N/A'}}" container="body">
+					{{row.postal_code ? row.postal_code : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Country Code" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="country_code" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.country_code ? row.country_code : 'N/A'}}" container="body">
+					{{row.country_code ? row.country_code : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Primary Telephone" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="primary_telephone" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.primary_telephone ? (row.primary_telephone  |phoneFormatPipe) : 'N/A'}}" container="body">
+					{{row.primary_telephone ? (row.primary_telephone  |phoneFormatPipe) : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Fax" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="fax" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.fax ? (row.fax  |phoneFormatPipe) : 'N/A'}}" container="body">
+					{{row.fax ? (row.fax  |phoneFormatPipe) : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Electronic Mail" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="electronic_mail" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.electronic_mail ? row.electronic_mail : 'N/A'}}" container="body">
+					{{row.electronic_mail ? row.electronic_mail : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Active Start Time" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="active_start_time" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.active_start_time ? (row.active_start_time | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A' | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()}}"
+					container="body">
+					{{row.active_start_time ? (row.active_start_time | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Active End Time" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="active_end_time" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.active_end_time ? (row.active_end_time | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A' | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()}}"
+					container="body">
+					{{row.active_end_time ? (row.active_end_time | utcTime | date:datePipeService.slashDateTimeFormat_MM_dd_yyyy_h_mm_AM_PM()) : 'N/A'}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Service Level" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="erx_service_levels" [width]="200" cellClass="action-icon">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<span *ngIf="value?.length > 0;else emptyServiceLevel">
+					<span *ngFor="let num of value" class="badge badge-info">
+						{{num?.service_level?.name}}
+					</span>
+				</span>
+				<ng-template #emptyServiceLevel>
+					N/A
+				</ng-template>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Version" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="version" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.version ? row.version : 'N/A'}}" container="body">
+					{{row.version ? row.version : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="NPI" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="npi" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.npi ? row.npi : 'N/A'}}" container="body">
+					{{row.npi ? row.npi : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="DEA Number" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+			[resizeable]="false" prop="dea_number" [width]="200">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+					ngbTooltip="{{row.dea_number ? row.dea_number : 'N/A'}}" container="body">
+					{{row.dea_number ? row.dea_number : 'N/A'}}</div>
+			</ng-template>
+		</ngx-datatable-column>
+		<ngx-datatable-column name="Actions" [sortable]="false" prop="id" cellClass="action-icon" [canAutoResize]="true"
+			[draggable]="false" [resizeable]="false">
+			
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<button class="view-hov mx-1" ngbTooltip="View" container="body"
+					(click)="pharmacy_detail_open_modal(row,'view',content)">
+					<i class="icon-eye"></i>
+				</button>
+			</ng-template>
+		</ngx-datatable-column>
+	</ngx-datatable>
+</div>
+<ng-template #content let-modal>
+	<div class="modal-header">
+		<h4 id="dialog-static-name" class="modal-title text-capitalize">Pharmacy Details</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<app-pharmacy-detail [pharmacy_detail]="pharmacyDetail"></app-pharmacy-detail>
+	</div>
+	<div class="col-md-12 modal-btn-width text-center">
+	</div>
+</ng-template>
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,8 @@
+<div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center">
+    <h6 class="color-blue mb-3">{{title}}
+    </h6>
+</div>
+<div class="card card-bg-white pb-0 mt-0">
+    <dynamic-form [fields]="fieldConfig" (onReady)="onReady($event)" (submit)="onSubmit($event)"></dynamic-form>
+    <!-- {{form?.value | json}} -->
+</div>

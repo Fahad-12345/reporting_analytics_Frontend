@@ -1,0 +1,31 @@
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end"><button class="btn btn-default btn-clear"  (click)="clearFunc()">Clear</button></div>
+<div
+    [ngClass]="{'disabled-column':(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)
+    ,'required-switch':!isFilled()}">
+
+    <div class="column-content  gridster-item-content layout-fix" id="test{{object.uicomponent_name}}"
+        [ngClass]="{ 'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+        <div *ngIf="object.is_required" class="required-box"></div>
+        <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content"
+            [hidden]="object.isStatement == false || layoutService.editorView == false" (click)="textClick()"
+            [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+        </p>
+        <angular-editor
+            [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)"
+            *ngIf="object.isStatement == true && layoutService.editorView == false"
+            class="ui-component-editor gridster-item-content " id="{{object.uicomponent_name}}Editor" [(obj)]="object"
+            [(ngModel)]="object.statement" (ngModelChange)="statementUpdate()">
+        </angular-editor>
+        <div class="multi-switch btn-group">
+            <label *ngFor="let option of  object.options; let i = index"
+                (click)="optionSelect(object.options, $event,i)">
+                <input
+                    [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)"
+                    style="white-space: pre;" name="{{object.uicomponent_name}}" class="form-control" id="switch{{i}}" type="radio"
+                    value="{{option?.instanceLabel}}" [checked]="option.selected">
+                    <span  (click)="optionSelect(object.options, $event,i)" class="value" *ngIf="layoutService.editorView==true" style="white-space: pre;" attr.for="switch{{i}}" [innerHTML]="sanitizer.bypassSecurityTrustHtml(option?.instanceLabel)"></span>
+                <span  (click)="optionSelect(object.options, $event,i)" class="value" *ngIf="layoutService.editorView==false" style="white-space: pre;" attr.for="switch{{i}}" [innerHTML]="sanitizer.bypassSecurityTrustHtml(option?.label)"></span>
+            </label>
+        </div>
+    </div>
+</div>

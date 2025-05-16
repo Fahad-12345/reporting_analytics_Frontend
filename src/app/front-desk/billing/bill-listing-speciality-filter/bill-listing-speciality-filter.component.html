@@ -1,0 +1,324 @@
+<div class="search-filter">
+  <div class="search-filter-body">
+    <form class="form d-flex flex-wrap" [formGroup]="SpecialityBillsForm">
+      <div class="field-block">
+        <div class="row" [class.dynamic-collapse]="!isCollapsed">
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('bill_date').value != '' && SpecialityBillsForm.get('bill_date').value != null }">
+              <label class="form-label" for="bill_date">Bill Date</label>
+              <ng-select 
+              formControlName="bill_date" 
+              id="bill_date" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('bill_date').errors?.required && (SpecialityBillsForm.get('bill_date').dirty || SpecialityBillsForm.get('bill_date').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+              [ngClass]="{'focused': SpecialityBillsForm.get('bill_date_start').value != '' && SpecialityBillsForm.get('bill_date_start').value != null || (SpecialityBillsForm.get('bill_date_start').errors?.invalid_date && SpecialityBillsForm.get('bill_date_start').errors?.invalid_date?.text != DATEFORMAT) }">
+              <label class="form-label mb-0" for="bill_date_start">From Date</label>
+              <input matInput class="form-control form-input date-field" appInputDateMask  [appMaskDate]=" SpecialityBillsForm.get('bill_date_start').value"  [matDatepicker]="bill_date_start" id="bill_date_start" formControlName="bill_date_start">
+              <span *ngIf="SpecialityBillsForm.get('bill_date_start').value != '' && SpecialityBillsForm.get('bill_date_start').value != null" (click)="SpecialityBillsForm?.get('bill_date_start')?.reset()" class="icon-plus date-cross-icon"></span>
+              <mat-datepicker-toggle matSuffix [for]="bill_date_start"></mat-datepicker-toggle>
+              <mat-datepicker #bill_date_start></mat-datepicker>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('bill_date_start').errors?.invalid_date && SpecialityBillsForm.get('bill_date_start').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('bill_date_end').value != '' && SpecialityBillsForm.get('bill_date_end').value != null || (SpecialityBillsForm.get('bill_date_end').errors?.invalid_date && SpecialityBillsForm.get('bill_date_end').errors?.invalid_date?.text != DATEFORMAT) }">
+              <label class="form-label mb-0" for="bill_date_end">To Date</label>
+              <input matInput class="form-control form-input date-field" appInputDateMask  [appMaskDate]=" SpecialityBillsForm.get('bill_date_end').value" [matDatepicker]="bill_date_end" id="bill_date_end" formControlName="bill_date_end">
+              <span *ngIf="SpecialityBillsForm.get('bill_date_end').value != '' && SpecialityBillsForm.get('bill_date_end').value != null" (click)="SpecialityBillsForm?.get('bill_date_end')?.reset()" class="icon-plus date-cross-icon"></span>
+              <mat-datepicker-toggle matSuffix [for]="bill_date_end"></mat-datepicker-toggle>
+              <mat-datepicker #bill_date_end></mat-datepicker>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('bill_date_end').errors?.invalid_date && SpecialityBillsForm.get('bill_date_end').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('service_date').value != '' && SpecialityBillsForm.get('service_date').value != null }">
+              <label class="form-label" for="service_date">Service Date</label>
+              <ng-select 
+              formControlName="service_date" 
+              id="service_date" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('service_date').errors?.required && (SpecialityBillsForm.get('service_date').dirty || SpecialityBillsForm.get('service_date').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+              [ngClass]="{'focused': SpecialityBillsForm.get('service_date_start').value != '' && SpecialityBillsForm.get('service_date_start').value != null || (SpecialityBillsForm.get('service_date_start').errors?.invalid_date && SpecialityBillsForm.get('service_date_start').errors?.invalid_date?.text != DATEFORMAT) }">
+              <label class="form-label mb-0" for="service_date_start">From Date</label>
+              <input matInput class="form-control form-input date-field" appInputDateMask [appMaskDate]=" SpecialityBillsForm.get('service_date_start').value" [matDatepicker]="service_date_start" id="service_date_start" formControlName="service_date_start">
+              <span *ngIf="SpecialityBillsForm.get('service_date_start').value != '' && SpecialityBillsForm.get('service_date_start').value != null" (click)="SpecialityBillsForm?.get('service_date_start')?.reset()" class="icon-plus date-cross-icon"></span>
+              <mat-datepicker-toggle matSuffix [for]="service_date_start"></mat-datepicker-toggle>
+              <mat-datepicker #service_date_start></mat-datepicker>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('service_date_start').errors?.invalid_date && SpecialityBillsForm.get('service_date_start').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('service_date_end').value != '' && SpecialityBillsForm.get('service_date_end').value != null || (SpecialityBillsForm.get('service_date_end').errors?.invalid_date && SpecialityBillsForm.get('service_date_end').errors?.invalid_date?.text != DATEFORMAT) }">
+              <label class="form-label mb-0" for="service_date_end">To Date</label>
+              <input matInput class="form-control form-input date-field" appInputDateMask [appMaskDate]=" SpecialityBillsForm.get('service_date_end').value" [matDatepicker]="service_date_end" id="service_date_end" formControlName="service_date_end">
+              <span *ngIf="SpecialityBillsForm.get('service_date_end').value != '' && SpecialityBillsForm.get('service_date_end').value != null" (click)="SpecialityBillsForm?.get('service_date_end')?.reset()" class="icon-plus date-cross-icon"></span>
+              <mat-datepicker-toggle matSuffix [for]="service_date_end"></mat-datepicker-toggle>
+              <mat-datepicker #service_date_end></mat-datepicker>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('service_date_end').errors?.invalid_date && SpecialityBillsForm.get('service_date_end').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('bill_status').value != '' && SpecialityBillsForm.get('bill_status').value != null }">
+              <label class="form-label" for="bill_status">Bill Status</label>
+              <ng-select 
+              formControlName="bill_status" 
+              id="bill_status" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('bill_status').errors?.required && (SpecialityBillsForm.get('bill_status').dirty || SpecialityBillsForm.get('bill_status').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('speciality_id').value != '' && SpecialityBillsForm.get('speciality_id').value != null }">
+              <label class="form-label" for="speciality_id">Speciality</label>
+              <ng-select 
+              formControlName="speciality_id" 
+              id="speciality_id" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('speciality_id').errors?.required && (SpecialityBillsForm.get('speciality_id').dirty || SpecialityBillsForm.get('speciality_id').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('user_id').value != '' && SpecialityBillsForm.get('user_id').value != null }">
+              <label class="form-label" for="user_id">User</label>
+              <ng-select 
+              formControlName="user_id" 
+              id="user_id" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('user_id').errors?.required && (SpecialityBillsForm.get('user_id').dirty || SpecialityBillsForm.get('user_id').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('attorney_id').value != '' && SpecialityBillsForm.get('attorney_id').value != null }">
+              <label class="form-label" for="attorney_id">Attorney</label>
+              <ng-select 
+              formControlName="attorney_id" 
+              id="attorney_id" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('attorney_id').errors?.required && (SpecialityBillsForm.get('attorney_id').dirty || SpecialityBillsForm.get('attorney_id').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('case_type').value != '' && SpecialityBillsForm.get('case_type').value != null }">
+              <label class="form-label" for="case_type">Case Type</label>
+              <ng-select 
+              formControlName="case_type" 
+              id="case_type" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('case_type').errors?.required && (SpecialityBillsForm.get('case_type').dirty || SpecialityBillsForm.get('case_type').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('insurance_name').value != '' && SpecialityBillsForm.get('insurance_name').value != null }">
+              <label class="form-label" for="insurance_name">Insurance Name</label>
+              <ng-select 
+              formControlName="insurance_name" 
+              id="insurance_name" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('insurance_name').errors?.required && (SpecialityBillsForm.get('insurance_name').dirty || SpecialityBillsForm.get('insurance_name').touched)">Insurance Name field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('patient_name').value != '' && SpecialityBillsForm.get('patient_name').value != null }">
+              <label class="form-label" for="patient_name">Patient Name</label>
+              <input type="text" class="form-control form-input" id="patient_name" formControlName="patient_name">
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('patient_name').errors?.required && (SpecialityBillsForm.get('patient_name').dirty || SpecialityBillsForm.get('patient_name').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('bill_number').value != '' && SpecialityBillsForm.get('bill_number').value != null }">
+              <label class="form-label" for="bill_number">Bill Number</label>
+              <input type="text" class="form-control form-input" id="bill_number" formControlName="bill_number">
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('bill_number').errors?.required && (SpecialityBillsForm.get('bill_number').dirty || SpecialityBillsForm.get('bill_number').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('case_number').value != '' && SpecialityBillsForm.get('case_number').value != null }">
+              <label class="form-label" for="case_number">Case Number</label>
+              <input type="text" class="form-control form-input" id="case_number" formControlName="case_number">
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('case_number').errors?.required && (SpecialityBillsForm.get('case_number').dirty || SpecialityBillsForm.get('case_number').touched)">This field is required</small>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-3">
+            <div class="form-group field"
+            [ngClass]="{'focused': SpecialityBillsForm.get('provider').value != '' && SpecialityBillsForm.get('provider').value != null }">
+              <label class="form-label" for="provider">Provider</label>
+              <ng-select 
+              formControlName="provider" 
+              id="provider" 
+              [multiple]="true" 
+              [clearable]="true"
+              [items]=""
+              bindLabel="name" 
+              [closeOnSelect]="false"
+              bindValue="id">
+                <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                  <div class="ng-value ng-label" *ngFor="let item of items | slice:0:2">
+                    <span class="ng-value-label">{{item.id}}</span>
+                    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                  </div>
+                  <div class="ng-value bg-none ng-numbers" *ngIf="items.length > 2">
+                    <span class="ng-value-label border-0">+{{items.length - 2}}</span>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <small class="form-text text-muted danger" *ngIf="SpecialityBillsForm.get('provider').errors?.required && (SpecialityBillsForm.get('provider').dirty || SpecialityBillsForm.get('provider').touched)">Provider Name field is required</small>
+            </div>
+          </div>
+          <div class="col-md-12 text-center search-filter-btn float-left mb-3">
+            <button class="btn btn-success mt-0 me-3" type="submit"> Filter </button>
+            <button class="btn btn-primary mt-0"> Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="colps-btn-block">
+        <button class="btn plus-btn position-relative float-right mt-0" style="right: 0;"
+          (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed"
+          aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+          [class.btn-success]="isCollapsed" type="button">
+          <span [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

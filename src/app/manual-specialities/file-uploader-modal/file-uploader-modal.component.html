@@ -1,0 +1,82 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Upload Document</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form [formGroup]="form">
+  <input type="hidden" formControlName="ext">
+
+
+  <div class="modal-body file-upload-modal">
+    <div class="row fields-holder">
+      <div *ngIf="files.length==1 || file" class="col-12">
+        <div class="form-group row fields-holder align-items-center mb-3"
+          [ngClass]="{'focused': form.get('file_title').value != ''}">
+          <label for="file_title" class="col-md-4 form-label">Document Name *</label>
+          <div class="col-md-8">
+            <input type="text" id="file_title" class="form-control form-input mb-0" formControlName="file_title"
+              placeholder="Enter Document Name">
+          </div>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('file_title').errors?.required && (form.get('file_title').dirty || form.get('file_title').touched)">This field is required</small>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('file_title').errors?.maxLength?.requiredLength==100">Maximum characters
+            should be 100!</small>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group align-items-center row fields-holder mb-3"
+          [ngClass]="{'focused': form.get('tags').value != ''}">
+          <label for="tags" class="form-label col-md-4" style="padding-left:10px !important;">Enter
+            Tags</label>
+          <div class="col-md-8">
+            <tag-input formControlName="tags" theme='bootstrap3-info' [separatorKeyCodes]='[32]'></tag-input>
+
+          </div>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('tags').errors?.required && (form.get('tags').dirty || form.get('tags').touched)">This field is required</small>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('tags').errors?.maxLength?.requiredLength==100">Maximum characters
+            should be 100!</small>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="form-group align-items-center row fields-holder mb-3"
+          [ngClass]="{'focused': form.get('description').value != ''}">
+          <label for="description" class="form-label col-md-4" style="padding-left:10px !important;">Description</label>
+          <div class="col-md-8">
+            <input type="text" id="description" class="form-control form-input mb-0" formControlName="description"
+              placeholder="Enter Description">
+
+          </div>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('description').errors?.required && (form.get('description').dirty || form.get('description').touched)">This field is required</small>
+          <small class="form-text text-muted danger offset-md-4 ps-2"
+            *ngIf="form.get('description').errors?.maxLength?.requiredLength==100">Maximum
+            characters should be 100!</small>
+        </div>
+      </div>
+
+
+
+      <div class="col-12 mb-0 px-0 mt-3">
+        <div class="col-sm-8 offset-sm-2">
+          <div class="row">
+
+            <div class="col-12 d-flex align-items-center justify-content-center">
+              <button type="button" (click)="close()" class="btn btn-outline-secondary me-3">Close</button>
+              <button class="btn btn-success" id="btnFileUpload" type="button"
+                (click)="submitForm(form.value)" [disabled]="disableBtn || form.invalid"><span
+                  class="icon-save-continue me-2"></span>
+                {{ disableBtn ?  'Please Wait...' : 'Upload Document' }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+<!-- {{form?.value | json}} -->

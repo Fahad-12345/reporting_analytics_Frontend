@@ -1,0 +1,454 @@
+@import "src/assets/sass/abstracts/variables/_colors.scss";
+
+@mixin pm-dashboard-headings{
+    font-weight: bold;
+    font-size: 14px;
+    @media (max-width: 1024px){
+        font-size: 12px;
+     
+        
+    }
+ 
+}
+
+@mixin appointment-val-font{
+    font-size: 14px;
+    color: $space-cadet-dark;
+}
+
+@mixin patient-card-headings{
+    font-weight: bold;
+    color: $text-grey;
+    font-size: 12px;
+}
+
+@mixin thershold-types{
+    font-size: 12px;
+    padding-inline: 4px;
+    border-radius: 5px;
+}
+
+
+.container {
+    max-width: 100%;
+ 
+}
+
+.heading {
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+.practice-manager{
+    min-height: 100%;
+    border: 1px solid $card-border-grey;
+    box-shadow: 2px 2px 2px 2px $card-boxshadow-grey;
+    .card-body{
+        border: none !important;
+    }
+}
+
+.trend-heading {
+    @include pm-dashboard-headings;
+}
+
+.trend-graph-img {
+    overflow: hidden;
+    position: relative;
+    height: 300px !important;
+    width:630px !important;
+    padding: 25px 25px 0px 25px !important;
+    @media (max-width: 1024px){
+        padding: 25px 0px 0px 0px !important;
+        width:430px !important;
+     
+        
+    }
+    @media (min-width: 1600px){
+        width: 832px !important;
+     
+        
+    }
+}
+
+.total-apt-text{
+    font-size: 12px;
+    font-weight: bold;
+    @media (max-width: 1024px){
+        font-size: 10px;
+     
+        
+    }
+    
+}
+
+.trend-options{
+ width: 160px;
+ height: 52px;
+ border-radius: 5px;
+ padding: 3px;
+ border-left:3px solid $dark-silver;
+ box-shadow: 1px 1px 1px 1px $card-boxshadow-grey;
+ background-color:$card-boxshadow-white;
+ margin-right: 4px;
+ @media (max-width: 1024px){
+    height: 42px;
+ 
+    
+}
+
+}
+.trend-text{
+    font-weight: bold;
+    color: $UCLA-blue;
+    font-size: 12px;
+    margin-top: 3px;
+    @media (max-width: 1024px){
+        font-size: 7px;
+     
+        
+    }
+}
+
+.trend-number {
+    margin-top: 2px;
+    font-weight: bold;
+    @include appointment-val-font;
+    @media (max-width: 1024px){
+        font-size: 8px;
+     
+        
+    }
+ 
+}
+.trend-val{
+    font-size: 14px;
+    color: $text-grey;
+    @media (min-width: 768px){
+        font-size: 10px;
+     
+        
+    }
+    
+   
+    
+}
+ 
+.bill-status-heading{
+    @include pm-dashboard-headings;
+}
+
+
+.threshold1{
+    @include thershold-types;
+    background-color: $warning;
+    margin-bottom: 4px;
+    @media (max-width: 1024px){
+        font-size: 10px;
+     
+        
+    }
+}
+.threshold2{
+    @include thershold-types;
+    background-color: $danger;
+    color: $white;
+    @media (max-width: 1024px){
+        font-size: 10px;
+     
+        
+    }
+       
+}
+
+
+.bill-img{
+    overflow: hidden;
+    position: relative;
+    height: 380px ;
+    @media (min-width: 1600px){
+        height: 400px;
+     
+        
+    }
+    @media (max-width: 1024px){
+        height: 370px;
+     
+        
+    }
+    &:after{
+        position: absolute;
+        content: '';
+        height: 310px;
+        width: 1px;
+        background: $red;
+        left: 200px;
+        top: 0;
+        @media (min-width: 1600px){
+            height: 348px;
+            left: 272px;
+            
+        }
+    }
+    &:before{
+        position: absolute;
+        content: '';
+        height: 310px;
+        width: 1px;
+        background: $warning;
+        left: 150px;
+        top: 0;
+        @media (min-width: 1600px){
+            height: 348px;
+            left: 200px;
+         
+            
+        }
+    }
+}
+
+.patient-heading{
+    @include pm-dashboard-headings;
+    @media (max-width: 1024px){
+        margin-bottom: 10px !important;
+     
+        
+    }
+}
+
+
+.patient-icon{
+    img{
+    @media (max-width: 1024px){
+        width: 20px !important;
+     
+        
+    }
+}
+}
+
+.patient-group{
+    border: 1px solid $card-boxshadow-white;
+    border-radius: 10px;
+    background-color:$card-boxshadow-white;
+    box-shadow: 1px 1px 1px 1px $card-boxshadow-grey;
+    min-height: 100%;
+    
+}
+
+.patient-data-heading{
+    @include patient-card-headings;
+    @media (max-width: 1024px){
+        font-size: 8px;
+     
+        
+    }
+}
+
+.patient-number{
+    font-size: 20px;
+    color: $UCLA-blue;
+    font-weight: bold;
+    @media (max-width: 1024px){
+        font-size: 14px;
+     
+        
+    }
+
+}
+.patient-val{
+    font-size: 12px;
+}
+
+.denial-title{
+    @include pm-dashboard-headings;
+}
+
+.denial-subtitle {
+    font-weight: bolder;
+    color: $text-grey;
+    font-size: 14px;
+    @media (max-width: 1024px){
+        font-size: 12px;
+     
+        
+    }
+
+}
+
+.billed-status-img{
+    overflow: hidden;
+    position: relative;
+    height: 160px ;
+    width: 190px;
+    margin-left: 60px;
+    @media (max-width: 1024px){
+        height: 130px;
+        width: 160px;
+        margin-left: 6px;
+     
+    }
+    @media (min-width: 1600px){
+        margin-left: 100px;
+     
+    }
+
+}
+
+.billed-list{
+    @media (max-width: 1024px){
+        font-size: 10px;
+     
+        
+    }
+}
+.billed-list-title{
+    list-style-type: none;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: white;
+    border-bottom: 1px solid $card-border-grey;
+}
+.info-graph{
+    height: 18px;
+}
+
+.billed-list{
+    overflow-y: scroll;
+    max-height: 240px;
+    box-shadow: 2px 2px 2px 2px $card-boxshadow-grey;
+    @media (max-width: 1024px){
+        max-height: 176px;
+     
+        
+    }
+   
+ }
+
+.average-heading{
+    @include pm-dashboard-headings;
+}
+
+.average-apt {
+    font-size: 14px;
+    color: $text-grey;
+    font-weight: bold;
+    text-align: center;
+    @media (max-width: 1024px){
+        font-size: 12px;
+     
+        
+    }
+
+}
+
+.min-wrap{
+    color: $minmum-green;
+    font-size: 14px;
+    @media (max-width: 1024px){
+        font-size: 12px;
+     
+        
+    }
+    .min{
+        font-weight: bold;
+    }
+}
+
+.max-wrap{
+    color:  $max-red;
+    font-size: 14px;
+    @media (max-width: 1024px){
+        font-size: 12px;
+     
+        
+    }
+    .max{
+        font-weight: bold;
+    }
+}
+
+
+.visit-status-heading{
+    @include pm-dashboard-headings()
+}
+
+.visit-status-img{
+    overflow: hidden;
+    position: relative;
+    height: 440px ;
+    width: 640px;
+    @media (max-width: 1024px){
+        height: 330px;
+        width: 420px;
+     
+    }
+    @media (min-width: 1600px){
+        width: 816px;
+     
+    }
+
+
+}
+.patient-icon-red{
+        color: $icon-red;
+        margin-top: 4px;
+        font-size: 12px;
+        border-radius: 12%;
+        font-weight: bold;
+}
+
+.patient-icon-green{
+    color: $icon-green;
+    margin-top: 4px;
+    font-size: 12px;
+    border-radius: 12%;
+    font-weight: bold;
+}
+
+.patient-icon-grey{
+    color: rgb(88, 87, 87);
+    margin-top: 4px;
+    font-size: 12px;
+    border-radius: 12%;
+    font-weight: bold;
+}
+.tooltip-outer:hover .tooltip-content {
+    display: block;
+}
+
+
+.tooltip-content {
+    display: none;
+}
+.unfinalized-thresholds{
+    position: absolute;
+    right: 40px;
+}
+#csv-icon2 {
+    margin-left: 20px;
+    height: 22px;
+    margin-bottom: 6px;
+  }
+  #csv-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 22px;
+    margin: 10px; /* Adjust this value as needed */
+    z-index: 1;
+  }
+  
+  #csv-icon:hover {
+    cursor: pointer;
+  }
+
+  .summary-icons {
+    height: 32px;
+    @media (max-width: 1024px) {
+      height: 24px;
+    }
+  }
+

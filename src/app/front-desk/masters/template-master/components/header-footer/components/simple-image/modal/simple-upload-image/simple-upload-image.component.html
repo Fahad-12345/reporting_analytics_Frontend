@@ -1,0 +1,46 @@
+<div>
+	<div class="modal-header">
+		<h4 class="modal-title">Upload</h4>
+		<button aria-label="Close" class="close" type="button" data-dismiss="modal"
+			(click)="imageModal.close('cancel')"><span aria-hidden="true">×</span></button>
+	</div>
+	<div class="modal-body">
+
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="px-0">
+					<div class="file-upload" style="border: 2px dashed #b3aeae; border-radius: 5px;">
+						<div class="custom-file-upload mb-3 mt-3">
+							<label for="file-upload" class="custom-file-upload1 bg-green  upload-btn">
+								<i class="icon-upload"></i> Upload
+							</label>
+							<input id="file-upload" type="file" name="image" (change)="fileProgress($event)">
+						</div>
+						<div id="jqueryAppend"></div>
+
+						<div class="image-preview" *ngIf="previewUrl">
+							<img [src]="previewUrl" class="img-fluid" style="height: 100%;" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<canvas id="temp" hidden>
+		</canvas>
+		<div class="row mt-4">
+			<div class="col-sm-8 offset-sm-2">
+				<div class="row">
+					<div class="col-6">
+						<button class="btn bg-green w-100" [disabled]="!previewUrl" type="submit"
+							(click)="onSubmit()">Save</button>
+					</div>
+					<div class="col-6">
+						<button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button"
+							(click)="imageModal.close('cancel')">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

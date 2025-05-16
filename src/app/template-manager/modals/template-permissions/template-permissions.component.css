@@ -1,0 +1,41 @@
+.table-theme tr th, .table-theme tr td {
+    text-align: center;
+    font-size: 12px;
+    padding: 5px !important;
+    font-weight: 500;
+    line-height: 21px;
+    /* border: 1px solid #bbcbbb; */
+    line-height: normal;
+}
+.table-theme tr th {
+    color: #fff;
+    border-color: #fff;
+    background: #61c3ef;
+}
+.color-delete {
+    color: #afafaf !important;
+}
+.table-responsive{
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    /* color: #495057; */
+    background-color: #f7f7f7;
+    border-color: #dee2e6 #dee2e6 #fff;
+    color: #4fa751;
+    font-size: 15px;
+    font-weight: 500;
+}
+.table-border{
+    border-style: solid;
+    border-width: 0 1px 1px 1px;
+    border-color: #b0b1b1;
+    border-radius: 6px 6px 0px 0px;
+}
+.not-found{
+    /* padding: .4em 0; */
+    font-size: 11px ;
+    /* line-height: 1.4; */
+    border-bottom: 1px solid rgba(230,230,230,.7);
+}

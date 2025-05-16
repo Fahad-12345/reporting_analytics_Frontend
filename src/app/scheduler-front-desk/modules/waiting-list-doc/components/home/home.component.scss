@@ -1,0 +1,204 @@
+@media only screen and (min-width: 1024px) and (max-width: 1100px) {
+	.noti-list{
+		padding-left: unset !important;
+	}
+}
+.list_doc{
+	flex: 0 0 35.333333% !important;
+    max-width: 35.333333% !important;
+}
+.Calender_list{
+	flex: 0 0 64% !important;
+    max-width: 64% !important;
+}
+
+.card-body {
+    border-width: 1px;
+    border-color: #c3c4c3;
+    background: #f7f7f7;
+    padding-bottom:0px;
+}
+.card-footer {
+    background: #4b4b4b;
+    border-radius: 0;
+    padding: 6px 15px;
+}
+.plus-btn {
+    width: 36px!important;
+    padding: 2px!important;
+    height: 35px!important;
+    background: #4b4b4b;
+    border-radius: 5px;
+    margin-left: 34px;
+}
+.edit-block a {
+    border: 2px solid #34c3ee;
+    color: #34c3ee;
+    padding: 4px 22px;
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 0;
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    margin-right: 0!important;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 992px) {
+	.time-tab {
+		padding-left: 0;
+		padding-right: 2px;
+	
+	}
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+	-webkit-appearance: searchfield-cancel-button;
+
+}
+
+.e-clear-icon .e-clear-icon-hide {
+	width: 45% !important;
+	margin-left: 68% !important;
+	margin-top: -24px !important;
+}
+
+@media only screen and (min-width: 750px) and (max-width: 899px) {
+
+	.list {
+
+		border: 3px solid #3895D3;
+		height: 60px;
+		width: 60px;
+		border-radius: 50%;
+		margin-top: 11px;
+		margin-bottom: 10px;
+	}
+
+	.descripton {
+		font-size: 13px !important;
+		padding: 0px 0px 0px 12% !important;
+		text-align: left;
+		float: left;
+		margin-bottom: 10px;
+		margin-top: 10px;
+	}
+
+	.tablet {
+		flex: 0 0 33.33333333% !important;
+		max-width: 33.33333333% !important;
+	}
+
+	.tablet1 {
+		flex: 0 0 40.66666667% !important;
+		max-width: 40.66666667% !important;
+	}
+
+	.time {
+		width: 133%;
+		border-bottom-color: #f44336 !important;
+	}
+}
+
+@media only screen and (min-width: 900px) and (max-width: 1365px) {
+	.list {
+
+		border: 3px solid #3895D3;
+		height: 79px;
+		width: 75px;
+		border-radius: 5%;
+		margin-top: 14px;
+		margin-bottom: 10px;
+		margin-left: 15px;
+	}
+
+	.descripton {
+		font-size: 14px !important;
+		padding: 0px 0px 0px 12% !important;
+		text-align: left;
+		float: left;
+		margin-bottom: 10px;
+		margin-top: 10px;
+	}
+	.tablet {
+		flex: 0 0 33.33333333% !important;
+		max-width: 33.33333333% !important;
+	}
+}
+
+@media only screen and (min-width: 1366px) {
+	.descripton {
+		text-align: left;
+		float: left;
+		margin-bottom: 10px;
+		margin-top: 10px;
+	}
+
+	.list {
+
+		border: 3px solid #3895D3;
+		height: 80px;
+		width: 75px;
+		border-radius: 5%;
+		margin-top: 15px;
+		margin-bottom: 10px;
+	}
+}
+
+.tablet {
+	margin-top: 25px;
+}
+.plus-icon
+{
+    font-size: 30px
+}
+.plus-btn:hover {
+    background: #34c3ee;
+    color: #fff;
+}
+.main-page{
+	font-weight:500;
+	font-size: 14px;
+	margin-top: 20px;
+}
+.main-scroll{
+	height: 120vh;
+	overflow-x: hidden
+}
+.main-page-container{
+	background-color:white;
+	padding: 0px;
+}
+.notifi-list-doc{
+	background-color:white;
+	border:1px solid darkgray;
+	margin-left: 0;
+	margin-right: 0;
+}
+.noti-list{
+	float: left;
+}
+.priority-column{
+	white-space: nowrap;
+	display: inline;
+}
+.priority-desc{
+	color:brown;
+	white-space: nowrap;	
+}
+.hand-icon{
+	float: right;
+}
+.show-more-less{
+	width: 50%;
+  }
+.Calender_list{
+	width:100%;
+	overflow-y: scroll;
+	overflow-x:hidden;
+	height: 95vh;
+	padding-right: 1px
+  }
+.table-width{
+	width:100%;
+  }

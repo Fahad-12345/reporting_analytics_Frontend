@@ -1,0 +1,101 @@
+<!-- wrapper -->
+<!-- <div id="wrapper"> -->
+	<!-- header -->
+	<!-- <header id="header">
+		<app-main-header></app-main-header>
+		<app-front-desk-navbar></app-front-desk-navbar>
+	</header> -->
+
+	<!-- <nav class="main-nav navbar navbar-expand w-100 m-0">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+					
+
+                    <li class="nav-item dropdown" routerLinkActive="active">
+                        <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            <span class="icon-stethoscope"></span> Doctor</a>
+                        <div class="dropdown-menu p-2 mt-0">
+                            <ul class="list-unstyled m-0">
+                                <li><a href="javascript:void(0)"></a></li>
+                                <li><a href="javascript:void(0)"></a></li>
+                                <li><a href="javascript:void(0)"></a></li>
+                            </ul>
+
+                        </div>
+					</li>
+					
+					<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
+								aria-haspopup="true" aria-expanded="false">
+								<span class="icon-Scheduler"></span> Scheduler</a>
+							<div class="dropdown-menu p-2 mt-0">
+								<ul class="list-unstyled m-0">
+									<li><a href="javascript:void(0)"></a></li>
+									<li><a href="javascript:void(0)"></a></li>
+									<li><a href="javascript:void(0)"></a></li>
+								</ul>
+	
+							</div>
+						</li>
+
+						<li class="nav-item dropdown">
+								<a class="nav-link dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown"
+									aria-haspopup="true" aria-expanded="false">
+									<span class="icon-reports"></span> Reports</a>
+								<div class="dropdown-menu p-2 mt-0">
+									<ul class="list-unstyled m-0">
+										<li><a href="javascript:void(0)"></a></li>
+										<li><a href="javascript:void(0)"></a></li>
+										<li><a href="javascript:void(0)"></a></li>
+									</ul>
+		
+								</div>
+							</li>
+
+                </ul>
+            </div>
+        </nav> -->
+	<!-- main informative section -->
+	<!-- <main id="main"> -->
+
+		<section class="medical-doctor">
+			<div class="md-block h-100 border-0 p-0">
+				<app-sidebar-left></app-sidebar-left>
+				<div class="row mx-0 h-100 ps-3 pe-3 height-auto">
+					<div class="md-content py-2 ps-2 pe-1 mt-1 h-100" [class.widthMax]="!isSideNavClosed">
+						<router-outlet></router-outlet>
+					</div>
+					<!-- <div class="sidebar-right ps-0 ps-sm-3">
+					<app-side-nav side="right" [showContent]="false" (change)='onSideNavChange($event)'>
+						<app-sidebar-right slot='right'></app-sidebar-right>
+					</app-side-nav>
+				</div> -->
+				</div>
+			</div>
+		</section>
+		<!-- <footer>
+			<div class="col-md-12 text-center px-0">
+				<p>Copyrights@ovada.com</p>
+			</div>
+		</footer> -->
+	<!-- </main> -->
+<!-- </div> -->
+
+
+<!-- <div class="main-container md-block h-100">
+	<app-sidebar-left></app-sidebar-left>
+
+
+	<div class="row mx-0 h-100 ps-3 pe-3">
+		<div class="md-content py-2 ps-2 pe-1 mt-1 h-100" [class.widthMax]="!isSideNavClosed">
+	
+			<router-outlet></router-outlet>
+		</div>
+		<div class="sidebar-right ps-0 ps-sm-3">
+		<app-side-nav side="right" [showContent]="false" (change)='onSideNavChange($event)'>
+			<app-sidebar-right slot='right'></app-sidebar-right>
+		</app-side-nav>
+	</div>
+	</div>
+</div> -->

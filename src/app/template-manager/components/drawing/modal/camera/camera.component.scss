@@ -1,0 +1,30 @@
+.actionBtn {
+  font-size:1rem;
+  cursor: pointer;
+  font-weight: bold;
+  i{
+    font-size: 2rem;
+    background-color: #34c3ee;
+    border-radius: 50%;
+    padding: 10px;
+    color: #fff;
+  }
+}
+.web-cam{
+  border: 3px dashed lightblue;
+  margin: 1rem 7rem;
+  padding: 8px 0px 4px 0px;
+}
+
+
+.snapshot {
+  text-align: center;
+  img {
+    max-width: 800px;
+    max-height: 800px;
+  }
+}
+
+ul.links {
+  padding-bottom: 20px;
+}

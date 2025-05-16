@@ -1,0 +1,219 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="tab-pane fade show active" id="HCPCS" role="tabpanel" aria-labelledby="HCPCS-tab">
+  <div *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_view)">
+    <div class="d-block text-end">
+      <a *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_add)" class="btn btn-default round-btn" href="javascript:void(0)" data-bs-toggle="modal" (click)="openHCPCSModal(editHCPCS)">
+        <span class="icon-plus-circle"></span> Add New </a>
+    </div>
+    <form class="form" action="" autocomplete="off" [formGroup]="HCPCSSearchForm" *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_filter)">
+      <div class="search-filter search-filter-bg-light filter-grid grid-3" [class.hide-remaining-search-filter]="!isCollapsed">
+        <div class="filter-grid-container">
+          <div class="form-group" [ngClass]="{'focused': HCPCSSearchForm.get('name').value != '' && HCPCSSearchForm.get('name').value != null }">
+            <label class="form-label" for="name">Code</label>
+            <input type="text" id="name" class="form-control form-input" formControlName="name">
+          </div>
+          <div class="form-group" [ngClass]="{'focused': HCPCSSearchForm.get('description').value != '' && HCPCSSearchForm.get('description').value != null }">
+            <label class="form-label" for="description">Description</label>
+            <input type="text" id="description" class="form-control form-input" formControlName="description">
+          </div>
+          <div class="form-group" [ngClass]="{'focused': HCPCSSearchForm.get('comments').value != '' && HCPCSSearchForm.get('comments').value != null }">
+            <label class="form-label" for="comments">Comments</label>
+            <input type="text" id="comments" class="form-control form-input" formControlName="comments">
+          </div>
+        </div>
+        <div class="collape-btn">
+          <button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed" [class.btn-success]="isCollapsed" type="button">
+            <span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+          </button>
+        </div>
+        <div class="search-filter-btn-group" [class.btn-group-mrgin-top]="isCollapsed">
+          <button class="btn btn-success" (click)="HCPCSsetPage({offset: 0})">Filter</button>
+          <button class="btn btn-primary" (click)="resetHCPCS()" [disabled]="checkInputs()">Reset</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="card data-table p-0 mt-2 border-0">
+    <div class="row">
+      <div class="col-12 col-sm-6 edit-block text-start">
+        <div class="form-group field option-field mb-2 d-inline-block">
+          <ul>
+            <li>Show</li>
+            <li>
+              <select class="custom-select" name="limit" id="limit" (change)="HCPCSPageLimit($event.target.value)" [(ngModel)]="HCPCSpage.size">
+                <option [value]="10" selected>10</option>
+                <option [value]="20">20</option>
+                <option [value]="30">30</option>
+                <option [value]="40">40</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+              </select>
+            </li>
+            <li>Entries</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+		<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+			Customize Columns
+		</button>
+        <!-- <lib-task-manager *ngIf="HcpcsSelection.selected.length "
+					selectedProps="{{HCPCSstringfy(selection.selected)}}" type="text"
+					[listCount]="HcpcsSelection.selected.length" page="Patient"></lib-task-manager> -->
+        <!-- <a href="javascript:void(0)" (click)="deleteMultipleHcpcsCode()" class="btn btn-default round-btn"
+                  *ngIf="HcpcsSelection.selected.length && aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_delete)"><span class="icon-remove me-1"></span> Delete [{{HcpcsSelection.selected.length}}]
+                </a> -->
+
+
+			</div>
+		</div>
+
+		<ngx-datatable class="bootstrap" #hcpcsList [rows]="HcpcsData" [columnMode]='"force"'
+			[headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [scrollbarH]="true"
+			[count]="HCPCSpage.totalElements" [offset]="HCPCSpage.pageNumber" [limit]="HCPCSpage.size"
+			(page)="HCPCSsetPage($event)" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true">
+
+			<ngx-datatable-column name="Code" [sortable]="false" prop="name" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.name || 'N/A'}}" container="body">
+						{{row.name || 'N/A'}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<!-- <ngx-datatable-column name="Code Type" [sortable]="false" prop="type.name">
+			</ngx-datatable-column> -->
+
+
+			<ngx-datatable-column name="Description" [sortable]="false" prop="description" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.description || 'N/A'}}" container="body">
+						{{row.description || 'N/A'}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<!-- <ngx-datatable-column name="Short Description" [sortable]="false" prop="short_description">
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Medium Description" [sortable]="false" prop="medium_description">
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Long Description" [sortable]="false" prop="long_description">
+			</ngx-datatable-column> -->
+			<ngx-datatable-column name="Comments" [sortable]="false" prop="comments" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.comments || 'N/A'}}" container="body">
+						{{row.comments || 'N/A'}}</div>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column [sortable]='false' name="Employer" prop="employer" [width]="80" [minWidth]="80"  [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template ngx-datatable-cell-template let-row="row">
+				  {{ row.employer?row.employer?.employer_name:'All'}}
+				</ng-template>
+			  </ngx-datatable-column>
+			<ngx-datatable-column name="Actions" [width]="150" [sortable]="false" cellClass="action-icon">
+				<ng-template ngx-datatable-header-template name="Actions">
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_edit)"
+						(change)="$event ? HcpcsmasterToggle() : null"
+						[checked]="HcpcsSelection.hasValue() && isHcpcsAllSelected()"
+						[indeterminate]="HcpcsSelection.hasValue() && !isHcpcsAllSelected()" disabled>
+					</mat-checkbox>
+					Actions
+
+				</ng-template>
+
+				<ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_edit)"
+						(click)="$event.stopPropagation()" (change)="$event ? HcpcsSelection.toggle(row) : null"
+						[checked]="HcpcsSelection.isSelected(row)" disabled>
+					</mat-checkbox>
+					<a href="javascript:void(0)"
+						*ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_edit)"
+						class="edit-hov mx-1" (click)="openHCPCSModal(editHCPCS , row , rowIndex)" ngbTooltip="Edit" container="body"
+						role="button" data-bs-toggle="modal">
+						<i class="icon-pencil"></i>
+						
+					</a>
+					<a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="hcpcsCodeHistoryStats(row)">
+						<i class="fa fa-history"></i>
+					  </a>
+					<!-- <lib-task-manager selectedProps="{{HCPCSstringfy([row])}}" type="icon" id="{{row.id}}"
+						page="Patient">
+					</lib-task-manager> -->
+
+					<!-- <a *ngIf="aclService.hasPermission(userPermissions.master_billing_codes_hcpcs_delete)" class="remove-hov mx-1"
+                    tooltip="Delete" href="javascript:void(0)" role="button" (click)="deleteOneHcpcsCode(row)"><i
+                      class="icon-remove"></i></a> -->
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+<ng-template #editHCPCS let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">{{modelTitle}} HCPCS Code</h5>
+    <button type="button" class="close" (click)="HCPCSClose()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <form autocomplete="" [formGroup]="HcpcsForm" (ngSubmit)="onHCPCSCodeSubmit(HcpcsForm.getRawValue())">
+      <div class="row">
+        <div class="col-md-12 mb-1">
+          <label class="form-label"> HCPCS Code Name*</label>
+          <input type="text" class="form-control mb-0" placeholder="" formControlName="name" notFirstCharactorSpace>
+          <small class="form-text text-muted danger" *ngIf="HcpcsForm.get('name').errors?.required && 
+		                          (HcpcsForm.get('name').dirty || HcpcsForm.get('name').touched)">This field is required</small>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 mb-1 form-group">
+          <label class="form-label"> Description</label>
+          <textarea class="form-control mb-0" rows="3" formControlName="description"></textarea>
+          <small class="form-text text-muted danger" *ngIf="HcpcsForm.get('description').errors?.required && 
+		                          (HcpcsForm.get('description').dirty || HcpcsForm.get('description').touched)">Please enter description!</small>
+        </div>
+      </div>
+      <!-- <div class="row"><div class="col-md-12 mb-1"><label for="name" class="form-label"> Short Description</label><textarea class="form-control mb-0" rows="3" formControlName="short_description"></textarea><small class="form-text text-muted danger"
+						*ngIf="HcpcsForm.get('short_description').errors?.required && 
+		                        (HcpcsForm.get('short_description').dirty || HcpcsForm.get('short_description').touched)">Please enter Short
+						Description!</small></div></div><div class="row"><div class="col-md-12 mb-1"><label for="name" class="form-label"> Medium Description</label><textarea class="form-control mb-0" rows="3" formControlName="medium_description"></textarea><small class="form-text text-muted danger"
+						*ngIf="HcpcsForm.get('medium_description').errors?.required && 
+		                      (HcpcsForm.get('medium_description').dirty || HcpcsForm.get('medium_description').touched)">Please enter Medium
+						Description!</small></div></div><div class="row"><div class="col-md-12 mb-1"><label for="name" class="form-label"> Long Description</label><textarea class="form-control mb-0" rows="3" formControlName="long_description"></textarea><small class="form-text text-muted danger" *ngIf="HcpcsForm.get('long_description').errors?.required && 
+		                    (HcpcsForm.get('long_description').dirty || HcpcsForm.get('long_description').touched)">Please
+						enter Long Description!</small></div></div> -->
+      <div class="row">
+        <div class="col-md-12 mb-1 form-group">
+          <label class="form-label"> Comments</label>
+          <textarea class="form-control mb-3" rows="3" formControlName="comments"></textarea>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 modal-btn-width text-center">
+          <button type="button" class="btn btn-primary me-3" data-dismiss="modal" (click)="HCPCSClose()">Cancel</button>
+          <button type="submit" class="btn btn-success" [disabled]="HcpcsForm.invalid || loadSpin">{{modelSubmit}}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

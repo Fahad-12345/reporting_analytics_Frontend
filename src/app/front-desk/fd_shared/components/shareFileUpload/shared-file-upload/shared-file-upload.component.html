@@ -1,0 +1,272 @@
+<!-- <p>
+  shared-file-upload works!
+</p> -->
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="row" *ngIf="isSameLoginUser()">
+	<div class="col-md-12">
+		<div class="file-upload mb-0 mt-0 mt-xl-2 mb-1">
+			<file-drop headertext="" (onFileDrop)="dropped($event, false , typeContent)" (onFileOver)="fileOver($event)"
+				(onFileLeave)="fileLeave($event)" [showBrowseBtn]="true" browseBtnLabel="Upload"
+				browseBtnClassName="btn btn-success py-1 upload-btn">
+				<p class="me-3 mb-0">Drag and drop files here to upload (PDF, Jpeg, PNG)
+					<!-- <button class="btn bg-green upload-btn mt-0"
+						style="    padding: 3px 15px !important;" type="submit"><img
+							src="assets/images/upload.png" alt="upload"> Upload</button> -->
+				</p>
+			</file-drop>
+		</div>
+	</div>
+</div>
+<mat-progress-bar *ngIf="isUploading" mode="indeterminate"></mat-progress-bar>
+<!-- {{has_document_files}} -->
+<div class="document-manager mt-3 p-0" *ngIf="has_document_files || folderFiles.length > 0 ">
+	<div class="row document-content-area">
+		<div class="col-md-6 px-2">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- <ng-container *ngIf="documentsShown?.files?.length > 0"> -->
+						<!-- {{documentsShown}} -->
+					<ng-container *ngFor="let folder of documentsShown">
+						<div *ngIf="folder?.files_count > 0">
+						<app-folder-component [pdfSourceLink]="pdfSourceLink" [title]="folder?.folder_name" [imageSourceLink]="imageSourceLink"
+							(showMedia)="showMedia($event)" [folder]="folder" (getAllDocuments)="getAllDocuments()" [visitSessionId] = "visitSessionId"
+							(editDocModal)="editDocModal(editTag,$event)" (addTagModal)="addTagModal(addTag,$event)"
+							(deleteMultipleFiles)="deleteForFiles($event)" (onFileDelete)="onFileDelete($event)">
+						</app-folder-component>
+						</div>
+					</ng-container>
+					<!-- </ng-container> -->
+				</div>
+
+
+			</div>
+		</div>
+
+		<div class="col-md-6 preview-details" *ngIf="documentsShown.length">
+			<div class="card">
+				<div class="card-header border-0" style="padding: 0px 15px !important;">
+					<div class="row align-items-center">
+						<div class="col-md-3">
+							<p class="mb-0">Preview</p>
+						</div>
+						<div class="col-md-9 text-end">
+							<button type="button" class="input-group-text btn-default slide-btn float-right"
+								style="background: #34c3ee !important;" *ngIf="!showFile"
+								(click)="showFilePreview(true)"><span class="icon-plus ms-0 p-0"
+									style="background: transparent !important;">
+								</span></button>
+							<button type="button" class="input-group-text btn-success slide-btn float-right"
+								*ngIf="showFile" (click)="showFilePreview(false)"><span class="icon-minus">
+								</span></button>
+						</div>
+					</div>
+
+				</div>
+				<div class="preview-scroll" [class.preview-hold]="!showFile" [style.visibility]="showFile ? 'visible' : 'hidden'">
+					<div class="card-body border-0">
+						<span *ngIf="pdfSourceLink != null &&  objectType == 'staff'">
+							<div class="pdfMD" id="pdfMD" [@fadeInOut]></div>
+						</span>
+
+						<div class="pdf" id="pdf" *ngIf="pdfSourceLink != null && objectType != 'staff'" [@fadeInOut]>
+						</div>
+						<img class="img-fluid w-100" [src]="imageSourceLink" *ngIf="imageSourceLink" [@fadeInOut] />
+						<div style="background-image:url(assets/images/preview.jpg); height:400px; background-position: top center;
+                        background-size: cover;" *ngIf="pdfSourceLink == 'xyz' && imageSourceLink == null"
+							[@fadeInOut]></div>
+					</div>
+					<!-- <perfect-scrollbar > -->
+					<!-- <div class="card-body border-left-0 border-top-0 border-right-0" *ngIf="!showingFiles">
+                        <img class="img-fluid" src="assets/images/preview.jpg">
+
+                    </div> -->
+					<!-- </perfect-scrollbar> -->
+				</div>
+
+
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+<ng-template #typeContent let-modal>
+	<div class="modal-header">
+		<h4 class="modal-title" id="modal-basic-title">Upload Document Test</h4>
+		<button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+
+		<div class="modal-body" style="padding-top:15px !important;">
+			<div class="row fields-holder">
+				<div class="col-12">
+					<!-- <div class="form-group row fields-holder"
+						[ngClass]="{'focused': form.get('fileTitle').value != ''}"></div> -->
+					<label for="fileTitle" class="col-md-4 form-label">Folder Name *</label>
+					<div class="col-md-12">
+
+						<select class="form-select" formControlName="option">
+							<!-- <option value="" disabled>Select Title</option> -->
+							<option value="professional">Professional</option>
+							<option value="educational">Educational</option>
+							<!-- <option value="personal">Personal</option> -->
+						</select>
+					</div>
+				</div>
+			</div>
+			
+					<div class="row justify-content-center mt-3">
+						<div class="col-3">
+							<button type="button" (click)="modal.dismiss('Cross click'); isUploading = false"
+								class="btn btn-primary w-100">Cancel</button>
+						</div>
+						<div class="col-3">
+							<button class="btn btn-success w-100" id="btnFileUpload" type="submit"
+								 [disabled]="form.invalid">Submit
+								<!-- disableBtn -->
+								<!-- {{ disableBtn == false ? 'Upload Document' : 'Please Wait...' }} -->
+							</button>
+						</div>
+
+	
+		</div>
+		</div>
+
+	</form>
+</ng-template>
+
+<!-- this pop up just to add tags -->
+<ng-template #addTag let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">Add Tags</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body modal-pt-15">
+		<form [formGroup]="addTagForm" (ngSubmit)="onSubmitAddTag(addTagForm.value)">
+			<input type="hidden" formControlName="id">
+			<div class="form-group row">
+				<label class="col-sm-12 col-form-label pt-0">Tags:</label>
+				<div class="col-sm-12">
+					{{tags | json}}
+					<tag-input formControlName="tags" (ngModel)='addtags' [addOnBlur]='true' [addOnPaste]='true'
+						theme='bootstrap3-info' [separatorKeyCodes]='[32]' [ripple]='false'
+						(onBlur)=onTextChange($event)>
+					</tag-input>
+
+				</div>
+			</div>
+
+			<div class="form-group row mb-0 mt-1">
+				<div class="col-sm-10 offset-sm-1 text-center">
+					<div class="row">
+						<div class="col-4">
+							<button type="button" (click)="modal.dismiss('Cross click')"
+								class="btn btn-primary w-100">Cancel</button>
+						</div>
+						<div class="col-8">
+							<button class="btn btn-success w-100" type="submit"
+								[disabled]="addTagForm.invalid || disableBtn"><span
+									class="icon-save-continue me-2"></span>Save & continue
+								<!-- {{ disableBtn == false ? 'Submit' : 'Please Wait...' }} -->
+							</button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+</ng-template>
+
+
+<ng-template #editTag let-modal style="max-width: 500px;">
+	<div class="modal-header">
+		<h5 class="modal-title">Edit  Document</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="editTagForm" (ngSubmit)="editTagSubmit()">
+
+			<div class="form-group fields-holder row mb-2"
+				[ngClass]="{'focused': editTagForm.get('file_title').value != ''}">
+				<label for="fileTitle" class="col-sm-3  col-form-label">Rename file:</label>
+				<div class="col-sm-9">
+					<input type="text" class="form-control form-input mb-0" formControlName="file_title"
+						placeholder="Enter Document Name" notFirstCharactorSpace>
+					<small class="form-text text-muted danger"
+						*ngIf="editTagForm.get('file_title').errors?.required && (editTagForm.get('file_title').dirty || editTagForm.get('file_title').touched)">Document Name field is required</small>
+					<small class="form-text text-muted danger"
+						*ngIf="editTagForm.get('file_title').errors?.maxLength?.requiredLength==100">Maximum characters
+						should be 100!</small>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-12 col-form-label pt-0">Tags:</label>
+				<div class="col-sm-12">
+					<tag-input formControlName="tags" (ngModel)='addtags' [addOnBlur]='true' [addOnPaste]='true'
+						theme='bootstrap3-info' [separatorKeyCodes]='[32]' [ripple]='false'
+						(onBlur)=onTextChange($event)>
+					</tag-input>
+				</div>
+			</div>
+
+			<div class="form-group row mb-0 mt-1">
+				<div class="col-sm-12">					
+					<div class="row justify-content-center">
+						<div class="col-4">
+							<button type="button" (click)="modal.dismiss('Cross click')"
+								class="btn btn-primary w-100">Close</button>
+						</div>
+						<div class="col-4">
+							<button class="btn btn-success w-100" type="submit"
+								[disabled]="editTagForm.invalid || updateDisableBtn"><span
+									class="icon-save-continue me-2"></span>Update
+								<!-- {{ disableBtn == false ? 'Submit' : 'Please Wait...' }} -->
+								<!-- [disabled]="disableBtn" -->
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<!-- <div class="form-group row">
+        <label class="col-sm-12 col-form-label pt-0">Please insert multiple tags comma separated! E.g (Tag#1,
+            Tag#2, Tag#3)</label>
+        <div class="col-sm-12">
+            <tag-input formControlName="tags" theme='bootstrap3-info'></tag-input>
+         
+        </div>
+    </div> -->
+
+	<!-- <div class="form-group row mb-0">
+        <div class="col-sm-10 offset-sm-2">
+            <div class="row">
+                <div class="col-8">
+                    <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                            class="icon-save-continue me-2"></span>
+                        {{ disableBtn == false ? 'Submit' : 'Please Wait...' }}
+                    </button>
+
+                </div>
+                <div class="col-4">
+                    <button type="button" (click)="modal.dismiss('Cross click')"
+                        class="btn btn-outline-secondary w-100">Close</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+</ng-template>

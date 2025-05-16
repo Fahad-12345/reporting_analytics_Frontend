@@ -1,0 +1,292 @@
+<!-- <busy-loader [loaderSpin]="startLoader"></busy-loader> -->
+<div class="front-desk-block billing-info">
+
+  <div class="pt-1 user-information disabled-medical-identifier">
+    <!-- (click)="confirmTabSwitch($event)" -->
+    <tabset #tabset>
+      <!-- [disabled]="disableSwitching" -->
+      <tab heading="Login Information">
+        <div class="card">
+          <div class="card-body form">
+            <form [formGroup]="loginForm" autocomplete="off" novalidate (keydown.enter)="$event.preventDefault()">
+              <!--  fake fields are a workaround for chrome/opera autofill getting the wrong fields -->
+              <input style="display:none" type="text" name="fakeusernameremembered">
+              <input style="display:none" type="password" name="fakepasswordremembered">
+
+
+              <div class="row mt-1">
+                <div class="form-group col-sm-6 col-lg-4 mb-4 mt-0 pe-md-1"
+                  [ngClass]="{'focused': loginForm.get('first_name').value != '' && loginForm.get('first_name').value != null }">
+                  <label class="form-label" for="FirstName">First Name*</label>
+                  <input type="text" formControlName="first_name" id="FirstName" class="form-control form-input" (keydown.shift.tab)="Effect('1')">
+                  <small class="form-text text-muted danger">
+                    <ng-container
+                      *ngIf="(loginForm.get('first_name').touched || loginForm.get('first_name').dirty) && loginForm.get('first_name').errors?.required">
+                      This field is required
+                    </ng-container>
+                  </small>
+                </div>
+
+
+                <div class="form-group col-sm-6 col-lg-4 mb-4 mt-0 pe-md-1"
+                  [ngClass]="{'focused': loginForm.get('middle_name').value != '' && loginForm.get('middle_name').value != null }">
+                  <label class="form-label" for="MiddleName">Middle Name</label>
+                  <input type="text" formControlName="middle_name" id="MiddleName" class="form-control form-input" (keydown.shift.tab)="Effect('0')">
+                </div>
+                <div class="form-group col-sm-6 col-lg-4 mb-4 mt-0 pe-md-3"
+                  [ngClass]="{'focused': loginForm.get('last_name').value != '' && loginForm.get('last_name').value != null }">
+                  <label class="form-label" for="LastName">Last Name*</label>
+                  <input type="text" class="form-control form-input" id="LastName" formControlName="last_name" (keydown.shift.tab)="Effect('0')">
+                  <small class="form-text text-muted danger">
+                    <ng-container
+                      *ngIf="(loginForm.get('last_name').touched || loginForm.get('last_name').dirty) && loginForm.get('last_name').errors?.required">
+                      This field is required
+                    </ng-container>
+                  </small>
+                </div>
+                <div class="form-group col-sm-6 col-lg-12 mb-4 mt-0 pe-md-3"
+                  [ngClass]="{'focused': loginForm.get('email').value != '' && loginForm.get('email').value != null }">
+                  <label for="Email" class="form-label">Email *</label>
+                  <input class="form-control form-input" type="email" formControlName="email" autocomplete="nope"
+                    id="Email" (keydown.shift.tab)="Effect('0')">
+                  <small class="form-text text-muted danger"
+                    *ngIf="(loginForm.get('email').touched || loginForm.get('email').dirty) && loginForm.get('email').errors?.required">This field is required</small>
+                    <small class="form-text text-muted danger"
+                    *ngIf="(loginForm.get('email').touched || loginForm.get('email').dirty) && loginForm.get('email').errors?.pattern">Email field is invalid</small>
+                </div>
+                <div class="col-12">
+                  <button class="btn btn-default text-white ms-1 mb-4" (click)="generatePassword()">Generate Password</button>
+                </div>
+
+                <div class="form-group col-sm-6 mb-0 mt-0 pe-md-1"
+                  [ngClass]="{'focused': loginForm.get('password').value != '' && loginForm.get('password').value != null }">
+                  <label for="Password" class="form-label">Password *</label>
+
+                  <input class="form-control mb-0 form-input" #password id="Password" type="password"
+                    formControlName="password" autocomplete="off"
+					
+					spaceNotAllowed appBlockedCopyPaste>
+                  <a href="javascript:void(0)" class="password-icon" (click)="passwordToggle(password)"><i
+                      [class.icon-eye-hide]="password.type == 'text'"
+                      [class.icon-eye-show]="password.type == 'password'"></i></a>
+                      <small class="form-text text-muted danger">
+                        <ng-container *ngIf="loginForm.get('password').touched || loginForm.get('password').dirty">
+                          <ng-container
+                            *ngIf="loginForm.get('password').errors?.required && !(loginForm.get('password').errors?.minlength || loginForm.get('password').errors?.maxlength)">
+                This field is required
+                          </ng-container>
+                          <ng-container
+                            *ngIf="(loginForm.get('password').errors?.minlength || loginForm.get('password').errors?.maxlength) && loginForm.get('password').touched">
+                            Password can be of {{minPasswordLength}} to {{maxPasswordLength}} characters!
+                          </ng-container>
+                        </ng-container>
+                      </small>
+					  <p *ngIf="!passwordIsValid"> Use 8 or more characters with a mix of letters (uper case and lower case), two numbers & symbols	</p>
+					  <app-password-strength
+					  [passwordToCheck]="loginForm.getRawValue().password"
+					  (passwordStrength)="passwordValid($event)"
+					  ></app-password-strength>
+				
+                  <!-- <a class="tooltip-outer copy-icon" tooltipClass="table-custom-tooltip" ngbTooltip="Copy to Clopboard"
+                    href="javascript:void(0)" (click)="copyToClipBoard(password)"><span class="fa fa-copy"></span></a> -->
+
+               
+
+
+                  <!-- <small class="form-text text-muted danger"
+                    *ngIf="loginForm.get('password').errors?.required && (loginForm.get('password').dirty || loginForm.get('password').touched)">Please
+                    enter password!</small>
+                  <small class="form-text text-muted danger"
+                    *ngIf="(loginForm.get('password').errors?.minlength || loginForm.get('password').errors?.maxlength) && loginForm.get('password').dirty">Password
+                    characters length must be between 4 and 24 !</small>
+                  <small class="form-text text-muted danger"
+                    *ngIf="loginForm.get('password').errors?.pattern && loginForm.get('password').touched">requires
+                    one lower case letter, one
+                    upper case letter, one digit, 4-24 length, and no spaces.</small>
+                  <small class="form-text text-muted danger"
+                    *ngIf="loginForm.get('password').errors?.minlength && loginForm.get('password').touched">requires
+                    Min Length should be 6 characters.</small>
+                  <small class="form-text text-muted danger"
+                    *ngIf="loginForm.get('password').errors?.maxlength && loginForm.get('password').touched">requires
+                    Max Length should not be greater than 20 characters.</small> -->
+                </div>
+
+
+                <div class="form-group col-sm-6 mt-0 mb-2 pe-md-1 pe-md-3"
+                  [ngClass]="{'focused': loginForm.get('password_confirmation').value != '' && loginForm.get('password_confirmation').value != null }">
+                  <label for="c_password" class="form-label">Password Confirmation *</label>
+                  <input #confirmPassword class="form-control form-input" type="password" id="c_password"
+                    formControlName="password_confirmation" autocomplete="new-password"
+				
+					spaceNotAllowed appBlockedCopyPaste>
+
+                  <a href="javascript:void(0)" class="password-icon" style="right:1.5625rem;"
+                    (click)="passwordToggle(confirmPassword)"><i [class.icon-eye-hide]="confirmPassword.type == 'text'"
+                      [class.icon-eye-show]="confirmPassword.type == 'password'"></i></a>
+                  <!-- <small class="form-text text-muted danger"
+                    *ngIf="loginForm.get('password_confirmation').errors?.required && (loginForm.get('password_confirmation').dirty || loginForm.get('password_confirmation').touched)">Please
+                    enter password!</small> -->
+                  <!-- <small class="form-text text-muted danger"
+                *ngIf="(loginForm.get('password_confirmation').errors?.minlength || loginForm.get('password_confirmation').errors?.maxlength) && loginForm.get('password_confirmation').dirty">Password
+                characters length must be between 4 and 24 !</small> -->
+                  <small class="form-text text-muted danger">
+                    <ng-container
+                      *ngIf="(loginForm.get('password').touched || loginForm.get('password').dirty) && loginForm.get('password').errors?.required ">
+					  This field is required
+                    </ng-container>
+                  </small>
+                  <!-- <small class="form-text text-muted danger"
+                    *ngIf="loginForm.controls['password'].value != loginForm.controls['password_confirmation'].value && loginForm.controls['password_confirmation'].touched ">
+                    Password does not match!
+                  </small> -->
+                  <small class="form-text color-green"
+                    *ngIf="!loginForm.get('password').errors?.required && !(loginForm.get('password').errors?.minlength || loginForm.get('password').errors?.maxlength) && loginForm.controls['password'].value == loginForm.controls['password_confirmation'].value ">
+                    Password match!
+                  </small>
+
+
+                  <!-- 
+                  <small class="form-text text-muted danger"
+                    *ngIf="loginForm.get('password_confirmation').errors?.minlength && loginForm.get('password_confirmation').touched">requires
+                    Min Length should be 6 characters.</small>
+                  <small class="form-text text-muted danger"
+                    *ngIf="loginForm.get('password_confirmation').errors?.maxlength && loginForm.get('password_confirmation').touched">requires
+                    Max Length should not be greater than 20 characters.</small> -->
+
+
+                  <!-- <small class="form-text text-muted danger"
+                *ngIf="loginForm.get('password_confirmation').errors?.pattern && loginForm.get('password_confirmation').touched">requires
+                one lower case letter, one
+                upper case letter, one digit, 6-13 length, and no spaces.</small> -->
+                </div>
+              </div>
+              <!-- <button class="btn btn-default ms-1 my-1" (click)="generatePassword()">Generate Password</button> -->
+              <!-- <button class="btn btn-default ms-1 my-1" (click)="copyToClipBoard(password)">Copy to Clipboard</button> -->
+              <div class="row">
+                <div class="form-group col-sm-6 mb-0 mt-0 pe-md-1">
+                  <label class="mb-0" for="role">User Roles *</label>
+                  <!-- <ng-select [items]="lstRole" id="role" bindLabel="name" formControlName="role_id" bindValue="id">
+                  </ng-select> -->
+				  <app-ng-select-shareable   [filterFieldName]="'role_id'"
+				  [bindlable]="'name'"  
+				 [bindId]="'id'" [apiPath]="EnumApiPath.userRoleListsApiPath"
+				 (valueChange)="selectionOnValueChange($event,'userRole')"
+				 (touched)="controlHasTouched($event,'userRole')" [ngSelectShow]="true"
+				 [multiple]="false"  [spacingNameClass]="['mb-0']" ></app-ng-select-shareable> 
+                  <small class="form-text text-muted danger">
+                    <ng-container
+                      *ngIf="(loginForm.get('role_id').touched || loginForm.get('role_id').dirty) && loginForm.get('role_id').errors?.required">
+                      This field is required
+                    </ng-container>
+                  </small>
+                  <!-- <input type="text" class="form-control"> -->
+                </div>
+                <div class="form-group col-sm-6 mb-2 mb-0 mt-0 pe-md-3">
+                  <label class="mb-0" for="p_practice">Primary Practice*</label>
+                  <!-- <ng-select [items]="lstFacility" id="p_practice" formControlName="primary_facility_id"
+                    bindLabel="facility_full_name" bindValue="id" [multiple]="false">
+                  </ng-select> -->
+				  <app-ng-select-shareable   [filterFieldName]="'primary_facility_id'"
+				  [bindlable]="'facility_full_name'"  
+				 [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"
+				 (valueChange)="selectionOnValueChange($event,'facility_location')"
+				 (touched)="controlHasTouched($event,'facility_location')"
+				 [multiple]="false" [spacingNameClass]="['mb-0']" 
+				 [qulifierShown] = "true" [ngSelectShow]="true"
+				 ></app-ng-select-shareable> 
+                  <small class="form-text text-muted danger">
+                    <ng-container
+                      *ngIf="(loginForm.get('primary_facility_id').touched || loginForm.get('primary_facility_id').dirty) && loginForm.get('primary_facility_id').errors?.required">
+                      This field is required
+                    </ng-container>
+                  </small>
+                </div>
+                <div *ngIf="is_medical" class="form-group col-md-6 mb-1 mt-0 pe-md-1">
+                  <label class="mb-0" for="speciality">Specialties</label>
+                  <!-- <ng-select [items]="lstSpeciality" id="speciality" bindLabel="name" formControlName="speciality_id"
+                    bindValue="id" [multiple]="false">
+                  </ng-select> -->
+				  <app-ng-select-shareable   [filterFieldName]="'speciality_ids'"
+				  [bindlable]="'name'"  
+				 [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"
+				 (valueChange)="selectionOnValueChange($event)"
+				 [qulifierShown] = "true" [ngSelectShow]="true"
+				 [multiple]="true"></app-ng-select-shareable> 
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-12 text-center">
+					<button class="btn btn-default text-white ms-3"
+                    (click)="cancelUser()">Cancel</button>
+                  <button class="btn btn-success ms-3"
+                    [disabled]="!loginForm.valid ||  !passwordIsValid || disableCredentialForm ||startLoader"
+					(click)="registerUser()">Register</button>
+				
+                </div>
+              </div>
+
+
+              <!-- <a href="javascript:void(0)" class="forgot-link" (click)="onForgotPassword()">Forgot Password?</a> -->
+            </form>
+          </div>
+        </div>
+
+      </tab>
+      <!-- [disabled]="disableSwitching" -->
+      <tab heading="Basic Information" id="basic_info">
+        <!-- <div class="document-manager add-user pt-2 px-0">
+          <div class="user-info">
+            <div class="row">
+              <div class="col-md-12">
+                <h4 class="mt-1 color-green mb-0">Add User</h4>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <hr class="line-bottom">
+
+        <div class="card mt-3" style="padding:0px; border:none;">
+          <app-user-form #userForm (userFormSubmit)="userFormSubmit($event)" [dropdownList]='dropdownList'>
+          </app-user-form>
+        </div> -->
+
+
+      </tab>
+      <!-- [disabled]="disableSwitching" -->
+      <tab heading="Privileges">
+        <!-- 
+        <div class="col-md-6 form">
+          <label for="super-admin" class="chkbox position-relative mt-2">
+            <input id="super-admin" name="superadmin" value="" [(ngModel)]="isSuperAdmin" type="checkbox">
+            <span class="fake-input position-absolute"></span>
+            <span class="fake-label d-block">Super Admin</span>
+          </label>
+
+
+        </div>
+        <tabset *ngIf="!isSuperAdmin">
+          <tab *ngFor="let tabz of allTab;let i = index" [attr.data-index]="i" [heading]="tabz?.name"
+            [active]="tabz?.active" (select)="selectedPrivchildTab(tabz,i)" [disabled]="tabz?.disabled"
+            [removable]="tabz?.removable" (removed)="removeTabHandler(tabz)" [customClass]="tabz?.customClass">
+
+
+            <app-user-privileges #privaleges [facilityId]="tabz?.id" [userPermissonData]="tabz?.userPermission">
+            </app-user-privileges>
+          </tab>
+
+        </tabset>
+        <button class="btn btn-primary" [disabled]="" (click)="updateUser()">Update</button> -->
+      </tab>
+      <tab *ngIf="isRoleMedicalIdentifier(loginForm.controls['role_id'].value)" heading="Medical Identifier"
+        style="pointer-events: none;">
+
+
+      </tab>
+    </tabset>
+  </div>
+</div>
+
+<!-- <app-user-form [title]="'Add'"></app-user-form> -->
+

@@ -1,0 +1,1034 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div [class]="isMaster?'front-desk-block invoice-builder invoice-builder-master':'front-desk-block invoice-builder invoice-builder-template'">
+  <div class="card border-0 w-100 mb-0 mt-3">
+    <div class="card-body form">
+      <form class="invoice-builder-form" [formGroup]="InvoiceBuilderForm" (ngSubmit)="onSubmit(InvoiceBuilderForm)" autocomplete="off">
+        <div class="invoice-header mt-3">
+          <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+              <div class="invoice-logo" *ngIf="this.invoicebuilder['is_enable_logo']">
+                <p>Logo of Practice</p>
+                <mat-slide-toggle *ngIf="!this.dontShowToggle" color="primary" formControlName="is_enable_logo"></mat-slide-toggle>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+              <div class="invoice-heading" *ngIf="!this.dontShowToggle">
+                <div class="form-group field " [ngClass]="{'focused': formControls['invoice_name'].value != '' && formControls['invoice_name'].value != null }">
+                  <label class="form-label" for="invoice_name">Invoice Name*</label>
+                  <input type="text" class="form-control form-input" id="invoice_name" formControlName="invoice_name" [maxLength]="50">
+                  <small class="form-text text-muted danger" *ngIf="formControls['invoice_name'].errors?.required && 
+                           (formControls['invoice_name'].dirty ||
+                           formControls['invoice_name'].touched)"> This field is required</small>
+                </div>
+              </div>
+              <h5 class="template-name" *ngIf="this.dontShowToggle">{{invoice_name}}</h5>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+              <app-ng-select-shareable #invoiceType  [events]="invoiceToSubject.asObservable()" [bindlable]="'name'" 
+               [bindId]="'id'" [lableName]="'Invoice Type*'" [disableField]="disableFieldInvoiceType" [filterFieldName]="'invoice_category_id'" [showSelectFieldList]="selectedMultipleFieldFiter['invoice_category_id']" [showSelectFieldOnRefresh]="InvoiceBuilderForm.get('invoice_category_id').value" [lists]="invoiceTypes" [apiPath]="EnumApiPath.Invoice_builder_Invoice_Type_Category" (valueChange)="selectionOnInvoiceToValueChange($event,'invoice_category_id',true); " [multiple]="false"></app-ng-select-shareable>
+              <small class="form-text text-muted danger" *ngIf="formControls['invoice_category_id'].errors?.required && 
+                     (formControls['invoice_category_id'].dirty ||
+                     formControls['invoice_category_id'].touched)"> This field is required</small>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+              <div class="invoice-mat-calender parent-horizontal-label" *ngIf="this.invoicebuilder['is_enable_current_date']">
+                <app-mat-date-picker-sharedable class="form-group field invoice-form-group" [disabled]="isEdit" [lableName]="'Current Date'" (valueChange)="onChangedate($event)" [defaultDate]='startDate'></app-mat-date-picker-sharedable>
+                <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2 mt-1" color="primary" formControlName="is_enable_current_date"></mat-slide-toggle>
+              </div>
+            </div>
+          </div>
+          <!-- <button class="close" type="button" (click)="onCancel()"><span class="icon-plus"></span></button> -->
+        </div>
+        <h6 class="heading-style">Practice Details:</h6>
+        <ng-container *ngIf="!isMaster">
+          <div class="row">
+            <div class="col-12">
+              <div class="light-list-striped light-mat-striped mb-3">
+                <ul>
+                  <li>
+                    <label class="mb-0">Practice:</label>
+                    <span *ngIf="invoice_from_bill" class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{invoiceDetailsForBills?.facility_location?.facility?.name || invoiceDetailsForBills?.invoice_data?.facility_name}}">
+                      {{invoiceDetailsForBills?.facility_location?.facility?.qualifier || invoiceDetailsForBills?.invoice_data?.facility_qualifier }}
+                    </span>
+                    <div class="practice-select ms-1 w-100" *ngIf="!invoice_from_bill">
+                      <!-- (valueChange)="selectionOnValueChange($event,'patient_recipient_id')"  -->
+                      <!-- <app-ng-select-shareable  [events]="eventsSubject.asObservable()"  [filterFieldName]="'practice_location_id'"
+                                     [showSelectFieldList]="selectedMultipleFieldFiter['practice_location_id']"
+                                     [showSelectFieldOnRefresh]="InvoiceBuilderForm.get('practice_location_id').value" 
+                                          [searchLableName]="'practice_location_id'"
+                                         [bindlable]="'template_facility_full_name'"
+                                      [bindId]="'id'"  [dontCallApi] ="true"
+                                      [disableField] = "disabledFields"
+                                      [lists] = "invoiceDetailsForBills['kiosk_case_practice_locations']?invoiceDetailsForBills['kiosk_case_practice_locations']:[]" 
+                                    [multiple]="false" 
+                                    (valueChange)="onPracticeLocationSelection($event)"
+                                    ></app-ng-select-shareable> -->
+                      <ng-select [items]="invoiceDetailsForBills['practice_location_name']?invoiceDetailsForBills['practice_location_name']:[]" formControlName="practice_location_id" [multiple]="false" (change)="onPracticeLocationSelection($event)" [closeOnSelect]="true" bindLabel="qualifier" bindValue="id" class="invoice-select">
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                          <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{item?.facility_full_name}}">{{item?.qualifier}}</span>
+                        </ng-template>
+                      </ng-select>
+                      <!-- <app-ng-select-shareable [events]="eventsSubject.asObservable()"
+                              [bindlable]="'facility_full_name'"
+                              [bindId]="'id'"  [qulifierShown]="true" [closeOnSelect]="true"
+                              [apiPath]="EnumApiPath.InvoiceBuilderFacilities"
+                              [disableField] = "disabledFields"
+                              (valueChange)="onPracticeLocationSelection($event)"></app-ng-select-shareable> -->
+                    </div>
+                  </li>
+                  <li *ngIf="this.invoicebuilder['is_enable_p_tax_identification_number']">
+                    <label class="mb-0"> Tax Identification Number:</label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip " container="body" ngbTooltip="{{invoiceDetailsForBills?.facility_location?.facility_billing?.tin}}">
+                      {{invoiceDetailsForBills?.facility_location?.facility_billing?.tin?invoiceDetailsForBills?.facility_location?.facility_billing?.tin:(practiceLocationDetails?.facility_billing && practiceLocationDetails?.facility_billing?.tin?(practiceLocationDetails?.facility_billing?.tin?.substring(0,2)+'-'+practiceLocationDetails?.facility_billing?.tin?.substring(2)):'')
+                           }}</span>
+                    <!-- {{practiceLocationDetails?.facility_billing && practiceLocationDetails?.facility_billing?.tin?(practiceLocationDetails?.facility_billing?.tin?.substring(0,2)+'-'+practiceLocationDetails?.facility_billing?.tin?.substring(2)):'Tax Identification No.'}} -->
+                  </li>
+                  <li *ngIf="this.invoicebuilder['is_enable_p_address']">
+                    <label class="mb-0 me-3">Practice Address:</label>
+                    <span *ngIf="invoice_from_bill" class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="
+                          {{invoiceDetailsForBills?.facility_location?.address?invoiceDetailsForBills?.facility_location?.address
+                           +',':invoiceDetailsForBills?.invoice_data?.facility_street_address?invoiceDetailsForBills?.invoice_data?.facility_street_address+',':''}}
+                         {{invoiceDetailsForBills?.facility_location?.floor?invoiceDetailsForBills?.facility_location?.floor+',':invoiceDetailsForBills?.invoice_data?.facility_floor?invoiceDetailsForBills?.invoice_data?.facility_floor+',':''}}
+                         {{invoiceDetailsForBills?.facility_location?.city?invoiceDetailsForBills?.facility_location?.city+',':
+                         invoiceDetailsForBills?.invoice_data?.facility_city?invoiceDetailsForBills?.invoice_data?.facility_city+',':''
+                        }}
+                         {{invoiceDetailsForBills?.facility_location?.state?invoiceDetailsForBills?.facility_location?.state+',':
+                         invoiceDetailsForBills?.invoice_data?.facility_state?invoiceDetailsForBills?.invoice_data?.facility_state+',':''
+                        }}
+                         {{invoiceDetailsForBills?.facility_location?.zip?invoiceDetailsForBills?.facility_location?.zip:
+                           invoiceDetailsForBills?.invoice_data?.facility_zip?invoiceDetailsForBills?.invoice_data?.facility_zip:''
+                        }}">
+                      {{invoiceDetailsForBills?.facility_location?.address?invoiceDetailsForBills?.facility_location?.address +',':invoiceDetailsForBills?.invoice_data?.facility_street_address?invoiceDetailsForBills?.invoice_data?.facility_street_address+',':''}}
+                      {{invoiceDetailsForBills?.facility_location?.floor?invoiceDetailsForBills?.facility_location?.floor+',':invoiceDetailsForBills?.invoice_data?.facility_floor?invoiceDetailsForBills?.invoice_data?.facility_floor+',':''}}
+                      <br>
+                      {{invoiceDetailsForBills?.facility_location?.city?invoiceDetailsForBills?.facility_location?.city+',': invoiceDetailsForBills?.invoice_data?.facility_city?invoiceDetailsForBills.invoice_data.facility_city+',':''
+                           }}
+                      {{invoiceDetailsForBills?.facility_location?.state?invoiceDetailsForBills?.facility_location?.state+',': invoiceDetailsForBills?.invoice_data?.facility_state?invoiceDetailsForBills?.invoice_data?.facility_state+',':''
+                           }}
+                      {{invoiceDetailsForBills?.facility_location?.zip?invoiceDetailsForBills?.facility_location?.zip: invoiceDetailsForBills?.invoice_data?.facility_zip?invoiceDetailsForBills?.invoice_data?.facility_zip:''
+                           }}
+                    </span>
+                    <span *ngIf="!invoice_from_bill">
+                      {{this.practiceLocationDetails?.address?this.practiceLocationDetails?.address:''}}{{this.practiceLocationDetails && this.practiceLocationDetails?.floor? ', ':''}}
+                      {{this.practiceLocationDetails?.floor}}
+                      <br>{{this.practiceLocationDetails?.city}}{{this.practiceLocationDetails && this.practiceLocationDetails?.state && this.practiceLocationDetails?.zip?', ':''}}
+                      {{this.practiceLocationDetails?.state}} {{this.practiceLocationDetails?.zip}}
+                    </span>
+                  </li>
+                </ul>
+                <ul class="list-unstyled" *ngIf="invoicebuilder['is_enable_p_email'] || invoicebuilder['is_enable_p_fax_number'] || invoicebuilder['is_enable_p_phone_number']">
+                  <li *ngIf="invoicebuilder['is_enable_p_email']">
+                    <label class="mb-0">Email:</label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{invoiceDetailsForBills?.facility_location?.email}}">
+                      {{invoiceDetailsForBills?.facility_location?.email?invoiceDetailsForBills?.facility_location?.email:(this.practiceLocationDetails?.email?practiceLocationDetails?.email:'')}}</span>
+                  </li>
+                  <li *ngIf="invoicebuilder['is_enable_p_fax_number']">
+                    <label class="mb-0">Fax number:</label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{invoiceDetailsForBills?.facility_location?.fax |phoneFormatPipe}}">
+                      {{(invoiceDetailsForBills?.facility_location?.fax)? (invoiceDetailsForBills?.facility_location?.fax|phoneFormatPipe):(
+                           practiceLocationDetails?.fax?(this.practiceLocationDetails?.fax | phoneFormatPipe):'')
+                           }}
+                    </span>
+                  </li>
+                  <li *ngIf="invoicebuilder['is_enable_p_phone_number']">
+                    <label class="mb-0">Phone number:</label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip=" {{invoiceDetailsForBills?.facility_location?.cell_no | phoneFormatPipe}}">
+                      {{(invoiceDetailsForBills?.facility_location?.phone)? (invoiceDetailsForBills?.facility_location?.phone | phoneFormatPipe):
+                           (practiceLocationDetails?.phone)?(this.practiceLocationDetails?.phone | phoneFormatPipe) :''
+                           }}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h6 class="heading-style">Patient Details:</h6>
+          <div class="row">
+            <div class="col-12">
+              <div class="light-list-striped mb-3">
+                <ul>
+                  <li *ngIf="invoicebuilder['is_enable_chart_id']">
+                    <label class="mb-0">Chart Id:</label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{invoiceDetailsForBills?.chart_id | ssnFormatPipe}}">
+                      {{invoiceDetailsForBills?.chart_id | ssnFormatPipe}}
+                    </span>
+                  </li>
+                  <li *ngIf="invoicebuilder['is_enable_patient_name']">
+                    <label class="mb-0"> Patient Name:</label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.facility_location?.facility_full_name}}">
+                      {{invoiceDetailsForBills?.patient?.first_name}} {{invoiceDetailsForBills?.patient?.middle_name?invoiceDetailsForBills?.patient?.middle_name:''}} {{invoiceDetailsForBills?.patient?.last_name}}
+                    </span>
+                  </li>
+                  <li>
+                    <label class="mb-0">Case Id:</label>
+                    <span *ngIf="invoice_from_bill || isEdit || case?.case_id" class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="  {{invoiceDetailsForBills?.id}}">
+                      {{invoiceDetailsForBills?.id}}
+                    </span>
+                    <div class="mat-ng-select ms-1 w-100" *ngIf="!invoice_from_bill && !isEdit && !case?.case_id">
+                      <app-ng-select-shareable #CaseIdNgSelect [events]="caseIdSubject.asObservable()" [filterFieldName]="'case_ids'" [maxLengthName]="27" [disableField]="disabledFields" [bindlable]="'case_id'" [bindId]="'case_id'" [searchLableName]="'id'" [apiPath]="EnumApiPath.CaseIDApiPath" (valueChange)="onCaseIdValueChange($event)" [multiple]="false"></app-ng-select-shareable>
+                    </div>
+                  </li>
+                </ul>
+                <ul class="list-unstyled" *ngIf="invoicebuilder['is_enable_dob'] || invoicebuilder['is_enable_claim_number'] || invoicebuilder['is_enable_date_of_loss']">
+                  <li *ngIf="invoicebuilder['is_enable_dob']">
+                    <label class="mb-0">Date of Birth:</label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{invoiceDetailsForBills?.patient_dob |date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+                      {{(invoiceDetailsForBills?.patient?.dob)?(invoiceDetailsForBills?.patient?.dob |date: commonService.slashDateFormat_MM_dd_yyyy()):(InvoiceBuilderForm.value.date_of_birth |date: commonService.slashDateFormat_MM_dd_yyyy())
+                           }}
+                    </span>
+                  </li>
+                  <li *ngIf="invoicebuilder['is_enable_claim_number']">
+                    <label class="mb-0">Claim No:</label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{invoiceDetailsForBills?.claim_no}}">
+                      {{invoiceDetailsForBills?.claim_num?invoiceDetailsForBills?.claim_num:InvoiceBuilderForm.value.claim_number }}</span>
+                  </li>
+                  <li *ngIf="invoicebuilder['is_enable_date_of_loss']">
+                    <label class="mb-0"> Date of Accident: </label>
+                    <span class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{(invoiceDetailsForBills?.accident_information)?(invoiceDetailsForBills?.accident_information?.accident_date |date: commonService.slashDateFormat_MM_dd_yyyy()):(InvoiceBuilderForm.value.date_of_loss |date: commonService.slashDateFormat_MM_dd_yyyy())}}">
+                      {{(invoiceDetailsForBills?.accident_information)?(invoiceDetailsForBills?.accident_information?.accident_date |date: commonService.slashDateFormat_MM_dd_yyyy()):(InvoiceBuilderForm.value.date_of_loss |date: commonService.slashDateFormat_MM_dd_yyyy())}}
+                    </span>
+                  </li>
+                </ul>
+                <ul *ngIf="invoicebuilder['is_enable_bill_id'] || invoicebuilder['is_enable_date_of_service']">
+                  <li *ngIf="!invoice_from_bill">
+                    <label>Specialty</label>
+                    <div class="mat-ng-select ms-1 w-100 inv-spec">
+                    <app-ng-select-shareable #specialityDetails 
+                    [bindlable]="'name'" 
+                    [bindId]="'id'" 
+                    [apiPath]="EnumApiPath.getSpecilities"
+                    (valueChange)="onChangeSpecility($event)"
+                    (removeEmitter)="removeSpeciality($event)"
+                    [showSelectAll]="true"
+                    [showGroupBy]="true"
+                    [forceApiHitonOpen]="true"
+                    [multiple]="true"></app-ng-select-shareable>
+                  </div>
+                  </li>
+                  <li *ngIf="invoicebuilder['is_enable_bill_id']">
+                    <label class="mb-0">Bill Id</label>
+                    <span *ngIf="invoice_from_bill" class="tooltip-outer ms-3" tooltipClass="table-custom-tooltip" container="body">
+                      <mat-chip-list #chipList class="inv-chip">
+                        <mat-chip class="inv-chip-hold mb-sm-1" *ngFor="let option of invoiceDetailsForBills?.bills" [selectable]="selectable" [removable]="removable" (removed)="removeBillId(option)">
+                          <!-- <mat-icon class="mat-cancel" matChipRemove (click)="removeBillId(option)">cancel</mat-icon> -->
+                          <span class="mat-value-label">{{option?.label_id || option?.bill_label_id }}</span>
+                          <span aria-hidden="true" matChipRemove (click)="removeBillId(option)" class="mat-cancel  left">×</span>
+                        </mat-chip>
+                      </mat-chip-list>
+                    </span>
+                    <div class="mat-ng-select ms-1 w-100 bill-id-flow" *ngIf="!invoice_from_bill">
+                      <app-ng-select-shareable 
+                      #BillIdNgSelect 
+                      [events]="billSubject.asObservable()" 
+                      [filterFieldName]="'bill_ids'" 
+                      [searchLableName]="'name'" 
+                      [disableField]="disabledFields" 
+                      [bindlable]="'label_id'" 
+                      [needToClearOptions]="true"
+                      [bindId]="'id'" 
+                      [apiPath]="EnumApiPath.get_bills_of_specilities "
+                      (valueChange)="onBillSelection($event)" 
+                      [conditionalExtraApiParams]="speclityParams"
+                      [showSelectAll]="true"
+                      [showGroupBy]="true" [forceApiHitonOpen]="true"
+                      [multiple]="true"></app-ng-select-shareable>
+                    </div>
+                  </li>
+                  <li *ngIf="invoicebuilder['is_enable_date_of_service']">
+                    <label class="mb-0">Date of Service:</label>
+                    <span *ngIf="invoice_from_bill" class="tooltip-outer ms-2" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.facility_location?.facility_full_name}}">
+                      {{ (invoiceDetailsForBills?.dos?.dos_start == invoiceDetailsForBills?.dos?.dos_end)
+                           ? (invoiceDetailsForBills?.dos?.dos_start | date: commonService.slashDateFormat_MM_dd_yyyy())
+                           :(invoiceDetailsForBills?.dos?.dos_start | date: commonService.slashDateFormat_MM_dd_yyyy()) +' - '+ (invoiceDetailsForBills?.dos?.dos_end | date: commonService.slashDateFormat_MM_dd_yyyy())
+                           }}
+                    </span>
+                    <span *ngIf="!invoice_from_bill" class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{editRecord?.facility_location?.facility_full_name}}">
+                      {{ (formControls['dos_start']?.value == formControls['dos_end']?.value)
+								? (formControls['dos_start']?.value | date: commonService.slashDateFormat_MM_dd_yyyy())
+								:(formControls['dos_start']?.value | date: commonService.slashDateFormat_MM_dd_yyyy()) +' - '+ (formControls['dos_end']?.value | date: commonService.slashDateFormat_MM_dd_yyyy())
+								}}
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <h6 class="heading-style">Invoice To: </h6>
+          <div class="row form-group mb-4 invoice-to-form">
+            <div class="col-sm-12">
+              <div class="light-list-striped p-3">
+                <ng-select [items]="billRecipatantTypes" formControlName="invoice_to" (add)="onAddInvoice($event)" [multiple]="true" (change)="onInvoiceToChange($event)" [closeOnSelect]="false" placeholder="Invoice To" (remove)="onInvoiceToRemove($event)" bindLabel="name" bindValue="id" class="invoice-select" id="invoice_to">
+                  <ng-template ng-option-tmp let-item="item" let-index="index">
+                    {{item.name}}
+                  </ng-template>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="grid-main" *ngIf="isOtherSelected">
+            <div class="row mt-3">
+              <div class="col-md-6">
+                <input type="text" (keydown)="onKeyDown($event)" formControlName="other_recipient" placeholder="Other*" maxlength="520" class="form-control mb-0">
+                <small class="form-text text-muted danger" *ngIf="InvoiceBuilderForm.get('other_recipient').errors?.required && (InvoiceBuilderForm.get('other_recipient').dirty || InvoiceBuilderForm.get('other_recipient').touched || submitted)">This field is required</small>
+              </div>
+              <div class="col-md-6">
+                <input class="form-control mb-0" type="text" formControlName="phone_no"  placeholder="Phone No" mask='000-000-0000'>
+                <small class="form-text text-muted danger"
+                *ngIf=" InvoiceBuilderForm.get('phone_no').touched && InvoiceBuilderForm?.controls?.phone_no?.status=='INVALID' && submitted">
+								Invalid Phone No.</small>
+              </div>
+            </div>
+            <div class="row fields-holder mt-4">
+              <div class="col-xl-3 col-lg-3">
+                <div class="form-group field" [ngClass]="{'focused': InvoiceBuilderForm.get('address').value != '' && InvoiceBuilderForm.get('address').value != null }">
+                  <label for="address" class="form-label">Address*</label>
+                  <input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+                  <input ngx-google-places-autocomplete [options]="{
+                        types: [],
+                        componentRestrictions: { country: 'US' }
+                        }" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event)" (keydown)="onKeyDown($event)" formControlName="address" class="form-control form-input mb-0" />
+                  <small class="form-text text-muted danger" *ngIf="InvoiceBuilderForm.get('address').errors?.required && (InvoiceBuilderForm.get('address').dirty || InvoiceBuilderForm.get('address').touched || submitted)">This field is required</small>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-3">
+                <div class="form-group field" [ngClass]="{'focused': InvoiceBuilderForm.get('city').value != '' && InvoiceBuilderForm.get('city').value != null }">
+                  <label for="city" class="form-label">City*</label>
+                  <input type="text" id="city" (keydown)="onKeyDown($event)" formControlName="city" class="form-control form-input mb-0" >
+                  <small class="form-text text-muted danger" *ngIf="InvoiceBuilderForm.get('city').errors?.required && (InvoiceBuilderForm.get('city').dirty || InvoiceBuilderForm.get('city').touched || submitted)">This field is required</small>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-3">
+                <div class="form-group field" [ngClass]="{'focused': InvoiceBuilderForm.get('state').value != '' && InvoiceBuilderForm.get('state').value != null }">
+                  <label for="state" class="form-label">State*</label>
+                  <input type="text" id="state" (keydown)="onKeyDown($event)" formControlName="state" class="form-control form-input mb-0" appStateMask >
+                  <small class="form-text text-muted danger" *ngIf="InvoiceBuilderForm.get('state').errors?.required && (InvoiceBuilderForm.get('state').dirty || InvoiceBuilderForm.get('state').touched || submitted)">This field is required</small>
+                </div>
+              </div>
+              <div class="col-xl-3 col-lg-3">
+                <div class="form-group field" [ngClass]="{'focused': InvoiceBuilderForm.get('zip').value != '' && InvoiceBuilderForm.get('zip').value != null }">
+                  <label for="zip" class="form-label">Zip*</label>
+                  <input type="tel" id="zip" class="form-control form-input mb-0" formControlName="zip" mask="00000" >
+                  <small class="form-text text-muted danger" *ngIf="InvoiceBuilderForm.get('zip').errors?.required && (InvoiceBuilderForm.get('zip').dirty || InvoiceBuilderForm.get('zip').touched || submitted)">This field is required</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row grid-main align-items-start mt-2">
+            <div class="col-md-3 column-data" *ngIf="InvoiceBuilderForm?.value && InvoiceBuilderForm?.value.invoice_to && InvoiceBuilderForm?.value.invoice_to.length!=0 && InvoiceBuilderForm?.value?.invoice_to?.includes(1 || '1')">
+              <label>Patient Name:</label>
+              <!-- <span>{{this.invoiceDetailsForBills['patient'].first_name  + ' ' +(this.invoiceDetailsForBills['patient'].middle_name?this.invoiceDetailsForBills['patient'].middle_name:'') + ' '+this.invoiceDetailsForBills['patient'].last_name}}</span> -->
+            </div>
+            <div class="col-md-3 column-data" *ngIf="InvoiceBuilderForm?.value && InvoiceBuilderForm?.value.invoice_to && InvoiceBuilderForm?.value.invoice_to.length!=0 && InvoiceBuilderForm?.value?.invoice_to.includes(4 || '4') && (this.invoiceDetailsForBills['case_firm'] &&
+                        this.invoiceDetailsForBills['case_firm'].firm['name']) && invoice_from_bill">
+              <label>Attorney Name:</label>
+              <!-- <span>{{(this.invoiceDetailsForBills['case_firm'] && this.invoiceDetailsForBills['case_firm']?.firm['name'])?this.invoiceDetailsForBills['case_firm']?.firm['name']:''}}</span> -->
+            </div>
+            <div class="col-md-3 column-data" *ngIf="InvoiceBuilderForm?.value && InvoiceBuilderForm?.value.invoice_to && InvoiceBuilderForm?.value.invoice_to.length!=0 && InvoiceBuilderForm?.value?.invoice_to.includes(4 || '4') && !invoice_from_bill">
+            <app-ng-select-shareable #invoiceBuilderBillFirmReciptient 
+            [events]="eventsSubject.asObservable()" 
+            [filterFieldName]="'attorney_recipient_id'"
+            [showSelectFieldOnRefresh]="InvoiceBuilderForm.get('attorney_recipient_id').value" 
+            [lableName]="'Firm'" 
+            [multiLocations]="true"
+            [apiPath]="firmUrlsEnum.AllFirms_list_GET"
+            [bindlable]="'full_name'" 
+            [searchLableName]="'attorney_recipient_id'" 
+            [bindId]="'id'" 
+            [multiple]="true"
+            (addNewRecord)="addNewInsurance($event,'attorney_recipient_id')"
+            (valueChange)="removeAllInsurances($event,'attorney_recipient_id')"
+            (removeEmitter)="removeInsuarance($event,'attorney_recipient_id')"
+            [lists]="isEdit?allFirms:[invoiceDetailsForBills?.case_firm?.firm]"
+            [conditionalLists]="isEdit?allFirms:[invoiceDetailsForBills?.case_firm?.firm]"
+            >
+          </app-ng-select-shareable>
+          </div>
+          <!-- [lists]="invoiceDetailsForBills['attorneyInfoReciptient']?invoiceDetailsForBills['attorneyInfoReciptient']:[]"  -->
+            <div class="col-md-3" *ngIf="InvoiceBuilderForm?.value && InvoiceBuilderForm?.value.invoice_to && InvoiceBuilderForm?.value.invoice_to.length!=0 && InvoiceBuilderForm?.value?.invoice_to?.includes(3 || '3') && invoice_from_bill">
+              <app-ng-select-shareable #InvoiceBuilderBillInsuranceeciptient [events]="eventsSubject.asObservable()" [filterFieldName]="'insurance_recipient_id'" [showSelectFieldList]="selectedMultipleFieldFiter['insurance_recipient_id']" [showSelectFieldOnRefresh]="InvoiceBuilderForm.get('insurance_recipient_id').value" [lableName]="'Insurance'" [bindlable]="'full_name'" [searchLableName]="'insurance_recipient_id'" [bindId]="'id'" [dontCallApi]="true" [lists]="invoiceDetailsForBills['insuranceInfoReciptient']?invoiceDetailsForBills['insuranceInfoReciptient']:[]" (valueChange)="selectionOnValueChange($event,'insurance_recipient_id')" [multiple]="true"></app-ng-select-shareable>
+            </div>
+            <div class="col-md-3" *ngIf="InvoiceBuilderForm?.value && InvoiceBuilderForm?.value.invoice_to && InvoiceBuilderForm?.value.invoice_to.length!=0 && InvoiceBuilderForm?.value?.invoice_to?.includes(3 || '3') && !invoice_from_bill">
+              <app-ng-select-shareable #InvoiceBuilderBillInsuranceeciptient 
+              [events]="eventsSubject.asObservable()"
+              [filterFieldName]="'insurance_recipient_id'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['insurance_recipient_id']"
+              [multiLocations]="true"
+              [apiPath]="insuranceUrlsEnum.insurance_bill_Get"
+              [showSelectFieldOnRefresh]="InvoiceBuilderForm.get('insurance_recipient_id').value" 
+              [lableName]="'Insurance'" [bindlable]="'insurance_name'"
+              (addNewRecord)="addNewInsurance($event,'insurance_recipient_id')"
+              (valueChange)="removeAllInsurances($event,'insurance_recipient_id')"
+              (removeEmitter)="removeInsuarance($event,'insurance_recipient_id')"
+              [searchLableName]="'insurance_recipient_id'" 
+              [bindId]="'id'"
+              [multiple]="true" 
+              [lists]="isEdit?allInsurances:invoiceDetailsForBills['insuranceInfoReciptient']"
+              [conditionalLists]="isEdit?allInsurances:invoiceDetailsForBills['insuranceInfoReciptient']"
+              ></app-ng-select-shareable> 
+            </div>
+            <div class="col-md-3" *ngIf="InvoiceBuilderForm?.value && InvoiceBuilderForm?.value.invoice_to && InvoiceBuilderForm?.value.invoice_to.length!=0 && InvoiceBuilderForm?.value?.invoice_to?.includes(2 || '2') && invoice_from_bill">
+              <app-ng-select-shareable #InvoiceBuilderBillEmployerreciptient [events]="eventsSubject.asObservable()" [filterFieldName]="'employer_recipient_id'" [showSelectFieldList]="selectedMultipleFieldFiter['employer_recipient_id']" [showSelectFieldOnRefresh]="InvoiceBuilderForm.get('employer_recipient_id').value" [lableName]="'Employer'" [bindlable]="'full_name'" [searchLableName]="'employer_recipient_id'" [bindId]="'id'" [dontCallApi]="true" [lists]="invoiceDetailsForBills['employerInfoReciptient']?invoiceDetailsForBills['employerInfoReciptient']:[]" (valueChange)="selectionOnValueChange($event,'employer_recipient_id')" [multiple]="true"></app-ng-select-shareable>
+            </div>
+            <div class="col-md-3" *ngIf="InvoiceBuilderForm?.value && InvoiceBuilderForm?.value.invoice_to && InvoiceBuilderForm?.value.invoice_to.length!=0 && InvoiceBuilderForm?.value?.invoice_to?.includes(2 || '2') && !invoice_from_bill">
+              <app-ng-select-shareable #InvoiceBuilderBillEmployerreciptient 
+              [events]="eventsSubject.asObservable()" 
+              [filterFieldName]="'employer_recipient_id'" 
+              [apiPath]="employerUrls.Employer_list_GET"
+              [showSelectFieldList]="selectedMultipleFieldFiter['employer_recipient_id']" 
+              [showSelectFieldOnRefresh]="InvoiceBuilderForm.get('employer_recipient_id').value" 
+              [lableName]="'Employer'" 
+              [bindlable]="'employer_name'"
+              [multiLocations]="true"
+              [searchLableName]="'employer_recipient_id'"
+              [bindId]="'id'"
+              [multiple]="true"
+              (addNewRecord)="addNewInsurance($event,'employer_recipient_id')"
+              (valueChange)="removeAllInsurances($event,'employer_recipient_id')"
+              (removeEmitter)="removeInsuarance($event,'employer_recipient_id')"
+              [lists]="isEdit?allEmployers:invoiceDetailsForBills['employerInfoReciptient']"
+              [conditionalLists]="isEdit?allEmployers:invoiceDetailsForBills['employerInfoReciptient']"
+              ></app-ng-select-shareable>
+            </div>
+            <div class="col-md-3" *ngFor="let location of allLocations">
+             <app-ng-select-shareable
+             [events]="eventsSubject.asObservable()" 
+             [bindId]="'id'"
+             [lableName]="location?.invoice_to_label=='attorney'?location?.name+' Firm':(location?.insurance_name+' Insurance')"
+             [lists]="location?.realObj?.insurance_locations?location?.realObj?.insurance_locations:(location?.realObj?.firm_locations?location?.realObj?.firm_locations:[])"
+             (valueChange)="changeNewLocation($event,location)"
+             [dontCallApi] ="true"
+             [bindlable]="'name'"
+             ></app-ng-select-shareable>
+            </div>
+          </div>
+        </ng-container>
+        <div class="invoice-info mt-4">
+          <div class="row">
+            <ng-container *ngIf="isMaster">
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="invoice-sec-left">
+                  <ng-container *ngIf="isMaster">
+                    <div *ngIf="this.invoicebuilder['is_enable_provider']">
+                      <div class="form-group">
+                        <ul>
+                          <li class="ps-0 invoice-list">
+                            <app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'Practice'" [showSelectAll] ="true"
+                            [showGroupBy] = "true" [bindlable]="'facility_full_name'" [bindId]="'id'" [qulifierShown]="true" [closeOnSelect]="true" [apiPath]="EnumApiPath.InvoiceBuilderFacilities" [disableField]="disabledFields" (valueChange)="onPracticeLocationSelection($event)"></app-ng-select-shareable>
+                            <!-- <mat-slide-toggle *ngIf="!this.dontShowToggle" class=" ms-4 mt-1" color="primary"
+                                       (change)="slideToggling($event,'provider')" formControlName="is_enable_provider"></mat-slide-toggle> -->
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="form-group" *ngIf="this.invoicebuilder['is_enable_p_tax_identification_number']">
+                        <ul>
+                          <li>
+                            <i class="far fa-file-alt fa-lg"></i>
+                          </li>
+                          <li class="invoice-list">
+                            <span for="p_tax_identification_number" class="title">{{practiceLocationDetails?.facility_billing && practiceLocationDetails?.facility_billing?.tin?(practiceLocationDetails?.facility_billing?.tin?.substring(0,2)+'-'+practiceLocationDetails?.facility_billing?.tin?.substring(2)):'Tax Identification No.'}} </span>
+                            <mat-slide-toggle *ngIf="!this.dontShowToggle" color="primary" (change)="ParentToggle($event,'is_enable_provider',this.provider,'is_enable_p_tax_identification_number')" formControlName="is_enable_p_tax_identification_number"></mat-slide-toggle>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="form-group" *ngIf="this.invoicebuilder['is_enable_p_address']">
+                        <ul>
+                          <li>
+                            <i class="fa fa-map-marker fa-lg" aria-hidden="true"></i>
+                          </li>
+                          <li class="invoice-list">
+                            <span *ngIf="!this.dontShowToggle" span class="title" for="is_enable_p_address"> Address </span>
+                            <span class="title" for="is_enable_p_address">
+                              {{this.practiceLocationDetails?.address?this.practiceLocationDetails?.address:''}}{{this.practiceLocationDetails && this.practiceLocationDetails?.floor? ', ':''}}
+                              {{this.practiceLocationDetails?.floor}}
+                              <br>{{this.practiceLocationDetails?.city}}{{this.practiceLocationDetails && this.practiceLocationDetails?.state && this.practiceLocationDetails?.zip?', ':''}}
+                              {{this.practiceLocationDetails?.state}} {{this.practiceLocationDetails?.zip}}
+                            </span>
+                            <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" color="primary" (change)="ParentToggle($event,'is_enable_provider',this.provider,'is_enable_p_address')" formControlName="is_enable_p_address"></mat-slide-toggle>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="form-group" *ngIf="this.invoicebuilder['is_enable_p_phone_number']">
+                        <ul>
+                          <li>
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                          <li class="invoice-list">
+                            <span class="title" for="p_phone_number">{{(this.practiceLocationDetails?.phone)?(this.practiceLocationDetails?.phone | phoneFormatPipe) :'Phone Number'}} </span>
+                            <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" color="primary" formControlName="is_enable_p_phone_number" (change)="ParentToggle($event,'is_enable_provider',this.provider,'is_enable_p_phone_number')"></mat-slide-toggle>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="form-group" *ngIf="this.invoicebuilder['is_enable_p_fax_number']">
+                        <ul>
+                          <li>
+                            <i class="fa fa-fax" aria-hidden="true"></i>
+                          <li class="invoice-list">
+                            <span class="title" for="p_fax_number">{{this.practiceLocationDetails?.fax?(this.practiceLocationDetails?.fax | phoneFormatPipe):'Fax Number'}} </span>
+                            <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" color="primary" formControlName="is_enable_p_fax_number" (change)="ParentToggle($event,'is_enable_provider',this.provider,'is_enable_p_fax_number')"></mat-slide-toggle>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="form-group" *ngIf="this.invoicebuilder['is_enable_p_email']">
+                        <ul>
+                          <li>
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                          <li class="invoice-list">
+                            <span class="title" for="p_email">{{this.practiceLocationDetails?.email?this.practiceLocationDetails?.email:'Email'}}</span>
+                            <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" color="primary" formControlName="is_enable_p_email" (change)="ParentToggle($event,'is_enable_provider',this.provider,'is_enable_p_email')"></mat-slide-toggle>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <div class="row form-group mb-4 invoice-to-form">
+                    <div class="col-sm-12 p-0">
+                      <ul>
+                        <li class="invoice-list" *ngIf="!disabledFields">
+                          <ng-select [items]="invoice_to_list" [multiple]="true" (change)="onInvoiceToChange($event)" [closeOnSelect]="false" placeholder="Invoice To" bindLabel="name" bindValue="id" id="invoice_to">
+                            <ng-template ng-option-tmp let-item="item" let-index="index">
+                              {{item.name}}
+                            </ng-template>
+                          </ng-select>
+                        </li>
+                      </ul>
+                      <select name="" class="my-3 form-control" disabled="true" *ngIf="disabledFields" id="">
+                        <option value="">Invoice To</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row grid-main">
+                    <div class="col-md-12 form-group inner-grid" *ngIf="invoiceToFirmLocation">
+                      <ul>
+                        <li class="invoice-to-list">
+                          <app-ng-select-shareable #invoiceToFirmNgSelect [events]="invoiceToSubject.asObservable()" [bindlable]="'location_name'" [bindId]="'id'" [lableName]="'Firm Name'" [showSelectAll] ="true"
+                          [showGroupBy] = "false" [apiPath]="EnumApiPath.AttorneyApiPath" [disableField]="disabledFields" (valueChange)="selectionOnInvoiceToValueChange($event,'firm'); " [multiple]="true"></app-ng-select-shareable>
+                        </li>
+                        <li [style.width]="(!this.dontShowToggle)? '20%' :'0%'"></li>
+                      </ul>
+                    </div>
+                    <div class="col-md-12 form-group inner-grid" *ngIf="invoiceToPatient">
+                      <ul>
+                        <li class="invoice-to-list">
+                          <app-ng-select-shareable #invoiceToPatientNgSelect [events]="invoiceToSubject.asObservable()" [mainApiPath]="requestServerpath.kios_api_path" [bindlable]="'full_name'" [bindId]="'id'" [lableName]="'Patient Name'" [showSelectAll] ="true"
+                          [showGroupBy] = "false" [disableField]="disabledFields" [apiPath]="EnumApiPath.patientNameApiPath" (valueChange)="selectionOnInvoiceToValueChange($event,'patient'); " [multiple]="false"></app-ng-select-shareable>
+                        </li>
+                        <li [style.width]="(!this.dontShowToggle)? '20%' :'0%'"></li>
+                      </ul>
+                    </div>
+                    <div class="col-md-12 form-group inner-grid" *ngIf="invoiceToInsuranceLocation">
+                      <ul>
+                        <li class="invoice-to-list">
+                          <app-ng-select-shareable #invoiceToInsuranceNgSelect [events]="invoiceToSubject.asObservable()" [bindlable]="'location_name'" [bindId]="'id'" [lableName]="'Insurance Name'" [showSelectAll] ="true"
+                          [showGroupBy] = "false" [disableField]="disabledFields" [apiPath]="EnumApiPath.InsuranceApiPath" (valueChange)="selectionOnInvoiceToValueChange($event,'insurance'); " [multiple]="true"></app-ng-select-shareable>
+                        </li>
+                        <li [style.width]="(!this.dontShowToggle)? '20%' :'0%'"></li>
+                      </ul>
+                    </div>
+                    <div class="col-md-12 form-group inner-grid" *ngIf="invoiceToEmployer">
+                      <ul>
+                        <li class="invoice-to-list">
+                          <app-ng-select-shareable #invoiceToEmployerNgSelect [searchLableName]="'employer_name'" [events]="invoiceToSubject.asObservable()" [mainApiPath]="requestServerpath.fd_api_url" [bindlable]="'employer_name'" [bindId]="'id'" [lableName]="'Employer Name'" 
+                          [showSelectAll] ="true" [showGroupBy] = "false" [disableField]="disabledFields" [apiPath]="EnumApiPath.EmployerApiPath" (valueChange)="selectionOnInvoiceToValueChange($event,'employer');" [multiple]="true"></app-ng-select-shareable>
+                        </li>
+                        <li [style.width]="(!this.dontShowToggle)? '20%' :'0%'"></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="invoice-sec-right mb-3">
+                  <div class="pt-detail mb-3 d-flex">
+                    <span class="title mt-1" for="patient_detail">Patient Details</span>
+                    <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-3 mt-1" color="primary" formControlName="is_enable_patient_detail" (change)="slideToggling($event,'patientdetails')"></mat-slide-toggle>
+                  </div>
+                  <div class="form-group mb-1" *ngIf="this.invoicebuilder['is_enable_chart_id']">
+                    <ul>
+                      <li>
+                        <span class="title">Chart ID</span>
+                      </li>
+                      <li class="invoice-list">
+                        <app-ng-select-shareable #chartidNgSelect [events]="chartIdSubject.asObservable()" [filterFieldName]="'chart_ids'" [searchLableName]="'id'" [disableField]="disabledFields" [lableName]="'Chart ID'" [showSelectAll] ="true"
+                        [showGroupBy] = "false" [bindlable]="'chart_id'" [bindId]="'id'" [apiPath]="EnumApiPath.ChartIdApiPath" [multiple]="false"></app-ng-select-shareable>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class=" ms-4 mt-1 " color="primary" formControlName="is_enable_chart_id" (change)="ParentToggle($event,'is_enable_patient_detail',this.patient_details,'is_enable_chart_id')"></mat-slide-toggle>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="form-group mb-1">
+                    <ul>
+                      <li>
+                        <span class="title">Case ID</span>
+                      </li>
+                      <li class="invoice-list">
+                        <app-ng-select-shareable #CaseIdNgSelect [events]="caseIdSubject.asObservable()" [filterFieldName]="'case_id'" [showSelectFieldList]="selectedMultipleFieldFiter['case_id']" [showSelectFieldOnRefresh]="InvoiceBuilderForm.get('case_id').value" [filterFieldName]="'case_ids'" [showSelectAll] ="true"
+                        [showGroupBy] = "false" [disableField]="disabledFields" [lableName]="'Case ID/Type'" [bindlable]="'case_id'" [bindId]="'case_id'" [searchLableName]="'id'" [apiPath]="EnumApiPath.CaseIDApiPath" (valueChange)="onCaseIdValueChange($event)" [multiple]="false"></app-ng-select-shareable>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="form-group mb-1 " *ngIf="this.invoicebuilder['is_enable_bill_id']">
+                    <ul>
+                      <li>
+                        <span class="title">Bill ID</span>
+                      </li>
+                      <li class="invoice-list">
+                        <app-ng-select-shareable  #BillIdNgSelect [events]="billSubject.asObservable()" [filterFieldName]="'bill_ids'" [searchLableName]="'bill_no'" [disableField]="disabledFields" [bindlable]="'label_id'" [bindId]="'id'" [apiPath]="EnumApiPath.BillIdPath" (valueChange)="onBillSelection($event)" [showSelectAll] ="true"
+                        [showGroupBy] = "false" [multiple]="true"></app-ng-select-shareable>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" color="primary" formControlName="is_enable_bill_id" (change)="ParentToggle($event,'is_enable_patient_detail',this.patient_details,'is_enable_bill_id')"></mat-slide-toggle>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="form-group  mb-1" *ngIf="this.invoicebuilder['is_enable_patient_name']">
+                    <ul>
+                      <li>
+                        <span class="title">Patient Name</span>
+                      </li>
+                      <li class="invoice-list">
+                        <app-ng-select-shareable #patientIdNgSelect [events]="patientIdSubject.asObservable()" [filterFieldName]="'patient_ids'" [disableField]="disabledFields" [mainApiPath]="requestServerpath.kios_api_path" [bindlable]="'full_name'" [bindId]="'id'" [showSelectAll] ="true"
+                        [showGroupBy] = "false" [apiPath]="EnumApiPath.patientNameApiPath" (valueChange)="onSelectionPatient($event)" [multiple]="false"></app-ng-select-shareable>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" color="primary" formControlName="is_enable_patient_name" (change)="ParentToggle($event,'is_enable_patient_detail',this.patient_details,'is_enable_patient_name')"></mat-slide-toggle>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="form-group form-dob  mb-1" *ngIf="this.invoicebuilder['is_enable_dob']" [ngClass]="{'focused': formControls['date_of_birth'].value != '' && formControls['date_of_birth'].value != null }">
+                    <ul>
+                      <li>
+                        <label class="title">Date of Birth</label>
+                      </li>
+                      <li class="invoice-list">
+                        <input type="text" class="form-control" formControlName="date_of_birth" />
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4 mt-1" color="primary" formControlName="is_enable_dob" (change)="ParentToggle($event,'is_enable_patient_detail',this.patient_details,'is_enable_dob')"></mat-slide-toggle>
+                      </li>
+                    </ul>
+                  </div>
+                  <div *ngIf="this.invoicebuilder['is_enable_date_of_loss']" class="form-group mb-2" [ngClass]="{'focused': formControls['date_of_loss'].value != '' && formControls['date_of_loss'].value != null }">
+                    <ul>
+                      <li>
+                        <label class="title">Date of Loss</label>
+                      </li>
+                      <li class="invoice-list">
+                        <input type="text" class="form-control" formControlName="date_of_loss" />
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4 mt-1" color="primary" formControlName="is_enable_date_of_loss" (change)="ParentToggle($event,'is_enable_patient_detail',this.patient_details,'is_enable_date_of_loss')"></mat-slide-toggle>
+                      </li>
+                    </ul>
+                  </div>
+                  <div *ngIf="this.invoicebuilder['is_enable_date_of_service']" class="form-group mb-1" [ngClass]="{'focused': formControls['date_of_service'].value != '' && formControls['date_of_service'].value != null }">
+                    <ul>
+                      <li>
+                        <label class="title">Date of Service</label>
+                      </li>
+                      <li class="invoice-list">
+                        <input type="text" class="form-control" formControlName="date_of_service" [disabled]="disabledFields" />
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4 mt-1" color="primary" formControlName="is_enable_date_of_service" (change)="ParentToggle($event,'is_enable_patient_detail',this.patient_details,'is_enable_date_of_service')"></mat-slide-toggle>
+                      </li>
+                    </ul>
+                  </div>
+                  <div *ngIf="this.invoicebuilder['is_enable_claim_number']" class="form-group" [ngClass]="{'focused': formControls['claim_number'].value != '' && formControls['claim_number'].value != null }">
+                    <ul>
+                      <li>
+                        <label class="title">Claim No</label>
+                      </li>
+                      <li class="invoice-list">
+                        <input type="text" class="form-control" formControlName="claim_number" [disabled]="disabledFields" />
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4 mt-1" color="primary" formControlName="is_enable_claim_number" (change)="ParentToggle($event,'is_enable_patient_detail',this.patient_details,'is_enable_claim_number')"></mat-slide-toggle>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="format-box">
+          
+          <div class="format-load-box">
+            <div class="row">
+              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngFor="let item of invoiceToDetailsData;">
+                <ng-container *ngIf="invoiceToDetailsData.length">
+                  <div class="invoice-name-card">
+                    <div class="form-group" *ngIf="this.invoicebuilder['is_enable_invoice_to_name']">
+                      <ul>
+                        <li>
+                          <i class="fa fa-user-plus" aria-hidden="true"></i>
+                        </li>
+                        <li class="invoice-list">
+                          <span class="title" for="invoice_to_name">{{item?.invoice_to_name?item.invoice_to_name:(item?.name?item?.name:'Name')}}</span>
+                          <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" (change)="ParentToggle($event,'is_enable_invoice_to',this.invoice_to,'is_enable_invoice_to_name')" color="primary" formControlName="is_enable_invoice_to_name"></mat-slide-toggle>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="form-group" *ngIf="this.invoicebuilder['is_enable_invoice_to_address']">
+                      <ul>
+                        <li>
+                          <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        </li>
+                        <li class="invoice-list">
+                          <span class="title" for="p_address">
+                            {{item?.street_address?item.street_address:item.street?item.street:''}}{{item && item.suit_floor?', ':''}}
+                            {{item?.suit_floor}}
+                            <br>{{item?.city}}{{item && item?.state?', ':''}}
+                            {{item?.state}} {{item?.zip}}
+                          </span>
+                          <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" color="primary" (change)="ParentToggle($event,'is_enable_invoice_to',this.invoice_to,'is_enable_invoice_to_address')" formControlName="is_enable_invoice_to_address"></mat-slide-toggle>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="form-group" *ngIf="this.invoicebuilder['is_enable_invoice_to_phone_number']">
+                      <ul>
+                        <li>
+                          <i class="fa fa-phone" aria-hidden="true"></i>
+                        </li>
+                        <li class="invoice-list">
+                          <span class="title" for="is_enable_invoice_to_phone_number">{{(item?.invoice_to_phone_no?(item?.invoice_to_phone_no | phoneFormatPipe):(item?.phone_no?(item?.phone_no | phoneFormatPipe):(item?.phone?(item?.phone| phoneFormatPipe):'N/A')))}} </span>
+                          <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-4" color="primary" (change)="ParentToggle($event,'is_enable_invoice_to',this.invoice_to,'is_enable_invoice_to_phone_number')" formControlName="is_enable_invoice_to_phone_number"></mat-slide-toggle>
+                        </li>
+                      </ul>
+                    </div>
+                    <button type="button" class="close" aria-label="Close" (click)="OnClickCrossInvoiceTo(item)">
+                      <!-- *ngIf="item.invoice_to_label=='!patient' && '!lawyer'" -->
+                      <span class="icon-plus" aria-hidden="true"></span>
+                    </button>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 col-xs-12" *ngFor="let item of insurancesLocations;">
+                <app-recipients-locations [invoiceToDetailsData]="insurancesLocations" [item]="item" (removeLocation)="removeNewLocation($event)"></app-recipients-locations>
+              </div>
+            </div>
+          </div>
+        
+        </div>
+        <ng-container *ngIf="InvoiceBuilderForm?.controls['invoice_category_id']?.value">
+          <div class="invoice-table mb-5">
+            <div class="row">
+              <div class="col-12">
+                <div class="d-block text-end" *ngIf="!invoice_from_bill">
+                  <a class="btn btn-default round-btn" data-toggle="modal" [ngClass]="{'disabled':allInventories.length==patientServicesDetails.length}" href="javascript:void(0)" (click)="AddnewRow()">
+                    <span class="icon-plus-circle"></span> Add New Row </a>
+                </div>
+                <ngx-datatable (reorder)="onDragAndDropColumns($event)" [reorderable]="true" [scrollbarH]="true" #invoiceTable [swapColumns]="false" class="bootstrap" #ngxdatatablesInvoiceBuilder [rows]="patientServicesDetails" [scrollbarH]="true" [columnMode]="'force'" [limit]="6" [headerHeight]="50" [footerHeight]="100" [rowHeight]="'auto'" [externalPaging]="false" [virtualization]="false">
+                  <ngx-datatable-column *ngIf="!invoice_from_bill" sortable="false" name="Item #"  cellClass="action-icon" [canAutoResize]="true" [draggable]="true" [resizeable]="false" [width]="90" [minWidth]="90">
+                    <ng-template let-column="column"  ngx-datatable-header-template> 
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label"> Item #</span>
+                        <span class="datatable-header-cell-label" > <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_item" ></mat-slide-toggle></span>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                      <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{rowIndex + 1}}" container="body">
+                        {{rowIndex + 1 || 'N/A'}}
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill" [width]="110" sortable="false" name="Bill ID" prop="bill_label_id" cellClass="action-icon" [canAutoResize]="true" [draggable]="true" [resizeable]="false">
+                    <ng-template let-column="column"  ngx-datatable-header-template> 
+                      <div  [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label">Bill ID</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_bill_id" ></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                      <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.bill_label_id}}" container="body">
+                        {{row?.bill_label_id}}
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill && isMaster"  sortable="false" name="DOS" prop="dos" cellClass="action-icon" [canAutoResize]="true" [draggable]="true" [resizeable]="false" [width]="" [minWidth]="110" [width]="110">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label">DOS</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_dos" ></mat-slide-toggle>
+                      </span>
+                    </ng-template>
+                 
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill && isMaster"  sortable="false" name="Specialty" prop="Specialty" cellClass="action-icon" [canAutoResize]="true" [draggable]="true" [resizeable]="false">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label">Speciality</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_specialty" ></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                 
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill && !isMaster"  sortable="false" name="Description"  cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="110" [minWidth]="110">
+                    <ng-template let-row="row" let-value="value"  ngx-datatable-cell-template>
+                      <div  class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{InvoiceBuilderForm.get('is_enable_table_dos')?.value ? (row?.dos_range?.dos_start | date:'MM/dd/YYYY') +'-'+ (row?.dos_range?.dos_end | date:'MM/dd/YYYY') : '' }} {{InvoiceBuilderForm.get('is_enable_table_specialty')?.value && InvoiceBuilderForm.get('is_enable_table_dos')?.value ?  '-' : ''}} {{InvoiceBuilderForm.get('is_enable_table_specialty')?.value ? (  row?.speciality_qualifier) : ''}}" container="body"></div>
+                      {{InvoiceBuilderForm.get('is_enable_table_dos')?.value ? (row?.dos_range?.dos_start | date:'MM/dd/YYYY')  : '' }} {{InvoiceBuilderForm.get('is_enable_table_specialty')?.value && InvoiceBuilderForm.get('is_enable_table_dos')?.value ?  '-' : ''}} {{InvoiceBuilderForm.get('is_enable_table_specialty')?.value ? (  row?.speciality_qualifier) : ''}}
+                     
+                    </ng-template>
+                 
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="!invoice_from_bill" name="Description" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="mappingValue" [width]="350" [minWidth]="350">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label">Description</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_description"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                      <ng-select #select id="{{rowIndex}}" [disabled]="disabledFields" (click)="getInventories($event,row,rowIndex)" [items]="inventories" [searchable]="true" appendTo="body" bindLabel="name" bindValue="id" name="value" (change)="handleInventoryChange($event,rowIndex)" [(ngModel)]="row.inventory_id" [ngModelOptions]="{standalone: true}"></ng-select>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Unit Price" [sortable]="false" [canAutoResize]="true" *ngIf="this.invoicebuilder['unit_price']
+                  && !invoice_from_bill && (!this.dontShowToggle || isUnitButtonEnable)" [draggable]="true" [resizeable]="false" prop="unit_price" [width]="110" [minWidth]="110">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label" >Unit Price</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_unit_price"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ (row.unit_price || 0) | currency }}" container="body">
+                        {{(row.unit_price || 0) | currency}}
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="!invoice_from_bill" name="Quantity" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="quantity" [width]="110" [minWidth]="110">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label" >Quantity</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_quantity"></mat-slide-toggle>
+                      </span>
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                      <input type="number" value="{{row.quantity}}" min="1" appAppOnlyNumbersWithoutDecimal getMaximumQuantity (input)="this.getMaxQuantity.compareQuantities($event,rowIndex,inventories,row,patientServicesDetails,rowIndex)" placeholder="Quantity" class="form-control text-center invoice-number-field" (change)="onChangeQauntity($event,rowIndex,row);" (keyup)="onKeyUpQuantity($event,rowIndex,row)" [disabled]="disabledFields">
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill" name="Bill Amount" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="bill_amount"[minWidth]="110">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label"> Bill Amount</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_bill_amount"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{(row?.bill_amount || 0) | currency}}" container="body">
+                        {{(row?.bill_amount || 0) | currency}}
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill" name="Paid" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="paid_amount" [width]="110" [minWidth]="110">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label">Paid</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_paid_amount"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{(row?.paid_amount || 0) | currency}}" container="body">
+                        {{(row?.paid_amount || 0) | currency}}
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill" name="Outstanding" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="outstanding_amount" [minWidth]="110">
+                    <ng-template let-column="column"  ngx-datatable-header-template> 
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label">Outstanding</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_outstanding_amount"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      {{value || 0 | currency}}
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill" name="Over Payment" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="over_amount">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label" >Over Payment</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_over_amount"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      {{value || 0 | currency}}
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill" name="Interest" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="interest_amount" [width]="110" [minWidth]="110">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label">Interest</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_interest_amount"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      {{value || 0 | currency}}
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="invoice_from_bill" name="Write Off" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="write_off_amount" [minWidth]="130" [width]="130">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label" >Write Off </span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_write_off_amount"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      {{value || 0 | currency}}
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column *ngIf="!invoice_from_bill" name="Total Amount" [sortable]="false" [canAutoResize]="true" [draggable]="true" [resizeable]="false" prop="total_amount" [width]="110" [minWidth]="110">
+                    <ng-template let-column="column"  ngx-datatable-header-template>
+                      <div [ngClass]="{'drag-area draggable':isMaster}"></div>
+                      <span class="datatable-header-cell-wrapper">
+                        <span class="datatable-header-cell-label">Total Amount</span>
+                        <mat-slide-toggle *ngIf="!this.dontShowToggle" class="ms-2" formControlName="is_enable_table_total_amount"></mat-slide-toggle>
+                      </span>
+                     
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                      <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{(row.total_amount || 0) | currency}}" container="body">
+                        {{(row.total_amount || 0) | currency}}
+                      </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Actions" sortable="false" prop="id" cellClass="action-icon" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="70" [minWidth]="70">
+                    <ng-template let-column="column"  ngx-datatable-header-template> Actions
+      
+                    </ng-template>
+                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                      <a class="edit-hov mx-1" ngbTooltip="delete" container="body" (click)="invoiceRowDelete(rowIndex,row)">
+                        <i class="icon-remove" aria-hidden="true"></i>
+                      </a>
+                    </ng-template>
+                  </ngx-datatable-column>
+                </ngx-datatable>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div class="invoice-total-amount mt-2 mb-4">
+          <div class="row">
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="invoice-sec-left"></div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12">
+              <div class="invoice-sec-right">
+                <div class="amount-due currency" *ngIf="!invoice_from_bill">
+                  <ul>
+                    <li class="amount-due-title text-end">
+                      <span class="title pe-1">Sub Total</span>
+                    </li>
+                    <li class="amount-due-input">
+                      <input type="text" class="form-control form-input mb-0" readonly formControlName="sub_total" [options]="customCurrencyMaskConfigAmountDue" currencyMask />
+                      <i class="fa fa-dollar-sign"></i>
+                    </li>
+                  </ul>
+                </div>
+                <div class="invoice-tax currency" *ngIf="(InvoiceBuilderForm?.controls['invoice_category_id']?.value!=2) &&this.invoicebuilder['tax'] && !invoice_from_bill">
+                  <ul>
+                    <li class="invoice-tax-1" *ngIf="this.invoicebuilder['is_enable_tax']">
+                      <ng-select #taxNgSelect [searchable]="true" formControlName="tax_detail" [items]="taxes" placeholder="Tax" bindLabel="tax_name" bindValue="id" (change)="handleTaxChange($event)">
+                        <ng-template ng-option-tmp let-item="item" let-index="index">
+                          <div class="ng-value ng-label">
+                            <div class="ng-value-label tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{item.tax_name}}" container="body">
+                              {{item.tax_name}}
+                            </div>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </li>
+                    <li class="invoice-tax-2" *ngIf="this.invoicebuilder['is_enable_tax']">
+                      <input type="text" class="form-control form-input invoice-tax-input" readonly formControlName="tax_price" [options]="customCurrencyMaskConfigTax" (keydown.space)="$event.preventDefault()" currencyMask>
+                      <i class="fa fa-dollar-sign"></i>
+                    </li>
+                    <li *ngIf="!dontShowToggle" class="invoice-tax-3 text-end">
+                      <mat-slide-toggle color="primary" formControlName="is_enable_tax"></mat-slide-toggle>
+                    </li>
+                  </ul>
+                </div>
+                <div class="invoice-tax currency" *ngIf="(InvoiceBuilderForm.controls['invoice_category_id'].value!=2) && this.invoicebuilder['shipping'] &&  !invoice_from_bill">
+                  <ul>
+                    <li class="invoice-tax" *ngIf="this.invoicebuilder['is_enable_shipping']">
+                      <ng-select #shippingNgSelect [items]="shippings" placeholder="Shipping" [searchable]="true" bindLabel="shipping_detail" bindValue="id" formControlName="shiping_detail" (change)=handleShippingChange($event)></ng-select>
+                    </li>
+                    <li class="invoice-tax" *ngIf="this.invoicebuilder['is_enable_shipping']">
+                      <input type="text" class="form-control form-input invoice-tax-input" readonly formControlName="shipping_cost" [options]="customCurrencyMaskConfig" (keydown.space)="$event.preventDefault()" currencyMask>
+                      <i class="fa fa-dollar-sign"></i>
+                    </li>
+                    <li *ngIf="!dontShowToggle" class="invoice-tax-3 text-end">
+                      <mat-slide-toggle color="primary" formControlName="is_enable_shipping"></mat-slide-toggle>
+                    </li>
+                  </ul>
+                </div>
+                <div class="amount-due currency" [ngClass]="{'focused': formControls['amount_due'].value != '' && formControls['amount_due'].value != null }">
+                  <ul>
+                    <li class="amount-due-title text-end">
+                      <span class="title pe-1">Amount Due</span>
+                    </li>
+                    <li class="amount-due-input">
+                      <input type="text" class="form-control form-input mb-0" readonly formControlName="amount_due" [options]="customCurrencyMaskConfigAmountDue" (keydown.space)="$event.preventDefault()" currencyMask />
+                      <i class="fa fa-dollar-sign"></i>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="invoice-btns mb-4">
+          <div class="row">
+            <div class="col-12 text-md-end text-sm-center text-xs-center mt-3 mb-4">
+              <button type="button" (click)="onCancel()" class="btn btn-primary mx-2 mb-2 mb-sm-0"> Cancel </button>
+              <button *ngIf="!this.dontShowToggle" type="submit" class="btn btn-success mx-1 mb-2 mb-sm-0" [disabled]="InvoiceBuilderForm.invalid">
+                {{hasId?'Update':'Save'}}
+              </button>
+              <button *ngIf="this.dontShowToggle" (click)="onSubmit(InvoiceBuilderForm)" type="button" class="btn btn-default mx-1 mb-2 mb-sm-0">
+                {{isEdit?'Update Invoice':'Generate Invoice'}}
+              </button>
+            </div>
+          </div>
+        </div>
+        <section class="footer" *ngIf="this.invoicebuilder['is_enable_footer']">
+          <div class="invoice-footer">
+            <div class="row">
+              <div class="col-md-3"></div>
+              <div class="col-md-6">
+                <div class="footer-text">
+                  <p class="mb-0">Make All checks payable to {{this.practiceLocationDetails?.facility?.name || invoiceDetailsForBills?.facility_location?.facility?.name || invoiceDetailsForBills?.invoice_data?.facility_name}}</p>
+                  <mat-slide-toggle *ngIf="!this.dontShowToggle" class="invoice-toggle" color="primary" formControlName="is_enable_footer"></mat-slide-toggle>
+                </div>
+                <div class="footer-text text-center">
+                  <p class="me-3 ">Thank You for Your Business</p>
+                </div>
+              </div>
+              <div class="col-md-3"></div>
+            </div>
+          </div>
+        </section>
+      </form>
+    </div>
+  </div>
+</div>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Invoice View</h4>
+    <button type="button" class="close" aria-label="Close" #modelClose (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body modal-pt-15">
+    <app-invoice-builder-format-preview></app-invoice-builder-format-preview>
+  </div>
+</ng-template>

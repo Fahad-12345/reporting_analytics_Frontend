@@ -1,0 +1,69 @@
+@import './../../../../../../assets/sass/components/radio-btn.scss';
+.main-title{
+    margin: 0 0 0 9px;
+    font-size: 1.125rem;
+}
+.radio-block{
+    margin: 0 0 25px 0;
+    .radio-title {
+        font: 500 1rem/0.9375rem Poppins,Arial,Helvetica,sans-serif;
+        text-transform: capitalize;
+        background: #fff;
+        position: absolute;
+        padding: 0 15px;
+        left: 15px;
+        top: -10px;
+        color: #000;
+    }  
+    
+}
+
+ul{
+    display: flex;;
+    padding: 0;
+    margin: 0;
+    li{
+        list-style: none;
+        &+li {
+            margin-left: 2.5rem;
+            @media screen and (min-width:992px) and (max-width:1250px) {
+                margin-left: 1.5rem;
+                
+            }
+        }
+    }
+}
+.drop-off-padding{
+    padding: 0;
+}
+
+.transport-input{
+    margin:0 !important;
+    .form-control{
+        display: inline-block;
+    }
+}
+.trans-form{
+    padding: 5px 20px 20px;
+    .trans-form-hold{
+        margin-bottom: 20px;
+        border: 1px solid #b0b1b1;
+        width: 100%;
+        position: relative;
+      
+        textarea {
+            &.form-control {
+                margin-bottom: 20px !important;
+            }
+        }
+        .transport-radio-btns{
+            margin: 0 0 15px 0 !important;
+        }
+    }
+    
+}
+
+
+.bg-gray-radio{
+    background: rgb(177, 186, 192);
+}

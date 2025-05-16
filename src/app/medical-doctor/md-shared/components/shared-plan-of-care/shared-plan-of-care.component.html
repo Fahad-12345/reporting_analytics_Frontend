@@ -1,0 +1,3396 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="section-frame reduce-height-tab border-0 pb-md-5 me-1 plan-of-care" style="border: 1px solid #a2a3a2 !important;
+padding: 8px;" *ngIf="form">
+	<div class="custom-scrollbar" id="ngx-scroll-to">
+		<div class="form position-relative pcare-screen">
+			<div [formGroup]="form">
+				<div class="d-flex course-block">
+					<strong class="sub-title py-1 d-flex flex-wrap justify-content-between"
+						style="border-bottom: 1px solid #a8a9a8 !important;">
+						<span class="d-inline-block pb-2" style="top: 5px; position: relative;">At this time will enroll
+							the patient in a course of
+						</span>
+						<ul class="list-inline m-0 pad-l-0">
+							<li class="list-inline-item m-0 ps-2" formArrayName="referrals"
+								*ngFor="let referral of form.get('referrals')['controls']; let referralIndex = index">
+								<label *ngIf="referralIndex==0" class="d-block chkbox position-relative m-0"
+									for="{{'referral_id'+referralIndex}}" [formGroupName]="referralIndex"
+									[ngClass]="{'checkbox-light-pink':checkCarryForward(referral,'checked')}">
+									<input (change)="triggerScrollTo('referral_specialty'+referralIndex)"
+										type="checkbox" formControlName="checked" id="{{'referral_id'+referralIndex}}"
+										>
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block" >
+										{{referral.get('specialty').value|titlecase}}
+									</span>
+								</label>
+							</li>
+						</ul>
+					</strong>
+				</div>
+				<div class="box text-start bg-white mb-0 border-0" formArrayName="referrals"
+					*ngFor="let referral of form.get('referrals')['controls']; let referralIndex = index"
+					style="border: 1px solid #ced4da; border-radius: 2px;">
+					<ng-container *ngIf="referral.get('checked').value">
+						<ng-container [formGroupName]="referralIndex">
+							<div class="types-box bg-white ad-border p-2" style="border-top:none !important;">
+								<div class="row">
+									<div class="col-12">
+										<button type="button"
+											class="btn btn-secondary btn-clear ms-1 text-white mb-2 pt-clear" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+											(click)="resetForm(referral)">Clear</button>
+										<strong class="sub-title"
+											id="{{'referral_specialty'+referralIndex}}">{{referral.get('specialty').value|titlecase}}</strong>
+									</div>
+								</div>
+								<div class="col-12 text-end">
+
+									<!-- <button type="button" 
+									class="btn btn-secondary btn-clear ms-1 text-white mb-2"
+									(click)="resetForm(referral)">Clear</button> -->
+								</div>
+								<div class="types-box bg-white ad-border p-2">
+									<div class="physical-block p-2 mb-2 form" style="border: 1px solid #a2a3a2;">
+
+										<ng-container>
+
+											<!-- <span (change)="generateSpecialtyString(referral)">  -->
+												{{isCarryForwarded()?'Will continue with' : 'At this time will enroll the patient in a course of' }}
+												{{referral.get('specialty').value}}
+											<!-- </span> -->
+
+
+											<input type="number" min="1" class="form-control d-inline text-center"
+												[ngClass]="{'bg-light-pink':checkCarryForward(referral,'perWeek')}"
+												style="width: 60px;padding: 5px; margin: 0px 10px;
+																border: 1px solid #908d8d;" formControlName="perWeek">
+											{{(referral.get('perWeek').value>1)?"times":"time"}} per
+
+											<ul class="date-box d-inline list-inline m-0">
+												<li class="list-inline-item">
+													<label for="week-{{referralIndex}}"
+														class="d-block position-relative m-0"
+														[ngClass]="{'radio-light-pink':checkCarryForward(referral,'intervalName')}">
+														<input id="week-{{referralIndex}}" value="week" type="radio"
+															formControlName="intervalName" appEnhanceRadio
+															[oldValue]="referral.controls.intervalName.value">
+														<span class="fake-input position-absolute"></span>
+														<span class="fake-label d-block">Week</span>
+													</label>
+												</li>
+												<li class="list-inline-item">
+													<label for="month-{{referralIndex}}"
+														class="d-block position-relative m-0"
+														[ngClass]="{'radio-light-pink':checkCarryForward(referral,'intervalName')}">
+														<input id="month-{{referralIndex}}" value="month" type="radio"
+															formControlName="intervalName" appEnhanceRadio
+															[oldValue]="referral.controls.intervalName.value">
+														<span class="fake-input position-absolute"></span>
+														<span class="fake-label d-block">Month</span>
+													</label>
+												</li>
+												<li class="list-inline-item">
+													<label for="year-{{referralIndex}}"
+														class="d-block position-relative m-0"
+														[ngClass]="{'radio-light-pink':checkCarryForward(referral,'intervalName')}">
+														<input id="year-{{referralIndex}}" value="year" type="radio"
+															formControlName="intervalName" appEnhanceRadio
+															[oldValue]="referral.controls.intervalName.value">
+														<span class="fake-input position-absolute"></span>
+														<span class="fake-label d-block">Year</span>
+													</label>
+												</li>
+											</ul>
+											for
+											<input type="number" min="1" class="me-1 form-control d-inline text-center"
+												style="width: 60px;padding: 5px; margin: 0px 10px;
+																border: 1px solid #908d8d;" formControlName="noOfWeeks"
+												[ngClass]="{'bg-light-pink':checkCarryForward(referral,'noOfWeeks')}">
+
+
+											<ul class="date-box d-inline list-inline radio-btn-disable m-0" [class.disabled]="!mainService.isenableSaveRecordMedicalDoctor()">
+												<li class="list-inline-item">
+													<label for="weekPeriod-{{referralIndex}}"
+														class="d-block position-relative m-0 disable-radio"
+														[ngClass]="{'radio-light-pink':checkCarryForward(referral,'periodName')}">
+														<input id="weekPeriod-{{referralIndex}}" value="week"
+															type="radio" formControlName="periodName" [attr.disabled]="(
+																				!( referral.controls['intervalName'].value=='day' || 
+																					referral.controls['intervalName'].value=='week' 
+																				))?'true':null" appEnhanceRadio [oldValue]="referral.controls.periodName.value">
+														<span class="fake-input position-absolute"></span>
+														<span
+															class="fake-label d-block">Week{{(referral.controls['noOfWeeks'].value<=1)?"":"s"}}</span>
+													</label>
+												</li>
+												<li class="list-inline-item">
+													<label for="monthPeriod-{{referralIndex}}"
+														class="d-block position-relative m-0 disable-radio"
+														[ngClass]="{'radio-light-pink':checkCarryForward(referral,'periodName')}">
+														<input id="monthPeriod-{{referralIndex}}" value="month"
+															type="radio" formControlName="periodName" [attr.disabled]="(!(
+																				referral.controls['intervalName'].value=='day' || 
+																				referral.controls['intervalName'].value=='week' ||
+																				referral.controls['intervalName'].value=='month'
+																				))?'true':null" appEnhanceRadio [oldValue]="referral.controls.periodName.value">
+														<span class="fake-input position-absolute"></span>
+														<span
+															class="fake-label d-block">Month{{(referral.controls['noOfWeeks'].value<=1)?"":"s"}}</span>
+													</label>
+												</li>
+												<li class="list-inline-item">
+													<label for="yearPeriod-{{referralIndex}}"
+														class="d-block position-relative m-0"
+														[ngClass]="{'radio-light-pink':checkCarryForward(referral,'periodName')}">
+														<input id="yearPeriod-{{referralIndex}}" value="year"
+															type="radio" formControlName="periodName" appEnhanceRadio
+															[oldValue]="referral.controls.periodName.value">
+														<span class="fake-input position-absolute"></span>
+														<span
+															class="fake-label d-block">Year{{(referral.controls['noOfWeeks'].value==1)?"":"s"}}</span>
+													</label>
+												</li>
+											</ul>
+											to decrease pain, increase strength and range of motion with modalities as
+											needed.
+
+											<div class="row pt-1">
+												<div class="col-12">
+													<div class="inner-frame position-relative mb-2 p-0"
+														style="overflow: visible; margin-top: 35px; border: 0;">
+														<div class="sub-title-bar position-absolute"
+															style="padding: 0 0 0 1px;">
+															<strong class="sub-title float-left">Comments</strong>
+															<button type="button" [disabled]="!mainService.isenableSaveRecordMedicalDoctor() || checkDisbaleButton(referralIndex)" 
+															class="btn btn-secondary btn-clear ms-1 text-white mb-2 pt-clear pt-comments"
+															(click)="clearPT(referralIndex)">Clear</button>
+														</div>
+														<div class="message p-2" style="border: 1px solid #a2a3a2;">
+															<textarea placeholder="Comments" class="form-control"
+																formControlName="comment" rows="3" cols="10"
+																style="min-height:60px!important; border-radius: 3px; max-height: 60px;"
+																[ngClass]="{'bg-light-pink':checkCarryForward(referral,'comment')}"></textarea>
+														</div>
+													</div>
+												</div>
+
+												<div class="col-12 text-end"
+													*ngIf="(referral.get('perWeek').value && referral.get('intervalName').value) || referral.get('comment').value">
+
+
+												</div>
+											</div>
+										</ng-container>
+									</div>
+									<div class="row">
+										<div class="col-12">
+											<strong class="sub-title">Diagnosis
+											</strong>
+											<div class="types-box ad-border px-2 py-2 overflow-hidden text-center"
+												style="color: #666;" *ngIf="!referral.get('diagnosis').controls.length">
+												No Selected Codes
+											</div>
+											<div class="types-box ad-border px-2 pt-3 pb-2 overflow-hidden"
+												*ngIf="referral.get('diagnosis').controls.length">
+												<ul class="types-list list-inline text-center">
+													<div class="pe-diagnosis grid-4">
+														<li class="list-inline-item text-start"
+															style="min-width: inherit;" formArrayName="diagnosis"
+															*ngFor="let diagnostic_code of referral.get('diagnosis').controls; let diagnostic_code_index = index">
+															<ng-container [formGroupName]="diagnostic_code_index">
+																<label class="d-block chkbox position-relative m-0"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(diagnostic_code,'checked')}">
+																	<input type="checkbox" formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{diagnostic_code.get('name').value}}</span>
+																</label>
+															</ng-container>
+														</li>
+													</div>
+												</ul>
+											</div>
+										</div>
+										<div class="col-12 mt-2">
+											<strong class="sub-title">Precautions /
+												Contradictions</strong>
+											<div class="notes-box position-relative">
+												<div class="message p-2">
+													<textarea placeholder="" class="form-control" cols="30" rows="10"
+														formControlName="precautions"
+														style="min-height: 60px; max-height: 60px;"
+														[ngClass]="{'bg-light-pink':checkCarryForward(referral,'precautions')}"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="row mt-2">
+										<div class="col-lg-6 types-box pe-1 mb-2 mb-md-0">
+											<strong class="sub-title">Weight Bearing</strong>
+											<div class="notes-box position-relative weight-block">
+												<div class="types-box ad-border" style="padding: 27px 15px 9px 15px;">
+													<ul class="types-list list-inline text-center">
+														<div style="display: inline-block; width:100%;">
+															<li formArrayName="weightBearings"
+																*ngFor="let weightBear of referral.get('weightBearings').controls; let weightBearInded = index"
+																class="list-inline-item text-start"
+																style="min-width: inherit;">
+																<ng-container [formGroupName]="weightBearInded">
+																	<label
+																		for="weightBearTxt-{{specialities[referralIndex].id}}-{{weight_bearing[weightBearInded].id}}"
+																		class="d-block chkbox position-relative m-0"
+																		[ngClass]="{'checkbox-light-pink':checkCarryForward(weightBear,'id')}">
+																		<input
+																			id="weightBearTxt-{{specialities[referralIndex].id}}-{{weight_bearing[weightBearInded].id}}"
+																			type="checkbox" formControlName="checked">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label d-block">{{weight_bearing[weightBearInded].name}}</span>
+																	</label>
+																</ng-container>
+															</li>
+														</div>
+													</ul>
+												</div>
+											</div>
+										</div>
+										<div class="col-lg-6">
+											
+											<strong class="sub-title range-motion py-1 ps-1 ">
+												<label class="d-block chkbox position-relative m-0 " for="evaluateAndTreat">
+													<input formControlName="evaluateAndTreat" type="checkbox" (change)="changeEvualte($event,referralIndex)" id="evaluateAndTreat" class="">
+													<span class="fake-input position-absolute"></span>
+													<span class="fake-label d-block">Evaluate &amp; Treat</span>
+												</label>	
+											</strong>
+											<!-- <strong class="sub-title" for="evaluateAndTreat">Evaluate &amp; Treat</strong> -->
+											<div class="notes-box position-relative">
+												<div class="message p-2">
+													<textarea 
+													[attr.disabled]="!referral.get('evaluateAndTreat').value ? '' : null"
+													placeholder="" class="form-control" cols="30" rows="10"
+													[ngClass]="	{'bg-light-pink disabled':checkCarryForward(referral,'evaluate')
+													
+												}"
+												formControlName="evaluate"
+														style="min-height: 60px; max-height: 60px;"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row mb-2">
+										<div class="col-12 types-box mt-2">
+											<strong class="sub-title">Goals</strong>
+											<div class="notes-box position-relative">
+												<div class="types-box ad-border px-2 pt-3">
+													<ul class="types-list list-inline text-center">
+														<div class="grid-5 w-100">
+															<li formArrayName="goals"
+																*ngFor="let goal of referral.get('goals').controls; let goalInded = index"
+																class="list-inline-item text-start"
+																style="min-width: inherit;">
+																<ng-container [formGroupName]="goalInded">
+																	<label
+																		for="goalTxt-{{specialities[referralIndex].id}}-{{goals[goalInded].id}}"
+																		class="d-block chkbox position-relative m-0"
+																		[ngClass]="{'checkbox-light-pink':checkCarryForward(goal,'checked')}">
+																		<input
+																			id="goalTxt-{{specialities[referralIndex].id}}-{{goals[goalInded].id}}"
+																			type="checkbox" formControlName="checked">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label d-block">{{goals[goalInded].name}}</span>
+																	</label>
+																</ng-container>
+															</li>
+														</div>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row mb-2">
+										<div class="col-12 types-box">
+											<strong class="sub-title">Modalities</strong>
+											<div class="notes-box position-relative">
+												<div class="types-box ad-border px-2 pt-3" style="border-radius: 0;">
+													<ul class="types-list list-inline text-center">
+														<div class="grid-5 w-100">
+															<li *ngFor="let modality of referral.get('modalities').controls; let modalityInded = index"
+																formArrayName="modalities"
+																class="list-inline-item text-start"
+																style="min-width: inherit;">
+																<ng-container [formGroupName]="modalityInded">
+																	<label
+																		for="modalityTxt-{{specialities[referralIndex].id}}-{{modalities[modalityInded].id}}"
+																		class="d-block chkbox position-relative m-0"
+																		[ngClass]="{'checkbox-light-pink':checkCarryForward(modality,'checked')}">
+																		<input
+																			id="modalityTxt-{{specialities[referralIndex].id}}-{{modalities[modalityInded].id}}"
+																			type="checkbox" formControlName="checked">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label d-block">{{modalities[modalityInded].name}}</span>
+																	</label>
+																</ng-container>
+															</li>
+														</div>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row mb-2">
+										<div class="col-12 types-box">
+											<strong class="sub-title">Manual Therapies</strong>
+											<div class="notes-box position-relative">
+												<div class="types-box ad-border px-2 pt-3">
+													<ul class="types-list list-inline text-center">
+														<div class="grid-5 w-100">
+															<li *ngFor="let tharapy of referral.get('tharapies').controls; let tharapyIndex = index"
+																formArrayName="tharapies"
+																class="list-inline-item text-start"
+																style="min-width: inherit;">
+																<ng-container [formGroupName]="tharapyIndex">
+																	<label
+																	    *ngIf="manual_therapies[tharapyIndex].show_therophy"
+																		for="tharapyTxt-{{specialities[referralIndex].id}}-{{manual_therapies[tharapyIndex].id}}"
+																		class="d-block chkbox position-relative m-0"
+																		[ngClass]="{'checkbox-light-pink':checkCarryForward(tharapy,'checked')}"  >
+																		<input
+																			id="tharapyTxt-{{specialities[referralIndex].id}}-{{manual_therapies[tharapyIndex].id}}"
+																			type="checkbox" formControlName="checked" (change)="changeTheraptiesIsoMetric($event,tharapyIndex,referralIndex)">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label d-block">{{manual_therapies[tharapyIndex].name}}</span>
+																	</label>
+																</ng-container>
+															</li>
+														</div>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row mb-2">
+										<div class="col-12 types-box">
+											<strong class="sub-title">Exercises</strong>
+											<div class="notes-box position-relative">
+												<div class="types-box ad-border px-2 pt-3" style="border-radius: 0;">
+													<ul class="types-list list-inline text-center">
+														<div class="w-100" style="display: inline-block">
+															<div class="grid-4" formArrayName="exercises">
+																<li *ngFor="let exercise of referral.get('exercises').controls; let exerciseIndex = index"
+																	class="list-inline-item text-start"
+																	style="min-width: inherit;">
+																	<div [formGroupName]="exerciseIndex">
+																		<label
+																			for="exerciseTxt-{{specialties[referralIndex].id}}-{{exercisesArr[exerciseIndex].id}}"
+																			class="d-block chkbox position-relative m-0"
+																			[ngClass]="{'checkbox-light-pink':checkCarryForward(exercise,'checked')}">
+																			<input type="checkbox"
+																				formControlName="checked"
+																				id="exerciseTxt-{{specialties[referralIndex].id}}-{{exercisesArr[exerciseIndex].id}}">
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label d-block">{{exercisesArr[exerciseIndex].name}}</span>
+																		</label>
+																	</div>
+																</li>
+															</div>
+														</div>
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="row mb-2">
+										<div class="col-12">
+											<strong class="sub-title">Specific Instructions</strong>
+											<div class="notes-box position-relative">
+												<div class="message p-2">
+													<textarea placeholder="" class="form-control" cols="30" rows="10"
+														formControlName="specificInstructions"
+														[ngClass]="{'bg-light-pink':checkCarryForward(referral,'specificInstructions')}"
+														style="min-height: 72px; max-height: 72px;"></textarea>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</ng-container>
+				</div>
+			</div>
+		</div>
+		<div  class="form position-relative pcare-screen course-block mt-2" [formGroup]="form">
+			<div class="course-block">
+				<strong class="sub-title pb-1 pt-0 ps-1 d-flex flex-wrap justify-content-between range-motion"
+					style="border-bottom: 1px solid #a8a9a8 !important;">
+					<label for="rangeOfMotion" class="d-block chkbox  position-relative m-0 mt-1"
+						style="width:fit-content;"
+						[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'rangeOfMotion')}">
+						<input id="rangeOfMotion" type="checkbox" formControlName="rangeOfMotion">
+						<span class="fake-input position-absolute"></span>
+						<span class="fake-label plancare d-block py-1">Patient will be
+							referred for range of motion testing to monitor
+							{{(gender=="female" ||gender=="Female")?'her':'his'}}
+							progress.</span>
+					</label>
+				</strong>
+				<button (click)="resetNonOrientedBodyPartsForm()" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+						class="btn btn-secondary pt-clear pt-comments float-right ms-1 text-white mb-2"
+						style="margin-right: -2px;">Clear
+						All</button>
+			</div>
+
+			<div class="types-box bg-white ad-border p-2" style="border-top:0px !important;"
+				*ngIf="form.get('rangeOfMotion').value == true">
+				<div class="col-lg-6 align-self-end">
+					
+				</div>
+				<div class="row mb-2 px-2">
+					<div class="col-12 types-box px-1">
+						<div class="notes-box position-relative">
+							<div class="types-box ad-border progress-block mt-2">
+								<ul class="types-list list-inline text-center px-2 pt-2">
+									<div style="display: inline-block; width:100%;">
+										<li formArrayName="nonOrientedBodyParts"
+									
+											*ngFor="let nonOrientedBodyPart of form['controls']['nonOrientedBodyParts'].controls; let nonOrientedBodyPartIndex = index"
+											class="list-inline-item text-start pb-1"
+											style="min-width: inherit; width:33.33%;">
+											<ng-container [formGroupName]="nonOrientedBodyPartIndex">
+												<label
+													for="nonOrientedBodyPartTxt-{{nonOrientedBodyPart.get('bodyPartId').value}}"
+													class="d-block chkbox position-relative m-0"
+													[ngClass]="{'checkbox-light-pink':checkCarryForward(nonOrientedBodyPart,'checked')}">
+
+													<input
+														id="nonOrientedBodyPartTxt-{{nonOrientedBodyPart.get('bodyPartId').value}}"
+														type="checkbox" formControlName="checked">
+													<span class="fake-input input-white position-absolute"></span>
+													<span
+														class="fake-label label-white d-block">{{nonOrientedBodyPart.get('name').value}}</span>
+												</label>
+											</ng-container>
+										</li>
+									</div>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row oriented-body-part mb-0 px-2">
+					<div class="col-lg-6 px-1 mb-2 types-box" formArrayName="orientedBodyParts"
+						*ngFor="let orientedBodyPart  of form['controls']['orientedBodyParts'].controls; let orientedBodyPartIndex = index">
+						<ng-container [formGroupName]="orientedBodyPartIndex">
+							<div class="ad-border devices-block d-flex p-1">
+								<ul class="types-list align-self-center list-inline mb-0 pull-right col-md-2 px-0">
+									<li class="list-inline-item text-start w-100 pb-0" style="min-width: inherit;">
+
+										<label for="orientedBodyPartTxt-{{orientedBodyPart.get('bodyPartId').value}}"
+											class="d-block chkbox position-relative m-0"
+											[ngClass]="{'checkbox-light-pink':checkCarryForward(orientedBodyPart,'checked')}">
+
+											<input id="orientedBodyPartTxt-{{orientedBodyPart.get('bodyPartId').value}}"
+												type="checkbox" formControlName="checked">
+											<span class="fake-input position-absolute"></span>
+											<span class="fake-label d-block">{{orientedBodyPart.get('name').value}}
+											</span>
+										</label>
+
+									</li>
+								</ul>
+								<ul
+									class="types-list align-self-center list-inline mb-0 pull-right d-flex justify-content-center col-md-10">
+
+									<li class="list-inline-item text-start pb-0 px-3" style="min-width: inherit;">
+										<label for="orientedTxtlft-{{orientedBodyPart.get('bodyPartId').value}}"
+											class="d-block chkbox position-relative m-0"
+											[ngClass]="{'radio-light-pink':checkCarryForward(orientedBodyPart,'orientation')}">
+											<input id="orientedTxtlft-{{orientedBodyPart.get('bodyPartId').value}}"
+												type="radio" value="left" formControlName="orientation" appEnhanceRadio
+												[oldValue]="orientedBodyPart.controls.orientation.value">
+											<span class="fake-input position-absolute"></span>
+											<span class="fake-label d-block">Left</span>
+										</label>
+									</li>
+									<li class="list-inline-item text-start pb-0 px-3" style="min-width: inherit;">
+										<label for="orientedTxtlrt-{{orientedBodyPart.get('bodyPartId').value}}"
+											class="d-block chkbox position-relative m-0"
+											[ngClass]="{'radio-light-pink':checkCarryForward(orientedBodyPart,'orientation')}">
+											<input id="orientedTxtlrt-{{orientedBodyPart.get('bodyPartId').value}}"
+												type="radio" value="right" formControlName="orientation" appEnhanceRadio
+												[oldValue]="orientedBodyPart.controls.orientation.value">
+											<span class="fake-input position-absolute"></span>
+											<span class="fake-label d-block">Right</span>
+										</label>
+									</li>
+									<li class="list-inline-item text-start pb-0 px-3" style="min-width: inherit;">
+										<label for="orientedTxtlbt-{{orientedBodyPart.get('bodyPartId').value}}"
+											class="d-block chkbox position-relative m-0"
+											[ngClass]="{'radio-light-pink':checkCarryForward(orientedBodyPart,'orientation')}">
+											<input id="orientedTxtlbt-{{orientedBodyPart.get('bodyPartId').value}}"
+												type="radio" value="bilateral" formControlName="orientation"
+												appEnhanceRadio
+												[oldValue]="orientedBodyPart.controls.orientation.value">
+											<span class="fake-input position-absolute"></span>
+											<span class="fake-label d-block">Bilateral</span>
+										</label>
+									</li>
+								</ul>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form position-relative mt-2">
+			<div class="header-tools d-flex">
+				<strong class="sub-title" style="transform: translate(0);">Medications</strong>
+			</div>
+			<div [formGroup]="medications" class="bg-white p-2"
+				style="border: 1px solid #a2a3a2; border-radius: 0 2px 2px 2px;">
+				<div class="row">
+					<div class="col-xl-6 pe-0">
+						<div class="box text-center bg-white p-2 pt-3 pb-3"
+							style="border: 1px solid #a2a3a2; border-right: 0; border-radius: 2px 0 0 2px;">
+							<label class="d-inline-block chkbox position-relative m-0 w-75" for="check1"
+								[ngClass]="{'checkbox-light-pink':checkCarryForward(medications,'useOld')}">
+								<input type="checkbox" formControlName="useOld" id="check1"
+									(change)="disableInput(medications.get('useOld').value, medications.get('prescribedDrugs'))">
+								<span class="fake-input input-white position-absolute"></span>
+								<span class="fake-label label-white d-block"
+									*ngIf="checkVisitType('evaluation')">Continue
+									medications given in
+									the ER</span>
+								<span class="fake-label label-white d-block"
+									*ngIf="checkVisitType('followUp')">Continue
+									current medication
+									for
+									pain</span> <!-- Comment Reveualtion Here-->
+							</label>
+						</div>
+						<div class="inner-frame position-relative mb-2 me-2 p-0"
+							style="overflow: visible; margin-top: 14px; border: 0;">
+							<textarea class="form-control" rows="3" placeholder="Comments" [class.disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+								[ngClass]="{'bg-light-pink':checkCarryForward(medications,'prescribedDrugs')}"
+								formControlName="prescribedDrugs" cols="10"
+								style="min-height:60px!important; border-radius:3px; max-height: 60px; border: 1px solid #a1a3a2;"></textarea>
+						</div>
+					</div>
+					<div class="col-xl-6 ps-0" style="border-left: 1px solid #a2a3a2;">
+						<div class="box text-center bg-white p-2 pt-3 pb-3"
+							style="border: 1px solid #a2a3a2; border-left: 0; border-radius: 0 2px 2px 0;">
+							<label class="d-inline-block chkbox position-relative m-0  w-75" for="check2"
+								[ngClass]="{'checkbox-light-pink':checkCarryForward(medications,'usePrescribed')}">
+								<input type="checkbox" checked="checked" id="check2" formControlName="usePrescribed"
+									(change)="disableInput(medications.get('usePrescribed').value, medications.get('newDrugs'))">
+								<span class="fake-input input-white position-absolute"></span>
+								<span class="fake-label label-white d-block">Prescribed today</span>
+							</label>
+						</div>
+						<div class="inner-frame position-relative mb-2 ms-2 p-0"
+							style="overflow: visible; margin-top: 14px; border: 0;">
+							<textarea class="form-control" [class.disabled]="!mainService.isenableSaveRecordMedicalDoctor()" formControlName="newDrugs" placeholder="Comments" rows="3"
+								[ngClass]="{'bg-light-pink':checkCarryForward(medications,'newDrugs')}" cols="10"
+								style="min-height:60px!important; border-radius: 3px; max-height: 60px; border: 1px solid #a1a3a2;"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div class="box text-center bg-white p-2 pt-3 pb-3"
+							style="border: 1px solid #ced4da; border-radius: 2px;">
+							<label class="d-inline-block chkbox position-relative m-0" for="check3"
+								[ngClass]="{'checkbox-light-pink':checkCarryForward(medications,'workEffect')}">
+								<input type="checkbox" id="check3" formControlName="workEffect">
+								<span class="fake-input input-white position-absolute"></span>
+								<span class="fake-label label-white d-block">Medication may affect patient's ability
+									to return to work, make patient drowsy and unable to function adequately.</span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="form position-relative pcare-screen mt-3">
+			<div class="header-tools d-flex">
+				<strong class="sub-title" style="transform: translate(0);">Will <ng-container
+						*ngIf="checkVisitType('evaluation')">also
+					</ng-container> refer patient for the following imaging studies</strong>
+			</div>
+			<div [formGroup]="form" class="p-2" style="border: 1px solid #a2a3a2; border-radius: 2px 2px 2px 0;">
+				<div class="box text-center bg-white px-2" style="border: 1px solid #ced4da; border-radius: 2px;">
+					<div class="row m-0">
+						<div class="col-xl-3 col-lg-6 p-2 p-md-3">
+							<label class="d-block chkbox position-relative m-0" for="check4"
+								[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'radiologyOn')}">
+								<input type="checkbox" formControlName="radiologyOn" id="check4"
+									(change)="triggerScrollTo('general-radiology')">
+								<span class="fake-input input-white position-absolute"></span>
+								<span class="fake-label label-white d-block">GENERAL RADIOLOGY/X-RAY</span>
+							</label>
+						</div>
+						<div class="col-xl-3 col-lg-6 p-2 p-md-3" style="border-left: 1px solid #ced4da;">
+							<label class="d-block chkbox position-relative m-0" for="check5"
+								[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'CTScanOn')}">
+								<input (change)="triggerScrollTo('cat-scan')" type="checkbox" id="check5"
+									formControlName="CTScanOn">
+								<span class="fake-input input-white position-absolute"></span>
+								<span class="fake-label label-white d-block">CAT SCAN</span>
+							</label>
+						</div>
+						<div class="col-xl-3 col-lg-6 p-2 p-md-3" style="border-left: 1px solid #ced4da;">
+							<label class="d-block chkbox position-relative m-0" for="check6"
+								[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'MRIOn')}">
+								<input (change)="triggerScrollTo('mri-scroll')" type="checkbox" id="check6"
+									formControlName="MRIOn">
+								<span class="fake-input input-white position-absolute"></span>
+								<span class="fake-label label-white d-block">MRI</span>
+							</label>
+						</div>
+						<div class="col-xl-3 col-lg-6 p-2 p-md-3" style="border-left: 1px solid #ced4da;">
+							<label class="d-block chkbox position-relative m-0" for="check7"
+								[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'otherOn')}">
+								<input (change)="triggerScrollTo('other-scroll')" type="checkbox" id="check7"
+									formControlName="otherOn">
+								<span class="fake-input input-white position-absolute"></span>
+								<span class="fake-label label-white d-block">OTHER</span>
+							</label>
+						</div>
+					</div>
+				</div>
+				<ng-container *ngIf="form.get('radiologyOn').value">
+					<div class="inner-frame position-relative bg-white mt-5 mb-1 p-0" style="overflow: visible;">
+						<div class="sub-title-bar position-absolute">
+							<div class="row">
+								<div class="col-lg-12 align-self-end">
+									<strong id="general-radiology" class="sub-title float-left"
+										style="width:fit-content;">GENERAL
+										RADIOLOGY/X-RAY</strong>
+												<button type="button" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+									class="btn btn-secondary btn-clear float-right ms-1 text-white mb-2"
+									(click)="reset(form.get('radiologies'),  'all');form.get('radiologyComments').reset()">Clear</button>
+								</div>
+								<div class="col-lg-6 align-self-end">
+									
+
+									<!-- <button (click)="reset(form.get('radiologies'),  'all')"
+										class="btn btn-primary round-btn float-right p-1"
+										style="margin-right: -2px;">Clear
+										All</button> -->
+								</div>
+							</div>
+						</div>
+						<div class="row m-0">
+							<div class="col-xl-6 p-0 br-color-ghost table-responsive">
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 34%;">
+												<button (click)="reset(form.get('radiologies'),  'Skeletal')"
+													class="btn btn-primary text-white p-1" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"><i
+														class="fas fa-undo-alt"></i></button>
+												SKELETAL
+
+											</th>
+											<th class="border-bottom border-right" style="width: 18%;">Call Stat
+												Report</th>
+											<th class="border-bottom" style="width: 18%;">Send Physician Films</th>
+											<th class="border-bottom" style="width: 30%;">
+												Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="radiologies"
+											*ngFor="let item of form.get('radiologies')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Skeletal'">
+													<td class="text-start">
+														<ul
+															class="list-unstyled opt-list m-0 w-50 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'skeletal'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'skeletal'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+														<ul *ngIf="item.get('childName').value.length>0"
+															class="list-unstyled opt-list m-0 w-50 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'skeletalChild'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'skeletalChild'+i}}"
+																		formControlName="childChecked"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('childName').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'callStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox" id="{{'callStat'+i}}"
+																		formControlName="callStatReport"
+														
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																		
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'sendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input id="{{'sendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		type="checkbox"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 34%;">
+												<button (click)="reset(form.get('radiologies'),  'ENT')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												ENT
+											</th>
+											<th class="border-bottom" style="width: 18%;">Call Stat Report</th>
+											<th class="border-bottom" style="width: 18%; border-right:none;">Send
+												Physician Films
+											</th>
+											<th class="border-bottom" style="width: 30%; border-right:none;">
+												Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="radiologies"
+											*ngFor="let item of form.get('radiologies')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='ENT'">
+													<td>
+														<ul
+															class="list-unstyled w-50  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'ENT'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'ENT'+i}}"
+																		formControlName="checked" >
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'callStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox" id="{{'callStat'+i}}"
+																		formControlName="callStatReport"
+																	
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'sendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'sendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() ||  !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() ||  !item.get('checked').value ? '' : null"
+
+                                                            
+
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 34%;">
+												<button (click)="reset(form.get('radiologies'),  'Abdomen')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												ABDOMEN
+											</th>
+											<th class="border-bottom" style="width: 18%;">Call Stat Report</th>
+											<th class="border-bottom" style="width: 18%; border-right:none;">Send
+												Physician Films
+											</th>
+											<th class="border-bottom" style="width: 30%; border-right:none;">
+												Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="radiologies"
+											*ngFor="let item of form.get('radiologies')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Abdomen' && item.get('name').value!='Other'">
+													<td>
+														<ul
+															class="list-unstyled w-50  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Abdomen'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'Abdomen'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'abdomenCallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'abdomenCallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() ||  !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'AbdomenSendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'AbdomenSendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() ||  !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Abdomen' && item.get('name').value=='Other'">
+													<td class="pt-0">
+														<ul
+															class="list-unstyled w-50  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Abdomen'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'Abdomen'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td colspan="3" class="py-0 border-right-0">
+														<textarea class="report-input" formControlName="otherComment"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															placeholder="Please Specify"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-xl-6 p-0 table-responsive">
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width:27%;">
+												<button (click)="reset(form.get('radiologies'),  'Extremities')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												EXTREMITIES
+											</th>
+											<th style="width: 6%; border-bottom: 1px solid #ced4da;">Left</th>
+											<th style="width: 6%; border-bottom: 1px solid #ced4da;">Right</th>
+											<th style="width: 14%; border-bottom: 1px solid #ced4da;">Call Stat
+												Report</th>
+											<th style="width: 14%; border-bottom: 1px solid #ced4da;">Send Physician
+												Films</th>
+											<th style="width: 30%; border-bottom: 1px solid #ced4da;">
+												Comments</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="radiologies"
+											*ngFor="let item of form.get('radiologies')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Extremities'">
+													<td>
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'extremities'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" formControlName="checked"
+																		id="{{'extremities'+i}}">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'extremitiesleft'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'left')}">
+																	<input type="checkbox" formControlName="left"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		id="{{'extremitiesleft'+i}}"
+																		>
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'extremitiesRight'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'right')}">
+																	<input type="checkbox" formControlName="right"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		id="{{'extremitiesRight'+i}}">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'extremitiesCallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox"
+																		id="{{'extremitiesCallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'extremitiesSendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'extremitiesSendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee;width: 32%;">
+												<button (click)="reset(form.get('radiologies'),  'Chest')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												CHEST
+											</th>
+											<th class="border-bottom" style="width: 17%;">Call Stat Report</th>
+											<th class="border-bottom" style="width: 17%; border-right:none;">Send
+												Physician Films
+											</th>
+											<th class="border-bottom" style="width: 30%; border-right:none;">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="radiologies"
+											*ngFor="let item of form.get('radiologies')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Chest'">
+													<td>
+														<ul
+															class="list-unstyled w-50  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Chest'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" formControlName="checked"
+																		id="{{'Chest'+i}}">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ChestCallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox" id="{{'ChestCallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ChestSendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'ChestSendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="inner-frame position-relative my-2 p-0" style="overflow: visible;  border: 0;">
+								<textarea class="form-control" placeholder="Comments"
+									[ngClass]="{'bg-light-pink':checkCarryForward(form,'radiologyComments')}"
+									formControlName="radiologyComments" rows="3" cols="10"
+									style="min-height:60px!important; border-radius:3px; max-height: 60px; border: 1px solid #a1a3a2;"></textarea>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="form.get('CTScanOn').value">
+					<div class="inner-frame position-relative bg-white mt-5 mb-1 p-0 cat-scan"
+						style="overflow: visible;">
+						<div class="sub-title-bar position-absolute">
+							<div class="row">
+								<div class="col-lg-12 align-self-end">
+									<strong id="cat-scan" class="sub-title float-left" style="width:fit-content;">CAT
+										SCAN</strong>
+											<button type="button" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+									class="btn btn-secondary btn-clear ms-1 float-right text-white mb-2"
+									(click)="reset(form.get('ctScans'),  'all');form.get('ctComments').reset()">Clear</button>
+								</div>
+								<div class="col-lg-6 align-self-end">
+
+									<!-- <button (click)="reset(form.get('ctScans'),  'all')"
+										class="btn btn-primary round-btn float-right p-1"
+										style="margin-right: -2px;">Clear
+										All</button> -->
+								</div>
+							</div>
+						</div>
+						<div class="row m-0">
+							<div class="col-12 p-0 border-0 table-responsive">
+								<table class="w-100 text-center plan-table">
+									<thead>
+										<tr>
+											<th class="text-white border-bottom"
+												style="background: #34c3ee; width: 16%;">
+											</th>
+											<th class="border-bottom" style="width: 4%;">Left</th>
+											<th class="border-bottom" style="width: 4%;">Right</th>
+											<th class="border-bottom" style="width: 4%;">With</th>
+											<th class="border-bottom" style="width: 5%;">Without</th>
+											<th class="border-bottom" style="width: 8%;">Call Stat Report</th>
+											<th class="border-bottom" style="width: 10%;">Send Physician Films</th>
+											<th class="border-bottom" style="width: 20%;">Comments</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="ctScans"
+											*ngFor="let item of form.get('ctScans')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0  && item.get('name').value!='Other'">
+													<td>
+														<ul
+															class="list-unstyled  opt-list m-0 d-inline-block align-top w-100">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'ctScan'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'ctScan'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td *ngIf="item.get('hasLeft').value">
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctScanleft'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'left')}">
+																	<input type="checkbox" formControlName="left"
+																		id="{{'ctScanleft'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td *ngIf="!item.get('hasLeft').value"></td>
+													<td *ngIf="item.get('hasRight').value">
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctScanright'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'right')}">
+																	<input type="checkbox" formControlName="right"
+																		id="{{'ctScanright'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td *ngIf="!item.get('hasRight').value"></td>
+													<td *ngIf="item.get('with').value">
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctScanWith'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="with"
+																		formControlName="withValue"
+																		id="{{'ctScanWith'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td *ngIf="!item.get('with').value"></td>
+													<td *ngIf="item.get('with').value">
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctScanWithout'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="without"
+																		formControlName="withValue"
+																		id="{{'ctScanWithout'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td *ngIf="!item.get('with').value"></td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctScanCallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox"
+																		formControlName="callStatReport"
+																		id="{{'ctScanCallStat'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctScanSendPhysician'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		formControlName="sendPhysicianFilms"
+																		id="{{'ctScanSendPhysician'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+												<tr
+													*ngIf="item.get('parentId').value==0  && item.get('name').value=='Other'">
+													<td class="pt-0">
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}"
+																	for="{{'ctScanOther'+i}}">
+																	<input type="checkbox" id="{{'ctScanOther'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td colspan="7" class="py-0 border-right-0">
+														<textarea class="report-input" placeholder="Please Specify"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="inner-frame position-relative mb-2 p-0 mt-2"
+								style="overflow: visible; border: 0;">
+								<textarea class="form-control" placeholder="Comments" formControlName="ctComments"
+									[ngClass]="{'bg-light-pink':checkCarryForward(form,'ctComments')}" rows="3"
+									cols="10"
+									style="min-height:60px!important; border-radius: 3px; max-height: 60px; border: 1px solid #a1a3a2;"></textarea>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+
+				<ng-container *ngIf="form.get('MRIOn').value">
+					<div class="inner-frame position-relative bg-white mt-5 mb-1 p-0" style="overflow: visible;">
+						<div class="sub-title-bar position-absolute">
+							<div class="row">
+								<div class="col-lg-12 align-self-end">
+									<strong id="mri-scroll" class="sub-title float-left"
+										style="width:fit-content;">MRI</strong>
+											<button type="button" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+									class="btn btn-secondary btn-clear float-right ms-1 text-white mb-2"
+									(click)="reset(form.get('MRI'),  'all');form.get('mriComments').reset()">Clear</button>
+								</div>
+								<div class="col-lg-6 align-self-end">
+									<!-- 								
+									<button (click)="reset(form.get('MRI'),  'all')"
+										class="btn btn-primary round-btn float-right p-1"
+										style="margin-right: -2px;">Clear
+										All</button> -->
+								</div>
+							</div>
+						</div>
+						<div class="row m-0">
+							<div class="col-xl-6 p-0 br-color-ghost table-responsive">
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 16%;">
+												<button (click)="reset(form.get('MRI'),  'Brain/Head')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												BRAIN/HEAD
+											</th>
+											<th class="border-bottom" style="width: 4%;">Left</th>
+											<th class="border-bottom" style="width: 4%;">Right</th>
+											<th class="border-bottom" style="width: 4%;">With</th>
+											<th class="border-bottom" style="width: 5%;">Without</th>
+											<th class="border-bottom" style="width: 8%;">Call Stat Report</th>
+											<th class="border-bottom" style="width: 10%;">Send Physician Films
+											</th>
+											<th class="border-bottom" style="border-right:none; width: 20%;">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="MRI"
+											*ngFor="let item of form.get('MRI')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Brain/Head'">
+													<td>
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'BrainHead'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'BrainHead'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+
+														</ul>
+													</td>
+													<td *ngIf="item.get('hasLeft').value">
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'BrainHeadleft'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'left')}">
+																	<input type="checkbox" id="{{'BrainHeadleft'+i}}"
+																		formControlName="left"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td *ngIf="!item.get('hasLeft').value">
+													</td>
+
+													<td *ngIf="item.get('hasLeft').value">
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'BrainHeadright'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'right')}">
+																	<input type="checkbox" id="{{'BrainHeadright'+i}}"
+																		formControlName="right"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td *ngIf="!item.get('hasLeft').value">
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'MRIWith'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="with"
+																		formControlName="withValue" id="{{'MRIWith'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'MRIWithout'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="without"
+																		formControlName="withValue"
+																		id="{{'MRIWithout'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'braincallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox" id="{{'braincallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'brainsendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'brainsendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 34%;">
+												<button (click)="reset(form.get('MRI'),  'Spine')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												SPINE
+											</th>
+											<th class="border-bottom" style="width: 6%;">With</th>
+											<th class="border-bottom" style="width: 6%;">Without</th>
+											<th class="border-bottom" style="width: 15%;">Call Stat Report</th>
+											<th class="border-bottom" style="border-right:none; width: 15%;">Send
+												Physician Films
+											</th>
+											<th class="border-bottom" style="border-right:none; width: 30%;">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="MRI"
+											*ngFor="let item of form.get('MRI')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Spine' && item.get('name').value!='Other'">
+													<td>
+														<ul class="list-unstyled opt-list m-0 d-inline-block align-top"
+															style="width:60%;">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Spine'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'Spine'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'SpineWith'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="with"
+																		formControlName="withValue"
+																		id="{{'SpineWith'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'SpineWithout'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="without"
+																		formControlName="withValue"
+																		id="{{'SpineWithout'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'callStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox" id="{{'callStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'sendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'sendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Spine' && item.get('name').value=='Other'">
+													<td>
+														<ul
+															class="list-unstyled w-50  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Spine'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'Spine'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td colspan="3" style="border-right:none;">
+														<textarea class="report-input" placeholder="Please Specify"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-xl-6 table-responsive p-0">
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width:16%;">
+												<button (click)="reset(form.get('MRI'),  'Extremities')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												EXTREMITIES
+											</th>
+											<th class="border-bottom" style="width:4%;">Left</th>
+											<th class="border-bottom" style="width:4%;">Right</th>
+											<th class="border-bottom" style="width:4%;">With</th>
+											<th class="border-bottom" style="width:5%;">Without</th>
+											<th class="border-bottom" style="width:8%;">Call Stat Report</th>
+											<th class="border-bottom" style="width:10%;">Send Physician Films
+											</th>
+											<th class="border-bottom" style="border-right:none; width:20%;">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="MRI"
+											*ngFor="let item of form.get('MRI')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Extremities' && item.get('name').value!='Other'">
+													<td>
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'mriextremities'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" formControlName="checked"
+																		id="{{'mriextremities'+i}}">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mriextremitiesleft'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'left')}">
+																	<input type="checkbox" formControlName="left"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		id="{{'mriextremitiesleft'+i}}">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mriextremitiesRight'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'right')}">
+																	<input type="checkbox" formControlName="right"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		id="{{'mriextremitiesRight'+i}}">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mriextrimitiesWith'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="with"
+																		formControlName="withValue"
+																		id="{{'mriextrimitiesWith'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mriextrimitiesWithout'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="without"
+																		formControlName="withValue"
+																		id="{{'mriextrimitiesWithout'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'catextremitiesCallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox"
+																		id="{{'catextremitiesCallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'catextremitiesSendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'catextremitiesSendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Extremities' && item.get('name').value=='Other'">
+													<td class="pt-0">
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Abdomen'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'Abdomen'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td colspan="7" class="py-0 border-right-0">
+														<textarea class="report-input" placeholder="Please Specify"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"></textarea>
+
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width:30%;">
+												<button (click)="reset(form.get('MRI'),  'Body')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												BODY
+											</th>
+											<th class="border-bottom" style="width:6%;">With</th>
+											<th class="border-bottom" style="width:6%;">Without</th>
+											<th class="border-bottom" style="width:15%">Call Stat Report</th>
+											<th class="border-bottom" style="width:15%">Send Physician Films
+											</th>
+											<th class="border-bottom" style="border-right:none; width:30%">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="MRI"
+											*ngFor="let item of form.get('MRI')['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('section').value=='Body'">
+													<td>
+														<ul
+															class="list-unstyled w-50  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Body'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" formControlName="checked"
+																		id="{{'Body'+i}}">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mriBodyWith'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="with"
+																		formControlName="withValue"
+																		id="{{'mriBodyWith'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mriBodyWithout'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="without"
+																		formControlName="withValue"
+																		id="{{'mriBodyWithout'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'BodyCallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox" id="{{'BodyCallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'BodySendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'BodySendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="inner-frame position-relative my-2 p-0"
+								style="overflow: visible; margin-top: 35px; border: 0;">
+								<textarea class="form-control" formControlName="mriComments" placeholder="Comments"
+									[ngClass]="{'bg-light-pink':checkCarryForward(form,'mriComments')}" rows="3"
+									cols="10"
+									style="min-height:60px!important; border-radius:3px; max-height: 60px; border: 1px solid #a1a3a2;"></textarea>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+
+				<ng-container *ngIf="form.get('otherOn').value">
+					<div class="inner-frame position-relative bg-white mt-5 mb-1 p-0" style="overflow: visible;">
+						<div class="sub-title-bar position-absolute">
+							<div class="row">
+								<div class="col-lg-12 align-self-end">
+									<strong id="other-scroll" class="sub-title float-left"
+										style="width:fit-content;">Other</strong>
+													<button type="button" 
+									class="btn btn-secondary btn-clear float-right ms-1 text-white mb-2" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+									(click)="reset(form.get('others'),  'all');form.get('otherComments').reset()">Clear</button>
+								</div>
+								<div class="col-lg-6 align-self-end">
+									<!-- <button type="button" 
+									class="btn btn-secondary btn-clear ms-1 text-white mb-2 pt-clear"
+									(click)="reset(form.get('others'),  'all')">Clear</button> -->
+									<!-- <button (click)="reset(form.get('others'),  'all')"
+										class="btn btn-primary round-btn float-right p-1"
+										style="margin-right: -2px;">Clear
+										All</button> -->
+								</div>
+							</div>
+						</div>
+						<div class="row m-0">
+							<div class="col-xl-6 p-0 br-color-ghost table-responsive">
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 25%;">
+												<button (click)="reset(form.get('others'),null,'mrAngiographies')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												MRA (ANGIOGRAPHY)
+											</th>
+											<th class="border-bottom" style="width:8%;">With</th>
+											<th class="border-bottom" style="width:8%;">Without</th>
+											<th class="border-bottom" style="width:15%;">Call Stat Report</th>
+											<th class="border-bottom" style="width:15%;">Send Physician Films
+											<th class="border-bottom" style="border-right:none; width:25%;">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="others"
+											*ngFor="let item of form.controls['others']['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('heading').value=='mrAngiographies' && item.get('name').value!='Other'">
+													<td>
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'mrAngiographies'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'mrAngiographies'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mrAngiographiesWith'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="with"
+																		formControlName="withValue"
+																		id="{{'mrAngiographiesWith'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mrAngiographiesWithout'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="without"
+																		formControlName="withValue"
+																		id="{{'mrAngiographiesWithout'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mrAngiographiescallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox"
+																		id="{{'mrAngiographiescallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mrAngiographiessendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'mrAngiographiessendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('heading').value=='mrAngiographies' && item.get('name').value=='Other'">
+													<td class="pt-0">
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Abdomen'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'Abdomen'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td colspan="5" class="py-0 border-right-0">
+														<textarea class="report-input" placeholder="Please Specify"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"></textarea>
+
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 30%;">
+												<button (click)="reset(form.get('others'),null,'ctaAngiographies')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												CTA (ANGIOGRAPHY) w/3D
+											</th>
+											<th class="border-bottom" style="width:8%;">With</th>
+											<th class="border-bottom" style="width:8%;">Without</th>
+											<th class="border-bottom" style="width:15%;"> Call Stat Report</th>
+											<th class="border-bottom" style="width:15%">Send Physician Films
+											<th class="border-bottom" style="width:25%">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="others"
+											*ngFor="let item of form.controls['others']['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('heading').value=='ctaAngiographies' && item.get('name').value!='Other'">
+													<td>
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'ctaAngiographies'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'ctaAngiographies'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctaAngiographiesWith'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="with"
+																		formControlName="withValue"
+																		id="{{'ctaAngiographiesWith'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctaAngiographiesWithout'+i}}"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'withValue')}">
+																	<input type="radio" value="without"
+																		formControlName="withValue"
+																		id="{{'ctaAngiographiesWithout'+i}}"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.withValue.value">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctaAngiographiescallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox"
+																		id="{{'ctaAngiographiescallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ctaAngiographiessendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'ctaAngiographiessendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('heading').value=='ctaAngiographies' && item.get('name').value=='Other'">
+													<td class="pt-0">
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'Abdomen'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'Abdomen'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td colspan="5" class="py-0 border-right-0">
+														<textarea class="report-input" placeholder="Please Specify"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"></textarea>
+
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 30%;">
+												<button (click)="reset(form.get('others'),null,'dexa')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												DEXA
+											</th>
+											<th style="width: 15%;">Call Stat Report</th>
+											<th style="width: 15%;">Send Physician Films</th>
+											<th style="border-right:none; width: 30%;">Send Physician Films</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="others"
+											*ngFor="let item of form.controls['others']['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('heading').value=='dexa'">
+													<td>
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'dexa'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'dexa'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'dexacallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox" id="{{'dexacallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'dexasendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'dexasendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+							</div>
+							<div class="col-xl-6 p-0 table-responsive">
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 30%;">
+												<button (click)="reset(form.get('others'),null,'mammographies')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												MAMMOGRAPHY
+											</th>
+											<th class="border-bottom" style="width: 15%;">Call Stat Report</th>
+											<th class="border-bottom" style="width: 15%;">Send Physician Films
+											</th>
+											<th class="border-bottom" style="border-right:none; width: 30%;">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="others"
+											*ngFor="let item of form.controls['others']['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr *ngIf="item.get('parentId').value==0 && item.get('heading').value=='mammographies' && item.get('name').value!='Other'"
+													class="other-mammo">
+													<td>
+														<ul
+															class="list-unstyled w-100  opt-list m-0 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'mammographies'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'mammographies'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mammographiescallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox"
+																		id="{{'mammographiescallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'mammographiessendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'mammographiessendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+
+								<table class="w-100 text-center plan-table border-0">
+									<thead>
+										<tr>
+											<th class="text-white" style="background: #34c3ee; width: 30%;">
+												<button (click)="reset(form.get('others'),null,'ultrasounds')" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+													class="btn btn-primary text-white p-1"><i
+														class="fas fa-undo-alt"></i></button>
+												ULTRASOUND
+											</th>
+											<th class="border-bottom" style="width: 15%;">Call Stat Report</th>
+											<th class="border-bottom" style="width: 15%;">Send Physician Films
+											</th>
+											<th class="border-bottom" style="border-right:none; width: 30%;">Comments
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+										<ng-container formArrayName="others"
+											*ngFor="let item of form.controls['others']['controls']; let i = index">
+											<ng-container [formGroupName]="i">
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('heading').value=='ultrasounds' && item.get('name').value!='Other'">
+													<td class="d-flex align-items-center text-start">
+														<ul
+															class="list-unstyled opt-list m-0 w-50 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'ultrasounds'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'ultrasounds'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+														<ul *ngIf="item.get('childName').value.length>0"
+															class="list-unstyled opt-list m-0 w-50 d-inline-block align-top"
+															style="margin-top: 0 !important;">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'ultrasoundsChild'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'childChecked')}">
+																	<input type="checkbox" id="{{'ultrasoundsChild'+i}}"
+																		formControlName="childChecked"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('childName').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ultrasoundscallStat'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'callStatReport')}">
+																	<input type="checkbox"
+																		id="{{'ultrasoundscallStat'+i}}"
+																		formControlName="callStatReport"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td>
+														<ul class="list-unstyled opt-list m-0">
+															<li>
+																<label
+																	class="fake-label-frame chkbox position-relative m-0"
+																	for="{{'ultrasoundssendPhysicianFilms'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'sendPhysicianFilms')}">
+																	<input type="checkbox"
+																		id="{{'ultrasoundssendPhysicianFilms'+i}}"
+																		formControlName="sendPhysicianFilms"
+																		[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null">
+																	<span class="fake-input" style="left: 0;"></span>
+																</label>
+															</li>
+														</ul>
+													</td>
+													<td style="border-right:none;">
+														<textarea class="form-control textarea-plan"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"
+															placeholder="Comments"></textarea>
+													</td>
+												</tr>
+												<tr
+													*ngIf="item.get('parentId').value==0 && item.get('heading').value=='ultrasounds' && item.get('name').value=='Other'">
+													<td class="d-flex align-items-center text-start">
+														<ul
+															class="list-unstyled opt-list m-0 w-50 d-inline-block align-top">
+															<li>
+																<label class="d-block chkbox position-relative m-0"
+																	for="{{'ultrasoundsOther'+i}}"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+																	<input type="checkbox" id="{{'ultrasoundsOther'+i}}"
+																		formControlName="checked">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label d-block">{{item.get('name').value}}</span>
+																</label>
+															</li>
+														</ul>
+													</td>
+
+													<td colspan="3" class="pt-0 border-right-0">
+														<textarea class="report-input" placeholder="Please Specify"
+															[ngClass]="{'bg-light-pink':checkCarryForward(item,'otherComment')}"
+															formControlName="otherComment"
+															[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"></textarea>
+													</td>
+												</tr>
+											</ng-container>
+										</ng-container>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="inner-frame position-relative my-2 p-0"
+								style="overflow: visible; margin-top: 35px; border: 0;">
+								<textarea class="form-control" placeholder="Comments" formControlName="otherComments"
+									[ngClass]="{'bg-light-pink':checkCarryForward(form,'otherComments')}" rows="3"
+									cols="10"
+									style="min-height:60px!important; border-radius: 3px; max-height: 60px; border: 1px solid #a1a3a2;"></textarea>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+			</div>
+		</div>
+		<div class="form position-relative pcare-screen mt-3">
+			<div class="header-tools d-flex">
+				<strong class="sub-title" style="transform: translate(0);">
+					Patient will be referred to
+					<button type="button" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+					class="btn btn-secondary btn-clear ms-1 text-white mb-2 pt-clear pt-comments"
+					(click)="resetSpecialityForm()">Clear</button>
+					<ng-container *ngIf="checkVisitType('reEvaluation')">/follow up with</ng-container> :
+				</strong>
+			</div>
+			<div class="p-3" style="border:1px solid #a2a3a2; border-radius: 2px 2px 2px 0;">
+				<div class="form" [formGroup]="form">
+
+					<div class="fields-holder">
+						<div class="row align-items-center"
+							*ngFor="let specialty of referringSpecialties; let i =index">
+							<div class="col-12 col-sm-6 col-md-4 col-lg-2 course-block">
+								<label class="d-block chkbox position-relative m-0" [for]="specialty.specialty_key+i"
+									[ngClass]="{'checkbox-light-pink':checkCarryForward(form,specialty.specialty_key)}">
+									<input type="checkbox" [id]="specialty.specialty_key+i"
+										[formControlName]="specialty.specialty_key">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">{{specialty.title}}</span>
+								</label>
+							</div>
+							<div class="col-12 col-sm-6 col-md-8 col-lg-10">
+								<div class="form-group field my-1">
+									<input type="text" [id]="specialty.specialty_comment_key+i"
+										[ngClass]="{'bg-light-pink':checkCarryForward(form,specialty.specialty_comment_key)}"
+										placeholder="Comments" class="form-control  form-input"
+										[formControlName]="specialty.specialty_comment_key">
+									<small class="form-text text-muted danger"
+										*ngIf=" (form.get(specialty.specialty_comment_key).errors?.maxlength) && form.get(specialty.specialty_comment_key).dirty">Maximum
+										characters should be 500</small>
+										<!-- {{specialty.specialty_comment_max_length}} -->
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form position-relative pcare-screen mt-3">
+			<div class="header-tools d-flex">
+				<strong class="sub-title" style="transform: translate(0);">Patient will be referred for </strong>
+			</div>
+			<div [formGroup]="form" class="p-2" style="border: 1px solid #a2a3a2; border-radius: 0 2px 2px 2px;">
+				<div class="box text-center bg-white px-2" style="border: 1px solid #ced4da; border-radius: 2px;">
+					<div class="row m-0">
+						<div class="col-xl-4 col-lg-6 p-2" style="margin:auto;">
+							<span>Patient will be referred for EMG/NCV testing of</span>
+						</div>
+						<div class="col-xl-4 col-lg-6 p-2 patient-reffered" style="border-left: 1px solid #ced4da;">
+							<table class="w-100">
+								<tbody>
+									<tr>
+										<td data-title="Location" align="center">
+											<ng-container>
+												<label for="upper" class="d-block position-relative mb-1 w-75"
+													[ngClass]="{'radio-light-pink':checkCarryForward(form,'extremities')}">
+													<input id="upper" value="upper extremities" type="radio"
+														formControlName="extremities" appEnhanceRadio
+														[oldValue]="form.controls.extremities.value">
+													<span class="fake-input position-absolute"></span>
+													<span class="fake-label d-block">upper extremities</span>
+												</label>
+												<label for="lower" class="d-block position-relative mb-1 w-75"
+													[ngClass]="{'radio-light-pink':checkCarryForward(form,'extremities')}">
+													<input id="lower" value="lower extremities" type="radio"
+														formControlName="extremities" appEnhanceRadio
+														[oldValue]="form.controls.extremities.value">
+													<span class="fake-input position-absolute"></span>
+													<span class="fake-label d-block">lower extremities</span>
+												</label>
+												<label for="upperandlower" class="d-block position-relative mb-1 w-75"
+													[ngClass]="{'radio-light-pink':checkCarryForward(form,'extremities')}">
+													<input id="upperandlower"
+														value="upper extremities and lower extremities" type="radio"
+														formControlName="extremities" appEnhanceRadio
+														[oldValue]="form.controls.extremities.value">
+													<span class="fake-input position-absolute"></span>
+													<span class="fake-label d-block">upper extremities and lower
+														extremities</span>
+												</label>
+											</ng-container>
+
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-xl-4 col-lg-6 d-flex align-items-center justify-content-center p-2"
+							style="border-left: 1px solid #ced4da;">
+							<span>to rule out radiculopathy/neuropathy.</span>
+						</div>
+					</div>
+				</div>
+				<div class="row pt-2">
+					<div class="col-12">
+						<div class="inner-frame position-relative mb-0 p-0" style="overflow: visible;  border: 0;">
+
+							<textarea class="form-control" placeholder="Comments" formControlName="comment" rows="3"
+								[ngClass]="{'bg-light-pink':checkCarryForward(form,'comment')}" cols="10"
+								style="min-height:60px!important; border-radius: 3px; max-height: 60px;"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form position-relative pcare-screen">
+			<div [formGroup]="form">
+				<div class="box text-start bg-white mb-0 border-0"
+					style="border: 1px solid #ced4da; border-radius: 2px;">
+					<div class="row mt-3">
+						<div class="col-12 types-box">
+							<strong
+								class="sub-title">{{ isCarryForwarded()? 'Recommended assistive devices prescribed for this patient:':'Assistive Devices'}}</strong>
+							<button type="button" class="btn btn-secondary btn-clear ms-1 text-white pt-clear" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+								(click)="resetDevicesForm()">Clear</button>
+							<div class="notes-box position-relative">
+
+								<div class="types-box ad-border px-2 pt-3" style="border-radius: 0;">
+									<ul class="types-list list-inline text-center">
+										<div class="w-100" style="display: inline-block">
+											<div class="grid-4" formArrayName="devices">
+												<li *ngFor="let item of form.get('devices')['controls']; let i = index"
+													class="list-inline-item text-start" style="min-width: inherit;">
+													<div [formGroupName]="i">
+														<label class="d-block chkbox position-relative m-0"
+															for="{{'devices'+i}}"
+															[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+															<input type="checkbox" id="{{'devices'+i}}"
+																formControlName="checked"
+																(change)="triggerScrollTo('device-scroll-'+i)">
+															<span class="fake-input position-absolute"></span>
+															<span
+																class="fake-label d-block">{{item.get('name').value}}</span>
+														</label>
+													</div>
+												</li>
+											</div>
+										</div>
+									</ul>
+
+									<div class="col-12 devices-block px-0" formArrayName="devices">
+										<div class="inner-frame position-relative mb-2 p-0"
+											*ngFor="let item of form.get('devices')['controls']; let deviceIndex = index"
+											style="overflow: visible; border: 0;
+													">
+											<ng-container [formGroupName]="deviceIndex"
+												*ngIf="item.get('checked').value">
+												<strong class="sub-title bg-blue color-white"
+													style="width: fit-content;"
+													id="device-scroll-{{deviceIndex}}">{{item.get('name').value}}</strong>
+												<div class="px-3 py-1" style="border: 1px solid #a2a3a2;">
+													<div class="row"
+														*ngIf="!item.get('seeded_body_parts').value || !item.get('seeded_body_parts').value.length">
+														<div *ngIf="item.get('location').value"
+															class="col-lg-6 p-2 patient-visit">
+															<div>
+																<label>Location</label>
+																<label for="device-left{{deviceIndex}}"
+																	class="d-inline-block position-relative me-2 mb-1"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'selected_location')}">
+																	<input id="device-left{{deviceIndex}}" type="radio"
+																		value="left" formControlName="selected_location"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.selected_location.value">
+																	<span class="fake-input position-absolute"></span>
+																	<span class="fake-label d-block">Left</span>
+																</label>
+																<label for="device-right{{deviceIndex}}"
+																	class="d-inline-block position-relative me-2 mb-1"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'selected_location')}">
+																	<input id="device-right{{deviceIndex}}" type="radio"
+																		value="right"
+																		formControlName="selected_location"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.selected_location.value">
+																	<span class="fake-input position-absolute"></span>
+																	<span class="fake-label d-block">Right</span>
+																</label>
+																<label for="device-both{{deviceIndex}}"
+																	class="d-inline-block position-relative me-2 mb-1"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'selected_location')}">
+																	<input id="device-both{{deviceIndex}}" type="radio"
+																		value="both" formControlName="selected_location"
+																		appEnhanceRadio
+																		[oldValue]="item.controls.selected_location.value">
+																	<span class="fake-input position-absolute"></span>
+																	<span class="fake-label d-block">Both</span>
+																</label>
+															</div>
+														</div>
+
+														<div class="p-2 patient-visit" [ngClass]="{ 'col-lg-6': item.get('location').value,
+																'col-lg-12': !item.get('location').value }">
+															<textarea class="form-control report-input"
+																[ngClass]="{'bg-light-pink':checkCarryForward(item,'comments')}"
+																placeholder="Comments" formControlName="comments"
+																[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || !item.get('checked').value ? '' : null"></textarea>
+														</div>
+													</div>
+													<div
+														*ngIf="(item.get('length_of_need').value || item.get('usage').value) ">
+
+														<strong>Rental</strong>
+														<div *ngIf="item.get('length_of_need').value"
+															formGroupName="length_of_need">
+															<div class="row mb-2">
+																<div class="col-lg-6">
+																	Lenght of need
+																	<label
+																		*ngFor="let seededLength of item.get('length_of_need').get('seededLengths').value; let seededIndex = index"
+																		for="length_of_need-{{seededIndex}}-{{deviceIndex}}"
+																		class="d-inline-block position-relative me-2 mb-1"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item.get('length_of_need'),'length')}">
+																		<input
+																			id="length_of_need-{{seededIndex}}-{{deviceIndex}}"
+																			type="radio" value="{{seededLength}}"
+																			formControlName="length" appEnhanceRadio
+																			[oldValue]="item.value.length_of_need.length">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label d-block">{{seededLength}}
+																			{{(seededLength==='other')?'':'Days'}}</span>
+																	</label>
+																</div>
+																<div class="col-lg-6 patient-visit">
+
+																	<textarea
+																		class="report-input d-inline-block  position-relative"
+																		placeholder="Comments"
+																		[ngClass]="{'bg-light-pink':checkCarryForward(item.get('length_of_need'),'other_comment')}"
+																		formControlName="other_comment" [class.disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+																		[attr.disabled]="item.get('length_of_need').get('length').value==='other' ? null : 'true'"></textarea>
+																</div>
+															</div>
+														</div>
+
+														<ng-container *ngIf="item.get('usage').value"
+															formGroupName="usage">
+															<div class="col-12 mb-2 px-0"
+																*ngIf="item.get('usage').value?.seeded_usage?.includes('use_in_control_unit')">
+																<label class="chkbox position-relative m-0"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item.get('usage'),'use_in_control_unit')}"
+																	for="use_in_control_unit-{{deviceIndex}}">
+																	<input type="checkbox"
+																		id="use_in_control_unit-{{deviceIndex}}"
+																		formControlName="use_in_control_unit">
+																	<span class="fake-input position-absolute"></span>
+																	<span class="fake-label">I have
+																		instructed the device for use as
+																		outlined in
+																		the Control Unit User's Manual</span>
+																</label>
+															</div>
+															<div class="col-12 mb-3 px-0"
+																*ngIf="item.get('usage').value">
+																<label class="chkbox position-relative m-0"
+																	[ngClass]="{'checkbox-light-pink':checkCarryForward(item.get('usage'),'settings')}"
+																	for="settings-{{deviceIndex}}">
+																	<input type="checkbox" id="settings-{{deviceIndex}}"
+																		formControlName="settings">
+																	<span class="fake-input position-absolute"></span>
+																	<span class="fake-label">Use setting</span>
+																</label>
+
+																<ng-container
+																	*ngIf="item.get('usage').value?.seeded_usage?.includes('frequency')">
+																	<input type="number" min="1"
+																		[ngClass]="{'bg-light-pink':checkCarryForward(item.get('usage'),'frequency')}"
+																		class="form-control d-inline text-center" style="width: 160px; padding: 5px; margin: 0px 10px;
+																							border: 1px solid #908d8d;" placeholder="Frequency" formControlName="frequency">
+																	times/day
+
+																</ng-container>
+																<ng-container
+																	*ngIf="item.get('usage').value?.seeded_usage?.includes('pressure')">
+																	use
+																	<select formControlName="pressure"
+																		class="form-control d-inline text-center" style="width: 160px;padding: 5px; margin: 0px 10px;
+																		border: 1px solid #908d8d;" [ngClass]="{'bg-light-pink':checkCarryForward(item.get('usage'),'pressure')}">
+																		<option [value]="''">Select pressure
+																		</option>
+																		<option *ngFor="let pressure of pressures"
+																			[value]="pressure">{{pressure}}
+																		</option>
+																	</select>
+																	pressure
+																	for
+
+																</ng-container>
+																<ng-container
+																	*ngIf="item.get('usage').value?.seeded_usage?.includes('time')">
+																	<input type="number" min="1"
+																		[ngClass]="{'bg-light-pink':checkCarryForward(item.get('usage'),'pressure')}"
+																		class="me-1 form-control d-inline text-center"
+																		style="width: 160px;padding: 5px; margin: 0px 10px;
+																							border: 1px solid #908d8d;" placeholder="Time" formControlName="time">
+																</ng-container>
+																<ng-container
+																	*ngIf="item.get('usage').value?.seeded_usage?.includes('hour')">
+																	hours
+																</ng-container>
+																<ng-container
+																	*ngIf="item.get('usage').value?.seeded_usage?.includes('minutes')">
+																	minutes
+																</ng-container>
+															</div>
+														</ng-container>
+														<ng-container
+															*ngIf="item['controls']['seeded_body_part_ids'] && item['controls']['seeded_body_parts'].value && item['controls']['seeded_body_parts'].value.length">
+															<div class="col-12 px-0">
+																<ng-multiselect-dropdown 
+																[settings]="dropdownSettings"
+																[placeholder]="'Body Parts'" 
+																	[data]="item['controls']['seeded_body_parts'].value"
+																	
+																	(onSelect)="onDeviceBodyPartSelect(item,$event)"
+																	formControlName="seeded_body_part_ids"
+																	(onSelectAll)="onDeviceBodyPartSelectAll(item,$event)"
+																	(onDeSelect)="onDeviceBodyPartDeSelect(item,$event)"
+																	(onDeSelectAll)="onDeviceBodyPartDeSelectAll(item)"
+																	[disabled]="!mainService.isenableSaveRecordMedicalDoctor()">
+																</ng-multiselect-dropdown>
+															</div>
+															<div class="row">
+																<ng-container formArrayName="body_parts"
+																	*ngFor="let body_part of item['controls']['body_parts']['controls']; let bodyPartIndex = index">
+																	<ng-container [formGroupName]="bodyPartIndex">
+																		<div class="col-6 mt-1">
+																			<div class="body-parts-radio">
+																				<div class="row">
+																					<div class="col-md-4">
+																						<span>{{body_part.get('name').value}}</span>
+																					</div>
+																					<div class="col-md-8">
+																						<ng-container
+																							*ngIf="body_part.get('hasLocation').value">
+
+																							<label
+																								for="device-left-{{bodyPartIndex}}-{{deviceIndex}}"
+																								class="d-inline-block position-relative me-4 mb-1"
+																								[ngClass]="{'radio-light-pink':checkCarryForward(body_part,'location')}">
+																								<input
+																									id="device-left-{{bodyPartIndex}}-{{deviceIndex}}"
+																									type="radio"
+																									value="left"
+																									formControlName="location"
+																									appEnhanceRadio
+																									[oldValue]="body_part.controls.location.value">
+																								<span
+																									class="fake-input position-absolute"></span>
+																								<span
+																									class="fake-label d-block">Left</span>
+																							</label>
+																							<label
+																								for="device-right-{{bodyPartIndex}}-{{deviceIndex}}"
+																								class="d-inline-block position-relative me-4 mb-1"
+																								[ngClass]="{'radio-light-pink':checkCarryForward(body_part,'location')}">
+																								<input
+																									id="device-right-{{bodyPartIndex}}-{{deviceIndex}}"
+																									type="radio"
+																									value="right"
+																									formControlName="location"
+																									appEnhanceRadio
+																									[oldValue]="body_part.controls.location.value">
+																								<span
+																									class="fake-input position-absolute"></span>
+																								<span
+																									class="fake-label d-block">Right</span>
+																							</label>
+																							<label
+																								for="device-both-{{bodyPartIndex}}-{{deviceIndex}}"
+																								class="d-inline-block position-relative me-2 mb-1"
+																								[ngClass]="{'radio-light-pink':checkCarryForward(body_part,'location')}">
+																								<input
+																									id="device-both-{{bodyPartIndex}}-{{deviceIndex}}"
+																									type="radio"
+																									value="both"
+																									formControlName="location"
+																									appEnhanceRadio
+																									[oldValue]="body_part.controls.location.value">
+																								<span
+																									class="fake-input position-absolute"></span>
+																								<span
+																									class="fake-label d-block">Both</span>
+																							</label>
+																						</ng-container>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<div *ngIf="body_part.get('has_comments').value"
+																			class="patient-visit" [ngClass]="{ 'col-lg-6': body_part.get('hasLocation').value,
+																		'col-lg-8': !body_part.get('hasLocation').value }">
+																			<textarea class="form-control report-input"
+																				[ngClass]="{'radio-light-pink':checkCarryForward(body_part,'comments')}"
+																				placeholder="Comments"
+																				formControlName="comments"></textarea>
+																		</div>
+																	</ng-container>
+																</ng-container>
+
+															</div>
+														</ng-container>
+													</div>
+												</div>
+											</ng-container>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<div  [formGroup]="form" class="form position-relative mt-2">
+			<div class="d-flex course-block mb-2">
+				<strong class="sub-title pb-1 pt-1 ps-1 d-flex flex-wrap justify-content-between range-motion"
+					style="border-bottom: 1px solid #a2a3a2 !important; border-radius: 0px;">
+					<label class="d-block chkbox position-relative m-0" for="hbotPrescription"
+						[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'hbotPrescription')}">
+						<input type="checkbox" id="hbotPrescription" formControlName="hbotPrescription">
+						<span class="fake-input position-absolute"></span>
+						<span class="fake-label d-block py-1">Patient is referred for Hyperbaric Oxygen Therapy (HBOT)
+							to
+							help
+							relieve pain and inflammation.</span>
+					</label>
+				</strong>
+			</div>
+			<div class="d-flex course-block">
+				<strong class="sub-title pb-1 pt-1 ps-1 d-flex flex-wrap justify-content-between range-motion"
+					style="border-bottom: 1px solid #a2a3a2 !important; border-radius: 0px;">
+					<label class="d-block chkbox position-relative m-0" for="synapticTreatment"
+						[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'synapticTreatment')}">
+						<input type="checkbox" id="synapticTreatment" formControlName="synapticTreatment">
+						<span class="fake-input position-absolute"></span>
+						<span class="fake-label d-block py-1">The patient is prescribed for Synaptic Treatment for their
+							Pain
+							symptoms.</span>
+					</label>
+				</strong>
+			</div>
+		</div>
+		<div class="form position-relative pcare-screen mt-2">
+			<div class="header-tools d-flex">
+				<strong class="sub-title" style="transform: translate(0);">Patient's next follow up visit</strong>
+			</div>
+			<div [formGroup]="form" class="p-2" style="border: 1px solid #a2a3a2; border-radius: 0 2px 2px 2px;">
+				<div class="box text-center bg-white px-2" style="border: 1px solid #ced4da; border-radius: 2px;">
+					<div class="row m-0">
+						<div class="col-xl-3 col-lg-4 p-2 m-auto">
+							Patient's next follow up visit is in:
+						</div>
+						<div class="col-xl-9 col-lg-8 p-2 patient-visit">
+
+							<label for="oneweek" class="d-inline-block position-relative me-2 mb-1"
+								[ngClass]="{'radio-light-pink':checkCarryForward(form,'followUpVisit')}">
+								<input id="oneweek" type="radio" value="a week" formControlName="followUpVisit"
+									appEnhanceRadio [oldValue]="form.controls.followUpVisit.value">
+								<span class="fake-input position-absolute"></span>
+								<span class="fake-label d-block">a week</span>
+							</label>
+							<label for="onetotwoweeks" class="d-inline-block position-relative me-2 mb-1"
+								[ngClass]="{'radio-light-pink':checkCarryForward(form,'followUpVisit')}">
+								<input id="onetotwoweeks" type="radio" value="1-2 weeks" formControlName="followUpVisit"
+									appEnhanceRadio [oldValue]="form.controls.followUpVisit.value">
+								<span class="fake-input position-absolute"></span>
+								<span class="fake-label d-block">1-2 weeks</span>
+							</label>
+							<label for="threetofourweeks" class="d-inline-block position-relative me-2 mb-1"
+								[ngClass]="{'radio-light-pink':checkCarryForward(form,'followUpVisit')}">
+								<input id="threetofourweeks" type="radio" value="3-4 weeks"
+									formControlName="followUpVisit" appEnhanceRadio
+									[oldValue]="form.controls.followUpVisit.value">
+								<span class="fake-input position-absolute"></span>
+								<span class="fake-label d-block">3-4 weeks</span>
+							</label>
+							<label for="fivetosixweeks" class="d-inline-block position-relative me-2 mb-1"
+								[ngClass]="{'radio-light-pink':checkCarryForward(form,'followUpVisit')}">
+								<input id="fivetosixweeks" type="radio" value="5-6 weeks"
+									formControlName="followUpVisit" appEnhanceRadio
+									[oldValue]="form.controls.followUpVisit.value">
+								<span class="fake-input position-absolute"></span>
+								<span class="fake-label d-block">5-6 weeks</span>
+							</label>
+							<label for="seventoeightweeks" class="d-inline-block position-relative me-2 mb-1"
+								[ngClass]="{'radio-light-pink':checkCarryForward(form,'followUpVisit')}">
+								<input id="seventoeightweeks" type="radio" value="7-8 weeks"
+									formControlName="followUpVisit" appEnhanceRadio
+									[oldValue]="form.controls.followUpVisit.value">
+								<span class="fake-input position-absolute"></span>
+								<span class="fake-label d-block">7-8 weeks</span>
+							</label>
+							<label for="otherweekfollowup" class="d-inline-block position-relative me-2 mb-1"
+								[ngClass]="{'radio-light-pink':checkCarryForward(form,'followUpVisit')}">
+								<input id="otherweekfollowup" type="radio" value="other" formControlName="followUpVisit"
+									appEnhanceRadio [oldValue]="form.controls.followUpVisit.value">
+								<span class="fake-input position-absolute"></span>
+								<span class="fake-label d-block">Other</span>
+							</label>
+							<textarea class="form-control" id="otherweekfollowup" type="text"
+								[ngClass]="{'bg-light-pink':checkCarryForward(form,'followUpOther')}"
+								*ngIf="!(form.get('followUpVisit').value!='other')?'true':null"
+								placeholder="Please Specify" formControlName="followUpOther"></textarea>
+						</div>
+					</div>
+					<div class="alert alert-secondary mb-2" role="alert" style="width:100%"
+						*ngIf="form.get('followUpVisit').value">
+						<div class="row align-items-center">
+							<div class="col-8 col-lg-9" style="text-align: left">
+								<ng-container>
+									<div><b>Preview:</b> </div>
+									Patient's next follow up visit is in :
+									<b
+										*ngIf="form.get('followUpVisit').value != 'other'">{{ form.get('followUpVisit').value}}.</b>
+									<b *ngIf="form.get('followUpVisit').value == 'other'">{{ form.get('followUpOther').value|textareaLineBreaks}}<span
+											*ngIf="form.get('followUpOther').value">.</span></b>
+								</ng-container>
+							</div>
+							<div class="col-4 col-lg-3 text-lg-end text-center">
+								<button type="button" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-secondary btn-clear ms-1 text-white"
+									(click)="clearFollowup()">Clear</button>
+							</div>
+
+						
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group mb-2">
+								<textarea class="form-control invalid"
+									formControlName="next_follow_up_visit_comments"
+									placeholder="Comments"
+									style="min-height: 60px; max-height: 60px;">
+							</textarea>
+							</div>
+						</div>
+					  </div>
+				
+				</div>
+
+				<div class="header-tools d-flex mt-2">
+					<strong class="sub-title" style="transform: translate(0);">CAUSALITY:</strong>
+				</div>
+				<div class="box text-center bg-white px-2  pb-2" style="border: 1px solid #ced4da; border-radius: 2px;">
+
+					<div class="box text-center">
+						<div class="row ms-2 ms-md-4">
+							<div class="form position-relative pcare-screen mt-2 pb-2" style="text-align:left">
+								<p class="mb-0">
+									It is within a certain degree of medical certainty, that the history presented by
+									the patient, the objective physical findings as well as the diagnosis rendered is
+									causally related to the injury the patient incurred on the specified date.
+								</p>
+							</div>
+						</div>
+					</div>
+					<div *ngIf="!isReevaluation()" class="box text-center bg-white"
+						style="border: 1px solid #ced4da; border-radius: 2px;">
+						<div class="row px-2">
+							<div class="col-6 p-2" style="border-right: 1px solid #ced4da;">
+								<label class="d-inline-block chkbox position-relative me-1 mb-0 w-50" for="prognosis"
+									[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'prognosisCheck')}">
+									<input type="checkbox" formControlName="prognosisCheck" id="prognosis">
+									<span class="fake-input input-white position-absolute"></span>
+									<span class="fake-label label-white d-block">Prognosis for recovery is</span>
+								</label>
+							</div>
+							<div class="col-6 p-2">
+
+								<label for="guarded" class="d-inline-block position-relative me-5 mb-0 w-19"
+									[ngClass]="{'radio-light-pink':checkCarryForward(form,'prognosis')}">
+									<input id="guarded" type="radio" value="guarded"
+										[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || (!form.get('prognosisCheck').value)?'true':null"
+										formControlName="prognosis" appEnhanceRadio
+										[oldValue]="form.controls.prognosis.value">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">guarded</span>
+								</label>
+								<label for="good" class="d-inline-block position-relative me-5 mb-0 w-19"
+									[ngClass]="{'radio-light-pink':checkCarryForward(form,'prognosis')}">
+									<input id="good" type="radio" value="good"
+										[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || (!form.get('prognosisCheck').value)?'true':null"
+										formControlName="prognosis" appEnhanceRadio
+										[oldValue]="form.controls.prognosis.value">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">good</span>
+								</label>
+								<label for="poor" class="d-inline-block position-relative me-5 mb-0 w-19"
+									[ngClass]="{'radio-light-pink':checkCarryForward(form,'prognosis')}">
+									<input id="poor" type="radio" value="poor"
+										[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || (!form.get('prognosisCheck').value)?'true':null"
+										formControlName="prognosis" appEnhanceRadio
+										[oldValue]="form.controls.prognosis.value">
+									<span class="fake-input position-absolute"></span>
+									<span class="fake-label d-block">poor</span>
+								</label>
+							</div>
+							<div class="alert alert-secondary mx-3" role="alert" style="width:100%"
+								*ngIf="form.get('prognosisCheck').value">
+								<div class="row align-items-center">
+									<div class="col-8 col-lg-9 " style="text-align: left">
+										<ng-container>
+											<div><b>Preview:</b> </div>
+											Prognosis for recovery is <span
+												*ngIf="form.get('prognosis').value"><b>{{form.get('prognosis').value}}.</b></span>
+										</ng-container>
+									</div>
+									<div class="col-4 col-lg-3 text-lg-end text-center">
+										<button type="button" class="btn btn-secondary btn-clear ms-1 text-white" [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+											(click)="clearPrognosis()">Clear</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="inner-frame position-relative p-0"
+								style="overflow: visible; margin-top: 15px; border: 0;">
+								<textarea class="form-control" placeholder="Comments"
+									[ngClass]="{'bg-light-pink':checkCarryForward(form,'casualityComments')}"
+									formControlName="casualityComments" rows="3" cols="10"
+									style="min-height:60px!important; border-radius:3px; max-height: 60px; border: 1px solid #a1a3a2;"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="types-box d-flex justify-content-between align-items-center  position-relative mt-2">
+					<strong class="sub-title" style="transform: translate(0);">IMPAIRMENT RATING:</strong>
+					<button style="position: absolute;
+					right: 10px;
+					top: 3px" type="button"  [disabled]="!mainService.isenableSaveRecordMedicalDoctor()"
+					class="btn btn-secondary pt-comments ms-1 text-white mb-2"
+					(click)="resetImpairmentForm()">Clear</button>
+				</div>
+				<div class="box text-center bg-white px-2 pb-2" style="border: 1px solid #ced4da; border-radius: 2px;">
+
+
+					<div class="box text-center">
+						<div class="row m-2 ms-4">
+							<div class=" p-2" style="text-align:left">
+								<!-- <span style="font-weight: bold"></span> -->
+								<p class="mb-0">
+									Patient is currently
+									<input type="number" min="0" max="100"
+										[ngClass]="{'bg-light-pink':checkCarryForward(form,'temporarilyImpaired')}"
+										class="form-control d-inline text-center" style="width: 60px;padding: 5px;     margin: 0px 10px;
+													border: 1px solid #908d8d;" formControlName="temporarilyImpaired"
+										(input)="onImpairedPercentChange($event.target.value)">% temporarily
+									impaired.
+								</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-12">
+							<div class="inner-frame position-relative mb-2 p-0" style="overflow: visible;  border: 0;">
+								<textarea class="form-control" placeholder="Comments"
+									[ngClass]="{'bg-light-pink':checkCarryForward(form,'temporarilyImpairedComment')}"
+									formControlName="temporarilyImpairedComment" rows="3" cols="10"
+									style="min-height:60px!important; border-radius: 3px; max-height: 60px; border: 1px solid #a1a3a2;"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row form-btn mt-2">
+		<div class="col-md-12 text-center">
+			<button href="javascript:void(0)" class="btn btn-primary d-inline-block" (click)="back()">
+				<span class="icon-left-arrow me-1"></span>Back</button>
+			<a *ngIf="mainService.isenableSaveRecordMedicalDoctor()"  class="btn btn-info d-inline-block mx-2"
+			  (clikc)="saveForLater()"><span class="icon-save-continue me-1"></span> Save For Later</a>
+	
+			<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" class="btn btn-success d-inline-block" (click)="next()">
+				<span class="icon-save-continue me-1"></span> Save & Continue </button>
+		</div>
+	</div>
+</div>

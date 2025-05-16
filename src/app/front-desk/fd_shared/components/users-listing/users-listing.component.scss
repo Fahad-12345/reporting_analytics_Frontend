@@ -1,0 +1,15 @@
+@import './../../../../../assets/sass/components/new-search-filters';
+::ng-deep.mat-slide-toggle {
+    &.mat-checked {
+        .mat-slide-toggle-bar {
+            background: rgba(80, 187, 94, 0.54) !important;
+        }
+        .mat-slide-toggle-thumb {
+            background: #00a650 !important;
+        }
+    }
+}
+
+.info-circle-size {
+  font-size: 0.85rem !important;
+}

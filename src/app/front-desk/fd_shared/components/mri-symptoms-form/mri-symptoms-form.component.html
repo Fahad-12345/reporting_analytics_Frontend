@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="edit-block align-items-end align-items-sm-center">
+        <h6 class="color-blue float-left">{{title}}</h6>
+        <div class="custom-tooltip-hov float-right">
+          <a href="javascript:void(0)" tooltip="Edit" (click)="enableForm(enableflag)">
+            <i class="icon-pencil"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="card-body in-mri-symptoms">
+        <form #newForm="ngForm" (ngSubmit)="onSubmit(newForm.value)" autocomplete="off">
+          <div class="form" action="#">
+            <div class="row justify-content-center">
+              <div class="col-xl-12 col-lg-12">
+                <div class="fields-holder">
+                  <!-- <span class="d-block">MRI Symptoms</span> -->
+                  <ul class="list-inline mb-0">
+                    <li class="list-inline-item mt-1 me-0" *ngFor="let symptom of symptomsList;let x = index">
+                      <label for="check-symptom-{{symptom.id}}" class="d-block chkbox position-relative m-0">
+                        <input id="check-symptom-{{symptom.id}}" name="checked-symptom-{{symptom.id}}" [value]="true"
+                          type="checkbox" [(ngModel)]="formData[x].value">
+                        <span class="fake-input position-absolute"></span>
+                        <span class="fake-label d-block">{{ symptom.name }}</span>
+                      </label>
+                    </li>
+                  </ul>
+                  <!-- <small class="form-text text-muted danger" *ngIf="!form.get('insuredTo').valid && (form.get('insuredTo').dirty || form.get('insuredTo').touched)">Please select Insured To!</small> -->
+                </div>
+              </div>
+            </div>
+            <div class="row form-btn" *ngIf="formEnabled">
+              <div class="col-lg-2 col-sm-6 col-5 offset-lg-4 text-center">
+                <a href="javascript:void(0)" class="btn btn-primary w-100" (click)="disableForm()"><span
+                    class="icon-left-arrow me-1"></span> Back</a>
+              </div>
+              <div class="col-lg-2 col-sm-6 col-7 text-center">
+                <button class="btn btn-success w-100" type="submit" [disabled]="disableBtn"><span
+                    class="icon-save-continue me-1"></span>
+                  {{ disableBtn == false ? 'Save & Continue' : 'Please Wait...' }}</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

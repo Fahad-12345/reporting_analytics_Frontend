@@ -1,0 +1,251 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div class="col-md-12" *ngIf="showRefreshButton">
+	<div class="row" >
+		<div class="col-12">
+		  <div class="form-group field">
+			<div class="alert alert-warning alert-dismissible fade show mt-2" role="alert" (click) = "refreshNow(true)">
+				 <strong>Note:</strong>
+				 Document list has been updated, please <a class="refresh-cls"> Refresh</a> the page to view the updated list.
+			</div>
+		  </div>
+		</div>
+	  </div>
+
+	<br>
+</div>
+
+<div class="document-manager px-0">
+	<div class="document-tag-area d-flex align-items-center">
+		<div dropzone [hasPermission]="aclService.hasPermission(userPermissions.patient_case_list_docs_upload)"
+			[patientId]="patientId" [caseId]="caseId" class="file-upload" [lstFolder]="folderDetailDataForSearched">
+			<p>Drag and drop files here to
+				<label class="btn btn-success py-1 upload-btn me-3 ms-3">
+					<input [disabled]="!folderList.length" (change)="onFileChange($event)" multiple
+					style="display: none;" type="file" />
+					<i class="icon-upload"></i> Upload
+				</label>
+				<button disabled onclick="scan()" class="btn btn-default py-1 upload-btn color-white">
+					<i class="icon-printer me-1"></i> Scan
+				</button>
+			</p>
+			<!-- </file-drop> -->
+		</div>
+		<form [formGroup]="searchForm" (ngSubmit)="onSubmitSeachForm(searchForm.value,true)"
+			class="document-tag-search ms-2">
+			<div class="position-relative">
+				<tag-input #input [placeholder]="'Tag Search'" [secondaryPlaceholder]="'Tag Search'"
+					formControlName="searchField" [addOnBlur]='true' [addOnPaste]='true' theme='bootstrap3-info'
+					[separatorKeyCodes]='[32]' [ripple]='false'   (onRemove)="onRemoveTag($event)"
+					(onBlur)=onTextChange($event)>
+				</tag-input>
+				<span *ngIf="searchForm.get('searchField').value != '' && searchForm.get('searchField').value != null"
+					(click)="searchForm.get('searchField').reset();searchResultReset()" style="top:14px !important;"
+					class="icon-plus date-cross-icon"></span>
+				<div class="input-group-prepend">
+					<button aria-label="Search" class="input-group-text search-btn" type="submit">
+						<span class="icon-search">
+						</span>
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div class="document-manager tree-left-sidebar px-0 d-flex mt-3">
+		<div>
+			<app-side-nav side='left' (change)="onClose()" class="position-relative wrap-sidebar"
+				*ngIf="folderList.length > 0">
+				<div slot='left' class="sidebar-frame h-100">
+					
+						<!-- <perfect-scrollbar> -->
+
+							<section class="widget custom-scroll-xy h-100">
+								<document-tree #DocumentTreeComponent *ngIf="folderList.length > 0" [unselectAll]='unselectAllDocumentTree'
+									[folders]="folderList" [removeItem]="removeItem" [caseId]="caseId"
+									[patientId]="patientId" (onSelectionChange)="treeSelectionChange($event)">
+								</document-tree>
+							</section>
+						<!-- </perfect-scrollbar> -->
+				</div>
+		</app-side-nav>
+		</div>
+
+		<div class="document-content-area w-100 ms-2">
+			<div class="document-content-width"  id="folder-container">
+				<div id="test" style="height: 560px;" *ngIf="foldersData.length > 0">
+					<div class="document-content-area-hold ps-content" >
+						<ng-container *ngFor="let folder of foldersData ;index as i;">
+							<div class="mt-0 pe-0" *ngIf="folder?.toggle">
+								<div class="card">
+									<div class="card-header folder-upload-file px-0">
+
+										<div dropzone [hasPermission]="aclService.hasPermission(userPermissions.patient_case_list_docs_upload)" [folder]="folder" [patientId]="patientId" [caseId]="caseId"
+											class="row align-items-center">
+											<div class="col-10 pe-0 ps-3">
+												<span style="cursor: pointer;" class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{folder.folder_name}}" container="body">  {{folder.facility_qualifier}}</span>
+											</div>
+											<div class="col-2 text-end ps-0 pe-4" style="padding-right: 10px;">
+												<button type="button" class="btn slide-btn" (click)="toggle(i,folder)"
+													[ngClass]="{'btn-success': opened[i], 'btn-primary':!opened[i] }">
+													<i class="icon-{{ icon(i) }}"></i>
+												</button>
+
+											</div>
+										</div>
+
+									</div>
+
+									<div class="card-body border-top-0 pb-0">
+										<div *ngIf='folder.toggle && folder.rootlevel '>
+											<app-document-shared-listing [showFolders]="showFolders"
+										    	[selectedFilesList] ="selectedFilesList"
+												[folders]= "folderDetailDataForSearched"
+												[caseId]="caseId"
+												[parentSelection]="parentSelection" (viewFile)="showMedia($event)"
+												style="width:100%;" [PreviewedFile]="file" [folder]="folder"
+												[folderList]="folderList" [folderId]="folderId">
+											</app-document-shared-listing>
+										</div>
+										<div *ngIf='folder.toggle'>
+											<ng-container *ngFor=" let _folder of folder?.selectedchild">
+												<app-document-list [PreviewedFile]="file" [previewUrl]="previewUrl"
+													[selectedFilesList] = "selectedFilesList"
+													[folders]="folderDetailDataForSearched"
+													(deleteFilesOrFilders)="refreshFoldersFiles($event)"
+													(refreshFoldersFiles) = "refreshFoldersFiles($event)"
+													(documentUpdate)="documentUpdate($event)"
+													(chSangePrint)="changePrint($event)"
+													(resetCounters)="clearSelection()" [showFolders]="showFolders"
+													[parentSelection]="parentSelection" [selectedTags]="selectedTags"
+													[folder]="_folder" [folderList]="folderList"
+													(filePreview)="showMedia($event)"
+													(getUpdatedDocument)="getUpdatedDocument();"
+													(getAllFolderList)="getAllFolderList($event)"
+													[patientId]="patientId" (removeRecord)="removeRecord($event)"
+													[caseId]="caseId"
+													(updateAllSelection)="updateAllSelection($event, _folder);"
+													(getUpdatedTags)="getAllTagsList();" [folderTittle]='folderTittle'
+													style="width:100%;">
+												</app-document-list>
+											</ng-container>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</div>
+
+					<div class="col-md-12 px-0 ps-2">
+						<p *ngIf="folderList.length == 0">Sorry, no file/folder found!</p>
+					</div>
+				</div>
+			</div>
+
+			<div class="preview-details pe-xl-0 ps-xl-1 pe-0" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_docs_view)">
+				<div class="card" >
+					<div class="card-header border-0">
+						<div class="row align-items-center">
+							<div class="col-md-12 py-2">
+								<p class="mb-0">Preview</p>
+							</div>
+						</div>
+					</div>
+					<div class="preview-scroll" [style.visibility]="showFile ? 'visible' : 'hidden'">
+						<div class="card-body border-0 h-100">
+							<div class="pdf" id="pdf" *ngIf="pdfSourceLink != null" [@fadeInOut]></div>
+							<img class="img-fluid w-100" [src]="imageSourceLink" *ngIf="imageSourceLink" [@fadeInOut] />
+							<div *ngIf="pdfSourceLink == 'xyz' && imageSourceLink == null" style="background-image:url(assets/images/preview.jpg); background-size: cover; height:100%; background-repeat: no-repeat; background-position: top center;" [@fadeInOut]></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 tags-btn tags-bottom">
+			<nav>
+				<ul class="list-unstyled mb-0 px-0">
+					<app-shared-document-actions (viewFile)="showFilePreview($event)" [folderList]='folderList'
+						[foldersData]='foldersData' [finalCount]='finalCount' [selectedFoldersId]='folderIdToPasss'
+						[selectedFiles]='selectedFiles' [selectedFilesList]='selectedFilesList' [caseId]="caseId"
+						(refreshContent)="refreshContent($event)" [folders]= "folderDetailDataForSearched" [selectedDocumentIds]="selectedDocumentIds"
+						[foldersSequence]="foldersSequence"
+						>
+					</app-shared-document-actions>
+					<li
+						*ngIf="aclService.hasPermission(userPermissions.patient_case_list_docs_create_folder) && folderList.length>0">
+						<button class="btn create-folder" (click)="creatFolderModal()"><i
+								class="fa fa-folder me-2"></i>
+							Create
+							New Folder</button>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<hr class="mt-3 mb-0" style="border-color:#b0b1b1;">
+	<div id="images" class="mt-0"></div>
+</div>
+
+<!-- Create Folder Modal -->
+<ng-template #newFolder let-modal>
+
+	<div class="modal-header">
+		<h5 class="modal-title">Create Folder</h5>
+		<button type="button" class="close" (click)="modal.dismiss('Cross click');addFolderForm.reset()"
+			data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form [formGroup]="addFolderForm" (ngSubmit)="onSubmitAddFolder(addFolderForm.getRawValue())">
+			<div class="form-group row mb-2 align-items-center">
+				<label class="col-sm-4">Name *</label>
+				<div class="col-sm-8 ps-0">
+					<input type="text" class="form-control w-100 mb-0" formControlName="folder" placeholder="">
+					<small style="color:red"
+						*ngIf="!testRegex(addFolderForm.get('folder').value) && addFolderForm.get('folder').touched">Invalid
+						format</small>
+				</div>
+			</div>
+			<div class="form-group row mb-3 align-items-center" *ngIf="folderList.length">
+				<label class="col-sm-4 pt-3">Select Folder :</label>
+				<div class="col-sm-8 ps-0">
+					<small style="font-size: 11.5px !important;">Choose an existing folder to create a
+						subfolder!</small>
+					<select class="custom-select" formControlName="parentId" id="parentId">
+						<option [value]=""> </option>
+						<ng-container *ngFor="let folder of folderList">
+							<option [value]="folder.id"> {{ folder.folder_name }}</option>
+						</ng-container>
+					</select>
+				</div>
+				<small class="form-text text-muted danger offset-md-4 ps-2"
+					*ngIf="addFolderForm.get('parentId').errors?.required && (addFolderForm.get('parentId').dirty || addFolderForm.get('parentId').touched)">
+					This field is required</small>
+			</div>
+			<div class="form-group row mb-0">
+				<div class="col-sm-8 offset-sm-4 mt-1">
+					<div class="row">
+						<div class="col-7 ps-0">
+							<button class="btn btn-success w-100" type="submit"
+								[disabled]="disableBtn || addFolderForm.invalid || !testRegex(addFolderForm.get('folder').value)"><span
+									class="icon-save-continue me-2"></span>
+								{{ disableBtn == false ? 'Submit' : 'Please Wait...' }}</button>
+						</div>
+						<div class="col-5">
+							<button type="button" (click)="modal.dismiss('Cross click');addFolderForm.reset()"
+								class="btn btn-outline-secondary w-100">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+
+</ng-template>
+
+<input type="hidden" id="fileUploadTxt" name="scanfile" value="">
+<a href="javascript:void(0)" id="fileDropLink"></a>
+

@@ -1,0 +1,266 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+ <div *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_add_new)">
+	 <div class="modal-header">
+		 <h4 class="modal-title">Create Provider Assignment</h4>
+		 <button type="button" class="close" data-dismiss="modal" (click)="activeModal.dismiss('Cross click')">&times;</button>
+	 </div>
+	 
+	 <div class="modal-body assignment-modal">
+		 <form [formGroup]="myForm">
+			 <div class="row">
+				 <div class="col-md-4">
+					 <label class="title" for="clinicname">Practice-Location* </label>
+					 <span class="tooltip-outer" tooltipClass="table-custom-tooltip tooltip-top-left" >
+						 <select class="form-select" formControlName="clinicname" (change)="changeClinic()" disabled>
+							 <option *ngFor="let clinic of assignClinics; let i=index" value={{clinic.id}} title="{{clinic.facility_name}}-{{clinic.name}}">
+								 
+								 {{clinic?.facility?.qualifier}}-{{clinic.qualifier}}
+							 </option>
+						 </select>
+					 </span>
+				 </div>
+				 <div class="col-md-4">
+					 <!-- <label class="title" for="speciality">Provider*</label>
+					 <select class="form-select" formControlName="speciality" (change)="changeDoc()">
+						 <option *ngFor="let spec of speciality" value={{spec.user_id}}>
+							 {{spec.doctor.info.first_name}}&nbsp;{{spec.doctor.info.middle_name}}&nbsp;{{spec.doctor.info.last_name}}
+						 </option>
+	 
+					 </select> -->				
+					 <app-ng-select-shareable class = "ngSelectDisabled" #ngSelectSharableDoctorName [events]="eventsSubject.asObservable()"  [filterFieldName]="'doctor_ids'"
+					 [showSelectFieldList]="selectedMultipleFieldFiter['doctor_ids']"
+					 [showSelectFieldOnRefresh]="myForm.get('doctor_ids').value" 
+					 [lableName]="'Provider*'" [bindlable]="'full_name'" [searchLableName]="'doctor_name'"
+					 [bindId]="'id'" [apiPath]="EnumApiPath.providerApiPath" [ngSelectShow]="true"
+					 [conditionalExtraApiParams] = "currentParams"
+					 (valueChange)="selectionOnValueChange($event,'doctor_ids')" 
+					  [multiple]="false">
+					 </app-ng-select-shareable> 
+				 </div>
+				 <div class="col-md-4" >			
+					 <app-ng-select-shareable #ngSelectSharableSpecality [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_ids'"
+					 [showSelectFieldList]="selectedMultipleFieldFiter['speciality_ids']"
+					  [showSelectFieldOnRefresh]="myForm.get('speciality_ids').value" 
+					  [lableName]="'Specialty*'" [bindlable]="'name'" 
+					  [mainApiPath] ="mainApiPath"
+					  [apiType] = "'post'"
+					  [dataIndocs] = "true"
+					  [qulifierShown] = "true"
+					  [conditionalExtraApiParams] = "currentParams"
+					  [bindId]="'id'" [apiPath]="'/users/get-user-info-by-specialities-v1'"  
+					  (valueChange)="selectionOnValueChange($event,'speciality_ids')" 
+					  (removeEmitter) = "removeEmitter($event)"
+					  (addNewRecord) = "addNewRecordSpecality($event)" [ngSelectShow]="true"
+					  [multiple]="true"></app-ng-select-shareable>  
+				 </div>
+			 </div>
+	 
+	 
+	 
+			 <!-- Form Array Start -->
+			  <ng-container formArrayName="specialities"
+			 *ngIf="myForm['controls'].specialities['controls'].length >0">
+			 <ng-container *ngFor="let device of myForm.controls.specialities.controls; let specialityIndex=index"
+				 [formGroupName]="specialityIndex">
+				 <div class="row">
+					 <div class="col-12 spec-head">
+						 <span>
+							 <b class="py-1 d-block" class="ng-value-label tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{getKeyControl('specality_name',specialityIndex).value}}" container="body"> {{getKeyControl('qualifier',specialityIndex).value}}:</b>
+							 <button class="close close-bold font-weight-bold" data-dismiss="modal" type="button" (click) = "removeSpecality(specialityIndex)">×</button>
+						 </span>
+					 </div>
+					 <div class="col-12  mb-2">
+						 <div class="spec-border">
+							 <div class="row pt-2">
+	 
+							 
+								 <!-- <div class='col-md-4'>
+								   
+									 <div class="form-group field"
+									 [ngClass]="{'focused': myForm.get('start_date').value != '' && myForm.get('start_date').value != null || (myForm.get('start_date').errors?.invalid_date) || ( myForm.get('start_date').errors?.invalid_date  && myForm.get('start_date').errors?.invalid_date?.text != DATEFORMAT) }">
+									 <label class="form-label" for="start_date">Start Date (mm/dd/yyyy)</label>
+									 <input appDateOnly appInputDateMask [matDatepicker]="start_date" type="text" id="start_date" formControlName="start_date"
+									   class="form-control form-input" [max]="2099-01-01">
+									 <span *ngIf=" myForm.get('start_date').value != '' && myForm.get('start_date').value != null || (myForm.get('start_date').errors?.invalid_date) || ( myForm.get('start_date').errors?.invalid_date  && myForm.get('start_date').errors?.invalid_date?.text != DATEFORMAT)"
+									   (click)="myForm?.get('start_date')?.reset()" class="icon-plus date-cross-icon"></span>
+									 <mat-datepicker-toggle [for]="start_date"></mat-datepicker-toggle>
+									 <mat-datepicker #start_date></mat-datepicker>
+									 <small class="form-text text-muted danger"
+									   *ngIf="myForm.get('start_date').errors?.invalid_date || myForm.get('start_date').errors?.invalid_date  && myForm.get('start_date').errors?.invalid_date?.text != DATEFORMAT">
+									   Date format should be accurate
+									   </small>
+									 </div>	
+								 </div> -->
+								 <div class="col-sm-4 col-lg-4 col-xl-4"> 
+									 <div class="form-group field"
+									 [ngClass]="{'focused': getKeyControl('start_date',specialityIndex).value != '' && getKeyControl('start_date',specialityIndex).value != null || ( getKeyControl('start_date',specialityIndex).errors?.invalid_date) || (  getKeyControl('start_date',specialityIndex).errors?.invalid_date  
+									 &&  getKeyControl('start_date',specialityIndex).errors?.invalid_date?.text != DATEFORMAT) }">
+									 <label class="form-label" for="start_date">Start Date*</label>
+									 <input  appInputDateMask 
+									 [appMaskDate]="getKeyControl('start_date',specialityIndex).value" [min]="min"
+									 [matDatepicker]="start_date" type="text" id="start_date" formControlName="start_date"
+									   class="form-control form-input" [max]="2099-01-01">
+									 <span *ngIf="  getKeyControl('start_date',specialityIndex).value!= '' &&  getKeyControl('start_date',specialityIndex).value != null || (getKeyControl('start_date',specialityIndex).errors?.invalid_date) || ( getKeyControl('start_date',specialityIndex).errors?.invalid_date  &&  getKeyControl('start_date',specialityIndex).errors?.invalid_date?.text != DATEFORMAT)"
+									   (click)="getKeyControl('start_date',specialityIndex).reset()" class="icon-plus date-cross-icon"></span>
+									 <mat-datepicker-toggle [for]="start_date"></mat-datepicker-toggle>
+									 <mat-datepicker #start_date></mat-datepicker>
+									 <small class="form-text text-muted danger"
+									   *ngIf="getKeyControl('start_date',specialityIndex).errors?.invalid_date || getKeyControl('start_date',specialityIndex).errors?.invalid_date  &&  getKeyControl('start_date',specialityIndex).errors?.invalid_date?.text != DATEFORMAT">
+									   Date format should be accurate
+									   </small>
+									 </div>
+								   </div>
+							 
+								 <div class='col-md-4'>
+									 <label class="title" for="starttime">Start Time*</label>
+									 <ejs-timepicker [min]="minStartTime" [max]="maxEndTime" strictMode=true [step]='interval' formControlName="start_time" (ngModelChange)="changeStartTime($event)">
+									 </ejs-timepicker>
+									 <span *ngIf="startTimeRequired" class="text-muted danger">
+										 Start time is required
+									 </span>
+								 </div>
+								 <div class='col-md-4'>
+									 <label class="title" for="endtime">End Time* </label>
+									 <ejs-timepicker [min]="minStartTime" [max]="maxEndTime" strictMode=true formControlName="end_time" [step]='interval' (ngModelChange)="changeEndTime($event)">
+									 </ejs-timepicker>
+									 <span *ngIf="endTimeRequired" class="text-muted danger">
+										 End time is required
+									 </span>
+									 <span *ngIf="endTimewrtStart" class="text-muted danger">
+										 Pick end time with respect to start
+									 </span>
+								 </div>
+					 
+							 </div>
+							 <div  class="row">
+								 <div class='col-md-4 recurrence-tab form ps-0'>
+									 <label class="d-inline-block chkbox position-relative my-3">
+										 <input id="recurrenceAfter{{getKeyControl('specality_name',specialityIndex).value}}" type="checkbox" name="recurrenceAfter{{getKeyControl('specality_name',specialityIndex).value}}" formControlName="is_recurance" (click)="recurrenceDocSpecalityBased($event,specialityIndex)">
+										 <span class="fake-input position-absolute"></span>
+										 <label class="fake-label d-block py-0 mb-0" for="recurrenceAfter{{getKeyControl('specality_name',specialityIndex).value}}">
+											 Recurrence
+										 </label>
+									 </label>
+								 </div>
+							 </div>
+							 
+	 
+							 <div class="recurrence-wrapper "[hidden]="!myForm?.value?.specialities[specialityIndex]?.is_recurance">
+								 <div class="recurrence-left d-flex justify-content-between align-items-center">
+									 <label> Repeat every </label>
+									 <select class="form-select recurrence-selection" formControlName="recurrence_ending_criteria_id" (change) = "onChangeRecurranceCriteria($event,specialityIndex)">
+										 <option *ngFor="let opt of option" value={{opt.id}}>
+											 {{opt.value}}
+										 </option>
+									 </select>
+									 <label class="title">on</label>
+								 </div>
+								 <div class="recurrence-right"  *ngIf="myForm?.value?.specialities[specialityIndex]?.is_recurance && (myForm?.value?.specialities[specialityIndex]?.recurrence_ending_criteria_id != 1)" >
+									 <ul>
+										 <li *ngFor="let days of weekDayList;let i=index" >
+											 <label class="d-flex align-items-center">
+												 <input id="{{specialityIndex}}{{days[0].name}}" type="checkbox"  [value]="days[0].id" name="{{specialityIndex}}{{days[0].name}}" formControlName="day" 
+												 (click)="changeWeek($event,days[0],specialityIndex)" >
+												 <span class="fake-input position-absolute"></span>
+												 <label class="fake-label d-block font-weight-normal ps-2">
+													 {{days[0].name}}
+												 </label>
+											 </label>
+										 </li>
+									 </ul>
+								 </div>
+							 </div>
+	 
+							 <div class="row" [hidden]="!myForm?.value?.specialities[specialityIndex]?.is_recurance" >
+								 <div [hidden]="isWeekError" class="error1 col-md-7 requ-date">
+									 Choose atleast one day*
+								 </div>
+							 </div>
+		 
+							 
+							 <div class="recurrence-wrapper" [hidden]="!myForm?.value?.specialities[specialityIndex]?.is_recurance" >
+								 <div class="recurrence-left">
+									 <label class="d-flex align-items-center">
+										 <input id="rangeRecurrence" type="checkbox" name="rangeRecurrence+{{specialityIndex}}" 
+											 (click)="rangeRecurranceSpecalityBased($event,specialityIndex)" formControlName="range_of_recurrence" >
+										 <span class="fake-input position-absolute"></span>
+										 <label class="fake-label d-block ms-2" for="rangeRecurrence+{{specialityIndex}}">
+											 Range of Recurrence
+										 </label>
+									 </label>
+								 </div>
+								 <div class="recurrence-right"  [hidden]="!myForm?.value?.specialities[specialityIndex]?.is_recurance"  [ngStyle]="{'color':isRangeRec ? 'grey' : 'black'}" >
+									 <ul>
+										 <li>
+											 <label class="d-flex align-items-center" for="end_by_status{{getKeyControl('specality_id',specialityIndex).value}}">
+												 <input id="end_by_status{{getKeyControl('specality_id',specialityIndex).value}}"
+												 [value]="1"   formControlName="end_by_status" type="radio" (change)= "endByStatus(specialityIndex)">
+												 <span class="fake-input position-absolute"></span>
+												 <span class="fake-label d-block font-weight-normal ms-2">End after</span>
+											 </label>
+										 </li>
+										 <li>
+											 <input (click)="endAfterClickChangedSpecalityBased(specialityIndex)"  formControlName="end_after_occurences" class="form-control end-after-input" type="number" min=1 oninput="validity.valid||(value='')">
+										 </li>
+										 <li>
+											 <label class="d-flex align-items-center" for="end_by_status2{{getKeyControl('specality_id',specialityIndex).value}}">
+												 <input  type="radio" formControlName="end_by_status" 
+												 id="end_by_status2{{getKeyControl('specality_id',specialityIndex).value}}"  [value]="2" (change)= "endByStatus(specialityIndex)" >
+												 <span class="fake-input position-absolute"></span>
+												 <span class="fake-label d-block font-weight-normal ms-2">End by</span>
+											 </label>
+										 </li>
+										 <li (click)="endOccChangedValue(specialityIndex)" class="flex-fill-custom">
+											 <div class="form-group horizontal-label mb-0"
+												 [ngClass]="{'focused': getKeyControl('end_date_for_recurrence',specialityIndex).value != '' && getKeyControl('end_date_for_recurrence',specialityIndex).value != null || ( getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date) || (  getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date  
+												 &&  getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date?.text != DATEFORMAT) }">
+												 <input   appInputDateMask
+												 [appMaskDate]="getKeyControl('end_date_for_recurrence',specialityIndex).value" 
+												 [matDatepicker]="end_date_for_recurrence" type="text" id="end_date_for_recurrence" formControlName="end_date_for_recurrence"
+												 class="form-control form-input date-piker-mb" [max]="2099-01-01">
+												 <div class="d-flex align-items-center icons-wrap">
+													 <span *ngIf="  getKeyControl('end_date_for_recurrence',specialityIndex).value!= '' &&  getKeyControl('end_date_for_recurrence',specialityIndex).value != null || (getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date) || ( getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date  &&  getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date?.text != DATEFORMAT)"
+													 (click)="getKeyControl('end_date_for_recurrence',specialityIndex).reset()" class="icon-plus date-cross-icon cross-label-forcefully"></span>
+													 <mat-datepicker-toggle  [for]="end_date_for_recurrence"></mat-datepicker-toggle>
+													 <mat-datepicker #end_date_for_recurrence></mat-datepicker>
+												 </div>
+												 <small class="form-text text-muted danger position-absolute"
+												 *ngIf="getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date || getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date  &&  getKeyControl('end_date_for_recurrence',specialityIndex).errors?.invalid_date?.text != DATEFORMAT">
+												 Date format should be accurate
+												 </small>
+											 </div>
+										 </li>
+									 </ul>
+								 </div>
+							 </div>
+						 </div>
+					 </div>
+				 </div>
+			 </ng-container>
+		 </ng-container>
+	 
+	 
+	 
+			 <!-- Form Array End -->
+	 
+		   
+	 
+			
+	 
+			 <!-- <div class="row">
+				 
+			 </div> -->
+		 
+		  
+	 
+			 <div class="row d-flex justify-content-center mt-3">
+				 <div class="col-md-3">
+					 <button class="btn btn-secondary w-100" data-dismiss="modal" type="button" (click)="activeModal.close()">Cancel</button>
+				 </div>
+				 <div class="col-md-3">
+					 <button class="btn btn-success w-100" type="submit" (click)="submitData()">Save</button>
+				 </div>
+			 </div>
+		 </form>
+	 </div>
+ </div>

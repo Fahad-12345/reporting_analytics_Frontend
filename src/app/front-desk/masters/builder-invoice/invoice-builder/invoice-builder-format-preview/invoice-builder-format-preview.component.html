@@ -1,0 +1,241 @@
+
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<div class="form">
+	<form>
+		<div class="invoice-title pb-3 text-center">
+			<span><strong>Invoice View</strong></span>
+		</div>
+		<div class="invoice-header">
+			<a *ngIf="this.templatedetails?.is_enable_logo" class="invoice-logo" >                       
+				<img src="./../../../../../assets/images/citimed-new-logo.png" alt="logo-img">
+			</a>
+			<div class="invoice-name-view">Test Invoice</div>
+			<div class="invoice-type-view">Invoice for XYZ</div>
+			<div *ngIf="this.templatedetails?.is_enable_current_date" class="invoice-mat-calender">
+				<span>mm/dd/yyyy</span>
+			</div>
+		</div>
+		<div class="invoice-info my-4">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="invoice-sec-left">
+							<div class="mb-3" *ngIf="this.templatedetails?.is_enable_provider">
+								<div class="form-group">
+									<span><strong>Practice</strong> :</span>
+									<span>&nbsp;Practice Name</span>
+								</div>
+								<div *ngIf="this.templatedetails?.is_enable_p_tax_identification_number" class="invoice-view-info">
+									<span class="invoice-icon">
+										<i class="far fa-file-alt"></i>
+									</span>
+									<div class="form-group">Tax Identification No. xx-xxxxxxx</div>
+								</div>
+								<div *ngIf="this.templatedetails?.is_enable_p_address" class="invoice-view-info">
+									<span class="invoice-icon">
+										<i class="fa fa-map-marker" aria-hidden="true"></i>
+									</span>
+									<div class="form-group">
+										<span >Street Address, Suite/Floor <br/> City, State ZIP</span>
+									</div>
+								</div>
+								<div *ngIf="this.templatedetails?.is_enable_p_phone_number" class="invoice-view-info">
+									<span class="invoice-icon">
+										<i class="fa fa-phone" aria-hidden="true"></i>
+									</span>
+									<div class="form-group">
+										<span >000-000-0000</span>
+									</div>
+								</div>
+								<div *ngIf="this.templatedetails?.is_enable_p_fax_number" class="invoice-view-info">
+									<span class="invoice-icon">
+										<i class="fa fa-fax" aria-hidden="true"></i>
+									</span>
+									<div class="form-group">
+										<span >000-000-0000</span>
+									
+									</div>
+								</div>
+								<div *ngIf="this.templatedetails?.is_enable_p_email" class="invoice-view-info">
+									<span class="invoice-icon">
+										<i class="fa fa-envelope" aria-hidden="true"></i>
+									</span>
+									<div class="form-group">
+										<span >xxxx@abcd.xxx</span>
+									</div>
+								</div>
+								
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_invoice_to">
+								<div class="form-group invoice-to-form">
+									<span class="text-nowrap"><strong>Invoice to</strong></span>
+									<select name="location" id="location" disabled class="w-100">
+										<option value="mercedes">Patient</option>
+										<option value="volvo">Insurance</option>
+										<option value="saab">Attorney</option>
+									</select>
+								</div>
+
+								<div class="invoice-to-block">
+									<div *ngIf="this.templatedetails?.is_enable_invoice_to_name" class="invoice-view-info">
+										<span class="invoice-icon">
+											<i class="fa fa-user-plus" aria-hidden="true"></i>
+										</span>
+										<span class="form-group">Name</span>
+									</div>
+									<div class="invoice-view-info">
+										<span class="invoice-icon">
+											<i class="fa fa-map-marker" aria-hidden="true"></i>
+										</span>
+										<div *ngIf="this.templatedetails?.is_enable_invoice_to_address" class="form-group mb-4">
+											<span>Address</span>
+										</div>
+									</div>
+									<div class="invoice-view-info">
+										<span class="invoice-icon">
+											<i class="fa fa-phone" aria-hidden="true"></i>
+										</span>
+										<div *ngIf="this.templatedetails?.is_enable_invoice_to_phone_number" class="form-group mb-4">
+											<span >Phone Number</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					<div class="col-md-4"></div>
+					<div *ngIf="this.templatedetails?.is_enable_patient_detail" class="col-md-4">
+						<div class="invoice-sec-right">
+							<div class="pt-detail mb-4 d-flex">
+								<span class="pt-detail-label mt-1"><strong>Patient Details</strong></span>
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_chart_id" class="form-group mb-1">
+								<label >Chart ID</label>
+								<input type="text" placeholder="000-00-0000" disabled />
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_case_type" class="form-group mb-1">
+								<label >Case ID/Type</label>
+								<input type="text" placeholder="0000/type" disabled />
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_bill_id" class="form-group  mb-1 ">
+							<label>Bill ID</label>
+								<input type="text" placeholder="xxx-xxx-0000" disabled />
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_patient_name" class="form-group  mb-1"> 
+							<label>Patient Name</label>
+								<input type="text" placeholder="First & Last Name" disabled />
+							</div> 
+							<div *ngIf="this.templatedetails?.is_enable_dob" class="form-group form-dob  mb-1">
+								<label>Date Of Birth</label>
+								<input type="text" placeholder="MM/DD/YYYY" disabled />
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_date_of_loss"  class="form-group mb-2">
+								<label >Date Of Loss</label>
+								<input type="text" placeholder="MM/DD/YYYY" disabled />
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_date_of_service"  class="form-group mb-1">
+								<label>Date of Service</label>
+								<input type="text" placeholder="MM/DD/YYYY" disabled />
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_claim_number" class="form-group">
+								<label>Claim No</label>
+								<input type="text" placeholder="0000-000" disabled />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="invoice-table  mb-3">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+					
+						<table class="table table-bordered bg-white text-center invoice-view-table">
+							<thead>
+							<tr>
+								<th scope="col" *ngFor="let tempHeader of templateHeaders">{{tempHeader?.header}}</th>
+								<!-- <th scope="col">Item #</th>
+								<th scope="col" style="text-align: center; width: 50%;">Description</th>
+								<th scope="col" *ngIf="this.templatedetails?.is_enable_unit_price">Unit Price</th>
+								<th scope="col" *ngIf="this.templatedetails?.is_enable_quantity">Quantity</th>
+								<th scope="col">Total Amount</th> -->
+							</tr>
+							</thead>
+							<tbody>
+							<tr >
+								<!-- <th scope="row">1</th>
+								<td class="text-center">&nbsp;</td>
+								<td *ngIf="this.templatedetails?.is_enable_unit_price">$0</td>
+								<td *ngIf="this.templatedetails?.is_enable_quantity">0</td> -->
+								<td *ngFor="let tempHeader of templateHeaders; let i =index">&nbsp;</td>
+							</tr>
+							<!-- <tr>
+								<th scope="row">2</th>
+								<td class="text-center">&nbsp;</td>
+								<td *ngIf="this.templatedetails?.is_enable_unit_price">$0</td>
+								<td *ngIf="this.templatedetails?.is_enable_quantity">0</td>
+								<td>$0</td>
+							</tr> -->
+							<tr>
+								<td class="text-center" [attr.colspan]="colspan"><strong>Sub Total</strong></td>
+								<td [attr.colspan]="templatedetails?.invoice_category?.slug == 'invoice_for_bill' ? colspan : ''" *ngIf="this.templatedetails?.is_enable_quantity"><strong>0</strong></td>
+								<td [attr.colspan]="templatedetails?.invoice_category?.slug == 'invoice_for_bill' ? colspan : ''"><strong>$0</strong></td>
+							</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="invoice-shipping-info mb-5">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4"></div>
+					<div class="col-md-4"></div>
+					<div class="col-md-4">
+						<div class="invoice-sec-right">
+							<div *ngIf="this.templatedetails?.is_enable_tax" class="form-group mb-2">
+								<label for="tax">Tax</label>
+								<select name="tax" id="tax" disabled>
+									<option value="vat">VAT</option>
+									<option value="cgt">CGT</option>
+									<option value="ost">OST</option>
+								</select>
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_shipping" class="form-group mb-2 ">
+								<label>Shipping</label>
+								<input type="text" placeholder="$0.00" disabled />
+							</div>
+							<div *ngIf="this.templatedetails?.is_enable_unit_price" class="form-group">
+								<label >Amount Due</label>
+								<input type="text" placeholder="$0.00" disabled />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<section *ngIf="this.templatedetails?.is_enable_footer" class="footer">
+			<div class="container">
+				<div class="invoice-footer">
+					<div class="row">
+						<div class="col-md-3"></div>
+						<div class="col-md-6">
+							<div class="footer-text">
+								<p class="mb-0">Make All checks payable to Citimed Medical System</p>
+							</div>
+							<div class="footer-text">
+								<p class="me-3 ">Thank You for Your Business</p>
+							</div>
+						</div>
+						<div class="col-md-3"></div>
+					</div>
+				</div>
+			</div>
+		</section>
+	</form>
+</div>
+
+

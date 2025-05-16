@@ -1,0 +1,313 @@
+@import "src/assets/sass/abstracts/variables/_colors.scss";
+@import "src/assets/sass/abstracts/variables/_fonts.scss";
+
+@mixin dashboard-provider-headings {
+  font-weight: bold;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+@mixin appointment-graph-details {
+  border: 1px solid $card-boxshadow-grey;
+  border-radius: 3px;
+  padding: 6px;
+  box-shadow: 1px 1px 1px 1px $card-boxshadow-grey;
+  color: $white;
+}
+
+@mixin appointment-graph-types {
+  border: 1px solid $card-boxshadow-grey;
+  border-radius: 3px;
+  padding-inline: 3px;
+  box-shadow: 1px 1px 1px 1px $card-boxshadow-grey;
+  color: $white;
+  background-color: $vista-blue;
+  margin-right: 6px;
+}
+
+@mixin thershold-types {
+  font-size: 12px;
+  padding-inline: 4px;
+  border-radius: 5px;
+  @media (max-width: 1024px) {
+    font-size: 10px;
+  }
+}
+
+.heading {
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+.heading {
+    font-weight: bolder;
+    font-size: 25px;
+}
+
+.container {
+  max-width: 100%;
+  margin-top: 25px !important;
+}
+
+
+
+
+
+.provider {
+  min-height: 100%;
+  border: 1px solid $card-border-grey;
+  box-shadow: 2px 2px 2px 2px $card-boxshadow-grey;
+}
+
+.card-body {
+  position: relative;
+  // font-family: $font-family;
+}
+
+#csv-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 22px;
+  margin: 10px; /* Adjust this value as needed */
+  z-index: 1;
+}
+
+#csv-icon:hover {
+  cursor: pointer;
+}
+
+.summary-icons {
+  height: 32px;
+  @media (max-width: 1024px) {
+    height: 24px;
+  }
+}
+.right-padding {
+  padding-left: 50px;
+}
+.patient-appointment-heading {
+  @include dashboard-provider-headings;
+}
+
+.info-graph {
+  height: 16px;
+}
+.nav.provider-tabs .nav-item .nav-link {
+  color: $cod-light-gray !important;
+  padding-inline: 68px !important;
+  // border-bottom: 1px solid #C3C4C3 !important;
+  @media (max-width: 1024px) {
+    padding-inline: 28px !important;
+  }
+  &:hover {
+    background-color: $non-photo-blue-light !important;
+    color: $moonstone !important;
+  }
+  .appointment-types-number {
+    font-size: 18px !important;
+    @media (max-width: 1024px) {
+      font-size: 14px !important;
+    }
+    font-weight: bold !important;
+  }
+}
+.nav.provider-tabs .nav-item .nav-link.active {
+  color: $moonstone !important;
+  border-top: 1px solid #c3c4c3 !important;
+  border-left: 1px solid #c3c4c3 !important;
+  border-right: 1px solid #c3c4c3 !important;
+  border-bottom: none !important;
+  border-radius: 3px !important;
+}
+.provider-tabs {
+  justify-content: center;
+  border-bottom: 1px solid #c3c4c3;
+}
+.patient-appointment-list {
+  margin-top: 20px;
+  overflow-y: scroll;
+  max-height: 240px;
+  @media (min-width: 1600px) {
+    max-height: 300px;
+  }
+  li {
+    font-size: 12px;
+    @media (max-width: 1024px) {
+      font-size: 9px;
+    }
+    padding-top: 8px;
+    padding-bottom: 4px;
+  }
+}
+
+.patient-info-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.patient-case {
+  text-decoration: underline;
+  margin-right: 10px;
+}
+.patient-name {
+  display: flex;
+  color: $black;
+  font-weight: bold;
+}
+
+.patient-age {
+  margin-left: 10px;
+  color: $nandor;
+  font-weight: bold;
+}
+.appointment-time {
+  background-color: $moonstone;
+  opacity: 0.5;
+  color: $white;
+  border-radius: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.Unfinalized-patient-heading {
+  @include dashboard-provider-headings;
+}
+
+.Unfinalized-patient-group {
+  margin-top: 20px;
+}
+
+.threshold1 {
+  @include thershold-types;
+  background-color: $warning;
+  margin-bottom: 4px;
+}
+.threshold2 {
+  @include thershold-types;
+  background-color: $danger;
+  color: $white;
+}
+
+.Unfinalized-line-graph {
+  position: relative;
+  height: 338px;
+  @media (max-width: 1024px) {
+    height: 256px;
+  }
+
+  &:after {
+    position: absolute;
+    content: "";
+    height: 286px;
+    width: 1px;
+    background: $red;
+    left: 326px;
+    top: 0;
+    @media (max-width: 1024px) {
+      height: 188px;
+      left: 224px;
+    }
+    @media (min-width: 1600px) {
+      left: 404px;
+    }
+  }
+  &:before {
+    position: absolute;
+    content: "";
+    height: 286px;
+    width: 1px;
+    background: $warning;
+    left: 272px;
+    top: 0;
+    @media (max-width: 1024px) {
+      height: 188px;
+      left: 180px;
+    }
+    @media (min-width: 1600px) {
+      left: 338px;
+    }
+  }
+}
+
+.appointment-graph-heading {
+  @include dashboard-provider-headings;
+}
+
+.appointment-line-graph {
+  margin-top: 20px;
+}
+
+.appointment-graph-types {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  @media (max-width: 1024px) {
+    top: 20px;
+    font-size: 10px;
+  }
+  .appointment-graph-type1 {
+    @include appointment-graph-types;
+  }
+  .appointment-graph-type2 {
+    @include appointment-graph-types;
+  }
+  .appointment-graph-type3 {
+    @include appointment-graph-types;
+  }
+}
+.appointment-line-graph {
+  margin-top: 40px;
+  @media (max-width: 1024px) {
+    margin-top: 30px;
+  }
+}
+.appointment-line-options {
+  @media (max-width: 1024px) {
+    font-size: 10px;
+  }
+}
+
+
+.unfinalized-thresholds {
+  position: absolute;
+  right: 40px;
+}
+
+.appointment-line-options1 {
+  @include appointment-graph-details;
+  background-color: $Tiffany-blue;
+}
+.appointment-line-options2 {
+  @include appointment-graph-details;
+  background-color: $vista-blue;
+}
+.appointment-line-options3 {
+  @include appointment-graph-details;
+  background-color: $sandy-brown;
+}
+
+.unfinalized-details-heading {
+  @include dashboard-provider-headings;
+}
+.unfinalized-details-group {
+  font-size: 14px;
+  border: 1px solid $card-border-grey;
+  box-shadow: 1px 1px 1px 1px $card-boxshadow-grey;
+  border-radius: 5px;
+  @media (min-width: 1600px) {
+    margin-top: 80px !important;
+  }
+  @media (max-width: 1024px) {
+    overflow-y: scroll;
+    max-height: 262px;
+    font-size: 10px;
+  }
+}
+
+.tooltip-outer:hover .tooltip-content {
+  display: block;
+}
+
+.tooltip-content {
+  display: none;
+}

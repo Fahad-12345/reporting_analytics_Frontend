@@ -1,0 +1,13 @@
+
+<div [ngClass]="{'form-disable': form?.disabled }"
+    *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_insurance_info_view)">
+    <div class="edit-block custom-tooltip-hov align-items-end align-items-sm-center">
+        <h6 class="pull-left color-blue d-inline-block mb-3">
+            Private Health Insurance </h6>
+    </div>
+	
+    <div class="pb-0" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_insurance_info_view)">
+        <dynamic-form [fields]="fieldConfig" (submit)="onSubmit($event)">
+        </dynamic-form>
+    </div>
+</div>

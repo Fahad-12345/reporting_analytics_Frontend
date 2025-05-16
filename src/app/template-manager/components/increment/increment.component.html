@@ -1,0 +1,26 @@
+<div *ngIf="layoutService.isInstancePreview && layoutService.editorView && !layoutService.isShowEditor" class="d-flex justify-content-end"><button class="btn btn-default btn-clear" (click)="clearFunc()">Clear</button></div>
+<div [ngClass]="{'disabled-column':(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui)
+,'required-increment':!isFilled()}">
+    <div class="column-content active-column" [ngClass]="{ 'alignment-top': object.alignment == 'top','alignment-center': object.alignment == 'center','alignment-bottom': object.alignment == 'bottom'}">
+        <div *ngIf="object.is_required" class="required-box"></div>
+        <angular-editor [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui) " *ngIf="object.isStatement == true && layoutService.editorView == false" class="ui-component-editor gridster-item-content "
+            id="{{object.uicomponent_name}}Editor" [(obj)]="object" [(ngModel)]="object.statement" (ngModelChange)="statementUpdate()">
+        </angular-editor>
+        <p id="inputText{{object.uicomponent_name}}" class="gridster-item-content" [hidden]="object.isStatement == false || layoutService.editorView == false" (click)="textClick()" [innerHTML]="sanitizer.bypassSecurityTrustHtml(object?.instanceStatement)">
+        </p>
+        <div class="row justify-content-center align-items-center ">
+            <div class="col">
+                <input [disabled]="(!layoutService.editorView && !layoutService.isShowEditor) || (object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui) ||(object.readOnly)" type="number" [(ngModel)]="object.value" class="form-control" id="exampleInput1"
+                    (ngModelChange)="valueChange($event)" min="{{object.options.floor}}" max="{{object.options.ceil}}" aria-describedby="Help" placeholder="Min : {{object.options.floor}}  -  Max : {{object.options.ceil}}" onkeypress="return event.charCode>=48 && event.charCode<=57">
+            </div>
+            <div class="col-auto">
+                <button [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui) ||(object.readOnly)" class="btn btn-primary plus-btn float-right mt-0" type="button"
+                    (click)="operatorsFunc('-')"><span class="icon-minus"></span></button>
+            </div>
+            <div class="col-auto">
+                <button [disabled]="(object.selected_linked_ui_component != object.linked_ui && !object.is_single_select) || (!object.selected_linked_ui_component && object.linked_ui) ||(object.readOnly)" class="btn btn-success plus-btn float-right mt-0" type="button"
+                    (click)="operatorsFunc('+')"><span class="icon-plus"></span></button>
+            </div>
+        </div>
+    </div>
+</div>

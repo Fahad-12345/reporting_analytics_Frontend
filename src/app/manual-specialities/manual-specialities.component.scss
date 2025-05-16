@@ -1,0 +1,23 @@
+::ng-deep .manual-specialitie{
+  .mat-mdc-form-field {
+      height: 30px;
+      margin-bottom: 1.25rem !important;
+      .mat-mdc-text-field-wrapper {
+        background-color: #ffffff;
+        height: inherit;
+        .mat-mdc-form-field-flex {
+          height: inherit;
+          .mat-mdc-floating-label {
+            font-size: 12px;
+            top: 13.5px !important;
+          }
+          .mat-mdc-form-field-infix {
+            height: inherit;
+            .mat-mdc-form-field-input-control {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+  }
+}

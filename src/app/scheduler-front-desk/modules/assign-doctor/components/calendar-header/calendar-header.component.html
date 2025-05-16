@@ -1,0 +1,39 @@
+
+<div class="row align-items-center cal-header mb-4">
+	<div class="col-lg-6 col-xl-3 text-md-center text-lg-start text-xl-center">
+		<div class="btn-group date_btn">
+			<div class="previous-date" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate"
+				(viewDateChange)="viewDateChange.emit(viewDate)" (click)="sendDataPrev(viewDate)"
+				title="Previous Month">
+				<i class="fa fa-caret-left"></i> </div>
+			<div class="text-truncate date-format mx-2" mwlCalendarToday>
+				{{ viewDate | calendarDate:(view + 'ViewTitle'):locale:0 }}
+			</div>
+			<div class="next-date" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate"
+				(viewDateChange)="viewDateChange.next(viewDate)" (click)="sendDataNext(viewDate)" title="Next Month">
+				<i class="fa fa-caret-right"></i>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-lg-6 col-xl-3 mt-md-2 mt-lg-0">
+		<select class="form-select" (change)="swap()" [(ngModel)]="isSwapped">
+			<option value="true">Provider/Practice-Location</option>
+			<option value="false">Practice-Location/Provider</option>
+		</select>
+	</div>
+
+	<div class="col-lg-6 col-xl-4 mt-md-3 mt-xl-0">
+		<nav class="nav justify-content-md-center justify-content-lg-left justify-content-xl-center">
+			<a (click)="viewChangeFun('month')" [class.active]="view === 'month'" class="nav-link">Month</a>
+			<a (click)="viewChangeFun('week')" [class.active]="view === 'week'" class="nav-link">Week</a>
+			<a (click)="viewChangeFun('day')" [class.active]="view === 'day'" class="nav-link">Day</a>
+		</nav>
+	</div>
+
+	<div class="col-lg-6 col-xl-2 mt-md-3 mt-lg-0 text-md-center text-lg-end text-xl-start">
+		<a href="javascript:void(0)" class="btn btn-outline-secondary" (click)="openModal()">
+			Automate</a>
+	</div>
+
+</div>

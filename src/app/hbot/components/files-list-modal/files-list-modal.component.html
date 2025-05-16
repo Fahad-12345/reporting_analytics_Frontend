@@ -1,0 +1,66 @@
+<!-- <busy-loader [loaderSpin]="disableBtn"></busy-loader> -->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Preview Document</h4>
+  <button type="button" class="close" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div style="padding:20px">
+  <ngx-datatable class="bootstrap scroll-hide custom-scroll-x table documentmanagerclass" [rows]="files"
+    [columnMode]='"force"' [footerHeight]="50">
+    <ngx-datatable-column [width]="120" name="Document Name">
+      <ng-template ngx-datatable-cell-template let-row="row" class="asdfasdf">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.file_title}}">
+          <a target="_blank">{{row.file_title}}</a>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Actions" [width]="100">
+      <ng-template ngx-datatable-header-template name="Actions">
+        <!-- <mat-checkbox type="checkbox"
+          [checked]="(folder.selection.selected.length > 0 && folder.selection.selected.length == folder.files.length && folder.files.length > 0) || folder.isFolderSelected"
+          (change)="$event ? onActionChange(folder.selection, folder.files,$event) : null"
+          [disabled]="folder.isFolderSelected">
+        </mat-checkbox> -->
+        Actions
+      </ng-template>
+
+      <ng-template style="color:black" ngx-datatable-cell-template let-row="row">
+        <!-- <mat-checkbox (click)="$event.stopPropagation()" (change)="toggleRows(row)" "
+          [checked]=" folder.selection.isSelected(row) || folder.isFolderSelected">
+        </mat-checkbox> -->
+        <a class="mx-1 view-hov" tooltip="View" (click)="openWindow(row?.pre_signed_url)" role="button"><i
+            class="icon-eye"></i></a>
+
+        <a href="javascript:void(0)" class="edit-hov mx-2" role="button" tooltip="Download"
+          (click)="downloadFile(row.id)"><span class="icon-download" download></span>
+        </a>
+        <!-- <a class="mx-1 edit-hov" tooltip="Edit" href="javascript:void(0)" role="button"
+          (click)="editDocModal(row, editContent)"><i class="icon-pencil"></i></a> -->
+        <a class="mx-1 printer-hov" tooltip="Print" (click)="openWindow(row?.pre_signed_url)" target="_blank" role="button"><i
+            class="icon-printer"></i></a>
+        <!-- <a class="mx-1 remove-hov me-1" tooltip="Delete" href="javascript:void(0)" role="button"
+          (click)="confirmDel(row)"><i class="icon-remove"></i></a> -->
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+
+  <div class="paging-bar text-center mb-1 pt-1">
+    <button [disabled]="disableBtn" href="javascript:void(0)" class="btn btn-primary color-white me-2 px-3"
+      (click)="close()"><span class="icon-left-arrow me-2"></span> Back
+    </button>
+    <button *ngIf="editable" [disabled]="disableBtn" href="javascript:void(0)" class="btn btn-info color-white px-3 me-2"
+	  (click)="submit(1)"><span class="icon-save-continue me-2"></span>
+	  Save For Later
+      <!-- {{disableBtn? 'Please Wait' : 'Save For Later'}} -->
+    </button>
+
+    <button  *ngIf="editable" [disabled]="disableBtn || form.invalid" href="javascript:void(0)" type="submit" class="btn btn-success px-3"
+	  (click)="submit(2)"><span class="icon-save-continue me-2"></span>
+	  Finalize Visit
+	  <!-- {{disableBtn? 'Please Wait': 'Finalize Visit' }} -->
+	 </button>
+  </div>
+</div>

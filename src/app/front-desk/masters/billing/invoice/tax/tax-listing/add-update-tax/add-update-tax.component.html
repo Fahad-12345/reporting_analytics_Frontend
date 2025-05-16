@@ -1,0 +1,59 @@
+<form [formGroup]="taxForm" (ngSubmit)="onSubmit(taxForm)">
+  <div class="row ">
+    <div class="col-12">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': taxForm.get('tax_name').value != '' && taxForm.get('tax_name').value != null }">
+        <label class="form-label">Tax Name*</label>
+        <input type="text" formControlName="tax_name" class="form-control form-input mb-0" notFirstCharactorSpace />
+        <small class="form-text text-muted danger" *ngIf="taxForm.get('tax_name').errors?.required && 
+           (taxForm.get('tax_name').dirty ||
+           taxForm.get('tax_name').touched)">
+          This field is required</small>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group  mb-1"
+        [ngClass]="{'focused': taxForm.get('unit_price').value != '' && taxForm.get('unit_price').value != null }">
+        <label class="form-label">Tax* %</label>
+        <input type="text" formControlName="unit_price" appOnlyNumeric class="form-control form-input mb-0"
+        [options]="customCurrencyMaskConfig" (keydown.space)="$event.preventDefault()" currencyMask
+        />
+          <small class="form-text text-muted danger" *ngIf="taxForm.get('unit_price').errors?.required && 
+          (taxForm.get('unit_price').dirty ||
+          taxForm.get('unit_price').touched)">
+          This field is required</small>
+          <small class="form-text text-muted danger"
+          *ngIf="taxForm.get('unit_price').errors?.max">
+          Tax % cannot be greater than 999999.999
+        </small>
+        <small class="form-text text-muted danger"
+      *ngIf="taxForm.get('unit_price').errors?.min">
+      Tax % cannot be less than 0.001
+    </small>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': taxForm.get('description').value != '' && taxForm.get('description').value != null }">
+        <label class="form-label">Description</label>
+        <textarea rows="6" formControlName="description" class="form-control form-input mb-0" notFirstCharactorSpace></textarea>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': taxForm.get('comment').value != '' && taxForm.get('comment').value != null }">
+        <label class="form-label">Comment</label>
+        <textarea rows="4" formControlName="comment" class="form-control form-input mb-0" notFirstCharactorSpace></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 modal-btn-width text-center mt-3">
+      <button class="btn btn-primary me-2" (click)="closeModal()" type="button"
+          >Cancel</button>
+      <button class="btn btn-success" type="submit"
+         [disabled]="isDisabled()">{{hasId?'Update':'Save'}} </button>
+    </div>
+  </div>
+</form>
+

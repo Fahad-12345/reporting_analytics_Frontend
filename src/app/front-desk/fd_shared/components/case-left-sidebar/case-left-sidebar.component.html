@@ -1,0 +1,136 @@
+<div class="position-relative mt-1">
+    <div class="row">
+        <div class="col-md-12 bg-white">
+            <nav class="left-nav overflow-x-auto p-0">
+                <ul class="list-unstyled">
+                    <li class="button--wayra" [class.disable-tab-btn]="!id"
+                        [class.active]="router.url.includes('patient_summary')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_patient_summary_menu) && id  ">
+                        <a class="d-block" (click)="goToPatientSummary()">Patient Summary</a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/patient/patient_summary" -->
+                    </li>
+
+
+                    <li class="button--wayra"
+                        [class.active]="router.url.includes('case-info') || router.url.includes('cases/create')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_case_info_menu)">
+                        <a class="d-block" (click)="nav('Case Info')">Case Info</a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/patient/patient_summary" -->
+                    </li>
+
+
+
+                    <li class="button--wayra" [class.disable-tab-btn]="!id"
+                        [class.active]="router.url.includes('personal-information')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_personal_information_menu)">
+                        <a class="d-block" (click)="nav('Personal Information')">
+                            Personal Information 
+                            <span *ngIf="_personalInfoIcon">
+                                <img alt="alert-img" [src]="source" class="warning-sign">
+                            </span>
+                        </a>
+                    </li>
+                    <li class="button--wayra" [class.disable-tab-btn]="!id"
+                        [class.active]="router.url.includes('referrals')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_referrals_menu) && _shouldShowReferral">
+                        <a class="d-block" (click)="nav('Referrals')">
+                            Referrals 
+                            <span *ngIf="_showValidationIconPhyInfo">
+                                <img alt="alert-img" [src]="source" class="warning-sign">
+                            </span>
+                        </a>
+                    </li>
+                    <li class="button--wayra" [class.disable-tab-btn]="!id"
+                        [class.active]="router.url.includes('insurance')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_insurance_menu)  && _shouldShowInsuranceTab">
+                        <a class="d-block" (click)="goToInsurance()">
+                            Insurance 
+                            <span *ngIf="_insuranceIcon">
+                                <img alt="alert-img" [src]="source" class="warning-sign">
+                            </span>
+                        </a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/case-insurance/insurance" -->
+                    </li>
+                    <li class="button--wayra" [class.disable-tab-btn]="!id"
+                        [class.active]="router.url.includes('injury')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_injury_menu) && _shouldShowInjury">
+                        <a class="d-block" (click)="nav('Injury')">Injury</a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/injury" -->
+                    </li>
+
+
+
+
+                    <li class="button--wayra" [class.disable-tab-btn]="!id"
+					 [class.active]="router.url.includes('marketing')"
+                        
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_marketing_menu)">
+                        <a class="d-block" (click)="goToMarketing()">Marketing</a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/marketing" -->
+                    </li>
+                    <li class="button--wayra" [class.disable-tab-btn]="!id"
+                        [class.active]="router.url.includes('document')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_docs_menu)">
+                        <a class="d-block" (click)="nav('Documents')">Documents</a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/document" -->
+                    </li>
+
+
+                    <li class="button--wayra" [class.disable-tab-btn]="!id" [class.active]="router.url.includes('scheduler')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_scheduler_menu)">
+                        <a class="d-block" (click)="nav('Schedular')">Scheduler</a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/scheduler" -->
+                    </li>
+                    <li class="button--wayra" [class.disable-tab-btn]="!id" [class.active]="router.url.includes('visits')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_visits_menu)">
+                        <a class="d-block" (click)="nav('Visits')">Visits</a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/billing" -->
+                    </li>
+                    <li class="button--wayra" [class.disable-tab-btn]="!id" [class.active]="router.url.includes('billing')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_billing_menu)">
+                        <a class="d-block" (click)="nav('Billing')">Billing</a>
+                        <!-- routerLink="/front-desk/cases/edit/{{id}}/billing" -->
+                    </li>
+
+					<li class="button--wayra" [class.disable-tab-btn]="!id" [class.active]="router.url.includes('erx')">
+					<a class="d-block" (click)="goToErx()">Erx</a>
+				</li>
+                    <!-- <li class="button--wayra disable-tab-btn" [class.active]="router.url.includes('comments')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_comments_menu)">
+                        <a class="d-block" (click)="nav('')">Comments</a>
+                    </li> -->
+<!-- routerLink="/front-desk/cases/edit/{{id}}/collection" -->
+                    <!-- <li class="button--wayra disable-tab-btn" [class.active]="router.url.includes('collection')"
+                        *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_menu)">
+                        <a class="d-block" (click)="nav('')">Collection</a>
+                        
+                    </li> -->
+                    <li class="button--wayra"  [class.disable-tab-btn]="!id" *ngIf="aclService.hasPermission(userPermissions.patient_case_list_comments_menu)">
+                        <a class="btn-default d-block text-white" (click)="openCaseComments()">Comments</a>
+                    </li>
+				</ul>
+				
+            </nav>
+            <router-outlet></router-outlet>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade modal-large" bsModal #caseCommentsModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+  <div class="modal-dialog modal-xl" style="min-height: calc(100% - 4rem);">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-static-name" class="modal-title pull-left">Comments</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="caseCommentsModal.hide();setHeightDefaul()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body bg-gray">
+        <app-comments #caseComments></app-comments>
+      </div>
+    </div>
+  </div>
+</div>

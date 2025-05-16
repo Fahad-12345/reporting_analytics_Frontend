@@ -1,0 +1,210 @@
+.ng-select {
+	height: auto;
+	font: 400 0.8125rem/1.0625rem 'Poppins', Arial, Helvetica, sans-serif !important;
+	max-width: 100%;
+	&.ng-select-single,
+	&.ng-select-multiple {
+	  width: 100%;
+	  .ng-dropdown-panel {
+		.ng-dropdown-panel-items {
+		  .ng-optgroup {
+			border-bottom: 1px solid #ccc;
+			.checkbox-btn {
+			  .fake-label {
+				background: none !important;
+				padding: 0 5px;
+				font-size: 14px;
+				font-weight: bold;
+				color: #161616;
+			  }
+			  span {
+				&.fake-input {
+				  top: -1px;
+				  transform: unset;
+				}
+			  }
+			}
+		  }
+		  .ng-option {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap !important;
+			-webkit-box-orient: vertical;
+			border-bottom: 1px solid #ccc;
+			padding: 8px 0 8px 10px;
+			.checkbox-btn {
+			  .fake-label {
+				background: none !important;
+				padding: 0 20px;
+			  }
+			}
+			.fake-input {
+			  &:before {
+				content: none;
+			  }
+			}
+			.ng-option-label,
+			q.ng-value-label,
+			span {
+			  overflow: hidden;
+			//   display: block;
+			  text-overflow: ellipsis;
+			  .highlighted {
+				display: inline-block;
+				padding: 0;
+				overflow: unset;
+			  }
+			}
+		  }
+		}
+	  }
+	}
+	&.ng-select-multiple {
+	  &.ng-select-focused {
+		height: auto !important;
+	  }
+	  .ng-dropdown-panel {
+		top: unset;
+	  }
+	  .ng-select-container {
+		box-shadow: none !important;
+		z-index: 9 !important;
+		flex-wrap: wrap;
+		.ng-value-container {
+		  flex-wrap: wrap;
+		  .ng-label {
+			min-width: auto;
+			max-width: 90%;
+		  }
+		  .ng-numbers {
+			position: absolute;
+			right: 35px;
+			background: transparent;
+			z-index: 9;
+		  }
+		  .ng-value {
+			white-space: pre-wrap !important;
+			display: flex;
+			align-items: center;
+			justify-content: flex-start;
+			.ng-value-icon {
+			  &.left {
+				border-right: 0;
+			  }
+			}
+			.ng-value-label {
+			  word-break: break-word;
+			  display: -webkit-box;
+			  -webkit-line-clamp: 2;
+			  overflow: hidden;
+			  white-space: normal;
+			  max-height: 36px;
+			  text-overflow: ellipsis;
+			  /*! autoprefixer: ignore next */
+			  -webkit-box-orient: vertical;
+  
+			}
+		  }
+		}
+	  }
+	  .ng-clear-wrapper {
+		@include px-to-rem(margin-top, 3px, false);
+		@include px-to-rem(width, 11px, true);
+	  }
+	}
+	.ng-spinner-loader {
+	  border-top: 2px solid #34c3ee61 !important;
+	  border-right: 2px solid #34c3eed6 !important;
+	  border-bottom: 2.2px solid #34c3ee !important;
+	  border-left: 2.5px solid #34c3ee !important;
+	}
+	
+  }
+  .ng-select .ng-select-container,
+  .ng-select-focused {
+	  min-height: 1.875rem !important;
+	  @include media('>xxl-widescreen') {
+		  @include px-to-rem(min-height, 32px, true);
+		  }
+	  &:focus {
+		  border: 1px solid $picton-blue !important;
+		  background: $white;
+	  }
+  }
+  .ng-select.ng-select-single .ng-select-container {
+	  @include px-to-rem(height, 30px, false);
+	  @include media('>xxl-widescreen') {
+		  height: 2rem !important;
+	  }
+  }
+  .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+	  @include px-to-rem(margin, 2px, true);
+  }
+  .ng-select.ng-select-multiple .ng-select-container .ng-value-container {
+	  @include px-to-rem(padding-top, 2px, true);
+	  @include px-to-rem(padding-left, 7px, false);
+  }
+.modal{
+	&.create-bill-modal{
+		.dropdown-btn{
+			.dropdown-multiselect__caret{
+				top: -4px !important;
+			}
+		}
+	}
+	.dropdown-btn{
+		display: flex !important;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+}
+
+  //Filters Dropdown UI
+
+.ng-check{
+	.ng-label{
+		.ng-option {
+			border-bottom: 1px solid #ccc;
+			.checkbox-btn {
+				.fake-label {
+					position: relative;
+					overflow: hidden;
+					white-space: nowrap;
+					text-overflow: ellipsis;
+				}
+			}
+		}
+	}
+	
+}
+
+
+:where(.ng-check .ng-option) {
+	.checkbox-btn {
+		display: flex;
+		align-items: center;
+	}
+}
+
+:where(.ng-check .ng-option .checkbox-btn) {
+	.fake-input {
+		flex: 0 0 0.875rem;
+		transform: translateY(0) !important;
+	}
+	.fake-label {
+		padding-left: 10px !important;
+	}
+}
+:where(.ng-check .ng-optgroup .checkbox-btn) {
+	.fake-input {
+		&::before {
+			opacity: 0 !important;
+		}
+	}
+	.fake-label {
+		padding-left: 12px !important;
+	}
+}
+
+
+

@@ -1,0 +1,88 @@
+<div class="front-desk-block billing-info">
+  <div class="row mt-3">
+    <div class="col-6">
+      <div class="form-group field mb-1" [ngClass]="{'focused': role != ''}">
+        <label for="fax" class="form-label">Role</label>
+        <select class="custom-select" name="role" [(ngModel)]="role" (change)="updateRole($event)" id="fax">
+          <option *ngFor="let role of roles" [ngValue]="role">{{ role.name }}
+          </option>
+        </select>
+        <!-- <select class="custom-select" name="role" [(ngModel)]="role_id" (change)="updateRole($event)">
+          <option value="">Select Role</option>
+          <option *ngFor="let role of roles" value="{{ role.id }}">{{ role.name }}
+            {{role.require_medical_identifiers}}
+          </option>
+        </select> -->
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group field mb-1" [ngClass]="{'focused': speciality_id != ''}">
+        <label for="speciality" class="form-label">Specialty</label>
+        <select class="custom-select" name="speciality" [(ngModel)]="speciality_id" id="speciality">
+          <option *ngFor="let spec of specalities" value="{{ spec.id }}">{{ spec.name }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <!--   
+    <label for="super-visor" class="chkbox position-relative mt-2">
+      <input id="super-visor" name="super-visor" value=""  [(ngModel)]="isFacilitySupervisior" type="checkbox">
+      <span class="fake-input position-absolute"></span>
+      <span class="fake-label d-block">Supervisor</span>
+  </label> -->
+  <div class="form mt-3">
+    <label for="facility-{{facilityId}}" class="chkbox position-relative mt-2">
+      <input id="facility-{{facilityId}}" name="supervisor" [(ngModel)]="isFacilitySupervisior" type="checkbox">
+      <span class="fake-input position-absolute"></span>
+      <span class="fake-label">Supervisor</span>
+    </label>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+
+      <ng-container *ngIf="!isFacilitySupervisior && !isSuperAdmin">
+
+        <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+
+          <mat-tree-node *matTreeNodeDef="let node" [ngClass]="{'parent-node': node.level==0}" matTreeNodeToggle
+            matTreeNodePadding class="third-child">
+            <button mat-icon-button disabled></button>
+            <mat-checkbox class="checklist-leaf-node" [checked]="checklistSelection.isSelected(node)"
+              (change)="todoLeafItemSelectionToggle(node)">{{node.item}}
+              <i [class]="getIcon(node)"></i>
+            </mat-checkbox>
+          </mat-tree-node>
+
+          <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+            <button mat-icon-button disabled></button>
+            <mat-form-field>
+              <input matInput #itemValue placeholder="New item...">
+            </mat-form-field>
+            <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+          </mat-tree-node>
+
+
+          <mat-tree-node *matTreeNodeDef="let node; when: hasChild" id="node{{node.item}}" matTreeNodePadding
+            class="second-child">
+            <button mat-icon-button matTreeNodeToggle class="icon-plus-um"
+              [attr.aria-label]="'toggle ' + node.filename">
+              <mat-icon class="mat-icon-rtl-mirror">
+
+                {{treeControl.isExpanded(node) ? 'indeterminate_check_box' : 'add_box'}} second-child
+              </mat-icon>
+            </button>
+            <mat-checkbox [checked]="descendantsAllSelected(node)" [indeterminate]="descendantsPartiallySelected(node)"
+              (change)="todoItemSelectionToggle(node)">{{node.item}}
+
+            </mat-checkbox>
+
+          </mat-tree-node>
+
+        </mat-tree>
+
+      </ng-container>
+
+    </div>
+  </div>
+</div>

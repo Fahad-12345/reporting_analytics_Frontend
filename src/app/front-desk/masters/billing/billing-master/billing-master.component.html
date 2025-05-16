@@ -1,0 +1,92 @@
+<div class="front-desk-block billing-info master-tabs">
+  <div class="card text-center">
+    <div class="card-header border-bottom-0">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li *ngIf="aclService.hasPermission('master-bb-pt-tab')" class="nav-item">
+          <a routerLinkActive="active" class="nav-link"
+            routerLink="/front-desk/masters/billing/billing-master/payment-type">Payment
+            Type</a>
+        </li>
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_vt_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/verification-type"
+            class="nav-link">Verification
+            Type</a>
+        </li>
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_denial_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/denial-type"
+            class="nav-link">Denial Type</a>
+		</li>
+
+		<li *ngIf="aclService.hasPermission(userPermissions.master_bb_denial_tab)" class="nav-item">
+			<a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/eor-type"
+			  class="nav-link">EOR Type</a>
+		  </li>
+
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_pb_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/paid-by"
+            class="nav-link">Payment By</a>
+        </li>
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_pos_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/place-of-service"
+            class="nav-link">Place Of
+            Service</a>
+        </li>
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_mod_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/modifiers-type"
+            class="nav-link">Modifiers</a>
+        </li>
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_cs_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/case-status"
+            class="nav-link">Case Status</a>
+        </li>
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_region_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/region"
+            class="nav-link">Region</a>
+        </li>
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_billing_title_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/billing-title"
+            class="nav-link">Billing Title</a>
+        </li>
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_emp_type_tab)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/billing-employment-type"
+            class="nav-link">Billing Employment Type</a>
+        </li>
+        <!-- <li *ngIf="aclService.hasPermission('master-bb-region-tab')" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/picklistcategory"
+            class="nav-link"> Pick List</a>
+        </li> -->
+        <li *ngIf="aclService.hasPermission(userPermissions.master_bb_bill_status_view)" class="nav-item">
+          <a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/billing-status"
+            class="nav-link">Bill/Invoice Status</a>
+		</li>
+		<li *ngIf="aclService.hasPermission(userPermissions.master_bb_bill_status_view)" class="nav-item">
+			<a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/payment-status"
+			  class="nav-link">Payment Status</a>
+		  </li>
+		  <li *ngIf="aclService.hasPermission(userPermissions.master_bb_bill_status_view)" class="nav-item">
+			<a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/payment-action-type"
+			  class="nav-link">Payment Action Type</a>
+		  </li>
+		  <li *ngIf="aclService.hasPermission(userPermissions.master_bb_bill_status_view)" class="nav-item">
+			<a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/eor-status"
+			  class="nav-link">EOR Status</a>
+		  </li>
+		  <li *ngIf="aclService.hasPermission(userPermissions.master_bb_bill_status_view)" class="nav-item">
+			<a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/denial-status"
+			  class="nav-link">Denial Status</a>
+		  </li>
+		  <li *ngIf="aclService.hasPermission(userPermissions.master_bb_bill_status_view)" class="nav-item">
+			<a routerLinkActive="active" routerLink="/front-desk/masters/billing/billing-master/verification-status"
+			  class="nav-link">Verification Status</a>
+		  </li>
+      </ul>
+    </div>
+
+    <div class="card-body bill-border border-top-0">
+      <div class="tab-content" id="myTabContent">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+
+</div>

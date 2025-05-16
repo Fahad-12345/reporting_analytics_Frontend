@@ -1,0 +1,38 @@
+.paging-bar .btn{
+    width: 175px;
+}
+
+// .md-provider-sign {
+// 	::ng-deep .signature-pad canvas, ::ng-deep .signature-img {
+// 		height: 140px !important;
+// 	}
+// 	}
+	
+::ng-deep.hobot-notes{
+    .mat-mdc-form-field {
+        height: 30px;
+        margin-bottom: 1.25rem !important;
+        .mat-mdc-text-field-wrapper {
+          background-color: #ffffff;
+          height: inherit;
+          .mat-mdc-form-field-flex {
+            height: inherit;
+            .mat-mdc-floating-label {
+              font-size: 12px;
+              top: 13.5px !important;
+            }
+            .mat-mdc-form-field-infix {
+              height: inherit;
+              .mat-mdc-form-field-input-control {
+                font-size: 14px;
+              }
+            }
+          }
+        }
+    }
+}
+.finalized-hbot-btn {
+    @media screen and (min-width: 767px) and (max-width: 992px) {
+        margin-top: 1rem !important;
+    }
+}

@@ -1,0 +1,287 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<app-md-sub-tab [tabLinks]="tabLinks" [currentScreen]='currentScreen'></app-md-sub-tab>
+<div class="section-frame reduce-height-tab plan-of-care pb-md-5 me-1" style="padding: 8px;">
+	<div class="custom-scrollbar">
+		<div class="header-tools d-flex">
+			<!-- <strong class="sub-title bg-blue color-white">WORK STATUS</strong> -->
+		</div>
+		<div class="inner-frame position-relative bg-white mb-3 p-3"
+			style="overflow: visible; border-radius: 0px 0px 4px 4px;">
+
+			<div class="row">
+				<div class="col-12">
+					<!-- <md-diagnostic-codes  [codeType]="'CPT'" [favoriteCodes]="favoriteCodes">
+					</md-diagnostic-codes> -->
+					<!-- [max]='6' -->
+					<md-diagnostic-codes 
+				[codes]="cpt_codes" 
+				[visitType]="visitType" 
+				[carryForwarded]="carryForwarded" 
+				[allow_multiple_cpt_code]="allow_multiple_cpt_code"
+				[showdialogbox] = "!allow_multiple_cpt_code"
+				[codeType]="'CPT'"  
+				[placeHolder]="'Search By CPT CODE Or Description '"
+				[favoriteCodes]="favoriteCodes"
+				[speciality_id]="appointment.speciality_id"
+				(codesUpdated)="codesUpdated($event)">
+				</md-diagnostic-codes>
+				</div>
+				<!-- <div class="col-12" *ngIf="cpt_codes.length">
+					<h6>CPT Codes</h6>
+					<ol class="mb-2">
+						<li *ngFor="let code of cpt_codes">
+							{{code}}
+						</li>
+					</ol>
+				</div> -->
+				<div class="col-12">
+					<div class="form pt-3">
+						<h6>Treatment Rendered Today:</h6>
+						<p class="mb-2">I provided the services listed above.</p>
+						<p class="mb-2">I,
+							{{appointment?.doctor?.firstName}}{{(appointment?.doctor?.middleName)?" "+appointment?.doctor?.middleName:""}}{{(appointment?.doctor?.lastName)?" "+appointment?.doctor?.lastName:""}},
+							being a physician being duly licensed and practicing in the State of
+							New York
+							pursuant to CPLR Section 2106, hereby affirm under the penalties of perjury that the
+							statements contained
+							herein are true and accurate. </p>
+
+						<p class="mb-0">
+							{{appointment?.doctor?.firstName}}{{(appointment?.doctor?.middleName)?" "+appointment?.doctor?.middleName:""}}{{(appointment?.doctor?.lastName)?" "+appointment?.doctor?.lastName:""}}<br />
+							Diplomate of the American <br />
+							Board of Internal Medicine </p>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-center md-provider-sign mb-2">
+			<div class="col-lg-10">
+				<p class="mb-1 mx-2">Provider Signature</p>
+				<div class="col-12 sign-hold">
+					<app-signature [editPad] = "mainService.isenableSaveRecordMedicalDoctor()" [editable]="mainService.isenableSaveRecordMedicalDoctor()" (signatureCleared)="clearedSignature()" [hide_title]='true' [(selectedId)]="appointment.doctor_signature_id" [(signature)]='doctor_signature'></app-signature>
+				</div>
+				<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-primary mx-2" (click)="chooseSignatures()">Choose Previous</button>
+			</div>
+			<!-- <div class="col-6">
+				<p class="mb-2">Patient Signature</p>
+				<app-signature [hide_title]='true' [(selectedId)]="appointment.patient_signature_id" [(signature)]='patient_signature'></app-signature>
+			</div> -->
+		</div>
+	</div>
+
+
+	<div class="paging-bar form-btn text-center mt-2">
+		<button href="javascript:void(0)" class="btn btn-primary me-2" (click)="previousPage()"
+			[disabled]="disableButtons"><span class="icon-left-arrow me-1"></span> Back </button>
+		<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" class="btn btn-default color-white me-2" (click)="saveForLater()"
+			[disabled]="disableButtons"> Save For Later </button>
+		<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" class="btn btn-warning color-white me-2" (click)="preview(treatment)"
+			[disabled]="disableButtons"> Preview Reports </button>
+		<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" class="btn btn-success me-1" (click)="finalizeVisit(treatment)"
+			[disabled]="disableButtons"> Finalize Visit </button>
+		<!-- <button href="javascript:void(0)" class="btn btn-success me-2" (click)="nextPage()"><span
+        class="icon-arrow-right-filled d-block"></span> <span class="icon-save-continue me-2"></span> Save &
+      Continue</button> -->
+	</div>
+</div>
+
+
+<!--  code for popup -->
+
+<ng-template #treatment let-modal>
+	<div class="modal-header">
+		<h5 class="modal-title">Referrals</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModel()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body front-desk-block">
+		<div
+			*ngIf="!treatmentRenderedFiles?.general?.length && !treatmentRenderedFiles?.radiology?.length && !treatmentRenderedFiles?.specialty?.length">
+			No record found!
+		</div>
+		<tabset #tabset>
+			<ng-container *ngFor="let folder of treatmentRenderedFiles | keyvalue">
+				<tab heading="{{generateHeadingFromKey(folder?.key)|titlecase }}" *ngIf="folder?.value?.length" (selectTab)="cleartabs($event)">
+					<div class="row justify-content-md-center mt-3">
+						<div class="col-lg-12">
+							<ul class="list-unstyled mb-2 text-center" *ngIf='selection.selected.length>0'>
+								<li class="d-inline-block"><button (click)="printMultipleFiles()" type="button">View
+										<span class="ms-1">[{{selection.selected.length}}]</span></button>
+								</li>
+								<li class="d-inline-block"><button (click)="printMultipleFiles()" type="button"
+										[disabled]="disablePrint">Print
+										<span class="ms-1">[{{selection.selected.length}}]</span></button>
+								</li>
+								<li class="d-inline-block"><button (click)="downloadDocument()" type="button">Download
+										<span class="ms-1">[{{selection.selected.length}}]</span></button>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="data-table">
+						<table class="table table-bordered table-striped text-center mb-0">
+							<thead>
+								<tr>
+									<th class="border-right w-50" scope="col">Name</th>
+									<th class="form w-50" scope="col">
+										<mat-checkbox (change)="$event ? masterToggle(folder?.key) : null"
+											[checked]="selection.hasValue() && isAllSelected(folder?.key)"
+											[indeterminate]="selection.hasValue() && !isAllSelected(folder?.key)">
+										</mat-checkbox>
+										<span class="py-1">Actions</span>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr *ngFor="let file of folder.value">
+									<td>{{ file.file_title }}</td>
+									<td class="form">
+										<mat-checkbox (click)="$event.stopPropagation()"
+											(change)="selectionChange($event, selection, file)"
+											[checked]="selection.isSelected(file)">
+										</mat-checkbox>
+										<a class="view-hov mx-2" target="_blank" href="{{openInWindow(file?.pre_signed_url)}}"
+											role="button" tooltip="View"><span class="icon-eye"></span>
+										</a>
+										<a href="javascript:void(0)" class="edit-hov mx-2" role="button"
+											tooltip="Download" target="_blank" (click)="downloadDocument(file.id)"><span
+												class="icon-download" download></span>
+										</a>
+										<a class="printer-hov mx-2" target="_blank" role="button" tooltip="Print"
+											href="{{openInWindow(file.link)}}"><span class=" icon-printer"></span>
+										</a>
+									</td>
+								</tr>
+								<!-- <tr>
+									<td>CAT Scan</td>
+									<td class="form">
+										<label class="chkbox position-relative m-0" for="select">
+											<input formcontrolname="select" id="select" type="checkbox">
+											<span class="fake-input position-absolute"></span>
+										</label>
+										<a class="view-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="View"><span class="icon-eye"></span>
+										</a>
+										<a class="edit-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="Download"><span class="icon-download"></span>
+										</a>
+										<a class="printer-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="Print"><span class="icon-printer"></span>
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td>MRI</td>
+									<td class="form">
+										<label class="chkbox position-relative m-0" for="select">
+											<input formcontrolname="select" id="select" type="checkbox">
+											<span class="fake-input position-absolute"></span>
+										</label>
+										<a class="view-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="View"><span class="icon-eye"></span>
+										</a>
+										<a class="edit-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="Download"><span class="icon-download"></span>
+										</a>
+										<a class="printer-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="Print"><span class="icon-printer"></span>
+										</a>
+									</td>
+								</tr>
+								<tr>
+									<td>Other</td>
+									<td class="form">
+										<label class="chkbox position-relative m-0" for="select">
+											<input formcontrolname="select" id="select" type="checkbox">
+											<span class="fake-input position-absolute"></span>
+										</label>
+										<a class="view-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="View"><span class="icon-eye"></span>
+										</a>
+										<a class="edit-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="Download"><span class="icon-download"></span>
+										</a>
+										<a class="printer-hov mx-2" href="javascript:void(0)" role="button"
+											tooltip="Print"><span class="icon-printer"></span>
+										</a>
+									</td>
+								</tr> -->
+							</tbody>
+						</table>
+					</div>
+				</tab>
+			</ng-container>
+		</tabset>
+		<div class="d-flex align-items-center justify-content-center mt-3 referral-popup">
+			<button href="javascript:void(0)" class="btn btn-primary me-2" type="button" data-dismiss="modal"
+				aria-label="Close" (click)="closeModel()"> Close </button>
+			<button href="javascript:void(0)" class="btn btn-default me-2" (click)="saveForLater(); closeModel();"
+				[disabled]="disableButtons"> Save For Later </button>
+			<button href="javascript:void(0)" class="btn btn-success me-2"
+				(click)="finalizeVisit(treatment);" [disabled]="disableButtons"> Finalize Visit </button>
+		</div>
+	</div>
+</ng-template>
+
+
+
+
+<!-- <ng-template #treatment let-modal>
+	<div class="modal-header">
+	  <h5 class="modal-title">Treatment</h5>
+	  <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="modal.dismiss('Cross click')">
+		<span aria-hidden="true">&times;</span>
+	  </button>
+	</div>
+
+	<div class="modal-body modal-pt-15">
+		<tabset #tabset>
+			<tab heading="Physical Therapy">
+				<form autocomplete="" [formGroup]="treatmentForm">
+
+					<div class="row">
+						<label for="PhysicalTherapy" class="form-label">Physical Therapy Range of Motion</label>
+
+					</div>
+					<div class="row">
+						<label for="Occupational" class="form-label">Occupational -Range of Motion</label>
+					</div>
+
+					<div class="row">
+						<label for="Chiropractor" class="form-label">Chiropractor -Range of Motion</label>
+					</div>
+					<div class="row">
+						<label for="Orthopedics" class="form-label">Orthopedics</label>
+					</div>
+					<div class="row">
+						<label for="PainManagement" class="form-label">Pain Management</label>
+					</div>
+					<div class="row">
+						<label for="PMR" class="form-label">PMR</label>
+					</div>
+					<div class="row">
+						<label for="SpineSpeciality" class="form-label">Spine Speciality</label>
+					</div>
+					<div class="row">
+						<label for="HandSpeciality" class="form-label">Hand Speciality</label>
+					</div>
+					<div class="row">
+						<label for="Other" class="form-label">Other</label>
+					</div>
+					<div class="row">
+						<label for="GeneralRadiology" class="form-label">General Radiology / X-RAY</label>
+					</div>
+					<div class="row">
+						<label for="CATSCAN" class="form-label">CAT SCAN</label>
+					</div>
+					<div class="row">
+						<label for="MRI" class="form-label">MRI</label>
+					</div>
+
+				</form>
+			</tab>
+		</tabset>
+	</div>
+  </ng-template> -->

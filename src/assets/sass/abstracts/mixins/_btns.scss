@@ -1,0 +1,30 @@
+$btn_classes:(
+    primary: $btn-primary-bg-color $btn-primary-text-color $btn-primary-border-color $btn-primary-bg-hover-color $btn-primary-text-hover-color $btn-primary-border-hover-color,
+    success: $btn-success-bg-color $btn-success-text-color $btn-success-border-color $btn-success-bg-hover-color $btn-success-text-hover-color $btn-success-border-hover-color,
+    default: $btn-default-bg-color $btn-default-text-color $btn-default-border-color $btn-default-bg-hover-color  $btn-default-text-hover-color $btn-default-border-hover-color,
+    secondary: $btn-secondary-bg-color $btn-secondary-text-color $btn-secondary-border-color $btn-secondary-bg-hover-color $btn-secondary-text-hover-color $btn-secondary-border-hover-color,
+    warning: $btn-warning-bg-color $btn-warning-text-color $btn-warning-border-color $btn-warning-bg-hover-color $btn-warning-text-hover-color $btn-warning-border-hover-color,
+    info: $btn-info-bg-color $btn-info-text-color $btn-info-border-color $btn-info-bg-hover-color$btn-info-text-hover-color $btn-info-border-hover-color,
+    white: $btn-white-bg-color $btn-white-text-color $btn-white-border-color $btn-white-bg-hover-color $btn-white-text-hover-color $btn-white-border-hover-color,
+    fax-btn: $fax-btn-bg-color $fax-btn-text-color $fax-btn-border-color $fax-btn-bg-hover-color $fax-btn-text-hover-color $fax-btn-border-hover-color,
+    outline-secondary: $btn-outline-secondary-bg-color $btn-outline-secondary-text-color $btn-outline-secondary-border-color $btn-outline-secondary-bg-hover-color $btn-outline-secondary-text-hover-color $btn-outline-secondary-border-hover-color,
+    outline-success-sch: $btn-outline-success-sch-bg-color $btn-outline-success-sch-text-color $btn-outline-success-sch-border-color $btn-outline-success-sch-bg-hover-color $btn-outline-success-sch-text-hover-color $btn-outline-success-sch-border-hover-color
+);
+
+@mixin btn_colors($background, $color, $border) {
+    background-color: $background !important;
+    color: $color !important;
+    border-color: $border !important;
+}
+
+@each $btn_child_class_name, $attributes in $btn_classes {
+    .btn-#{"" + $btn_child_class_name + ""}{
+        @include btn_colors(nth($attributes, 1), nth($attributes, 2), nth($attributes, 3));
+        &:hover, 
+        &.active,
+        &:active, 
+        &:focus{
+            @include btn_colors(nth($attributes, 4), nth($attributes, 5), nth($attributes, 6));
+        }
+    }
+}

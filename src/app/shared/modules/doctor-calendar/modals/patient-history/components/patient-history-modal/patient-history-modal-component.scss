@@ -1,0 +1,13 @@
+::ng-deep .sch-patient-hist-modal {
+    .ngx-datatable {
+        .datatable-body {
+            overflow-y: auto !important;
+            .datatable-scroll {
+                max-height: 350px;
+                @media screen and (min-width: 1199.98px) {
+                    overflow-x: hidden !important;
+                }
+            }
+        }
+    }
+}

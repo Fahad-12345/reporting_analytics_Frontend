@@ -1,0 +1,64 @@
+<div class="section-frame reduce-height border-0 pb-2 diagnostic-impression">
+
+	<div class="inner-frame bg-white ps-2 pe-1 pt-1 h-100 pb-0 px-3">
+		<div>
+			<div class="form position-relative">
+				<div class="header-tools d-flex justify-content-between">
+				</div>
+
+				<!--CODE SECTION -->
+				<div class="row">
+					<div class="col-lg-6 col-xl-5">
+						<div [class.focused]="codeModel.length" class="form-group my-3 field">
+							<!-- <label for="filter" class="form-label">Search By {{codeType}} Code Or Description (Maximum 6)</label> -->
+							<!-- <ng-template #rt let-r="result" let-t="term">
+								<ng-container *ngIf="r">
+									{{ r?.name }} {{ (r?.description)?" - "+r?.description:'' }}
+								</ng-container>
+							</ng-template> -->
+
+							<!-- <input type="text" id="filter" class="form-control form-input" [(ngModel)]="codeModel"
+								[ngModelOptions]="{standalone: true}" [ngbTypeahead]="searchCodes" [resultTemplate]="rt"
+								[inputFormatter]="hosFormatter" (selectItem)="onSelectCode($event)" />
+
+
+							<div class="input-group-prepend">
+								<button class="input-group-text search-btn" type="submit">
+									<span class="icon-search"></span></button></div> -->
+									<!-- [max]="max" -->
+									<app-mat-autocomplete [showconfirmationdialog] = "showdialogbox"
+									[dialogMessage]="dialogMessage" [multiple]="allow_multiple_cpt_code" [selected_case_type_slug]="code_type_slug" [allowed_case_type_slugs]="allowed_case_type_slugs" (onkeyUp)="getCodes($event, 'search')" (onScrolled)="onScroll($event)" [selectedOptions]="codes && codes.value ? codes.value : []" (onChangeEmitter)="onSelectCode($event)" [placeHolder] ="placeHolder"  [disabled] ="!mainService.isenableSaveRecordMedicalDoctor()" [options]="lstCode"></app-mat-autocomplete>
+
+									 
+							<!-- <ng-select [closeOnSelect]="false" [maxSelectedItems]='max' [virtualScroll]="true" [(ngModel)]="codeModel" (keyup)="getCodes($event.target.value)" [items]="lstCode"
+								(change)="onSelectCode($event)" [multiple]="true" bindLabel="full_name" >
+							</ng-select> -->
+						</div>
+					</div>
+					<div class="col-12 data-table">
+					
+						<!-- <ngx-datatable class="bootstrap" [virtualization]="false" [rows]="codes['controls']"
+							[columnMode]="'force'" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50"
+							[limit]="10" [rowClass]="getRowClass">
+							<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+								name="Code" prop="name" sortable="false">
+								<ng-template let-row="row" ngx-datatable-cell-template>
+									{{row?.value?.name}}
+								</ng-template>
+							</ngx-datatable-column>
+							<ngx-datatable-column [canAutoResize]="true" [draggable]="false" [resizeable]="false"
+								name="Description" prop="description" sortable="false">
+								<ng-template let-row="row" ngx-datatable-cell-template>
+									{{row?.value?.description}}
+								</ng-template>
+							</ngx-datatable-column>
+						</ngx-datatable> -->
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</div>

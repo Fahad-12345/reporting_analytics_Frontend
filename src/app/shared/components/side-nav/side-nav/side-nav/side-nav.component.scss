@@ -1,0 +1,45 @@
+.example-container {
+  margin: 12px;
+  border: 1px solid #555;
+}
+mat-drawer-content {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+mat-drawer-container{
+  display: contents;
+}
+.toggle-btn-close{
+  left:-24px;
+  @media only screen and (max-width: 1199.98px){
+    left: -10px;
+  }
+  span {
+    transform: rotate(-90deg);
+    left: 0px;
+    position: relative;
+  }
+}
+.left-btn.toggle-btn-close-right{
+  right: 0px;
+}
+.hide-sidebar {
+  height: 550px;
+}
+.left-btn {
+  right: -5px;
+}
+::ng-deep .side-height{
+  .sidebar-frame{
+    .widget{
+      .no-border{
+        border: 0 !important;
+      }
+      .dropdown-menu{
+        border: 1px solid #e2dddd!important;
+      }
+    }
+  }
+}

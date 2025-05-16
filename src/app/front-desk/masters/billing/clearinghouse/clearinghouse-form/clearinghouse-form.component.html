@@ -1,0 +1,77 @@
+<div class="document-manager add-user px-0 mt-3">
+    <div class="card-header card-header-custom" style="background-color: #909090 !important;">
+        <div class="row align-items-center pt-1">
+            <div class=" col-md-12 pe-0 form">
+                <p class="mb-0 text-start">
+                    <span class="text-white ps-3 justify-content-center" style="position: relative;">{{title}}
+                        Clearinghouse</span>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card search-filter-block mb-3">
+        <div class="card-body">
+            <form [formGroup]="clearinghouseForm">
+                <div class="form">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12">
+                            <div [ngClass]="{'focused': clearinghousenameValueGetter != '' && clearinghousenameValueGetter != null }"
+                                class="form-group field text-start">
+                                <label class="form-label" for="clearinghouse_name">Clearinghouse Name*</label>
+                                <input formControlName="name" type="text" id="clearinghouse_name" required
+                                    class="form-control form-input" [maxlength]="50" notFirstCharactorSpace>
+                                <span class="text-muted danger"
+                                    *ngIf="clearinghousenameValueGetter =='' && clearinghousenameGetter['touched']">
+                                    This field is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group field"
+                                [ngClass]="{'focused': clearinghouseshort_nameValueGetter != '' && clearinghouseshort_nameValueGetter != null }">
+                                <label class="form-label" for="short_name">Short Name*</label>
+                                <input formControlName="short_name" type="text" id="short_name"
+                                    class="form-control form-input">
+                                <span class="text-muted danger"
+                                    *ngIf="clearinghouseshort_nameValueGetter =='' && clearinghouseshort_nameGetter.touched ">
+                                    This field is required
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12">
+                            <div class="form-group field"
+                                [ngClass]="{'focused':clearinghousecommentsValueGetter != '' && clearinghousecommentsValueGetter != null }">
+                                <label class="form-label" for="comments">Comments</label>
+                                <input formControlName="comment" type="text" id="comments"
+                                    class="form-control form-input" maxlength="1024">
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="!editMode" class="row"> <label class="ms-2"><b>*Note:</b> At least one Payer info is
+                            required
+                        </label>
+                    </div>
+                    <div *ngIf="!editMode" class="row">
+                        <div class="col-md-12 text-start">
+                            <button [disabled]="clearinghouseForm.invalid" (keydown.enter)=" $event.preventDefault()"
+                                class="btn btn-primary mt-2 mb-1 py-2 d-flex align-items-center" type="button"
+                                (click)="AddPayersInfo()"><i class="icon-plus-circle me-2"></i> Add
+                                Payer</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center search-filter-btn my-3">
+                            <button *ngIf="editMode" type="button" (click)="update(clearinghouseForm.value)"
+                                [disabled]="clearinghouseForm.invalid"
+                                class="btn btn-success mt-1 mt-sm-0 mb-2 mb-sm-0 me-3">
+                                Update
+                            </button>
+                            <button class="btn btn-primary mt-1 mt-sm-0 mb-2 mb-sm-0"
+                                (click)="cancelForm()">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

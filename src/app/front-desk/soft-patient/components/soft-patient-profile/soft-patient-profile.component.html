@@ -1,0 +1,301 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+
+
+<div class="front-desk-block">
+	<div class="row user-info pt-2">
+		<div class="col-12">
+			<h4 class="my-0 color-green">Patient Profile</h4>
+		</div>
+	</div>
+	<hr class="line-bottom">
+	<div class="row pt-2">
+		<div class="col-12">
+			<div class="profile-block">
+				<figure class="profile-image-box d-block">
+					<figcaption class="image-hold">
+						<img *ngIf="patient.URI" src="{{patient.URI}}" alt="patient-profile">
+						<img *ngIf="patient.URI == undefined" src="assets/images/user.png" alt="patient-profile">
+					</figcaption>
+				</figure>
+
+				<div class="text-hold">
+					<div class="d-flex flex-wrap align-items-center justify-content-between">
+						<h2 class="mt-0 mb-2 mb-lg-0">
+							{{(patient?.first_name ? patient?.first_name:'N/A')| titlecase}}
+							{{patient?.middle_name| titlecase}}
+							{{patient?.last_name| titlecase}}
+							<small><span>(</span>
+								{{(patient?.dob ? patient?.dob : 'N/A') |calculateAge}} <span
+									class="line-space">|</span>
+								{{patient.dob? (patient.dob | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+								<span class="line-space">|</span>
+								{{(patient?.gender ?patient?.gender:'N/A') | titlecase }} <span>)</span>
+							</small>
+						</h2>
+						<h3 class="mt-0 mb-0 text-lg-end">{{patient.chart_id}}</h3>
+					</div>
+					<div class="row mt-3 mt-lg-2 padd-lr">
+						<div class="col-12 patient-info-box px-0">
+							<ul class="list-unstyled">
+								<li>
+									<label class="mb-0">Street Address:</label>
+									<span>{{patientAddress?.street ? patientAddress?.street : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Suite / Floor:</label>
+									<span>{{patientAddress?.apartment ? patientAddress?.apartment : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">City:</label>
+									<span>{{patientAddress?.city ? patientAddress?.city : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">State:</label>
+									<span>{{patientAddress?.state ? patientAddress?.state : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Zip Code:</label>
+									<span>{{patientAddress?.zip ? patientAddress?.zip : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Email:</label>
+									<span>{{patient?.self?.email ? patient?.self?.email : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">Fax:</label>
+									<span>{{patient?.self?.fax ? patient?.self?.fax : 'N/A'}}</span>
+								</li>
+								<li>
+									<label class="mb-0">SSN:</label>
+									<span>
+										{{(patient?.ssn ? patient.ssn : 'N/A')|ssnFormatPipe }}
+									</span>
+								</li>								
+								
+							</ul>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12" style="padding-top:14px;">
+					<div class="row">
+						<div class="col-12">
+							<div class="mt-2 search-filter border-0 p-0">
+								<div class="d-block">
+									<a 
+										(click)="addNewSoftCase()" href="javascript:void(0)"
+										class="btn btn-default round-btn float-right">
+										<span>Add Soft Case  </span> <span class="icon-plus-circle ms-2"></span>
+									</a>
+									<a 
+										(click)="addNewVarifiedCase()" href="javascript:void(0)"
+										class="btn btn-success round-btn float-right me-2">
+										<span>Add Case  </span> <span class="icon-plus-circle ms-2"></span>
+									</a>
+								</div>
+							
+								<!-- <div 
+									class="search-filter-body">
+									<dynamic-form (submit)="setPage({ offset: 0 })" (onReady)="onReady($event)"
+										[fields]="fieldConfig" (onValueChange)="onValueChanges($event)">
+									</dynamic-form>
+								</div> -->
+							</div>
+							<div 
+								class="card data-table mb-0 p-0 mt-2" style="border:none;">
+								<div class="row">
+									<div class="col-md-6 edit-block">
+										<div class="form-group field option-field mb-2 d-inline-block">
+											<ul>
+												<li>Show</li>
+												<li>
+
+													<select class="custom-select" name="limit" id="limit"
+														(change)="pageLimit($event.target.value)">
+														<option [value]="10" selected>10</option>
+														<option [value]="20">20</option>
+														<option [value]="30">30</option>
+														<option [value]="40">40</option>
+														<option [value]="50">50</option>
+														<option [value]="100">100</option>
+													</select>
+												</li>
+												<li>entries</li>
+											</ul>
+										</div>
+									</div>
+								
+								</div>
+								<ngx-datatable class="bootstrap scroll-hide custom-scroll-x" [rows]="cases"
+									[columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'"
+									[virtualization]="false" [scrollbarH]="true" [externalPaging]="true"
+									[count]="page.totalElements" [offset]="page.pageNumber - 1" [limit]="page.size"
+									(page)="onPageChange($event.offset)" >
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Case No."
+										prop="caseId" [width]="50">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Case No
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<a class="underline-hov" href="javascript:void(0)"
+												(click)="goToCaseDetail(row)"
+												>{{
+												row.id }}</a>
+											
+										</ng-template>
+									</ngx-datatable-column>
+
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Accident Date"
+										prop="date_of_accident" [width]="70">
+
+										<ng-template let-column="column" ngx-datatable-header-template>
+											DOA
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											{{value? (value | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : ''}}
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Case Type"
+										prop="case_type" [width]="100">
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Firm Name"
+										prop="firm_name" [width]="65">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Firm Name
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.firm_name}}">
+												{{row?.firm_name}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Insurance"
+										prop="insurance_name" [width]="80">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Insurance
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+										
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.insurance_name}}">
+												{{row.insurance_name}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Claim No."
+										prop="claim" [width]="70">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Claim No
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+									
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.claim_no}}">
+												{{row.claim_no}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Policy No."
+										prop="policy" [width]="70">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											Policy No
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+										
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.policy_no}}">
+												{{row.policy_no}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="WCB No."
+										prop="wcb" [width]="60">
+										<ng-template let-column="column" ngx-dattable-header-template>
+											WCB No
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{row.policy}}">
+												{{row.wcb_no}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Body Parts"
+										prop="body_parts" [width]="110">
+										<ng-template let-column="column" ngx-datatable-header-template>
+											Injured Body Parts
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+												ngbTooltip="{{value}}">
+												{{value}}</div>
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Date of Admission" prop="date_of_admission"
+									[width]="100">
+						  
+									<ng-template let-column="column" ngx-datatable-header-template>
+									  Date of Admission
+									</ng-template>
+									<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+									  {{value? (value | dateFormatMDY | date:datePipeService.slashDateFormat_MM_dd_yyyy()) : 'N/A'}}
+									</ng-template>
+								  </ngx-datatable-column>
+						  
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Last Apt."
+										prop="lastAppointment" [width]="70">
+
+										<ng-template let-column="column" ngx-datatable-header-template>
+											Last Apt.
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											N/A
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Next Apt."
+										prop="nextAppointment" [width]="70">
+										<ng-template let-column="column" ngx-datatable-header-template>
+											Next Apt.
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											N/A
+										</ng-template>
+									</ngx-datatable-column>
+									<ngx-datatable-column [sortable]='false' [canAutoResize]="true" name="Case Status"
+										prop="status" [width]="70">
+										<ng-template let-column="column" ngx-datatable-header-template>
+											Case Status
+										</ng-template>
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+											  {{value}}
+											</div>
+										  </ng-template>
+									</ngx-datatable-column>
+
+									<!-- <ngx-datatable-column [canAutoResize]="true" [draggable]="false"   [resizeable]="false" name="Action"  [width]="60">
+
+										<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+											<div *ngIf="row && row.is_active ">
+												<i  class="fas fa-check-circle text-success"></i>
+											</div>
+											<div *ngIf="row && !row.is_active ">
+
+												<i  class="fa fa-exclamation-triangle text-danger"></i>
+											</div>										
+									
+											
+										</ng-template>
+										
+								
+									</ngx-datatable-column> -->
+								</ngx-datatable>
+							</div>
+						</div>
+					</div>	
+		</div>
+	</div>
+</div>

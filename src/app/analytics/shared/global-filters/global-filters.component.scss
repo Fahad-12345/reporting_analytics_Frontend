@@ -1,0 +1,119 @@
+
+
+.filters {
+  border-radius: 3px;
+}
+.week-button {
+  font-size: 12px;
+  text-align: center;
+  padding-top: 2px;
+  width: 42px;
+  height: 42px
+}
+.calendar-text {
+  margin-right: 4px;
+}
+.location-name{
+  margin-left: 2px
+}
+.facility-name{
+  margin-left: 2px
+}
+.location-names{
+  margin-left: 12px;
+}
+.drops {
+  font-size: 12px;
+}
+.drop-options {
+  background-color: white;
+  color: black;
+}
+.drop-option {
+  height: 42px;
+}
+.facility-drop {
+  width: 250px !important;
+}
+.mat-datepicker-input {
+  width: 100% !important;
+}
+// mat-icon {
+//   position: relative !important;
+//   float: right !important;
+//   top: 12px !important;
+//   cursor: pointer !important;
+//   color: rgba(0, 0, 0, 0.54) !important;
+// }
+.mat-date-range-input{
+  width: 91% !important;
+}
+.see-more {
+  margin-left: 0;
+}
+
+
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: #8a98eb !important;
+}
+.form-group .mat-datepicker-toggle .mdc-icon-button {
+  top: 11px !important;
+  margin-left: 3px;
+}
+@media (min-width:992px) {
+  .date-style {
+    width: 205px !important;
+  }
+}
+@media (min-width:1200px) {
+  .date-style {
+    width: 215px !important;
+  }
+}
+.pointer {
+  pointer-events: none;
+}
+
+// .ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+//   display: none;
+// }
+:host ::ng-deep .ng-select.customClass .ng-dropdown-panel .ng-dropdown-panel-items .ng-option  {            
+  display: contents;
+}
+:host ::ng-deep .form-group .mat-datepicker-toggle .mdc-icon-button{
+  margin-top: 5px !important;
+  width: 0px !important;
+  height: 0px !important;
+}
+
+// .seeLocations-font {
+//   font-size: 12px !important;
+//   margin-left: 1.8%;
+//   position: relative;
+//   margin-bottom: -4%;
+//   text-decoration: none;
+// }
+.facility-names {
+  margin-bottom: -5%;
+  display: flex;
+}
+.location-names {
+  padding: 3%;
+  border-bottom: 1px solid #BEBEBE;
+  margin-left: 10%;
+}
+.seeLocations-font {
+  background-color: transparent;
+}
+.seeLocations-font:hover {
+  background-color: transparent;
+}
+.caret{
+  color: #9C9C9C;
+}
+.caret:hover{
+  color: #525252;
+}
+.buttonn {
+  justify-content: center;
+}

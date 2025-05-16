@@ -1,0 +1,19 @@
+::ng-deep.replicate-text-wrap{
+    .mdc-form-field {
+        label {
+            text-overflow: ellipsis;
+            max-width: 400px;
+            overflow: hidden;
+            white-space: nowrap;
+            div {
+                &.tooltip-outer {
+                    overflow: hidden;
+                    text-overflow: ellipsis ;
+                }
+            }
+               
+            
+        }
+    }
+
+}

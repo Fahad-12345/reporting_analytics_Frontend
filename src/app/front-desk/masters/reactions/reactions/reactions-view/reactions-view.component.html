@@ -1,0 +1,122 @@
+<!-- <div class="modal-body"> -->
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<form [formGroup]="reactionDetailForm">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group field mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('added_date').value != '' && reactionDetailForm.get('added_date').value != null }">
+				<label class="form-label" for="added_date">Added Date
+					(mm/dd/yyyy)</label>
+				<input appDateOnly [matDatepicker]="added_date" type="text" id="added_date" formControlName="added_date"
+					class="form-control form-input">
+				<mat-datepicker-toggle [for]="added_date"></mat-datepicker-toggle>
+				<mat-datepicker #added_date></mat-datepicker>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('concept_type').value != '' && reactionDetailForm.get('concept_type').value != null }">
+				<label class="form-label" for="concept_type">Concept Type</label>
+				<input type="text" class="form-control form-input mb-0" id="concept_type"
+					formControlName="concept_type">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('hl7_object_identifier').value != '' && reactionDetailForm.get('hl7_object_identifier').value != null }">
+				<label class="form-label" for="hl7_object_identifier">H17 Object Identifier</label>
+				<input type="text" class="form-control form-input mb-0" id="hl7_object_identifier"
+					formControlName="hl7_object_identifier">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('hl7_object_identifier_type').value != '' && reactionDetailForm.get('hl7_object_identifier_type').value != null }">
+				<label class="form-label" for="hl7_object_identifier_type">H17 Object Identifier Type</label>
+				<input type="text" class="form-control form-input mb-0" id="hl7_object_identifier_type"
+					formControlName="hl7_object_identifier_type">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('in_active_date').value != '' && reactionDetailForm.get('in_active_date').value != null }">
+				<label class="form-label" for="in_active_date">In Active Date</label>
+				<input appDateOnly [matDatepicker]="in_active_date" type="text" id="in_active_date"
+					formControlName="in_active_date" class="form-control form-input">
+				<mat-datepicker-toggle [for]="in_active_date"></mat-datepicker-toggle>
+				<mat-datepicker #in_active_date></mat-datepicker>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('snomed_concept_id').value != '' && reactionDetailForm.get('snomed_concept_id').value != null }">
+				<label class="form-label" for="snomed_concept_id">Snomed Concept Id</label>
+				<input type="text" class="form-control form-input mb-0" id="snomed_concept_id"
+					formControlName="snomed_concept_id">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('snomed_term_concept_type_id').value != '' && reactionDetailForm.get('snomed_term_concept_type_id').value != null }">
+				<label class="form-label" for="snomed_term_concept_type_id">Snomed Term Concept Type ID</label>
+				<input type="text" class="form-control form-input mb-0" id="snomed_term_concept_type_id"
+					formControlName="snomed_term_concept_type_id">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('snomed_term_desc').value != '' && reactionDetailForm.get('snomed_term_desc').value != null }">
+				<label class="form-label" for="snomed_term_desc">Snomed Term Desc</label>
+				<input type="text" class="form-control form-input mb-0" id="snomed_term_desc"
+					formControlName="snomed_term_desc">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('snomed_term_desc_id').value != '' && reactionDetailForm.get('snomed_term_desc_id').value != null }">
+				<label class="form-label" for="snomed_term_desc_id">Snomed Term Desc ID</label>
+				<input type="text" class="form-control form-input mb-0" id="snomed_term_desc_id"
+					formControlName="snomed_term_desc_id">
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('term_type_desc').value != '' && reactionDetailForm.get('term_type_desc').value != null }">
+				<label class="form-label" for="term_type_desc">Term Type Desc</label>
+				<input type="text" class="form-control form-input mb-0" id="term_type_desc"
+					formControlName="term_type_desc">
+			</div>
+		</div>
+		<!-- <div class="col-md-6">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('value_set_comment').value != '' && reactionDetailForm.get('value_set_comment').value != null }">
+				<label class="form-label" for="value_set_comment">Value Set Comment</label>
+				<input type="text" class="form-control form-input mb-0" id="value_set_comment"
+					formControlName="value_set_comment">
+			</div>
+		</div> -->
+		<div class="col-12">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('value_set_comment').value != '' && reactionDetailForm.get('value_set_comment').value != null }">
+				<label class="form-label" for="value_set_comment">Value Set Comment</label>
+				<textarea class="form-control form-input" formControlName="value_set_comment"></textarea>
+			</div>
+		</div>
+		<div class="col-12">
+			<div class="form-group mb-1"
+				[ngClass]="{'focused': reactionDetailForm.get('value_set_type_description').value != '' && reactionDetailForm.get('value_set_type_description').value != null }">
+				<label class="form-label" for="value_set_type_description">Value Set Type Description</label>
+				<textarea class="form-control form-input" formControlName="value_set_type_description"></textarea>
+			</div>
+		</div>
+	</div>
+</form>
+<div class="col-md-12 modal-btn-width text-center">
+	<button *ngIf="reactionDetail.action == action.EDIT || reactionDetail.action == action.ADD"
+		class="btn btn-primary me-3" type="button" (click)="closeModal()">Cancel</button>
+	<button *ngIf="reactionDetail.action == action.EDIT || reactionDetail.action == action.ADD"
+		[disabled]="reactionDetailForm.invalid" (click)="saveContinue()" class="btn btn-success" type="submit">Save
+		&amp;
+		Continue </button>
+</div>
+<!-- </div> -->

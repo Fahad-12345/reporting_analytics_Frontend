@@ -1,0 +1,219 @@
+<div class="cal-assign-doctor-week-view">
+	<mwl-calendar-week-view-header [clinicIndex]="clinicIndex" [days]="days" [locale]="locale"
+		[customTemplate]="headerTemplate" (dayHeaderClicked)="dayHeaderClicked.emit($event)"
+		(eventDropped)="eventDropped({dropData: $event}, $event.newStart, true)">
+	</mwl-calendar-week-view-header>
+
+	<div class="cal-time-events" mwlDroppable *ngFor="let spec of speciality; let i=index;"
+		style="border: none !important">
+
+		<div (click)="removeSideEntry(spec)" *ngIf="clinicIndex == 0" [ngClass]="{'border-0':spec.id == 0}"
+			class="row cal-time-label-column"
+			style="width: 95px !important; min-width: 95px !important; height: 85px; border: 1px solid #e1e1e1; margin-right: 0px; margin-left: 0px;">
+			<div class="col-md-12" [style.background-color]="spec.color"
+				style="padding-right: 0px; padding-left: 0px; height: 20px;"></div>
+				<div
+				class="text-truncate"
+				style="margin-right: 0; margin-left: 0; width: 100%; overflow: hidden; text-overflow: ellipsis;"
+				title="{{spec.facility_name?spec.facility_name:''}}{{ '-' +spec.name?spec.name:'' }}{{spec?.doctor?.specialities?.name?' - '+spec?.doctor?.specialities?.name:''}}"> 
+
+				<!-- <span *ngIf="spec.facility_name">{{ spec.facility_name }}-</span>{{ spec.name }}
+				 {{spec?.doctor?.specialities?.name?'- '+spec?.doctor?.specialities?.name:''}} -->
+				 <span *ngIf="spec.facility_name">{{ spec.facility_name }}-</span>{{ spec.name }}
+				 {{spec?.doctor?.specialities?.qualifier?'- '+spec?.doctor?.specialities?.qualifier:''}}
+			</div>
+		</div>
+		<div  style="width: 118px;" class="cal-time-label-column"
+			*ngFor="let day of view.hourColumns; let odd = odd">
+			<div [class.cal-hour-odd]="odd">
+				<!-- {{returnItem(day, spec, clinicId.id,clinicId) |json}} -->
+				<div style="height: 85px; border: 1px solid #e1e1e1;"
+					[style.background-color]="disableCheckspecId(spec,day)? 'lightgrey' : 'white'"
+					(dblclick)="openAssignment(day,spec)">
+					<div *ngFor="let events of returnItem(day, spec, clinicId.id,clinicId); let i=index;">
+						<div *ngIf="i<2 && events.doctor!=undefined && 
+					
+						(events && events.availableSpeciality &&  events.availableSpeciality.speciality_id?events.availableSpeciality.speciality_id:null)" class="event row"
+							[style.background-color]="spec.color" [ngbPopover]="popTemplate"
+							[placement]="events.placement" container="body">
+							<span   class="col-md-10 text-truncate" style="padding:0; color: white;">
+								<!-- {{events.current_dateList_event.startTime}} - {{events.current_dateList_event.endTime}} -->
+							 {{currentDateEventFromdateList(events,day.date).current_dateList_event.startTime}}-{{currentDateEventFromdateList(events,day.date).current_dateList_event.endTime}}
+							</span>
+
+							
+							<ng-template #popTemplate>
+								<div class="popover-top custom-popover-style">
+									<div class="popover-header" [style.background-color]="spec.color">
+										<span tooltipClass="table-custom-tooltip" container="body"
+					                      ngbTooltip=" {{ clinicId?.doctor?.specialities?.name }}  {{clinicId.facility_name?clinicId.facility_name +'-':'' }}  {{clinicId.name }}"> {{clinicId?.facility?.qualifier }} {{clinicId?.qualifier }} {{clinicId?.doctor?.specialities?.qualifier}} - {{clinicId?.name}}</span>
+										<span *ngIf="events.is_provider_assignment===true" class="popover-icon d-inline-flex float-right">
+											<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_edit)"
+											  class="popover-icon-edit" href="javascript:void(0)"
+												(click)="updateAssignmentModal(currentDateEventFromdateList(events,day.date),spec,clinicId)">
+												<i class="icon-pencil"></i>
+											</a>
+											<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_delete)"
+											 class="popover-icon-remove" href="javascript:void(0)"
+												(click)="deleteEvent(currentDateEventFromdateList(events,day.date),spec,clinicId)">
+												<i class="icon-remove"></i>
+											</a>
+										</span>
+										<a class="float-right" href="javascript:void(0)"><i class="fa fa-times"></i></a>
+									</div>
+									<div class="popover-desc">
+										<ul class="list-unstyled mb-0">
+											<li>
+												<!-- {{events.current_dateList_event.startTime}} - {{events.current_dateList_event.endTime}} -->
+												{{currentDateEventFromdateList(events,day.date).current_dateList_event.startTime}}-{{currentDateEventFromdateList(events,day.date).current_dateList_event.endTime}}
+											</li>
+											<li>{{spec.facility_name?spec.facility_name+'-':''}}{{spec.name}}</li>
+											<li class="py-0">
+												<span *ngIf="events.is_provider_assignment ==false">
+													Assigned due to Specialty
+												</span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</ng-template>
+
+						</div>
+						
+						<div *ngIf="i<2 && events.subject && facility_location_id ===events.facility_location_id && 
+						specality_id ===
+						(events && events.availableSpeciality &&  events.availableSpeciality.speciality_id?events.availableSpeciality.speciality_id:null)" class="event row" [ngStyle]="events.approvalStatus==0 ?
+            {'background-color': 'lightblue'} : {'background-color': 'lightgray'}" [ngbPopover]="popUn" container="body"
+							[placement]="events.placement">
+							<span class="col-md-10 text-truncate" style="padding:0; color: white;">{{events.startTime}}
+								- {{events.endTime}}</span>
+							<ng-template #popUn>
+								<div class="popover-top custom-popover-style">
+									<div class="popover-header" [ngStyle]="events.approvalStatus==0 ?
+            {'background-color': 'lightblue'} : {'background-color': 'lightgray'}">
+										<span>{{events.subject}}</span>
+									</div>
+									<div class="popover-desc">
+										<ul class="list-unstyled mb-0">
+											<li>{{events.startDate |date: datePipeService.slashDateFormat_MM_dd_yyyy()}} {{datePipeService.slashDateFormat_MM_dd_yyyy()}}
+												{{events.endDate |date: datePipeService.slashDateFormat_MM_dd_yyyy()}}
+											</li>
+											<li>
+												<!-- {{events.current_dateList_event.startTime}} - {{events.current_dateList_event.endTime}} -->
+												{{currentDateEventFromdateList(events,day.date).current_dateList_event.startTime}}-{{currentDateEventFromdateList(events,day.date).current_dateList_event.endTime}}
+											</li>
+										</ul>
+									</div>
+								</div>
+
+							</ng-template>
+
+						</div>
+
+						<div *ngIf="i=== 2">
+							<ng-template #morePop>
+								<h5 class="assign-popper-haeder" [style.background-color]="spec.color">
+									<span>Assignments</span>
+									<span (click)="popHide.close()"><i
+											class="fa fa-times"></i></span>
+								</h5>
+								<div class="assign-popper-body py-2">
+									<div class="assign-popper-body-hover" style="height: 100px; overflow-y: scroll;">
+										<div *ngFor="let event of returnItem(day, spec, clinicId.id,clinicId);let i = index; trackBy:trackByEventId;">
+											<div class="event row" *ngIf="event.doctor"
+												[style.background-color]="spec.color"
+												style="background-color: transparent;margin:0;text-align: left; width: 91% !important; margin: 0 20px 0 10px; height: auto;"
+												[ngbPopover]="popTemplatemore" container="body" placement="bottom">
+												<span class="col-md-10 text-truncate" style="padding:0; color: white;">
+													<!-- {{event.current_dateList_event.startTime}} - {{event.current_dateList_event.endTime}}</span> -->
+													{{currentDateEventFromdateList(event,day.date).current_dateList_event.startTime}}-{{currentDateEventFromdateList(event,day.date).current_dateList_event.endTime}}
+												</span>
+												</div>
+											<div class="event row" *ngIf="event.subject" [ngStyle]="event.approvalStatus==0 ?
+												{'background-color': 'lightblue'} : {'background-color': 'lightgray'}"
+												style="background-color: transparent;margin:0;text-align: left; width: 91% !important; margin: 0 20px 0 10px; height: auto;"
+												[ngbPopover]="popUnmore" container="body" placement="bottom">
+												<span class="col-md-10 text-truncate"
+													style="padding:0; color: white;">
+													<!-- {{event.current_dateList_event.startTime}} -
+													{{event.current_dateList_event.endTime}} -->
+													{{currentDateEventFromdateList(event,day.date).current_dateList_event.startTime}}-{{currentDateEventFromdateList(event,day.date).current_dateList_event.endTime}}
+												</span>
+											</div>
+											<ng-template #popUnmore>
+												<div class="popover-top custom-popover-style">
+													<div class="popover-header" [ngStyle]="event.approvalStatus==0 ?
+				{'background-color': 'lightblue'} : {'background-color': 'lightgray'}">
+														<span>{{event.subject}}</span>
+													</div>
+													<div class="popover-desc">
+														<ul class="list-unstyled mb-0">
+															<li>{{event.startDate |date: datePipeService.slashDateFormat_MM_dd_yyyy()}} {{datePipeService.signBetweenDates()}}
+																{{event.endDate |date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</li>
+															<li>
+																<!-- {{event.current_dateList_event.startTime}} - {{event.current_dateList_event.endTime}} -->
+																{{currentDateEventFromdateList(event,day.date).current_dateList_event.startTime}}-{{currentDateEventFromdateList(event,day.date).current_dateList_event.endTime}}
+	
+															</li>
+														</ul>
+													</div>
+												</div>
+	
+											</ng-template>
+	
+											<ng-template #popTemplatemore>
+												<div class="popover-top custom-popover-style">
+													<div class="popover-header" [style.background-color]="spec.color">
+														<span tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{clinicId.facility_name?clinicId.facility_name+'-':'' }}{{clinicId.name }}" >{{clinicId?.facility?.qualifier }}-{{clinicId.qualifier }}</span>
+														<span *ngIf="event.is_provider_assignment===true" class="popover-icon d-inline-flex float-right">
+															<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_edit)"
+															 class="popover-icon-edit" href="javascript:void(0)"
+																(click)="updateAssignmentModal(currentDateEventFromdateList(event,day.date),spec,clinicId)">
+																<i class="icon-pencil"></i>
+															</a>
+															<a *ngIf="aclService.hasPermission(userPermissions.scheduler_assignment_delete)"
+															 class="popover-icon-remove" href="javascript:void(0)"
+																(click)="deleteEvent(currentDateEventFromdateList(event,day.date),spec,clinicId)">
+																<i class="icon-remove"></i>
+															</a>
+														</span>
+														<a class="float-right" href="javascript:void(0)"><i
+																class="fa fa-times"></i>
+														</a>
+													</div>
+													<div class="popover-desc">
+														<ul class="list-unstyled mb-0">
+															<li>
+																<!-- {{event.current_dateList_event.startTime}} - {{event.current_dateList_event.endTime}} -->
+																{{currentDateEventFromdateList(event,day.date).current_dateList_event.startTime}}-{{currentDateEventFromdateList(event,day.date).current_dateList_event.endTime}}
+															</li>
+															<li>{{spec.facility_name?spec.facility_name+'-':''}}{{spec.name}}</li>
+														</ul>
+														<div *ngIf="event.is_provider_assignment ==false">
+															Assigned due to Specialty
+														</div>
+													</div>
+												</div>
+	
+											</ng-template>
+	
+										</div>
+									</div>
+								</div>
+
+							</ng-template>
+							<div class="waves-light" [autoClose]="false" (click)="openPop(popHide)"
+							 [ngbPopover]="morePop" container="body" style="cursor: pointer;"
+								#popHide="ngbPopover" [placement]="events.placement">
+								{{returnItem(day, spec, clinicId.id,clinicId).length - 2}} more
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+</div>

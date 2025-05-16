@@ -1,0 +1,97 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+<form class="form mt-3" [formGroup]="proofingInformationForm">
+	<div class="row"> 
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group"
+					[ngClass]="{'focused': proofingInformationForm.get('order_id').value != '' && proofingInformationForm.get('order_id').value != null}">
+					<label class="form-label" for="order_id">Order ID</label>
+					<input type="text" class="form-control form-input" id="order_id" formControlName="order_id">
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group"
+					[ngClass]="{'focused': proofingInformationForm.get('license_key').value != '' && proofingInformationForm.get('license_key').value != null}">
+					<label class="form-label" for="key">Key</label>
+					<input type="text" class="form-control form-input" id="key" formControlName="license_key">
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group field"
+					[ngClass]="{'focused': proofingInformationForm.get('expiry_date').value != '' && proofingInformationForm.get('expiry_date').value != null }">
+					<label for="expiry_date" class="form-label">Expiry Date (mm/dd/yyyy)</label>
+					<input [matDatepicker]="expiry_date" type="text" id="expiry_date" class="form-control form-input"
+						formControlName="expiry_date" appDateOnly>
+					<!-- CROSS BTN -->
+					<span
+						*ngIf="proofingInformationForm.get('expiry_date').value != '' && proofingInformationForm.get('expiry_date').value != null"
+						(click)="proofingInformationForm.get('expiry_date').reset()"
+						class="icon-plus select-cross-icon" [ngClass]="{'cursur-none': proofingInformationForm.get('expiry_date').disabled == true}"></span>
+					<mat-datepicker-toggle [for]="expiry_date"></mat-datepicker-toggle>
+					<mat-datepicker #expiry_date></mat-datepicker>
+
+					<!-- DATE VALIDATION -->
+					<small class="form-text text-muted danger"
+						*ngIf="(proofingInformationForm.get('expiry_date').errors?.invalid_date && (proofingInformationForm.get('expiry_date').dirty && proofingInformationForm.get('expiry_date').touched)) ">
+						Invalid Date Format
+					</small>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group"
+					[ngClass]="{'focused': proofingInformationForm.get('user_status').value != '' && proofingInformationForm.get('user_status').value != null}">
+					<label class="form-label" for="user_status">User Status</label>
+					<input type="text" class="form-control form-input" id="user_status" formControlName="user_status">
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group"
+					[ngClass]="{'focused': proofingInformationForm.get('status').value != '' && proofingInformationForm.get('status').value != null}">
+					<label class="form-label" for="status">Proofing Status</label>
+					<input type="text" class="form-control form-input" id="status" formControlName="status">
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group"
+					[ngClass]="{'focused': proofingInformationForm.get('result').value != '' && proofingInformationForm.get('result').value != null}">
+					<label class="form-label" for="result">Result</label>
+					<input type="text" class="form-control form-input" id="result" formControlName="result">
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group"
+					[ngClass]="{'focused': proofingInformationForm.get('failReason').value != '' && proofingInformationForm.get('failReason').value != null}">
+					<label class="form-label" for="failReason">Fail Reason</label>
+					<input type="text" class="form-control form-input" id="failReason" formControlName="failReason">
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-3">
+				<div class="form-group"
+					[ngClass]="{'focused': proofingInformationForm.get('noOf_tries').value != '' && proofingInformationForm.get('noOf_tries').value != null}">
+					<label class="form-label" for="no_of_tries">No. of Tries</label>
+					<input type="text" class="form-control form-input" id="no_of_tries" formControlName="noOf_tries">
+				</div>
+			</div>
+	</div>
+	<div class="row">
+		<!-- *ngIf="whichButtonDisplay.START_BUTTON" -->
+		<div *ngIf="whichButtonDisplay.START_BUTTON" class="col-md-12 modal-btn-width text-end">
+			<button class="btn btn-primary" type="button" (click)="OpenProofingDisclaimer(contentOpt)"
+				[disabled]="isHideButton.START_BUTTON">Start Proofing</button>
+		</div>
+		<div *ngIf="whichButtonDisplay.WEB_CAM_BUTTON" class="col-md-12 modal-btn-width text-end">
+			<button class="btn btn-primary" type="button" (click)="webCamProofing()"
+				[disabled]="isHideButton.WEB_CAM_BUTTON">Webcam</button>
+		</div>
+		<div *ngIf="whichButtonDisplay.RESUME_BUTTON" class="col-md-12 modal-btn-width text-end">
+			<button class="btn btn-primary" type="button" (click)="resumeProofing()"
+				[disabled]="isHideButton.RESUME_BUTTON">Resume Proofing</button>
+		</div>
+		<div *ngIf="whichButtonDisplay.CANCEL_BUTTON" class="col-md-12 modal-btn-width text-end">
+			<button class="btn btn-primary" type="button" (click)="cancelProofing()"
+				[disabled]="isHideButton.CANCEL_BUTTON">Cancel</button>
+		</div>
+	</div>
+	<ng-template #contentOpt let-modal>
+			<app-notice-modal (modalEmit)="onModalClose($event)"></app-notice-modal> 
+	</ng-template>
+</form>

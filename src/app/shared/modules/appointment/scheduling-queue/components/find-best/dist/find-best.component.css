@@ -1,0 +1,362 @@
+.search-filter-btn {
+  top: 21px !important;
+}
+
+select,
+input,
+textarea {
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 0.26rem;
+  padding: 4px 10px;
+  border: 1px solid #c6c4c4;
+  color: #525252;
+  background-color: #fff;
+}
+
+.required {
+  color: red;
+  font-size: 12px;
+}
+
+.plus-btn {
+  width: 45px !important;
+  padding: 3px !important;
+  height: 35px !important;
+  background: #4b4b4b;
+  border-radius: 5px;
+  margin-left: 34px;
+}
+
+.title {
+  margin-bottom: 0px;
+  font-size: 13px;
+}
+
+.me-2,
+.mx-2 {
+  margin-right: 0.5rem !important;
+}
+
+.mb-2,
+.my-2 {
+  margin-bottom: 0.5rem !important;
+}
+
+.d-inline-block {
+  display: inline-block !important;
+}
+
+.datatable-header {
+  background: #34c3ee !important;
+}
+
+.mat-checkbox-layout {
+  margin-top: -8px !important;
+}
+
+.edit-block a {
+  border: 2px solid #34c3ee;
+  color: #34c3ee;
+  padding: 4px 22px;
+  float: right;
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 0;
+  border-bottom: 0;
+  border-radius: 6px 6px 0 0;
+  margin-right: 0 !important;
+}
+
+.chkbox {
+  margin-right: 9px;
+  margin-left: 6px;
+}
+
+.delete-hov:hover {
+  color: #f51010 !important;
+}
+
+.plus-btn:hover {
+  background: #34c3ee;
+  color: #fff;
+}
+
+.clock:hover {
+  color: #34c3ee !important;
+}
+
+.pencil-hov:hover {
+  color: #00a650 !important;
+}
+
+.color-green {
+  color: #00a650;
+}
+
+.mt-1 {
+  margin-top: 0.25rem !important;
+}
+
+.plus-icon {
+  font-size: 30px;
+}
+
+.card-body {
+  border-width: 1px;
+  border-color: #c3c4c3;
+  background: #f7f7f7;
+  padding-bottom: 0px;
+}
+
+.card-footer {
+  background: #4b4b4b;
+  border-radius: 0;
+  padding: 6px 15px;
+}
+
+.datatable-header-cell {
+  color: #fff;
+  background: #34c3ee;
+}
+
+.mb-0,
+.my-0 {
+  margin-bottom: 0 !important;
+}
+
+.pagination {
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+  /* border-radius: .25rem; */
+}
+
+.data-table table thead {
+  color: #fff;
+  background: #34c3ee;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.justify-content-end {
+  justify-content: flex-end !important;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+  background-color: white;
+}
+
+.table-bordered td,
+.data-table table.table-bordered th {
+  border: 1px solid #bbcbbb !important;
+  font-size: 14px !important;
+}
+
+.table-bordered th {
+  font-weight: 500 !important;
+}
+
+.delete-hov:hover {
+  color: #f51010 !important;
+}
+
+td {
+  padding: 0 !important;
+}
+
+.t-row {
+  margin: 0;
+  border: 1px solid #00000054;
+  width: 100%;
+  margin-top: 3px;
+  color: #6d6969 !important;
+  font-weight: 400 !important;
+}
+
+@media only screen and (min-width: 750px) and (max-width: 899px) {
+  .header-date {
+    max-width: 16% !important;
+    flex: 0 0 16% !important;
+  }
+
+  .patient_img {
+    height: 59px !important;
+    margin-top: 3px !important;
+    width: 59px;
+    border-radius: 5px;
+    border: 2px solid #34c3ee !important;
+    margin-top: 3px !important;
+  }
+
+  .patient-data {
+    padding: 8px;
+  }
+
+  .head-cell {
+    padding: 5px;
+  }
+
+  .pag {
+    width: 122% !important;
+    margin-left: 10px !important;
+  }
+}
+@media only screen and (min-width: 900px) and (max-width: 1365px) {
+  .patient_img {
+    height: 59px !important;
+    margin-top: 3px !important;
+    width: 59px;
+    border-radius: 5px;
+    border: 2px solid #34c3ee !important;
+    margin-top: 3px !important;
+  }
+
+  .pag {
+    width: 99.5%;
+    margin-left: 10px !important;
+  }
+
+  .header-date {
+    max-width: 12% !important;
+    flex: 0 0 20% !important;
+  }
+}
+@media only screen and (min-width: 1024px) and (max-width: 1199px) {
+  .toDate {
+    margin-right: 0% !important;
+  }
+
+  .timeRange {
+    margin-left: 0% !important;
+  }
+
+  .dayrestri {
+    max-width: 23% !important;
+    flex: 0 0 23% !important;
+  }
+}
+@media only screen and (min-width: 1366px) {
+  .patient_img {
+    height: 59px !important;
+    margin-top: 3px !important;
+    width: 59px;
+    border-radius: 5px;
+    border: 2px solid #34c3ee !important;
+    margin-top: 3px !important;
+  }
+
+  .pag {
+    width: 99.5%;
+    margin-left: 10px !important;
+  }
+
+  .header-date {
+    max-width: 12% !important;
+    flex: 0 0 20% !important;
+  }
+}
+table {
+  width: 100%;
+}
+
+tr.mat-footer-row,
+tr.mat-row {
+  height: 79px !important;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  vertical-align: top;
+}
+
+.find-best {
+  border: 1px solid #c3c4c3;
+  padding: 15px;
+  border-radius: 0;
+  margin: 0 !important;
+}
+
+.btn {
+  font: 400 13px/17px "Poppins", Arial !important;
+}
+
+.main-div {
+  border-width: 1px;
+  border-color: #c3c4c3;
+  background: #f7f7f7;
+  padding: 20px;
+}
+
+.top-margin {
+  margin-top: 1rem !important;
+}
+.top-margin .btn {
+  font: 400 13px/17px "Poppins", Arial !important;
+}
+
+.input-field-flex {
+  max-width: 30%;
+  flex: 0 0 30%;
+}
+
+.restrictin {
+  padding-left: 15px !important;
+  max-width: 21%;
+  flex: 0 0 21%;
+}
+
+.day-name {
+  border: 1px solid #c6c4c4;
+  border-radius: 5px;
+  text-align: center;
+  padding: 6px;
+  max-width: 13.3% !important;
+  flex: 0 0 13.3% !important;
+}
+
+.time-range {
+  max-width: 33.5%;
+  flex: 0 0 33.5%;
+}
+
+.to-satrt {
+  max-width: 33%;
+  flex: 0 0 33%;
+}
+
+.overbooking {
+  margin-top: 0.2rem !important;
+  max-width: 27%;
+  flex: 0 0 27%;
+}
+
+.ckeck-overbook {
+  margin-left: 29%;
+  height: 17px !important;
+}
+
+.no-of-overbook {
+  margin-left: 4px;
+  padding: 0 !important;
+  max-width: 71%;
+  flex: 0 0 71%;
+}
+
+.input-no-book {
+  background-color: #e9ecef !important;
+  height: 35px;
+}
+
+.field-top .col-md-2 {
+  flex: 0 0 20%;
+  max-width: 20%;
+}
+
+.requ-date {
+  color: red;
+  font-size: 13px;
+}

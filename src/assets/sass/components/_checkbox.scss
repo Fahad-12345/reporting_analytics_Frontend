@@ -1,0 +1,125 @@
+/************ Material checkbox *************/
+.mat-mdc-checkbox {
+	min-width: 14px;
+	min-height: 14px;
+	margin-inline: 4px;
+	.mdc-form-field {
+		.mdc-checkbox {
+			padding: 0 !important;
+			margin: 0 !important;
+			flex: 0 0 14px;
+			width: 14px;
+			height: 14px;
+			.mdc-checkbox__ripple{
+				background-color: transparent;
+				opacity: 0;
+			}
+			.mdc-checkbox__background {
+				@include border(1.5px, solid, $dark-pumice);
+        border-width: 1.5px;
+        border-color: $dark-pumice !important;
+				background-color: $white !important;
+				box-shadow: 0 0 6px rgba(0,0,0,.109804) !important;
+				top: 0 !important;
+			  left: 0 !important;
+			}
+			& > * {
+				width: 14px !important;
+				height: 14px !important;
+			}
+			&:hover {
+				.mdc-checkbox__background {
+					border-color: $dark-pumice;
+				}
+			}
+		}
+		& > label {
+			white-space: nowrap;
+		}
+	}
+  &.mat-mdc-checkbox-checked, 
+  &.mat-mdc-checkbox-indeterminate {
+    &.mat-accent {
+      .mdc-checkbox__background {
+        background-color: $white !important;
+        @include border(1px, solid, $dark-pumice);
+        @include border-width(1px);
+        @include media('<xl-widescreen') {
+          @include border-width(1px);
+        }
+        .mdc-checkbox__checkmark {
+          width: 85%;
+          height: 85%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          path {
+            &.mdc-checkbox__checkmark-path {
+              stroke-width: 4.13333px !important;
+              stroke: $green-haze !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/************ Material radio button *************/
+.mat-mdc-radio-button {
+	min-width: 16px;
+	min-height: 16px;
+	margin-inline: 4px;
+	.mdc-form-field {
+		.mdc-radio {
+			padding: 0 !important;
+			margin: 0 !important;
+			flex: 0 0 16px;
+			width: 16px;
+			height: 16px;
+			.mdc-radio__background {
+				.mdc-radio__outer-circle {
+					border-width: 1px;
+				}
+				
+			}
+			.mat-radio-ripple{
+				background-color: transparent;
+				opacity: 0;
+			}
+			& > * {
+				width: 16px !important;
+				height: 16px !important;
+			}
+			&:hover {
+				.mdc-radio__background {
+					&:before {
+						background: none;
+					}
+				}
+			}
+		}
+		& > label {
+			white-space: nowrap;
+		}
+	}
+	&.mat-mdc-radio-checked {
+		.mdc-radio__background {
+			.mdc-radio__outer-circle {
+				border: 1px solid #34c3ee !important;
+				
+			}
+			.mdc-radio__inner-circle {
+				border-color: #34c3ee !important;
+				top: -2px;
+				left: -2px;
+				transform: scale(0.45) !important;
+			}
+			&:before {
+				background: none !important;
+			}
+		}
+	}
+}
+

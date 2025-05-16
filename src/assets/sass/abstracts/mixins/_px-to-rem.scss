@@ -1,0 +1,18 @@
+// Mixin for font-size, width, height, all margins, sing value margins, all paddings, single value padding, and for all css which we change the value px to rem
+@mixin px-to-rem($property, $values, $important) {
+    $max: length($values);
+    $remValues: '';
+    @for $i from 1 through $max {
+        $value: strip-unit(nth($values, $i));
+        $remValues: #{$remValues + $value}rem;
+        @if $i < $max {
+            $remValues: #{$remValues + " "};
+        }
+    }
+    @if $important {
+        #{$property}: $remValues !important;
+    }
+    @else {
+        #{$property}: $remValues;
+    }
+}

@@ -1,0 +1,393 @@
+<!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+
+<div class="row mb-3">
+  <div class="col-3 col-sm-3 edit-block text-start">
+    <div class="form-group field option-field mb-2 d-inline-block">
+      <ul class="text-capitalize">
+        <li>Show</li>
+        <li>
+          <select class="custom-select" name="limit" id="limit" id="limit" (change)="pageLimit($event.target.value)"
+            [(ngModel)]="page.size">
+            <option [value]="10" selected>10</option>
+            <option [value]="20">20</option>
+            <option [value]="30">30</option>
+            <option [value]="40">40</option>
+            <option [value]="50">50</option>
+            <option [value]="100">100</option>
+          </select>
+        </li>
+        <li>Entries</li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-9 text-sm-end btn-train">
+    <button type="button" class="btn btn-default text-white" (click)="LoadInvoiceFormats()">
+      <i class="icon-plus-circle"></i>
+      Generate Invoice
+    </button>
+    <button type="button" class="btn btn-primary" (click)="generteEnvelope()"
+      [disabled]="selection.selected.length==0">
+      <i class="fa fa-envelope"></i>
+      Generate Envelope <span *ngIf="selection.selected.length!=0">
+        [{{selection.selected.length}}]</span>
+      <!-- <span *ngIf="selection.selected.length!=0"> [{{selection.selected.length}}]</span> -->
+    </button>
+    <button [disabled]="selection.selected.length==0" type="button" class="btn btn-danger"
+      (click)="onDeleteInvoice()">
+      <i class="icon-remove"></i> Delete Invoice <span *ngIf="selection.selected.length!=0">
+        [{{selection.selected.length}}]</span>
+    </button>
+    <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+      Customize Columns
+     </button>
+  </div>
+  </div>
+  <ngx-datatable class="bootstrap billing-datatable invoice-listing-table" #invoiceList [rows]="invoiceData" [columnMode]='"force"' [footerHeight]="50"
+  [rowHeight]="'auto'" [scrollbarH]="true" [virtualization]="false" [externalPaging]="true"
+    [count]="page.totalElements" [offset]="page.offset" [limit]="page.size" (page)='onPageChange($event)'>
+
+    <ngx-datatable-column name="Invoice ID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="invoice_id" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{row.invoice_id?row.invoice_id:'N/A'}}
+        <!-- <a (click)="getInvoiceLink(row)">{{row.invoice_id?row.invoice_id:'N/A'}}</a>   -->
+        <!-- {{value}} -->
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column *ngIf="adminBilling" name="Case ID" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="case_id" [minWidth]="80" [width]="80">
+      <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+        <a class="tooltip-outer underline-hov" tooltipClass="table-custom-tooltip" container="body"
+          ngbTooltip="{{row.case_id?row.case_id:'N/A'}}"  [routerLink]="['/front-desk/cases/edit/'+row?.case_id+'/patient/patient_summary']">
+          {{row.case_id?row.case_id:'N/A'}}
+      </a>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column *ngIf="adminBilling" name="Case Type" prop="case_type" [sortable]="false" [canAutoResize]="true"
+      [draggable]="false" [resizeable]="false" [minWidth]="100" [width]="100">
+      <ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+          ngbTooltip="{{row.case_type?row.case_type:'N/A'}}">
+          {{row.case_type?row.case_type:'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- <ngx-datatable-column name="Patient ID"  prop="patient_id" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="100">
+  <ng-template ngx-datatable-cell-template let-value="value">
+    <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body">
+    {{value}}
+    </div>
+  </ng-template>
+</ngx-datatable-column> -->
+<ngx-datatable-column  name="Invoice Type" [minWidth]="100" [width]="100" [sortable]="false" [canAutoResize]="true"
+[draggable]="false" [resizeable]="false" prop="invoice_category">
+<ng-template let-row="row" ngx-datatable-cell-template>
+  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+    ngbTooltip="{{row.invoice_category=='invoice_for_bill'?'Bill':'Inventory'}}">
+    {{row.invoice_category=='invoice_for_bill'?'Bill':'Inventory'}}
+  </div>
+</ng-template>
+</ngx-datatable-column>
+<ngx-datatable-column *ngIf="adminBilling" name="Patient Name" [minWidth]="100" [width]="100" [sortable]="false" [canAutoResize]="true"
+      [draggable]="false" [resizeable]="false" prop="patient_name">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body"
+          ngbTooltip="{{row.patient_name?row.patient_name:'N/A'}}">
+          {{row.patient_name?row.patient_name:'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <!-- <ngx-datatable-column name="DOS (From & To)"   [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="eor_id" [width]="135">
+  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+    <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{row?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}{{commonService.signBetweenDates()}}{{row?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+      {{row?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}{{commonService.signBetweenDates()}}{{row?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+    </div>
+  </ng-template>
+</ngx-datatable-column> -->
+    <ngx-datatable-column name="Specialty" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="speciality_name" [minWidth]="90" [width]="90">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{row.speciality_name? row.speciality_name:'N/A'}}" container="body">
+          {{row.speciality_qualifiers? row.speciality_qualifiers:'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Practice" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="" [minWidth]="80" [width]="80">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row?.facility_name}}"
+          container="body">
+          {{row?.facility_qualifier?row.facility_qualifier:'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Provider" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="doctor_name" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{row.doctor_name?row.doctor_name:'N/A'}}" container="body">
+          {{row.doctor_name?row.doctor_name:'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Invoice Date" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="invoice_date" [minWidth]="90" [width]="90">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{(value| date: commonService.slashDateFormat_MM_dd_yyyy())?(value| date:
+        commonService.slashDateFormat_MM_dd_yyyy()):'N/A'}}
+        <!-- {{value}} -->
+      </ng-template>
+    </ngx-datatable-column>
+
+    <!-- <ngx-datatable-column name="Bill To"  [width]="120" [sortable]="false" [canAutoResize]="true" prop="bill" [draggable]="false" [resizeable]="false" [sortable]="false" cellClass="action-icon count-hold">
+  <ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+    <div  *ngIf="value.bill_recipients?.length>0" class="tooltip-outer" popoverClass="visit-bill-popover" [ngbPopover]="popContent" triggers="mouseenter:mouseleave" container="body">
+    {{getRecipatentName(value.bill_recipients[0],row)}}<span *ngIf="value?.bill_recipients?.length>1">...</span>
+    </div>
+
+    <ng-template #popContent>
+      <table class="w-100 text-start">
+      <tbody>
+        <tr>
+          <td class="border-right"><span class="font-bold"> Recipient Type Name </span></td>
+          <td><span class="font-bold"> Recipient Name </span></td>
+        </tr>
+        <tr *ngFor="let item of value.bill_recipients; let x = index">
+          <td class="border-right"> {{item.recipient_type_name | titlecase}}</td>
+          <td> {{getRecipatentName(item,row)}}</td>
+        </tr>
+       
+      </tbody>
+      </table>
+    </ng-template>
+  </ng-template>
+</ngx-datatable-column> -->
+    <ngx-datatable-column name="Invoice" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="invoice_amount" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{row?.amount_due || 0 | currency}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Paid" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="paid_amount" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{value || 0 | currency}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Outstanding" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="outstanding_amount" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{value || 0 | currency}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Over Payment" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="over_amount" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{value || 0 | currency}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Interest" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="interest_amount" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{value || 0 | currency}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Write Off" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="write_off_amount" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{value || 0 | currency}}
+      </ng-template>
+    </ngx-datatable-column>
+
+    <ngx-datatable-column name="Invoice To" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="invoice_to" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <!-- <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.invoice_to_name?row.invoice_to_name:'N/A'}}"
+        container="body">
+        {{getInvoiceToName(value[0],row)}}
+        {{row.invoice_to_name?row.invoice_to_name:'N/A'}}
+      </div> *ngIf="value?.length>0" *ngIf="value?.length>1"-->
+        <div *ngIf="value?.length>0" class="tooltip-outer" popoverClass="visit-bill-popover" [ngbPopover]="popContent"
+          triggers="mouseenter:mouseleave" container="body">
+          {{getInvoiceToName(value,row) || 'N/A'}}<span *ngIf="value?.length>1">...</span>
+        </div>
+        <div *ngIf="!value?.length">{{'N/A'}}</div>
+        <ng-template #popContent>
+          <table class="w-100 text-start">
+            <tbody>
+              <tr>
+                <td class="border-right"><span class="font-bold"> Recipient Type Name </span></td>
+                <td><span class="font-bold"> Recipient Name </span></td>
+              </tr>
+              <tr *ngFor="let item of row.invoice_to; let x = index">
+                <td class="border-right"> {{item.invoice_to_label | titlecase}}</td>
+                <td>{{item.name}}</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </ng-template>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Payment Status" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="payment_status_name" [minWidth]="120" [width]="120">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        {{row.payment_status_name?row.payment_status_name:'N/A'}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Bill IDs" [sortable]="false" [canAutoResize]="true" [draggable]="false"
+      [resizeable]="false" prop="bill_label_ids" [minWidth]="100" [width]="100">
+      <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+        <div class="tooltip-outer" tooltipClass="table-custom-tooltip"
+          ngbTooltip="{{row.bill_label_ids? row.bill_label_ids:'N/A'}}" container="body">
+          {{row.bill_label_ids? row.bill_label_ids:'N/A'}}
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+    
+    <ngx-datatable-column name="Actions" [minWidth]="230" [width]="230" [sortable]="false" cellClass="action-icon count-hold bill-action">
+      <ng-template ngx-datatable-header-template name="Actions">
+        <mat-checkbox (change)="$event ? invoicesmasterToggle() : null"
+          [checked]="selection.hasValue() && isInvoiceAllSelected()"
+          [indeterminate]="selection.hasValue() && !isInvoiceAllSelected()">
+        </mat-checkbox>
+        Actions
+      </ng-template>
+      <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+        <a class="edit-hov mx-1" ngbTooltip="Edit" container="body"
+          (click)="editInvoice(row,invoiceBuilderContentModal)" href="javascript:void(0)" role="button"><i
+            class="icon-pencil"></i></a>
+
+        <a class="file-hov mx-1" ngbTooltip="pdf" container="body" href="javascript:void(0)" role="button"><i
+            class="icon-pdf" (click)="openInvoicePdfViewModal(row , pdfViewModal)"></i></a>
+        <a class="edit-hov mx-1" href="javascript:void(0)" ngbTooltip="Payment"
+          (click)="openPaymentModal(row , paymentContent)" container="body">
+          <span class="fa fa-credit-card"></span>
+          <span class="comments-count badge badge-pill badge-danger">{{row?.payment_count}}</span>
+        </a>
+        <a class="view-hov mx-1" ngbTooltip="Comment" container="body" href="javascript:void(0)" role="button"
+          (click)="getCommentsBilling(row,'commment')">
+          <span class="icon-commets"></span>
+          <span class="comments-count badge badge-pill badge-danger">{{row.comment_count? row.comment_count:0}}</span>
+        </a>
+        <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="historyStats(row)">
+          <i class="fa fa-history"></i>
+        </a>
+        <a class="remove-hov mx-1" ngbTooltip="Delete" container="body" href="javascript:void(0)" (click)="onDeleteInvoice(row.id)">
+          <i class="icon-remove"></i>
+        </a>
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
+<div class="modal fade" bsModal #caseCommentsModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+  role="dialog" aria-labelledby="dialog-static-name">
+  <div class="modal-dialog modal-lg" style="min-height: calc(100% - 4rem);">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-static-name" class="modal-title pull-left">Comments</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="caseCommentsModal.hide();setPage();">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body bg-gray">
+        <app-comments #caseComments [caseId]="currentCaseId" [objectId]="currentInvoiceId"></app-comments>
+      </div>
+      <!-- [caseId] = "currentCaseId" [objectId] = "currentBillId" -->
+    </div>
+  </div>
+</div>
+<div class="modal fade" bsModal #invoiceFormatsModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1"
+  role="dialog" aria-labelledby="dialog-static-name">
+  <div class="modal-dialog modal-lg" style="min-height: calc(100% - 4rem);">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-static-name" class="modal-title pull-left">Generate Invoice</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="invoiceFormatsModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-invoice-format-load  (resetList)="resetList()" [invoiceData]="invoiceData && invoiceData[0]?invoiceData[0]:{}" #invoiceFormatLoad [activationMessage]="activationMessage"
+          [invoiceFormatsModal]="invoiceFormatsModal"
+          (openInvoiceBuilderEvent)="openInvoiceBuilderEvent($event,invoiceBuilderContentModal)">
+        </app-invoice-format-load>
+      </div>
+      <!-- [caseId] = "currentCaseId" [objectId] = "currentBillId" -->
+    </div>
+  </div>
+</div>
+
+<ng-template #paymentContent let-modal>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">Payments</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');setPage()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <!-- <app-bill-detail-sharedble [currentBill]="currentInvoice"></app-bill-detail-sharedble> -->
+    <!-- <app-payment-form #paymentFormComponent (changePaymentData) = "changePaymentData($event)" (billListingRefreshOnPaymentAdd)="billListingRefreshOnPaymentAdd($event)" [currentBill] = "currentBill"></app-payment-form> -->
+    <app-invoice-detail-shareable [currentInvoice]="currentInvoice"></app-invoice-detail-shareable>
+    <!-- <app-invoice-payment-form [currentInvoice]="currentInvoice"></app-invoice-payment-form> -->
+    <!-- <app-payment-form #paymentFormComponent (changePaymentData) = "changePaymentData($event)" (billListingRefreshOnPaymentAdd)="billListingRefreshOnPaymentAdd($event)" [currentBill] = "currentBill"></app-payment-form> -->
+  </div>
+</ng-template>
+<ng-template #pdfViewModal let-modal>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">INV- {{invoiceId}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');;setPage()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-invoice-pdf-view [invoiceId]="invoiceId" [invoice]="invoice"></app-invoice-pdf-view>
+  </div>
+</ng-template>
+
+<ng-template #invoiceBuilderContentModal let-modal>
+  <div class="modal-header">
+    <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{invoiceBuilderPopupTittle}}
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click');setPage()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body scroll-control">
+    <app-invoice-builder [invoice_type]="invoice_type" [invoiceData]="invoiceData && invoiceData[0]?invoiceData[0]:{}" #invoiceBuilderComponent [isEdit]="isEdit" [invoice_id]="invoice_id" [templateId]="templateId"
+      [dontShowToggle]="true" [disabledFields]="false" [invoice_from_bill]="false" [isMaster]="false"
+      [caseId]="currentCaseId" [comingFrom]="'generate'" [selectedBills]="[]" [selectedFacilityId]="null"
+      (refreshComponent)="refreshComponent($event,pdfViewModal);modal.dismiss('Cross click');setPage()"
+      (updateInvoice)="updateInvoice($event)"
+      (onCanceled)="modal.dismiss('Cross click');setPage()"
+      [isUnitButtonEnable]="isUnitButtonEnable"
+      ></app-invoice-builder>
+  </div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+		[config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+		aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+			  <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+			  <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+			</div>
+			<div class="modal-footer justify-content-center">
+			  <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+			  <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+			</div>
+		  </div>
+		</div>
+	</div>

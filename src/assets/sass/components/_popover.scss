@@ -1,0 +1,164 @@
+.popover {
+    border: 1px solid rgba(52, 195, 238, 0.8392156862745098);
+	@include px-to-rem(padding, 0px, true);
+
+}
+
+.bs-popover-auto[x-placement^=right]>.arrow::before,
+.bs-popover-right>.arrow::before {
+    border-right-color: $picton-blue;
+}
+
+.popover-top {
+	margin-top: 0 !important;
+	&.custom-popover-style {
+		@include box-shadow(0px 0px 5px rgba(0, 0, 0, 0.12941176470588237));
+
+		.popover-header {
+			color: $white;
+			@include font-weight(semi-bold);
+			@include px-to-rem(font-size, 16px, false);
+			@include px-to-rem(min-height, 36px, false);
+			@include px-to-rem(height, 36px, false);
+			padding: .3rem .75rem;
+			span {
+				&:first-child {
+				white-space: nowrap;
+				width: 68%;
+				display: inline-block;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				}
+			}
+			a {
+				color: $white;
+				@include px-to-rem(font-size, 15px, false);
+				.fa-times {
+					@include border(1.5px, solid, $ross-white);
+					border-radius: 50%;
+					@include px-to-rem(padding, 1px, false);
+					@include px-to-rem(width, 16px, false);
+					color: $white;
+					@include px-to-rem(height, 16px, false);
+					position: absolute;
+					right: 5px;
+					top: 5px;
+				}
+			}
+			.popover-icon {
+				a {
+					position: relative; 
+					top: 14px;
+					border-radius: 50%;
+					@include px-to-rem(width, 22px, false);
+					@include px-to-rem(height, 22px, false);
+					@include px-to-rem(line-height, 21px, false);
+					@include box-shadow(0px 2px 2px rgba(0, 0, 0, 0.188235));
+					text-align: center;
+					@include px-to-rem(font-size, 12px, false);
+				}
+			}
+			.popover-icon-edit {
+				@include border(1px, solid, $picton-blue);
+				background: $white;
+				color: $mine-shaft;
+				@include px-to-rem(margin-right, 5px, false);
+				&:hover {
+					background: $picton-blue;
+					color: $white;
+					border-color: $white;
+					.icon-pencil{
+						&:hover {
+							color: $white;
+						}
+					}
+				}
+			}
+			.popover-icon-remove {
+				@include border(1px, solid, $remove-color);
+				background: $white;
+				color: $mine-shaft;
+				@include px-to-rem(margin-right, 10px, false);
+				&:hover {
+					background: $remove-color;
+					color: $white;
+					border-color: $white;
+					.icon-remove{
+						&:hover {
+							color: $white;
+						}
+					}
+				}
+			}
+
+		}
+		.popover-desc {
+			ul {
+				li {
+					@include px-to-rem(padding, 4px 15px 4px 15px, false);
+					&:nth-child(odd) {
+						background: $light-alabaster;
+					}
+					&:last-child {
+						@include border-radius(4px);
+					}
+				}
+			}
+			.icon-remove {
+				color: $emperor;
+
+				&:hover {
+					color: $remove-color;
+				}
+			}
+			.icon-pencil {
+				color: $emperor;
+				&:hover {
+					color: $picton-blue;
+				}
+			}
+			.btn-success {
+				@include px-to-rem(padding, 1px 10px 2px, true);
+				@include px-to-rem(font-size, 12px, false);
+			}
+		}
+	}
+}
+.popover{
+	&.nacustom-popover {
+		.popover-body {
+			width: 100% !important;
+			max-width: 430px !important;
+			.popover-top {
+				.popover-desc {
+					max-height: 420px;
+					overflow-y: auto;
+				}
+			}
+		}
+	}
+	.popover-body{
+        border-radius: calc(.3rem - 1px);
+        overflow: hidden;
+		.assign-popper-haeder{
+			margin: 0;
+			color: #fff;
+			font-weight: 600;
+			font-size: 16px;
+			min-height: 36px;
+			height: 36px;
+			padding: .3rem .75rem;
+			border-bottom: 1px solid #ebebeb;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.assign-popper-body{
+			.assign-popper-body-hold{
+				height: 100px;
+			    overflow-y: scroll;
+			}
+		}
+	}
+}
+

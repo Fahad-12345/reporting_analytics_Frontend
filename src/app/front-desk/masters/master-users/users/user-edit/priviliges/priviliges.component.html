@@ -1,0 +1,264 @@
+<div class="card-body bill-border border-top-0">
+    <div class="user-info">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- <h4 class="my-0 color-green pt-2">Privileges</h4> -->
+				<h4 class="my-0 color-green pt-2">User Permissions, Practice Locations, and Timings</h4>
+
+            </div>
+        </div>
+    </div>
+    <hr class="line-bottom">
+    
+    <div class="row role-permissions">
+        <!-- <busy-loader [loaderSpin]="loadSpin"></busy-loader> -->
+    
+        <div class="col-md-12"> 
+            <form [formGroup]="form"> 
+                <!-- <div class="col-md-6 col-lg-4 col-xl-3 d-inline-block ps-0 pe-0 pe-md-2">
+                    <div class="form-group">
+                        <label class="mb-0" for="facilities">Practice - Location</label>
+                        <select (change)="onPracticeChange($event,facility)" formControlName="facilities" class="form-control text-truncate"
+                            id="facilities" [ngbTooltip]="selectePractice" #facility container="body" tooltipClass="table-custom-tooltip">
+                            <option selected disabled>Choose Practice - Location</option>
+                            <option *ngFor="let facility of lstFacilities" [value]="facility.id">
+                                {{facility.facility_full_name | slice:0:50}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xl-3 d-inline-block ps-0 ps-md-2 pe-0 pe-lg-2">
+                    <div class="form-group" *ngIf="isMedicalIdentifier">
+                        <label class="mb-0" for="speciality">Specialty</label>
+                        <select [(ngModel)]="currentSpeciality" (change)="onSpecialityChange($event,allSpeciality)"
+							[ngModelOptions]="{standalone: true}" class="form-control text-truncate" id="speciality" [ngbTooltip]="selecteSpeciality" #allSpeciality 
+							container="body" tooltipClass="table-custom-tooltip" [disabled]="isDisabledTemplateControl">
+                            <option [value]="InitSpecility" selected disabled>Choose Specialty</option>
+                            <option *ngFor="let speciality of lstSpecialities" [value]="speciality.id"> {{speciality.name}}
+                            </option>
+                        </select>
+                        <span *ngIf="currentSpeciality" (click)="resetSpecialityId()"
+                            class="icon-plus select-cross-icon"></span>
+                    </div>
+                </div>
+    
+                <div class="col-md-6 col-lg-4 col-xl-3 d-inline-block">
+                    <div class="form-group" *ngIf="isMedicalIdentifier">
+                        <input [(ngModel)]="isManualSpecialty" [ngModelOptions]="{standalone: true}" type="checkbox"
+                            id="is_manual" [disabled]="isDisabledTemplateControl">
+                        <label class="form-label ms-2" for="is_manual">  Use Manual form</label>
+                    </div>
+                </div>	 -->
+            </form>
+        </div>
+        <!-- <div class="col-md-12" >
+            <app-user-template-manager [practice_location_id]='this.practiceLocationId' [speciality_id]='this.currentSpeciality'></app-user-template-manager>
+    
+        </div> -->    
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-lg-6 mb-3 mb-lg-0">
+                    <h5 class="text-center mb-2 mt-2">User Permissions</h5>
+                    <app-role-privileges #approlesprivales [rolePriviligesInputData]="rolePriviligesInputData"
+                        (submitData)="submitData($event)" [dataObj]="dataObj" [userPermissonData]="userPermissonData">
+                    </app-role-privileges>
+    
+                    <!-- <folder-permission-tree [data]="dataObj"></folder-permission-tree> -->
+                </div>
+                <div class="col-lg-6 pb-3 user-prev">
+					<div class="mb-2 mt-2">
+						<mat-checkbox [checked]="multiple_assignment === 1 ? true : false" (change)="changeMultipleAssignment($event)" [(ngModel)]="multiple_assignment">
+							Allow Multiple Assignments
+						</mat-checkbox>
+						<hr>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="col-md-12 master-user pt-3">
+								<nav class="left-nav">
+									<ul class="list-unstyled user-scroll">
+										<li class="button--wayra" [ngClass]="{'disable-tab-btn' : disableSubmission()==true && practiceLocationId!=facility.id}" *ngFor="let facility of lstFacilities">
+											<a class="d-block"  [ngClass]="{'active':practiceLocationId==facility.id, 'bg-danger' : disableSubmission()==true && practiceLocationId==facility.id }" (click)="onPracticeChange(facility.id)">
+												<span tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{facility.facility_full_name}}">{{facility.qualifier}}</span>
+												<span *ngIf="disableSubmission()==false && practiceLocationId==facility.id" class="tab-icon" > 
+													<i class="fa fa-check-circle"></i>
+												</span>
+	
+												<span *ngIf="disableSubmission()==true && practiceLocationId==facility.id" class="tab-icon" > 
+													<i class="fa fa-exclamation-circle"></i>
+												</span>
+											</a>
+											
+										</li>		
+									</ul>
+								</nav>
+						
+						
+								<!-- <router-outlet></router-outlet> -->
+						
+							</div>
+
+						</div>
+					</div>
+					<!-- [ngClass]="{'active':SelectedSpecialitySupervisor==specialty.id }" -->
+					<div class="tab-container tab-with-btn tab-with-icon mx-2" *ngIf="this.isMedicalIdentifier && !hasSupervisor && practiceLocationId">
+						<div class="tab-header">
+							<ul class="nav nav-tabs">
+								<li class="nav-item" [ngClass]="{'active':SelectedSpecialitySupervisor==specialty.id }" *ngFor="let specialty of this.lstSpecialtiesSupervisorAgainstFacility;let i = index ;trackBy: trackByMethod">
+									<a class="nav-link" (click)="onSpecialitySupervisorChange(true,specialty)" [ngClass]="{'active':SelectedSpecialitySupervisor==specialty.id, 'text-danger' : !multiSpecChildValues[i].isValid }" id="{{specialty.id}}-tab" data-bs-toggle="tab" href="#{{specialty.id}}" role="tab" aria-controls="One" aria-selected="true">
+										<span tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{specialty.name}}">{{specialty.qualifier ? specialty.qualifier :specialty.name}}</span>
+									</a>
+									<span class="tab-icon bg-hover-danger" (click)="deleteSpecialty(specialty,i)">
+										<i class="icon-remove"></i>
+									</span>
+									<!-- {{multiSpecChildValues[i].isValid}} -->
+									<span *ngIf="multiSpecChildValues[i].isValid" class="tab-icon bg-hover-success" >
+										<i class="fa fa-check-circle"></i></span>
+									<span *ngIf="!multiSpecChildValues[i].isValid" class="tab-icon bg-hover-danger" >
+										<i class="fa fa-exclamation-circle"></i>
+									</span>
+								</li>
+							</ul>
+							<a class="btn btn-default round-btn float-right sup-btn-tab" (click)="openAddSpecialtyModel()" href="javascript:void(0)">
+								<span >Add Specialty</span>
+								<span class="icon-plus-circle ms-2"></span>
+							</a>
+						</div>
+						
+						<div class="tab-body p-3" >
+							<span *ngIf="this.lstSpecialtiesSupervisorAgainstFacility && this.lstSpecialtiesSupervisorAgainstFacility.length==0">No specialty found. Please add new specialty against this location. </span>
+							<div class="tab-content" id="myTabContent" >
+								<div class="tab-pane fade" [ngClass]="{'show active':SelectedSpecialitySupervisor==specialty.id }" *ngFor="let specialty of this.lstSpecialtiesSupervisorAgainstFacility;let i = index" id="{{specialty.id}}" role="tabpanel" aria-labelledby="one-tab">
+									<h5 class="text-center mb-0"> User Timings</h5>
+									<app-time-plan [update]="true" (openReplicatePopUpBtn)="openModel($event,'specialty')" [showReplicateAllButton]="showReplicateAllButton" [childValues]="multiSpecChildValues[i]">
+									</app-time-plan>             
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- <div class="tab-container tab-with-btn tab-with-icon mx-2" *ngIf=" (!this.isMedicalIdentifier && hasSupervisor) || (this.isMedicalIdentifier && hasSupervisor)">
+						<div class="tab-header">
+							<ul class="nav nav-tabs">
+								<li class="nav-item" [ngClass]="{'active':SelectedSpecialitySupervisor==supervisor.id }" *ngFor="let supervisor of this.lstSpecialtiesSupervisorAgainstFacility;let i = index ; trackBy: trackByMethod">
+									<a class="nav-link" [ngClass]="{'active':SelectedSpecialitySupervisor==supervisor.id }" id="{{supervisor.id}}-tab" (click)="onSpecialitySupervisorChange(false,supervisor)" data-bs-toggle="tab" href="#{{supervisor.id}}" role="tab" aria-controls="One" aria-selected="true">
+										{{supervisor.first_name | FullName :supervisor.middle_name: supervisor.last_name}}
+									</a>
+									<span class="tab-icon bg-hover-danger" (click)="deleteSupervisor(supervisor,i)">
+										<i class="icon-remove"></i>
+									</span>
+									<span *ngIf="multiSpecChildValues[i].isValid" class="tab-icon bg-hover-success" >
+										<i class="fa fa-check-circle"></i></span>
+									<span *ngIf="!multiSpecChildValues[i].isValid" class="tab-icon bg-hover-danger" >
+										<i class="fa fa-exclamation-circle"></i>
+									</span>
+								</li>
+							</ul>
+							<a class="btn btn-default round-btn float-right" (click)="openAddSupervisorModel()" href="javascript:void(0)">
+								<span >Add Supervisor</span>
+								<span class="icon-plus-circle ms-2"></span>
+							</a>
+						</div>
+						<div class="tab-body p-3"  >
+							<span *ngIf="this.lstSpecialtiesSupervisorAgainstFacility && this.lstSpecialtiesSupervisorAgainstFacility.length==0">No supervisor found. Please add new supervisor against this location. </span>
+
+							<div class="tab-content" id="myTabContent" >
+								<div class="tab-pane fade" [ngClass]="{'show active':SelectedSpecialitySupervisor==supervisor.id }" *ngFor="let supervisor of this.lstSpecialtiesSupervisorAgainstFacility;let i = index" id="{{supervisor.id}}" role="tabpanel" aria-labelledby="one-tab">
+									<h5 class="text-center mb-0"> User Timings</h5>
+									<app-time-plan [update]="true" (openReplicatePopUpBtn)="openModel($event,'supervisor',i)" [showReplicateAllButton]="showReplicateAllButton" [childValues]="multiSpecChildValues[i]">
+									</app-time-plan>  
+									
+									
+								</div>
+							</div>
+						</div>
+					</div> -->
+
+					<div class="tab-container tab-with-btn tab-with-icon mx-2" *ngIf=" (!this.isMedicalIdentifier && hasSupervisor  && practiceLocationId) || (this.isMedicalIdentifier && hasSupervisor && practiceLocationId)">
+						<div class="tab-header">
+							<!-- <nav class="left-nav">
+								<ul class="list-unstyled user-scroll">
+									<li class="button--wayra" *ngFor="let supervisor of this.supervisorList;let i = index ;trackBy: trackByMethod">
+										<a class="d-block">
+											{{supervisor.first_name | FullName :supervisor.middle_name: supervisor.last_name}}
+											<span  class="tab-icon" (click)="deleteSupervisor(supervisor,i)"> 
+												<i class="fa fa-times-circle"></i>
+											</span>
+										</a>
+										
+									</li>
+								
+								</ul>
+							</nav> -->
+							<ul class="nav nav-tabs">
+								<li class="btn-holder me-2 mb-1" *ngFor="let supervisor of this.supervisorList;let i = index ;trackBy: trackByMethod">
+									<button class="btn btn-outline-success">
+										{{supervisor.first_name | FullName :supervisor.middle_name: supervisor.last_name}}
+										<span  class="tab-icon" (click)="deleteSupervisor(supervisor,i)"> 
+											<i class="fa fa-times-circle"></i>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<a class="btn btn-default round-btn float-right sup-btn" (click)="openAddSupervisorModel()" href="javascript:void(0)">
+								<span >Add Supervisor</span>
+								<span class="icon-plus-circle ms-2"></span>
+							</a>
+						</div>
+						<div class="tab-body p-3">
+							<div class="col-12 user-plan">
+									<h5 class="text-center mb-0"> User Timings</h5>
+									<app-time-plan [update]="true"   [childValues]="childValues">
+									</app-time-plan>  
+							</div>
+						</div>
+
+
+					</div>
+
+					<!-- <ng-template #normalUser> -->
+
+						<div class="col-12 user-plan" *ngIf="!this.isMedicalIdentifier &&  !hasSupervisor ">
+							<h5 class="text-center mb-0 mt-2">User Timings</h5>
+							<app-time-plan [update]="true" [childValues]="childValues">
+							</app-time-plan>
+						</div>
+					<!-- </ng-template> -->
+                   
+                </div>
+			
+            </div>
+            <div *ngIf="!isSameUserLogin" class="row justify-content-center form-btn mt-3" >
+                <div class="col-12 text-center mt-3">
+                    <a class="btn btn-primary d-inline-block me-3 text-white" (click)="GoBackToBasicInfo()">
+                        <span class="icon-left-arrow me-2"></span> Back</a>
+                    <button  class="btn btn-success d-inline-block" [disabled]="disableSubmission()"
+                        (click)="submitAll()"><span class="icon-save-continue me-2"></span> {{isMedicalIdentifier ? 'Save & Continue' : 'Submit'}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div class="col-md-12 form ps-0">
+      <label for="super-admin" class="chkbox position-relative my-3">
+        <input id="super-admin" name="superadmin" value="" [ngModelOptions]=" {standalone: true}" [(ngModel)]="isSuperAdmin"
+          type="checkbox">
+        <span class="fake-input position-absolute"></span>
+        <span class="fake-label d-block">Super Admin</span>
+      </label>
+    </div>
+    <tabset *ngIf="!isSuperAdmin">
+      <tab *ngFor="let tabz of facilities;let i = index" [attr.data-index]="i" [heading]="tabz?.name"
+        [active]="tabz?.active" (select)="selectedPrivchildTab(tabz,i)" [disabled]="tabz?.disabled"
+        [removable]="tabz?.removable" (removed)="removeTabHandler(tabz)" [customClass]="tabz?.customClass">
+        <app-user-privileges #privaleges [isSuperAdmin]="isSuperAdmin" [facilityId]="tabz?.facility_locations_id"
+          [role_id]="tabz?.role_id" [speciality_id]="tabz?.speciality_id || ''" [userPermissonData]="tabz?.privs"
+          (require_medical_identifiers)="require_medical_identifiers($event)">
+        </app-user-privileges>
+      </tab>
+    
+    </tabset>
+    <button class="btn btn-primary mt-2 mb-4" style="margin-left:calc(50% - 30px);" (click)="updateUser()"><span
+        class="icon-save-continue me-2"></span> Save</button> -->

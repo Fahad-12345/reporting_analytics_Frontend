@@ -1,0 +1,57 @@
+export class SummeryStats {
+    ///Denial Props
+    Denial_Rate_current: number = 0;
+    Denial_Rate_previous: number = 0;
+    Denial_Rate_changed: number = 0;
+    Denial_Rate_current_total_number:number = 0;
+    Denial_Rate_previous_total_number:number = 0;
+    Denial_is_Positive: boolean ;
+    /// Cancellation Props
+    Cancel_current: number = 0;
+    Cancel_previous: number = 0;
+    Cancel_changed: number = 0;
+    Cancel_current_total_number:number = 0;
+    Cancel_previous_total_number:number = 0;
+    Cancel_is_Positive: boolean ;
+    Unbilled_Visit_current: number = 0;
+    Unbilled_Visit_previous: number = 0;
+    Unbilled_Visit_changed: number = 0;
+    Unbilled_is_Positive: boolean ;
+    Appointment_current: number = 0;
+    Appointment_previous: number = 0;
+    Appointment_changed: number = 0;
+    Appointment_current_total_number:number = 0;
+    Appointment_previous_total_number:number = 0;
+    Appointment_is_Positive: boolean;
+    WaitTime_current: number = 0;
+    WaitTime_previous: number = 0;
+    WaitTime_changed: number = 0;
+    WaitTime_is_Positive: boolean ;
+    current_interest: number = 0;
+    previous_interest: number = 0;
+    interest_difference: number = 0;
+    isInterestPositive: boolean ;
+    current_billed: number = 0;
+    previous_billed: number = 0;
+    billed_difference: number = 0;
+    isBilledPositive: boolean ;
+    total_payment_received: number = 0;
+    previous_payment_received: number = 0;
+    payment_received_difference: number = 0;
+    isPaymentPositive: boolean ;
+    current_account_receivable: number = 0;
+    previous_account_receivable: number = 0;
+    account_receivable_difference: number = 0;
+    isReceivablesPositive: boolean ;
+    current_writeoff: number = 0;
+    previous_writeoff: number = 0;
+    writeoff_difference: number = 0;
+    isWriteoffPositive: boolean ;
+    Unfinalized_Visit_current: number = 0;
+    Unfinalized_Visit_previous: number = 0;
+    Unfinalized_Visit_changed: number = 0;
+    Unbilled_Visit_current_total_number:number = 0;
+    Unbilled_Visit_previous_total_number:number = 0;
+    Unfinalized_is_Positive: boolean ;
+    displayClass:string;
+}

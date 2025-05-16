@@ -1,0 +1,1588 @@
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="section-frame reduce-height-tab border-0 pb-md-5 me-1" style="border: 1px solid #a2a3a2 !important;
+padding: 8px;">
+	<div class="custom-scrollbar" id="ngx-scroll-to">
+		<div class="form position-relative h-100" [class.disabled]="!mainService.isenableSaveRecordMedicalDoctor()">
+			<div class="d-flex justify-content-between">
+				<strong class="sub-title py-1"><span class="position-relative me-3 sub-title-head">Select body
+						parts</span>
+					<form class="align-self-end d-inline-block header-check-outer" [formGroup]="form"
+						(ngSubmit)="submit()">
+						<ul class="list-inline m-0 course-block">
+							<li class="list-inline-item m-0 ms-2" formArrayName="movementDetails"
+								*ngFor="let item of form['controls']['movementDetails']['controls']; let i = index">
+								<label class="d-block chkbox position-relative m-0" for="{{'body_part_id'+i}}"
+									[formGroupName]="i"
+									[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+									<input type="checkbox" (change)="triggerScrollTo('body_part_scroll'+i)"
+										formControlName="checked" id="{{'body_part_id'+i}}">
+									<span class="fake-input position-absolute"></span> 
+									<span class="fake-label d-block">{{item.value.bodyPartName}}</span>
+								</label>
+							</li>
+						</ul>
+					</form>
+				</strong>
+			</div>
+			<div class="types-box ad-border bg-white p-2">
+				<form class="form" [formGroup]="form">
+					<div class="row mb-1">
+						<ng-container formArrayName="movementDetails"
+							*ngFor="let item of form['controls']['movementDetails']['controls']; let i = index">
+							<div class="col-12 physical-exam-block px-0" [formGroupName]="i" *ngIf="item.value.checked">
+								<div class="row m-0">
+									<div class="col-12">
+										<strong id="body_part_scroll{{i}}" class="sub-title"
+											style="transform: translate(0);">{{item.value.bodyPartName}}</strong>
+										<div class="row m-0 mb-2 pt-1 pb-3"
+											style="background: #fff; border: 1px solid #a2a3a2;">
+
+											<ng-container>
+												<div class="col-xl-5 pe-xl-0">
+													<!--[ngClass]="{'col-xl-5': item.value.normal_range=='false', 'col-xl-12': item.value.normal_range=='true'}"-->
+													<div class="col-xl-12 pb-0 px-0"
+														*ngIf="hasOrientation(item.value.bodyPartName)">
+														<div class="option-bar p-2 text-center mt-md-3">
+															<ul
+																class="list-inline options m-0 ms-xl-2 d-lg-inline-block d-lg-inline-block d-block">
+																<li class="list-inline-item">
+																	<label for="left{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'orientation')}">
+																		<input id="left{{i}}" value="left" type="radio"
+																			appEnhanceRadio
+																			[oldValue]="item.value.orientation"
+																			formControlName="orientation">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span class="fake-label d-block">Left</span>
+																	</label>
+																</li>
+																<li class="list-inline-item">
+																	<label for="right{{i}}"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'orientation')}"
+																		class="d-block position-relative m-0">
+																		<input id="right{{i}}" value="right"
+																			type="radio" formControlName="orientation"
+																			appEnhanceRadio
+																			[oldValue]="item.value.orientation">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span class="fake-label d-block">Right</span>
+																	</label>
+																</li>
+																<li class="list-inline-item">
+																	<label for="both{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'orientation')}">
+																		<input id="both{{i}}" value="both" type="radio"
+																			formControlName="orientation"
+																			appEnhanceRadio
+																			[oldValue]="item.value.orientation">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span class="fake-label d-block">Both</span>
+																	</label>
+																</li>
+															</ul>
+														</div>
+													</div>
+													<ng-container
+														*ngIf="item.value.orientation ||!hasOrientation(item.value.bodyPartName)">
+														<div class="col-xl-12 pb-2 px-0" *ngIf="check('movements',i)">
+															<div class="option-bar p-2 text-center"
+																[class.border-top-0]="item.value.orientation">
+																<ul
+																	class="list-inline options m-0 d-lg-inline-block d-lg-inline-block d-block">
+																	<li class="list-inline-item">
+																		<label for="normal_range{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'normal_range')}">
+																			<input id="normal_range{{i}}" [value]="true"
+																				type="radio"
+																				formControlName="normal_range"
+																				appEnhanceRadio
+																				[oldValue]="item.value.normal_range">
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span class="fake-label d-block">Within
+																				Normal Range</span>
+																		</label>
+																	</li>
+																	<li class="list-inline-item">
+																		<label for="notnormal_range{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'normal_range')}">
+																			<input id="notnormal_range{{i}}"
+																				[value]="false" type="radio"
+																				formControlName="normal_range"
+																				appEnhanceRadio
+																				[oldValue]="item.value.normal_range">
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span class="fake-label d-block">Not in
+																				Normal Range</span>
+																		</label>
+																	</li>
+																</ul>
+															</div>
+														</div>
+														<div class="table-frame ad-class mb-2 table-responsive"
+															*ngIf="item.value.normal_range==false">
+															<table class="mt-4 table-hold" style="width: calc(100% - 1px); ">
+																<tr>
+																	<th align="center" scope="col">
+																		<!-- <strong class="section-title">{{item.value.bodyPartName}}</strong> -->
+																	</th>
+																	<th align="center" scope="col" class="ps-3 pe-3"
+																		*ngIf="check('normalROM',i)">Normal ROM</th>
+																	<th colspan="2" align="center" scope="col"
+																		class="ps-1 pe-1" *ngIf="check('movements',i)">
+																		Patient’s ROM</th>
+																</tr>
+																<tr class="bg-white" *ngIf="check('movements',i)">
+																	<td align="center"
+																		*ngIf="check('rightMeasuredROM',i) || check('leftMeasuredROM',i)">
+																		&nbsp;</td>
+																	<td align="center"
+																		*ngIf="check('rightMeasuredROM',i) || check('leftMeasuredROM',i) ">
+																		&nbsp;</td>
+																	<td align="center" style="font-weight: 500;"
+																		*ngIf="check('rightMeasuredROM',i) && checkOrientation(item.value.orientation, 'right')">
+																		Right </td>
+																	<td align="center" style="font-weight: 500;"
+																		*ngIf="check('leftMeasuredROM',i) && checkOrientation(item.value.orientation, 'left')">
+																		Left</td>
+																</tr>
+																<ng-container *ngIf="check('movements',i)">
+																	<tr class="bg-white"
+																		formArrayName="bodyPartMovements"
+																		*ngFor="let item1 of getMovements(item); let j = index">
+																		<ng-container [formGroupName]="j">
+																			<td align="center" valign="middle">
+																				{{getMovements(item)[j].value.movement}}
+																			</td>
+																			<td align="center" valign="middle"
+																				*ngIf="check('normalROM',i)">
+																				{{getMovements(item)[j].value.normalROM}}
+																			</td>
+																			<td align="center" valign="middle"
+																				class="p-2"
+																				*ngIf="check('rightMeasuredROM',i)  && checkOrientation(item.value.orientation, 'right')">
+																				<div class="form-group m-0"
+																					*ngIf="check('rightMeasuredROM',i)">
+																					<input type="number" min="0"
+																						[ngClass]="{'bg-light-pink':checkCarryForward(item1,'rightMeasuredROM')}"
+																						[max]="(getMovements(item)[j].value.normalROM>99)?999:99"
+																						class="form-control"
+																						formControlName="rightMeasuredROM"> 
+																				</div>
+																			</td>
+																			<td align="center" valign="middle"
+																				class="p-2"
+																				*ngIf="check('leftMeasuredROM',i) && checkOrientation(item.value.orientation, 'left')">
+																				<div class="form-group m-0">
+																					<input type="number" min="0"
+																						[max]="(getMovements(item)[j].value.normalROM>99)?999:99"
+																						[ngClass]="{'bg-light-pink':checkCarryForward(item1,'leftMeasuredROM')}"
+																						class="form-control"
+																						formControlName="leftMeasuredROM">
+																				</div>
+																			</td>
+																			<td colspan="2" align="center"
+																				valign="middle" class="p-2"
+																				*ngIf="check('measuredROM',i)">
+																				<div class="form-group m-0">
+																					<input type="number" min="0"
+																						[ngClass]="{'bg-light-pink':checkCarryForward(item1,'measuredROM')}"
+																						[max]="(getMovements(item)[j].value.normalROM>99)?999:99"
+																						class="form-control"
+																						formControlName="measuredROM">
+																				</div>
+																			</td>
+																		</ng-container>
+																	</tr>
+																</ng-container>
+															</table>
+														</div>
+													</ng-container>
+												</div>
+												<div
+													[ngClass]="{'col-xl-7': item.value.bodyPartName!='Thoracic spine', 'col-xl-12': item.value.bodyPartName=='Thoracic spine'}">
+													<div class="outer-frame w-100 border-0">
+														<ng-container *ngIf="item.value.bodyPartKey=='thoracic-spine'">
+															<!-- ************************************************************************************** -->
+															<!-- ************************************************************************************** -->
+															<!-- **************************************thoracic spine********************************** -->
+															<!-- ************************************************************************************** -->
+															<!-- ************************************************************************************** -->
+															<div *ngIf="check('tendernessRadio',i)"
+																class="option-bar d-flex align-items-center mb-2 bg-white break-line flex-xl-nowrap">
+																<div class="box p-2">
+																	<p class="m-0 text-center">Spinal point tenderness
+																	</p>
+																</div>
+																<div class="box p-2">
+																	<label for="and{{i}}"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'conjunction')}"
+																		class="d-block position-relative m-0">
+																		<input id="and{{i}}" value="and" type="radio"
+																			formControlName="conjunction"
+																			appEnhanceRadio
+																			[oldValue]="item.value.conjunction">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">and</span>
+																	</label>
+																	<label for="or{{i}}"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'conjunction')}"
+																		class="d-block position-relative m-0">
+																		<input id="or{{i}}" value="or" type="radio"
+																			formControlName="conjunction"
+																			appEnhanceRadio
+																			[oldValue]="item.value.conjunction">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">or</span>
+																	</label>
+																</div>
+																<div class="box p-2">
+																	<p class="m-0 text-center">paraspinal tenderness to
+																		palpation</p>
+																</div>
+																<div class="alert alert-secondary align-self-center rounded-0 m-0 th-width"
+																	role="alert" *ngIf="item.get('conjunction').value ">
+																	<div class="row">
+																		<div class="col-12 col-sm-8 align-self-center">
+																			<ng-container
+																				*ngIf="item.get('conjunction').value">
+																				<strong
+																					class="d-inline-block">Preview:</strong>
+																				Spinal point tenderness
+																				<b>{{item.get('conjunction').value}}
+																				</b> paraspinal tenderness to palpation
+																			</ng-container>
+																		</div>
+																		<div class="col-12 col-sm-4 mt-2 mt-sm-0 align-self-center text-end"
+																			*ngIf="item.get('conjunction').value">
+																			<button type="button"
+																				class="btn btn-secondary ms-1"
+																				(click)="clear(item)">Clear</button>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</ng-container>
+														<ng-container
+															*ngIf="form.controls['movementDetails']['controls'][i].value.bodyPartKey=='cervical-spine'">
+															<!-- ************************************************************************************** -->
+															<!-- ************************************************************************************** -->
+															<!-- **************************************cervical spine********************************** -->
+															<!-- ************************************************************************************** -->
+															<!-- ************************************************************************************** -->
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<!-- ++++++++++++++++++++++++++++++++++++++++ TEST ++++++++++++++++++++++++++++++++++++++++ -->
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<div *ngIf="check('test',i)"
+																class="option-bar d-flex align-items-center mb-2 break-line">
+																<div class="box p-2">
+																	Foraminal compression / Spurling's sign
+																</div>
+																<div class="box p-2">
+																	<label for="positive{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'testResult')}">
+																		<input id="positive{{i}}" value="positive"
+																			type="radio" formControlName="testResult"
+																			appEnhanceRadio
+																			[oldValue]="item.value.testResult">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">positive</span>
+																	</label>
+																	<label for="negative{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'testResult')}">
+																		<input id="negative{{i}}" value="negative"
+																			type="radio" formControlName="testResult"
+																			appEnhanceRadio
+																			[oldValue]="item.value.testResult"
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">negative</span>
+																	</label>
+																</div>
+
+																<div class="alert alert-secondary m-0 align-self-center w-100"
+																	role="alert" *ngIf="item.get('testResult').value ">
+																	<div class="row align-items-center">
+																		<div class="col-12 col-sm-8 text-start">
+																			<ng-container
+																				*ngIf="item.get('testResult').value">
+																				<strong
+																					class="d-inline-block">Preview:</strong>
+																				Foraminal compression / Spurling's
+																				sign:-
+																				<b>{{item.get('testResult').value}}</b>
+																			</ng-container>
+																		</div>
+																		<div class="col-12 col-sm-4 mt-2 mt-sm-0 text-end"
+																			*ngIf="item.get('testResult').value">
+																			<button type="button"
+																				class="btn btn-secondary ms-1"
+																				(click)="clearTest(item)">Clear</button>
+																		</div>
+																	</div>
+																</div>
+															</div>
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<!-- +++++++++++++++++++++++++++++++++++++ Tenderness +++++++++++++++++++++++++++++++++++++ -->
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<div *ngIf="check('tendernessCheckBox',i) ||check('tendernessCheckBox',i)"
+																class="option-bar d-flex align-items-center p-2 mb-2 mt-3">
+																<div class="box p-2"
+																	*ngIf="check('tendernessCheckBox',i)">
+																	<label for="tendernessCheckBox{{i}}"
+																		class="d-block chkbox position-relative m-0"
+																		[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'tenderness')}">
+																		<input id="tendernessCheckBox{{i}}"
+																			type="checkbox"
+																			formControlName="tenderness" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span class="fake-label d-block">Spinal point
+																			tenderness noted on palpation</span>
+																	</label>
+																</div>
+															</div>
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<!-- +++++++++++++++++++++++++++++++++++++++ Muscle +++++++++++++++++++++++++++++++++++++++ -->
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<div *ngIf="check('test',i)"
+																class="option-bar text-center bg-white mb-2">
+																<div class="box p-2 d-inline-block align-middle">
+																	Cervical muscles appear
+																</div>
+																<div class="box p-2 m-1 d-inline-block align-middle">
+																	<label for="symmetrical{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'consistency')}">
+																		<input id="symmetrical{{i}}" value="symmetrical"
+																			type="radio" formControlName="consistency"
+																			appEnhanceRadio
+																			[oldValue]="item.value.consistency"
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">symmetrical</span>
+																	</label>
+																	<label for="asymmetrical{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'consistency')}">
+																		<input id="asymmetrical{{i}}"
+																			value="asymmetrical" type="radio"
+																			formControlName="consistency"
+																			appEnhanceRadio
+																			[oldValue]="item.value.consistency"
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">asymmetrical</span>
+																	</label>
+																</div>
+																<div class="box p-2 m-1 d-inline-block align-middle">
+																	<label for="with{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'with')}">
+																		<input id="with{{i}}" value="true" type="radio"
+																			formControlName="with" appEnhanceRadio
+																			[oldValue]="item.value.with"
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">with</span>
+																	</label>
+																	<label for="without{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'with')}">
+																		<input id="without{{i}}" value="false"
+																			type="radio" formControlName="with"
+																			appEnhanceRadio
+																			[oldValue]="item.value.with"
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">without</span>
+																	</label>
+																</div>
+																<div class="box p-2 m-1 d-inline-block align-middle">
+																	<label for="mild{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																		<input id="mild{{i}}" value="mild" type="radio"
+																			formControlName="painLevel" appEnhanceRadio
+																			[oldValue]="item.value.painLevel">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">mild</span>
+																	</label>
+																	<label for="moderate{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																		<input id="moderate{{i}}" value="moderate"
+																			type="radio" formControlName="painLevel"
+																			appEnhanceRadio
+																			[oldValue]="item.value.painLevel">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">moderate</span>
+																	</label>
+																	<label for="severe{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																		<input id="severe{{i}}" value="severe"
+																			type="radio" formControlName="painLevel"
+																			appEnhanceRadio
+																			[oldValue]="item.value.painLevel">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">severe</span>
+																	</label>
+																</div>
+																<div class="box p-2 d-inline-block align-middle">
+																	tenderness
+																</div>
+																<div class="box p-2 m-1 d-inline-block align-middle">
+																	<label for="and{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'conjunction')}">
+																		<input id="and{{i}}" value="and" type="radio"
+																			formControlName="conjunction"
+																			appEnhanceRadio
+																			[oldValue]="item.value.conjunction">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">and</span>
+																	</label>
+																	<label for="or{{i}}"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'conjunction')}">
+																		<input id="or{{i}}" value="or" type="radio"
+																			formControlName="conjunction"
+																			appEnhanceRadio
+																			[oldValue]="item.value.conjunction">
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">or</span>
+																	</label>
+																</div>
+																<div class="box p-2 d-inline-block align-middle">
+																	muscle spasm to upper Trapezius and Paraspinal
+																	muscles.
+																</div>
+
+																<div class="alert alert-secondary m-0 align-self-center rounded-0"
+																	role="alert" *ngIf="item.get('consistency').value">
+																	<div class="row">
+																		<div class="col-12 col-md-10 align-self-center text-start">
+																			<ng-container
+																				*ngIf="item.get('consistency').value">
+																				<strong
+																					class="d-inline-block">Preview:</strong>
+																				Cervical muscles appear
+																				<b>{{item.get('consistency').value}}</b>
+																				<ng-container
+																					*ngIf="item.get('with').value">
+																					<b> {{(item.get('with').value=='true')?"with":"without"}}
+																					</b>
+																					<ng-container
+																						*ngIf="item.get('painLevel').value || item.get('with').value=='false'">
+																						<b> {{item.get('painLevel').value}}
+																						</b> tenderness
+																						<ng-container
+																							*ngIf="item.get('conjunction').value">
+																							<b>{{item.get('conjunction').value}}</b>
+																							muscle spasm to upper
+																							Trapezius and Paraspinal
+																							muscles.
+																						</ng-container>
+																					</ng-container>
+																				</ng-container>
+																			</ng-container>
+																			<!-- <div *ngIf="item.get('comment').value"><br><b>Comments:</b> </div>
+																					{{item.get('comment').value}} -->
+																			<!-- <u>{{item.get('comment').value}}</u> -->
+																		</div>
+																		<div class="col-12 col-md-2 mt-2 mt-sm-0 align-self-center text-end"
+																			*ngIf="item.get('consistency').value">
+																			<button type="button"
+																				class="btn btn-secondary ms-1"
+																				(click)="clear(item)">Clear</button>
+																		</div>
+																	</div>
+																</div>
+
+															</div>
+														</ng-container>
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<!-- +++++++++++++++++++++++++++++++ Shoulder Pains +++++++++++++++++++++++++++++++++++++++ -->
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<div *ngIf="check('shoulder',i)"
+															class="option-bar d-flex align-items-center p-2 mb-2 mt-3 table-responsive">
+															<table class="table-hold" style="width: calc(100% - 1px);">
+																<tr>
+																	<td align="center" valign="middle">Pain in joint
+																	</td>
+																	<td align="center" valign="middle">
+																		<label for="jointright{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'painInJoint')}">
+																			<input id="jointright{{i}}" value="right"
+																				type="radio"
+																				formControlName="painInJoint"
+																				appEnhanceRadio
+																				[oldValue]="item.value.painInJoint">
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Right</span>
+																		</label>
+																	</td>
+																	<td align="center" valign="middle">
+																		<label for="jointleft{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'painInJoint')}">
+																			<input id="jointleft{{i}}" value="left"
+																				type="radio"
+																				formControlName="painInJoint"
+																				appEnhanceRadio
+																				[oldValue]="item.value.painInJoint"
+																			>
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Left</span>
+																		</label>
+																	</td>
+																	<td align="center" valign="middle">
+																		<label for="jointboth{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'painInJoint')}">
+																			<input id="jointboth{{i}}" value="both"
+																				type="radio"
+																				formControlName="painInJoint"
+																				appEnhanceRadio
+																				[oldValue]="item.value.painInJoint"
+																			>
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Both</span>
+																		</label>
+																	</td>
+																</tr>
+																<tr>
+																	<td align="center" valign="middle">Pain accross
+																		shoulder</td>
+																	<td align="center" valign="middle">
+																		<label for="rightshoulder{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'painAcrossShoulder')}">
+																			<input id="rightshoulder{{i}}"
+																				name="painAcrossShoulder" value="right"
+																				type="radio"
+																				formControlName="painAcrossShoulder"
+																				appEnhanceRadio
+																				[oldValue]="item.value.painAcrossShoulder" 
+																			>
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Right</span>
+																		</label>
+																	</td>
+																	<td align="center" valign="middle">
+																		<label for="leftshoulder{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'painAcrossShoulder')}">
+																			<input id="leftshoulder{{i}}"
+																				name="painAcrossShoulder" value="left"
+																				type="radio"
+																				formControlName="painAcrossShoulder"
+																				appEnhanceRadio
+																				[oldValue]="item.value.painAcrossShoulder">
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Left</span>
+																		</label>
+																	</td>
+																	<td align="center" valign="middle">
+																		<label for="bothshoulders{{i}}"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'painAcrossShoulder')}"
+																			class="d-block position-relative m-0">
+																			<input id="bothshoulders{{i}}"
+																				name="painAcrossShoulder" value="both"
+																				type="radio"
+																				formControlName="painAcrossShoulder"
+																				appEnhanceRadio
+																				[oldValue]="item.value.painAcrossShoulder" 
+																			>
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Both</span>
+																		</label>
+																	</td>
+																</tr>
+																<tr>
+																	<td align="center" valign="middle">Limitation of
+																		movement</td>
+																	<td align="center" valign="middle">
+																		<label for="rightmovement{{i}}"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'limitationOfMovement')}"
+																			class="d-block position-relative m-0">
+																			<input id="rightmovement{{i}}"
+																				name="limitationOfMovement"
+																				value="right" type="radio"
+																				formControlName="limitationOfMovement"
+																				appEnhanceRadio
+																				[oldValue]="item.value.limitationOfMovement" 
+																			>
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Right</span>
+																		</label>
+																	</td>
+																	<td align="center" valign="middle">
+																		<label for="leftmovement{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'limitationOfMovement')}">
+																			<input id="leftmovement{{i}}"
+																				name="limitationOfMovement" value="left"
+																				type="radio"
+																				formControlName="limitationOfMovement"
+																				appEnhanceRadio
+																				[oldValue]="item.value.limitationOfMovement" 
+																			>
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Left</span>
+																		</label>
+																	</td>
+																	<td align="center" valign="middle">
+																		<label for="bothmovement{{i}}"
+																			class="d-block position-relative m-0"
+																			[ngClass]="{'radio-light-pink':checkCarryForward(item,'limitationOfMovement')}">
+																			<input id="bothmovement{{i}}"
+																				name="limitationOfMovement" value="both"
+																				type="radio"
+																				formControlName="limitationOfMovement"
+																				appEnhanceRadio
+																				[oldValue]="item.value.limitationOfMovement" 
+																			>
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label pt-1 pb-1 add-padding d-block">Both</span>
+																		</label>
+																	</td>
+																</tr>
+															</table>
+														</div>
+														<ng-container
+															*ngIf="item.value.bodyPartKey=='lumbosacral-spine'">
+															<!-- ************************************************************************************** -->
+															<!-- ************************************************************************************** -->
+															<!-- **************************************lumbosacral-spine********************************** -->
+															<!-- ************************************************************************************** -->
+															<!-- ************************************************************************************** -->
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<!-- +++++++++++++++++++++++++++++++++++++ Tenderness +++++++++++++++++++++++++++++++++++++ -->
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<div *ngIf="check('tendernessCheckBox',i)"
+																class="option-bar d-flex align-items-center bg-white mb-2">
+																<div class="box p-2"
+																	*ngIf="check('tendernessCheckBox',i)">
+																	<label for="tendernessCheckBox{{i}}"
+																		class="d-block chkbox position-relative m-0"
+																		[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'tenderness')}">
+																		<input id="tendernessCheckBox{{i}}"
+																			type="checkbox"
+																			formControlName="tenderness" 
+																		> 
+
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span class="fake-label d-block">Spinal point
+																			tenderness noted on palpation</span>
+																	</label>
+																</div>
+															</div>
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<!-- +++++++++++++++++++++++++++++++++++++++ Muscle +++++++++++++++++++++++++++++++++++++++ -->
+															<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+															<div *ngIf="check('test',i)"
+																class="option-bar d-flex flex-wrap align-items-center bg-white mb-2">
+																<div class="box p-2">
+																	Lumbar muscles appear
+																</div>
+																<div class="box p-2">
+																	<label for="symmetrical"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'consistency')}">
+																		<input id="symmetrical" name="consistency"
+																			value="symmetrical" type="radio"
+																			formControlName="consistency"
+																			appEnhanceRadio
+																			[oldValue]="item.value.consistency" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">symmetrical</span>
+																	</label>
+																	<label for="asymmetrical"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'consistency')}">
+																		<input id="asymmetrical" name="consistency"
+																			value="asymmetrical" type="radio"
+																			formControlName="consistency"
+																			appEnhanceRadio
+																			[oldValue]="item.value.consistency" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">asymmetrical</span>
+																	</label>
+																</div>
+																<div class="box p-2">
+																	<label for="with"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'with')}">
+																		<input id="with" value="true" type="radio"
+																			formControlName="with" appEnhanceRadio
+																			[oldValue]="item.value.with" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">with</span>
+																	</label>
+																	<label for="without"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'with')}">
+																		<input id="without" value="false" type="radio"
+																			formControlName="with" appEnhanceRadio
+																			[oldValue]="item.value.with" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">without</span>
+																	</label>
+																</div>
+																<div class="box p-2">
+																	palpable
+																</div>
+																<div class="box p-2">
+																	<label for="mild"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																		<input id="mild" value="mild" type="radio"
+																			formControlName="painLevel" appEnhanceRadio
+																			[oldValue]="item.value.painLevel" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">mild</span>
+																	</label>
+																	<label for="moderate"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																		<input id="moderate" value="moderate"
+																			type="radio" formControlName="painLevel"
+																			appEnhanceRadio
+																			[oldValue]="item.value.painLevel" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">moderate</span>
+																	</label>
+																	<label for="severe"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																		<input id="severe" value="severe" type="radio"
+																			formControlName="painLevel" appEnhanceRadio
+																			[oldValue]="item.value.painLevel" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">severe</span>
+																	</label>
+																</div>
+																<div class="box p-2">
+																	tenderness
+																</div>
+																<div class="box p-2">
+																	<label for="and"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'conjunction')}">
+																		<input id="and" value="and" type="radio"
+																			formControlName="conjunction"
+																			appEnhanceRadio
+																			[oldValue]="item.value.conjunction" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">and</span>
+																	</label>
+																	<label for="or"
+																		class="d-block position-relative m-0"
+																		[ngClass]="{'radio-light-pink':checkCarryForward(item,'conjunction')}">
+																		<input id="or" value="or" type="radio"
+																			formControlName="conjunction"
+																			appEnhanceRadio
+																			[oldValue]="item.value.conjunction" 
+																		>
+																		<span
+																			class="fake-input position-absolute"></span>
+																		<span
+																			class="fake-label pt-1 pb-1 add-padding d-block">or</span>
+																	</label>
+																</div>
+																<div class="box p-2">
+																	muscle spasm to paraspinal muscles.
+																</div>
+
+																<div class="alert alert-secondary m-0 align-self-center w-100"
+																	role="alert" *ngIf="item.get('consistency').value">
+																	<div class="row">
+																		<div class="col-12 col-md-10 align-self-center"
+																			style="text-align:left">
+																			<strong
+																				class="d-inline-block">Preview:</strong>
+																			Lumbar muscles appear
+																			<b>{{item.get('consistency').value}} </b>
+																			<ng-container
+																				*ngIf="item.get('with').value">
+																				<b>{{(item.get('with').value=='true')?"with":"without"}}
+																				</b> palpable
+																				<ng-container
+																					*ngIf="item.get('painLevel').value">
+																					<b>{{item.get('painLevel').value}}
+																					</b> tenderness
+																					<ng-container
+																						*ngIf="item.get('conjunction').value">
+																						<b>{{item.get('conjunction').value}}
+																						</b> muscle spasm to paraspinal
+																						muscles.
+																					</ng-container>
+																				</ng-container>
+																			</ng-container>
+																		</div>
+																		<div class="col-12 col-md-2 mt-2 mt-sm-0 align-self-center text-end"
+																			*ngIf="item.get('consistency').value">
+																			<button type="button"
+																				class="btn btn-secondary ms-1"
+																				(click)="clear(item)">Clear</button>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</ng-container>
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<!-- +++++++++++++++++++++++++++++++++++++++ Muscle +++++++++++++++++++++++++++++++++++++++ -->
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<div *ngIf="check('position',i)"
+															class="option-bar d-flex align-items-center bg-white mb-2 break-line">
+															<div class="box p-2">
+																Tenderness palpated over
+															</div>
+
+															<div class="box p-2">
+																<ng-container formArrayName="position"
+																	*ngFor="let position of item.get('position')['controls']; let positionIndex = index">
+																	<ng-container [formGroupName]="positionIndex">
+																		<label for="position-{{positionIndex}}"
+																			class="d-block chkbox position-relative m-0"
+																			[ngClass]="{'checkbox-light-pink':checkCarryForward(position,'checked')}">
+																			<input id="position-{{positionIndex}}"
+																				type="checkbox"
+																				formControlName="checked">
+																			<span
+																				class="fake-input position-absolute"></span>
+																			<span
+																				class="fake-label d-block">{{position.get('name').value}}</span>
+																		</label>
+
+																		<!-- 
+																		<li class="list-inline-item text-start pb-0"
+																			style="min-width: inherit;">
+																			<label
+																				class="d-block chkbox position-relative m-0"
+																				for="position-{{positionIndex}}">
+																				<input type="checkbox"
+																					formControlName="checked"
+																					id="position-{{positionIndex}}">
+																				<span
+																					class="fake-input position-absolute"></span>
+																				<span
+																					class="fake-label d-block">{{position.get('name').value|titlecase}}</span>
+																			</label>
+																		</li> -->
+																	</ng-container>
+																</ng-container>
+															</div>
+
+															<!-- <div class="box p-2">
+																<label for="anterior{{i}}"
+																	class="d-block position-relative m-0">
+																	<input id="anterior{{i}}" name="position"
+																		value="anterior" type="radio"
+																		formControlName="position" appEnhanceRadio
+																		[oldValue]="item.value.position">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">anterior</span>
+																</label>
+																<label for="lateral{{i}}"
+																	class="d-block position-relative m-0">
+																	<input id="lateral{{i}}" name="position"
+																		value="lateral" type="radio"
+																		formControlName="position" appEnhanceRadio
+																		[oldValue]="item.value.position">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">lateral</span>
+																</label>
+																<label for="posterior{{i}}"
+																	class="d-block position-relative m-0">
+																	<input id="posterior{{i}}" name="position"
+																		value="posterior" type="radio"
+																		formControlName="position" appEnhanceRadio
+																		[oldValue]="item.value.position">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">posterior</span>
+																</label>
+															</div> -->
+															<div class="box p-2">
+																aspects.
+															</div>
+
+															<div class="alert alert-secondary align-self-center m-0 w-100"
+																role="alert"
+																*ngIf="getSelectedPositions(item.get('position').value)">
+																<div class="row align-items-center">
+																	<div class="col-12 col-md-8 text-start">
+																		<ng-container
+																			*ngIf="item.get('position').value">
+																			<strong
+																				class="d-inline-block">Preview:</strong>
+																			Tenderness palpated over
+																			<b>{{getSelectedPositions(item.get('position').value)}}</b>
+																			<!-- <b>{{item.get('position').value |json}}</b> -->
+																			aspects.
+																		</ng-container>
+																	</div>
+																	<div class="col-12 col-md-4 mt-2 mt-sm-0 text-end ps-0"
+																		*ngIf="item.get('position').value">
+																		<button type="button"
+																			class="btn btn-secondary ms-1"
+																			(click)="clearPosition(item)">Clear</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<!-- ++++++++++++++++++++++++++++++++++++++++ TEST ++++++++++++++++++++++++++++++++++++++++ -->
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+														<div class="table-frame ad-class mb-2 table-responsive"
+															*ngIf="hasTests(i) && noOrientations(getTests(item))">
+															<table class="table-hold">
+																<tr>
+																	<td align="center">&nbsp;</td>
+																	<td align="center" style="font-weight: 500;">Result
+																	</td>
+																</tr>
+																<ng-container formArrayName="bodyPartTests"
+																	*ngFor="let item1 of getTests(item); let k = index">
+																	<tr *ngIf="!item1.value.hasOrientation">
+																		<ng-container [formGroupName]="k">
+																			<td align="center" valign="middle"
+																				class="no-border border-top-0">
+																				{{item1.value.name}} </td>
+																			<td align="center" valign="middle"
+																				class="p-2">
+																				<ul class="list-inline m-0">
+																					<li class="list-inline-item d-lg-inline-block"
+																						style="width: 60px;">
+																						<label
+																							for="SignPositive{{i}}{{k}}"
+																							class="d-block label position-relative m-0"
+																							[ngClass]="{'radio-light-pink':checkCarryForward(item1,'Sign')}">
+																							<input
+																								id="SignPositive{{i}}{{k}}"
+																								value="positive"
+																								type="radio"
+																								formControlName="Sign"
+																								appEnhanceRadio
+																								[oldValue]="item1.value.Sign" 
+																							>
+																							<span
+																								class="fake-input position-absolute"></span>
+																							<span
+																								class="fake-label d-block text-end">
+																								<span
+																									class="icon-plus d-inline-block align-middle"></span>
+																							</span>
+																						</label>
+																					</li>
+																					<li class="list-inline-item d-lg-inline-block"
+																						style="width: 60px;">
+																						<label
+																							for="SignNegative{{i}}{{k}}"
+																							class="d-block label position-relative m-0"
+																							[ngClass]="{'radio-light-pink':checkCarryForward(item1,'Sign')}">
+																							<input
+																								id="SignNegative{{i}}{{k}}"
+																								value="negative"
+																								type="radio"
+																								formControlName="Sign"
+																								appEnhanceRadio
+																								[oldValue]="item1.value.Sign" 
+																							>
+																							<span
+																								class="fake-input position-absolute"></span>
+																							<span
+																								class="fake-label d-block text-end">
+																								<span
+																									class="icon-minus d-inline-block align-middle"></span>
+																							</span>
+																						</label>
+																					</li>
+																				</ul>
+																			</td>
+																		</ng-container>
+																	</tr>
+																</ng-container>
+															</table>
+														</div>
+														<div class="table-frame ad-class mb-2 table-responsive" *ngIf="hasTests(i)">
+															<table class="table-hold">
+																<tr>
+																	<td align="center">&nbsp;</td>
+																	<td align="center" style="font-weight: 500;"
+																		*ngIf="toShowHead(i, 'right')">Right</td>
+																	<td align="center" style="font-weight: 500;"
+																		*ngIf="toShowHead(i, 'left')">Left</td>
+																	<td align="center" style="font-weight: 500;"
+																		*ngIf="toShowHead(i, '')">Result</td>
+																</tr>
+																<ng-container formArrayName="bodyPartTests"
+																	*ngFor="let item1 of getTests(item); let k = index">
+																	<tr *ngIf="getTests(item)[k].value.hasOrientation">
+																		<ng-container [formGroupName]="k">
+																			<td align="center" valign="middle"
+																				class="no-border border-top-0">
+																				{{item1.value.name}} </td>
+																			<td align="center" valign="middle"
+																				class="p-2"
+																				*ngIf="toShowHead(i, 'right')">
+																				<ul class="list-inline m-0">
+																					<li class="list-inline-item"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'rightSign')">
+																						<label
+																							for="rightSignPositive{{i}}{{k}}"
+																							class="d-block label position-relative m-0"
+																							[ngClass]="{'radio-light-pink':checkCarryForward(item1,'rightSign')}">
+																							<input
+																								id="rightSignPositive{{i}}{{k}}"
+																								value="positive"
+																								type="radio"
+																								formControlName="rightSign"
+																								(change)="isDegreeDisabled(item1, 'rightSign', 'rightDegree')"
+																								appEnhanceRadio
+																								[oldValue]="item1.value.rightSign" 
+																							>
+																							<span
+																								class="fake-input position-absolute"></span>
+																							<span
+																								class="fake-label d-block text-end">
+																								<span
+																									class="icon-plus d-inline-block align-middle"></span>
+																							</span>
+																						</label>
+																					</li>
+																					<li class="list-inline-item"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'rightDegree')">
+																						<div class="form-group m-0">
+																							<input type="number"
+																								[ngClass]="{'bg-light-pink':checkCarryForward(item1,'rightDegree')}"
+																								min="-360" max="360"
+																								placeholder="deg"
+																								class="form-control"
+																								formControlName="rightDegree"
+																								style="padding:4px 8px !important;" 
+																							>
+																						</div>
+																					</li>
+																					<li class="list-inline-item"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'rightSign')">
+																						<label
+																							for="rightSignNegative{{i}}{{k}}"
+																							class="d-block label position-relative m-0"
+																							[ngClass]="{'radio-light-pink':checkCarryForward(item1,'rightSign')}">
+																							<input
+																								id="rightSignNegative{{i}}{{k}}"
+																								value="negative"
+																								type="radio"
+																								formControlName="rightSign"
+																								(change)="isDegreeDisabled(item1, 'rightSign', 'rightDegree')"
+																								appEnhanceRadio
+																								[oldValue]="item1.value.rightSign" 
+																							>
+																							<span
+																								class="fake-input position-absolute"></span>
+																							<span
+																								class="fake-label d-block text-end">
+																								<span
+																									class="icon-minus d-inline-block align-middle"></span>
+																							</span>
+																						</label>
+																					</li>
+																				</ul>
+																			</td>
+																			<td align="center" valign="middle"
+																				class="p-2"
+																				*ngIf="toShowHead(i, 'left')">
+																				<ul class="list-inline m-0">
+																					<li class="list-inline-item"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'leftSign')">
+																						<label
+																							for="leftSignPositive{{i}}{{k}}"
+																							class="d-block label position-relative m-0"
+																							[ngClass]="{'radio-light-pink':checkCarryForward(item1,'leftSign')}">
+																							<input
+																								id="leftSignPositive{{i}}{{k}}"
+																								value="positive"
+																								type="radio"
+																								formControlName="leftSign"
+																								(change)="isDegreeDisabled(item1, 'leftSign', 'leftDegree')"
+																								appEnhanceRadio
+																								[oldValue]="item1.value.leftSign" 
+																							>
+																							<span
+																								class="fake-input position-absolute"></span>
+																							<span
+																								class="fake-label d-block text-end">
+																								<span
+																									class="icon-plus d-inline-block align-middle"></span>
+																							</span>
+																						</label>
+																					</li>
+																					<li class="list-inline-item"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'leftDegree')">
+																						<div class="form-group m-0">
+																							<input type="number"
+																								[ngClass]="{'bg-light-pink':checkCarryForward(item1,'leftDegree')}"
+																								min="-360" max="360"
+																								placeholder="deg"
+																								class="form-control"
+																								formControlName="leftDegree"
+																								style="padding:4px 8px !important;" 
+																							>
+																						</div>
+																					</li>
+																					<li class="list-inline-item"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'leftSign')">
+																						<label
+																							for="leftSignNegative{{i}}{{k}}"
+																							class="d-block label position-relative m-0"
+																							[ngClass]="{'radio-light-pink':checkCarryForward(item1,'leftSign')}">
+																							<input
+																								id="leftSignNegative{{i}}{{k}}"
+																								value="negative"
+																								type="radio"
+																								formControlName="leftSign"
+																								(change)="isDegreeDisabled(item1, 'leftSign', 'leftDegree')"
+																								appEnhanceRadio
+																								[oldValue]="item1.value.leftSign" 
+																							>
+																							<span
+																								class="fake-input position-absolute"></span>
+																							<span
+																								class="fake-label d-block text-end">
+																								<span
+																									class="icon-minus d-inline-block align-middle"></span>
+																							</span>
+																						</label>
+																					</li>
+																				</ul>
+																			</td>
+																			<td align="center" valign="middle"
+																				class="p-2" *ngIf="toShowHead(i, '')">
+																				<ul class="list-inline m-0">
+																					<li class="list-inline-item d-lg-inline-block"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'Sign')">
+																						<label
+																							for="SignPositive{{i}}{{k}}"
+																							class="d-block label position-relative m-0"
+																							[ngClass]="{'radio-light-pink':checkCarryForward(item1,'Sign')}">
+																							<input
+																								id="SignPositive{{i}}{{k}}"
+																								value="positive"
+																								type="radio"
+																								formControlName="Sign"
+																								appEnhanceRadio
+																								[oldValue]="item1.value.Sign">
+																							<span
+																								class="fake-input position-absolute"></span>
+																							<span
+																								class="fake-label d-block text-end">
+																								<span
+																									class="icon-plus d-inline-block align-middle"></span>
+																							</span>
+																						</label>
+																					</li>
+																					<li class="list-inline-item"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'Degree')">
+																						<div class="form-group m-0">
+																							<input type="number"
+																								[ngClass]="{'bg-light-pink':checkCarryForward(item1,'Degree')}"
+																								min="-360" max="360"
+																								placeholder="deg"
+																								class="form-control"
+																								formControlName="Degree"
+																								style="padding:4px 8px !important;" 
+																							>
+																						</div>
+																					</li>
+																					<li class="list-inline-item d-lg-inline-block"
+																						style="width: 60px;"
+																						*ngIf="toShow(i, 'Sign')">
+																						<label
+																							for="SignNegative{{i}}{{k}}"
+																							class="d-block label position-relative m-0"
+																							[ngClass]="{'radio-light-pink':checkCarryForward(item1,'Sign')}">
+																							<input
+																								id="SignNegative{{i}}{{k}}"
+																								value="negative"
+																								type="radio"
+																								formControlName="Sign"
+																								appEnhanceRadio
+																								[oldValue]="item1.value.Sign" 
+																							>
+																							<span
+																								class="fake-input position-absolute"></span>
+																							<span
+																								class="fake-label d-block text-end">
+																								<span
+																									class="icon-minus d-inline-block align-middle"></span>
+																							</span>
+																						</label>
+																					</li>
+																				</ul>
+																			</td>
+																		</ng-container>
+																	</tr>
+																</ng-container>
+															</table>
+														</div>
+
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<!-- +++++++++++++++++++++++++++++++++++++++ Muscle +++++++++++++++++++++++++++++++++++++++ -->
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<div *ngIf="check('test',i) && form.controls['movementDetails']['controls'][i].value.bodyPartKey=='shoulder'"
+															class="option-bar d-flex flex-wrap align-items-center bg-white mb-2">
+															<div class="box p-2">
+																Shoulders are
+															</div>
+															<div class="box p-2">
+																<label for="symmetrical{{i}}"
+																	class="d-block position-relative m-0"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'consistency')}">
+																	<input id="symmetrical{{i}}" value="symmetrical"
+																		type="radio" formControlName="consistency"
+																		appEnhanceRadio
+																		[oldValue]="item.value.consistency"
+																	> 
+
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">symmetrical</span>
+																</label>
+																<label for="asymmetrical{{i}}"
+																	class="d-block position-relative m-0"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'consistency')}">
+																	<input id="asymmetrical{{i}}" value="asymmetrical"
+																		type="radio" formControlName="consistency"
+																		appEnhanceRadio
+																		[oldValue]="item.value.consistency"
+																	> 
+																		
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">asymmetrical</span>
+																</label>
+															</div>
+															<div class="box p-2">
+																<label for="with{{i}}"
+																	class="d-block position-relative m-0"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'with')}">
+																	<input id="with{{i}}" value="true" type="radio"
+																		formControlName="with" appEnhanceRadio
+																		[oldValue]="item.value.with">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">with</span>
+																</label>
+																<label for="without{{i}}"
+																	class="d-block position-relative m-0"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'with')}">
+																	<input id="without{{i}}" value="false" type="radio"
+																		formControlName="with" appEnhanceRadio
+																		[oldValue]="item.value.with">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">without</span>
+																</label>
+															</div>
+															<div class="box p-2">
+																<label for="mild{{i}}"
+																	class="d-block position-relative m-0"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																	<input id="mild{{i}}" value="mild" type="radio"
+																		formControlName="painLevel" appEnhanceRadio
+																		[oldValue]="item.value.painLevel">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">mild</span>
+																</label>
+																<label for="moderate{{i}}"
+																	class="d-block position-relative m-0 "
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																	<input id="moderate{{i}}" value="moderate"
+																		type="radio" formControlName="painLevel"
+																		appEnhanceRadio
+																		[oldValue]="item.value.painLevel">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">moderate</span>
+																</label>
+																<label for="severe{{i}}"
+																	class="d-block position-relative m-0"
+																	[ngClass]="{'radio-light-pink':checkCarryForward(item,'painLevel')}">
+																	<input id="severe{{i}}" value="severe" type="radio"
+																		formControlName="painLevel" appEnhanceRadio
+																		[oldValue]="item.value.painLevel">
+																	<span class="fake-input position-absolute"></span>
+																	<span
+																		class="fake-label pt-1 pb-1 add-padding d-block">severe</span>
+																</label>
+															</div>
+															<div class="box p-2">
+																pain on palpation.
+															</div>
+
+															<div class="alert alert-secondary m-0 align-self-center w-100"
+																role="alert" *ngIf="item.get('consistency').value">
+																<div class="row">
+																	<div class="col-12 col-sm-8 align-self-center"
+																		style="text-align:left">
+																		<b>Preview:</b> Shoulders are
+																		<b>{{item.get('consistency').value}} </b>
+																		<ng-container *ngIf="item.get('with').value">
+																			<b>{{(item.get('with').value=='true')?"with":"without"}}
+																			</b>
+																			<ng-container
+																				*ngIf="item.get('painLevel').value || item.get('with').value=='false'">
+																				<b>{{item.get('painLevel').value}} </b>
+																				pain on palpation.
+																			</ng-container>
+																		</ng-container>
+																	</div>
+																	<div class="col-12 col-sm-4 mt-2 mt-sm-0 align-self-center text-end"
+																		*ngIf="item.get('consistency').value">
+																		<button type="button"
+																			class="btn btn-secondary ms-1"
+																			(click)="clear(item)">Clear</button>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<!-- +++++++++++++++++++++++++++++++++++++ Comments +++++++++++++++++++++++++++++++++++++++ -->
+														<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+														<!-- <div *ngIf="check('comment',i)" class="inner-frame position-relative p-2" style="overflow: visible;">
+																	<textarea class="form-control" rows="3" style="min-height:30px !important" formControlName="comment"></textarea>
+																</div> -->
+
+														<div class="messaging-block pt-3" *ngIf="check('comment',i)">
+															<div class="form-group field m-0"
+																[ngClass]="{'focused': item.get('comment').value != '' && item.get('comment').value != null }"
+																style="overflow: visible;">
+																<label for="comment-{{i}}" class="form-label">Comments
+																</label>
+																<textarea id="comment-{{i}}"
+																	class="form-control form-input" placeholder=""
+																	rows="3" style="min-height:50px !important"
+																	formControlName="comment"
+																	[ngClass]="{'bg-light-pink':checkCarryForward(item,'comment')}"></textarea>
+															</div>
+														</div>
+													</div>
+												</div>
+											</ng-container>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<div class="col-12 physical-exam-block">
+							<div class="notes-frame bg-white mb-3 mt-2">
+								<table class="w-100">
+									<tr>
+										<td valign="middle" width="93" align="center" class="pt-2 pb-2"><span
+												class="title">GAIT:</span></td>
+
+										<!-- <div class="box text-start bg-white mb-0 border-0" formArrayName="gait"
+											*ngFor="let gait of form.get('gait')['controls']; let gaitIndex = index"
+											style="border: 1px solid #ced4da; border-radius: 2px;">
+											<ng-container *ngIf="gait.get('checked').value">
+												<ng-container [formGroupName]="gaitIndex">
+												</ng-container>
+											</ng-container>
+										</div> -->
+
+
+
+										<td valign="middle" class="pt-2 pb-2">
+											<ul class="types-list list-inline">
+												<ng-container formArrayName="gait"
+													*ngFor="let gait of form.get('gait')['controls']; let gaitIndex = index">
+													<ng-container [formGroupName]="gaitIndex">
+														<li class="list-inline-item text-start pb-0"
+															style="min-width: inherit;">
+															<label class="d-block chkbox position-relative m-0"
+																for="gait-{{gaitIndex}}"
+																[ngClass]="{'checkbox-light-pink':checkCarryForward(gait,'checked')}">
+																<input type="checkbox" formControlName="checked"
+																	id="gait-{{gaitIndex}}">
+																<span class="fake-input position-absolute"></span>
+																<span
+																	class="fake-label d-block">{{gait.get('name').value|titlecase}}</span>
+															</label>
+														</li>
+													</ng-container>
+												</ng-container>
+											</ul>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											<div class="row">
+												<div class="col-lg-12 algn-self-end">
+													<strong class="sub-title">Comments</strong>
+												</div>
+											</div>
+											<div class="inner-frame position-relative bg-white mb-1 p-2"
+												style="overflow: visible;">
+
+												<textarea class="form-control" rows="3"
+													[ngClass]="{'bg-light-pink':checkCarryForward(form,'gaitComment')}"
+													style="min-height:60px !important"
+													formControlName="gaitComment"></textarea>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="notes-frame bg-white table-responsive">
+								<table class="table-hold w-sm-100">
+									<tr>
+										<td valign="middle" width="93" align="center" class="pt-2 pb-2">
+
+											<label class="d-block chkbox position-relative m-0"
+												[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'neurologic')}">
+												<input type="checkbox" formControlName="neurologic"
+													class="ng-untouched ng-pristine ng-valid">
+												<span class="fake-input position-absolute"></span>
+												<span class="fake-label d-block">NEUROLOGIC</span>
+											</label>
+											<!-- <span class="title">
+												
+												NEUROLOGIC:</span> -->
+										</td>
+										<td valign="middle" class="pt-2 pb-2"
+											style="font-size: 14px; padding:10px 5px !important">
+											Alert and oriented x3, memory, speech, and judgment are intact, CN II-XII
+											grossly intact.
+										</td>
+									</tr>
+									<tr>
+										<td colspan="2">
+											<div class="row">
+												<div class="col-lg-12 algn-self-end">
+													<strong class="sub-title">Comments</strong>
+												</div>
+											</div>
+											<div class="inner-frame position-relative bg-white mb-1 p-2"
+												style="overflow: visible;">
+												<textarea class="form-control" rows="3"
+													[ngClass]="{'bg-light-pink':checkCarryForward(form,'neurologicComment')}"
+													style="min-height:60px !important"
+													formControlName="neurologicComment"></textarea>
+											</div>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<!-- </perfect-scrollbar> -->
+	</div>
+	<div class="paging-bar form-btn text-center mb-1 mt-2">
+		<button href="javascript:void(0)" class="btn btn-primary d-inline-block" (click)="back()"><span
+				class="icon-left-arrow me-1"></span> Back</button>
+		<a *ngIf="mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-info d-inline-block mx-2" (click)="saveForLater()"><span
+				class="icon-save-continue me-1"></span> Save For Later</a>
+		<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" href="javascript:void(0)" class="btn btn-success d-inline-block" (click)="next()"><span
+				class="icon-save-continue me-1"></span> Save & Continue</button>
+	</div>
+</div>

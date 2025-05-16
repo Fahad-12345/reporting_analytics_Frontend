@@ -1,0 +1,138 @@
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { BillingService } from '../../service/billing.service';
+import { ToastrService } from 'ngx-toastr';
+import { RequestService } from '@appDir/shared/services/request.service';
+import { BillingEnum } from '../../billing-enum';
+import { REQUEST_SERVERS } from '@appDir/request-servers.enum';
+import { zip } from 'rxjs'
+@Component({
+  selector: 'app-visit-upload-documents',
+  templateUrl: './visit-upload-documents.component.html',
+  styleUrls: ['./visit-upload-documents.component.scss']
+})
+export class VisitUploadDocumentsComponent implements OnInit, OnChanges {
+  public uploadForm: FormGroup;
+  constructor(private fb: FormBuilder, private billingService: BillingService, private toastrService: ToastrService, private requestService: RequestService) { }
+  @Input() files;
+  @Input() uploadFiles;
+  @Input() folder;
+  @Output() closeModal = new EventEmitter();
+  // uploadFiles: any[] = [];
+  disableBtn: boolean = false
+  ngOnInit() {
+    this.initializeUploadDocument()
+    console.log('files', this.files)
+    // if (this.files.length > 0) {
+    //   for (const file of this.files) {
+    //     this.setFileDetails(file)
+    //   }
+    // }
+  }
+  _closeModal() {
+    this.uploadForm.reset()
+    this.closeModal.emit()
+  }
+  ngOnChanges(simpleChanges: SimpleChanges) {
+    if (this.folder)
+      console.log('wokring')
+    this.uploadForm ? this.uploadForm.controls['folder_name'].setValue(this.folder && this.folder.folder_name ? this.folder.folder_name : '') : ''
+  }
+  // setFileDetails(file) {
+  //   let ext = file.type.split('/');
+  //   if (ext) {
+  //     switch (ext[1].toLocaleLowerCase()) {
+  //       case 'jpg':
+  //       case 'jpeg':
+  //       case 'png':
+  //       case 'pdf':
+  //         const reader = new FileReader();
+  //         reader.onload = this.handleReaderLoaded.bind(this);
+  //         reader.readAsDataURL(file);
+  //         break;
+  //       default:
+  //         this.toastrService.error(`Only files with extension JPG, JPEG, PNG or PDF are allowed.`)
+  //         return;
+  //     }
+  //   }
+  // }
+  // handleReaderLoaded(e, id) {
+  //   let reader = e.target;
+  //   let imageSrc = reader.result;
+  //   let filecode = imageSrc.split(',');
+  //   imageSrc = filecode[1]
+  //   let ext = filecode[0].split('/');
+  //   let ext1 = ext[1].split(';')
+  //   this.uploadFiles.push({ file: imageSrc, ext: ext1[0] })
+  //   console.log('this.uploadFiles', this.uploadFiles)
+  // }
+  initializeUploadDocument() {
+    this.uploadForm = this.fb.group({
+      file_title: ['', Validators.required],
+      tags: [''],
+      folder_id: [''],
+      folder_name: ['', Validators.required],
+    })
+  }
+  onSubmitUploadForm(form) {
+    let formValue = this.uploadForm.getRawValue();
+
+
+    var tagsStr = '';
+    if (formValue.tags.length) {
+      var i = 0;
+      for (let tag of formValue.tags) {
+        let comma = i > 0 ? ',' : '';
+        if (typeof (tag) == 'object') {
+          tagsStr = tagsStr + comma + tag.display;
+        } else {
+          tagsStr = tagsStr + comma + tag;
+        }
+        i++;
+      }
+    }
+    let $request = []
+    this.disableBtn = true
+    // let requestdata = {
+    //   folder_id: this.folder.id,
+    //   tags: tagsStr,
+    //   file_title: form.file_title,
+    //   file: this.files[0]
+    // }
+<<<<<<< HEAD
+    this.uploadFiles.forEach((element, index) => {
+      let formData = new FormData()
+      formData.append('file', this.files[index]);
+      // formData.append('file_title', this.uploadForm.get('file_title').value)
+      formData.append('file_title', this.uploadFiles.length == 1 ? this.uploadForm.get('file_title').value : this.files[index].name)
+      formData.append('folder_id', this.folder.id)
+      formData.append('tags', tagsStr)
+      let req = this.requestService.sendRequest(BillingEnum.uploadFolder, 'POST', REQUEST_SERVERS.fd_api_url, formData)
+      $request.push(req)
+    })
+    zip(...$request).subscribe(data => {
+      this.disableBtn = false
+      this._closeModal()
+      this.toastrService.success('Successfully Added', 'Success');
+    }, err => this.disableBtn = false)
+=======
+    setTimeout(() => {
+      this.uploadFiles.forEach((element, index) => {
+        let formData = new FormData()
+        formData.append('file', this.files[index]);
+        // formData.append('file_title', this.uploadForm.get('file_title').value)
+        formData.append('file_title', this.uploadFiles.length == 1 ? this.uploadForm.get('file_title').value : this.files[index].name)
+        formData.append('folder_id', this.folder.id)
+        formData.append('tags', this.addnewtag ? tagsStr = tagsStr ? tagsStr + ',' + this.addnewtag : this.addnewtag : '')
+        let req = this.requestService.sendRequest(BillingEnum.uploadFolder, 'POST', REQUEST_SERVERS.fd_api_url, formData)
+        $request.push(req)
+      })
+      zip(...$request).subscribe(data => {
+        this.disableBtn = false
+        this._closeModal()
+        this.toastrService.success('Successfully Added', 'Success');
+      }, err => this.disableBtn = false)
+    }, 2000);
+>>>>>>> 0c2cd425021a8adf0bc3c88c4f6c86bdb16ef0f3
+  }
+}

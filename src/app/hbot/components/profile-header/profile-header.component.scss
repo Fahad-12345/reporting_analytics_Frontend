@@ -1,0 +1,70 @@
+@import './../../../../assets/sass/themes/case-flow-user-info-theme';
+.user-info{
+    .user-img{
+        $img-width-height: 3.4375rem;
+        border: 2px solid $master-user-image-border-color;
+        border-radius: 5px;
+        margin-right: 0.5rem;
+        width: $img-width-height;
+        height: $img-width-height;
+    }
+    .media-body{
+        .row{
+            @media (max-width: 1024px){
+                align-items: center;
+            }
+            @media(max-width: 992.98px){
+                align-items: baseline !important;
+            }
+            h5{
+                margin: 0.3125rem 0.625rem 0px;
+                margin-bottom: 0.5rem;
+                font-size: 1.125rem;
+                letter-spacing: 1px;
+                color: $master-user-header-text-color !important;
+                @media (max-width: 1600.98px){
+                    font-size: 1rem;
+                    margin-bottom: 0.5rem;
+                }
+                @media (max-width: 1024px){
+                    font-size: 0.9375rem;
+                    margin: 0.3125rem 0.5625rem 0.125rem;
+                }
+                @media (max-width: 768.98px){
+                    margin: 0.3125rem 0.3125rem 0.125rem;
+                }
+                @media (max-width: 576.98px){
+                    font-size: 0.875rem;
+                }
+                small{
+                    margin-left: 0.5rem;
+                    font-size: 0.9375rem;
+                    font-weight: 500;
+                    color: $master-user-header-text-color !important;
+                    @media (max-width: 1230px){
+                        font-size: 0.875rem;
+                        margin-left: 0.75rem;
+                    }
+                    @media (max-width: 1024px){
+                        margin-left: 0.5rem;
+                    }
+                    @media(max-width: 992.98px){
+                        margin-left: 0;
+                    }
+                    @media (max-width: 576.98px){
+                        font-size: 0.8125rem;
+                    }
+                    .line-space {
+                        margin: 0px 0.5rem;
+                        @media(max-width: 992.98px){
+                            margin: 0 0.3125rem;
+                        }
+                    }
+                    span{
+                        color: $master-user-header-text-color !important;
+                    }
+                }
+            }
+        }
+    }
+}

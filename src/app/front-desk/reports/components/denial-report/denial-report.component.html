@@ -1,0 +1,401 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+
+<div class="row user-info pt-2">
+  <div class="col-12">
+    <h4 class="my-0 color-green mt-2">Denial Report</h4>
+   
+    <hr class="line-bottom mb-3" />
+  </div>
+</div>
+<div class="row pom-report">
+  <div class="col-12">
+    <div class="card text-center border-0">
+      <div class="card-body border-pumice border-top-0">
+        <div class="tab-content">
+          <app-filter-reports
+            #ReportFilterComponent
+            [filtersIncludes]="filtersIncludesReport"
+            [isArReport]="true"
+            [isArSummaryReport]="true"
+            [isDenialReport]="true"
+            [mandatoryFields]="['date_type', 'date_range_type']"
+            (resetFilterEvent)="onResetFilter($event)"
+            [queryParams]="queryParams"
+            (reportFilter)="onApplyFilter($event)"
+            (groupDataEvent)="onCatchGroupDataEvent($event,$event)"
+            ></app-filter-reports>
+            <!-- [groupByList]="groupBY" -->
+    
+
+          <div class="report buttons d-flex justify-content-end mb-3">
+            <div class="export-reports-button">
+              <button
+                type="button"
+                (click)="generateExcel()"
+                class="btn btn-success mx-2 mb-2 mb-sm-0"
+                [disabled]="rowData?.length == 0"
+              >
+                <i class="fa fa-file-excel"></i> Export Report
+              </button>
+            </div>
+          </div>
+
+          <div class="nf-reports">
+            <div *ngIf="showfirstTable">
+              <!-- <ngx-datatable
+              class="bootstrap"
+                [rowHeight]="rowHeight"
+                [columnMode]="'force'"
+                [scrollbarH]="true"
+                [scrollbarV]="false"
+                [reorderable]="false"
+                #accountReceivableReportTable
+                [virtualization]="true"
+                [externalPaging]="false"
+                [rows]="rowData"
+                > -->
+
+                <ngx-datatable
+                class="bootstrap"
+                [headerHeight]="50"
+                [rowHeight]="50"
+                [columnMode]="'force'"
+                [scrollbarH]="true"
+                [scrollbarV]="true"
+                [reorderable]="false"
+                #accountReceivableReportTable
+                [virtualization]="true"
+                [externalPaging]="false"
+                [rows]="rowData"
+                [ngStyle]="{'height': summaryTableHeight}"
+                >
+                <!-- [footerHeight]="50" -->
+
+                <ngx-datatable-column 
+                *ngIf="!groupBy && !filterParam.group_by_id"
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  name="Denial Reason" 
+                  prop="denial_reason"
+                  [width]="50"
+                  >
+                  
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+                    <div
+                      class="tooltip-outer"
+                      container="body"
+                      tooltipClass="table-custom-tooltip"
+                      ngbTooltip="{{ value }}"
+                      [ngClass]="{
+                        'text-bold':
+                          rowIndex == lastIndex && !subGroupBy && !groupBy
+                      }"
+                    >
+                      {{
+                        rowIndex == lastIndex && !subGroupBy && !groupBy
+                          ? "Total"
+                          : subGroupBy && rowIndex == lastIndex
+                          ? null
+                          : value
+                      }}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <!-- *ngIf="groupBy && group_by_id !== null" -->
+                <ngx-datatable-column
+                *ngIf="filterParam.group_by_id"
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [name]="groupBy"
+                  prop="group_by_name"
+                  [width]="50"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+                    <div
+                      class="tooltip-outer"
+                      container="body"
+                      tooltipClass="table-custom-tooltip"
+                      ngbTooltip="{{ value }}"
+                      [ngClass]="{ 'text-bold': rowIndex == lastIndex }"
+                    >
+                      {{
+                        rowIndex == lastIndex && !subGroupBy
+                          ? "Total"
+                          : subGroupBy && rowIndex == lastIndex
+                          ? null
+                          : value
+                      }}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column
+                  [canAutoResize]="true"
+                  *ngIf="filterParam.subgroup_by_id"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [name]="subGroupBy"
+                  prop="sub_group_by_name"
+                  [width]="50"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+                    <div
+                      class="tooltip-outer"
+                      container="body"
+                      tooltipClass="table-custom-tooltip"
+                      ngbTooltip="{{ value }}"
+                      [ngClass]="{ 'text-bold': rowIndex == lastIndex }"
+                    >
+                      {{ rowIndex == lastIndex ? "Total" : value }}
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
+
+                <ngx-datatable-column
+                [canAutoResize]="true"
+                [draggable]="false"
+                [resizeable]="false"
+                [width]="30"
+                name="30 Days"
+                prop="balance_0_to_29_days"
+                >
+                <ng-template let-value="value" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                  
+                  <div
+                    [ngClass]="{
+                      'text-bold': rowIndex == lastIndex,
+                      'cell-content' :normalizeValue(value) !== 0
+                    }"
+                  (click)="onCellClick(rowIndex, 'Balance_0_to_29_Days',normalizeValue(value) !== 0)"         
+                   >
+                 {{ value | currency }}
+                </div>      
+                </ng-template>
+              </ngx-datatable-column>
+              <!-- class="cell-content"  -->
+
+                <ngx-datatable-column
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [width]="30"
+                  name="60 Days"
+                  prop="balance_30_to_59_days"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+               
+                    <div
+                      [ngClass]="{
+                        'text-bold': rowIndex == lastIndex,
+                        'cell-content' :normalizeValue(value) !== 0
+                      }"
+                      (click)="onCellClick(rowIndex, 'Balance_30_to_59_Days',normalizeValue(value) !== 0)"
+                     
+                    >
+                      <!-- {{ value || 0 | toNumber | currency }} -->
+                      {{ value | currency }}
+                    </div>
+                    
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [width]="30"
+                  name="90 Days"
+                  prop="balance_60_to_89_days"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+                 
+                    <div
+                      [ngClass]="{
+                        'text-bold': rowIndex == lastIndex,
+                        'cell-content' :normalizeValue(value) !== 0
+                      }"
+                      (click)="onCellClick(rowIndex, 'Balance_60_to_89_Days',normalizeValue(value) !== 0)"
+                      
+                    >
+                      <!-- {{ value || 0 | toNumber | currency }} -->
+                      {{ value | currency }}
+                    </div>
+                   
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [width]="30"
+                  name="120 Days"
+                  prop="balance_90_to_119_days"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+                
+                    <div
+                      [ngClass]="{
+                        'text-bold': rowIndex == lastIndex,
+                        'cell-content' :normalizeValue(value) !== 0
+                      }"
+                      (click)="onCellClick(rowIndex, 'Balance_90_to_119_Days',normalizeValue(value) !== 0)"
+                      
+                    >
+                      <!-- {{ value || 0 | toNumber | currency }} -->
+                      {{ value | currency }}
+                    </div>
+                  
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [width]="30"
+                  name="150 Days"
+                  prop="balance_120_to_149_days"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+                 
+                    <div
+                      [ngClass]="{
+                        'text-bold': rowIndex == lastIndex,
+                        'cell-content' :normalizeValue(value) !== 0
+                      }"
+                      (click)="onCellClick(rowIndex, 'Balance_120_to_149_Days',normalizeValue(value) !== 0)"
+                     
+                    >
+                      <!-- {{ value || 0 | toNumber | currency }} -->
+                      {{ value | currency }}
+                    </div>
+                   
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [width]="30"
+                  name="180 Days"
+                  prop="balance_150_to_179_days"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+    
+                    <div
+                      [ngClass]="{
+                        'text-bold': rowIndex == lastIndex,
+                        'cell-content' :normalizeValue(value) !== 0
+                      }"
+                      (click)="onCellClick(rowIndex, 'Balance_150_to_179_Days',normalizeValue(value) !== 0)"
+                     
+                       [ngCLass]
+                    >
+                      <!-- {{ value || 0 | toNumber | currency }} -->
+                      {{ value | currency }}
+                    </div>
+                    
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [width]="30"
+                  name="180+ Days"
+                  prop="balance_180plusdays"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+                  <!-- *ngIf="Count == false" -->
+                    <div
+                      [ngClass]="{
+                        'text-bold': rowIndex == lastIndex,
+                        'cell-content' :normalizeValue(value) !== 0
+                      }"
+                      (click)="onCellClick(rowIndex, 'Balance_180PlusDays', normalizeValue(value) !== 0)"
+                       
+                    >
+                      <!-- {{ value || 0 | toNumber | currency }} -->
+                      {{ value | currency }}
+                    </div>
+                    
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column
+                  [canAutoResize]="true"
+                  [draggable]="false"
+                  [resizeable]="false"
+                  [width]="30"
+                  name="Total Denied Amount"
+                  prop="total_denied_amount"
+                  >
+                  <ng-template
+                    let-value="value"
+                    ngx-datatable-cell-template
+                    let-rowIndex="rowIndex"
+                  >
+                  <!-- *ngIf="Count == false" -->
+                    <div
+                      [ngClass]="{
+                        'text-bold': rowIndex == lastIndex,
+                        'cell-content' :normalizeValue(value) !== 0
+                      }"
+                      (click)="onCellClick(rowIndex, 'total_denied_amount',normalizeValue(value) !== 0)"
+                     
+                    >
+                      <!-- {{ value || 0 | toNumber | currency }} -->
+                      {{ value | currency }}
+                    </div>
+                   
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+            <div *ngIf=" showSummaryTable == true " class="summary-footer">
+              <ng-container *ngFor="let column of Summarycolumns; let isFirst = first">
+                <div class="summary-column" [ngClass]="column?.prop" [style.margin-left.%]="calculateLeftMargin(column?.prop)">
+                  {{ isFirst || Count ? lastRowData[0][column?.prop] : lastRowData[0][column?.prop] || 0  | currency  }}
+                </div>
+              </ng-container>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

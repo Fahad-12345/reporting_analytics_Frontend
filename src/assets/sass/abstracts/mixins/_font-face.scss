@@ -1,0 +1,14 @@
+// Icomoon 
+@mixin fontface ($fontfamily, $filename, $weight, $style) {
+	@font-face {
+		font-family: $fontfamily;
+			src: url('../../../sass/vendors/fonts/#{$filename}.eot');
+			src: url('../../../sass/vendors/fonts/#{$filename}.eot?#iefix') format('embedded-opentype'),
+				url('../../../sass/vendors/fonts/#{$filename}.woff') format('woff'),
+				url('../../../sass/vendors/fonts/#{$filename}.ttf') format('truetype'),
+				url('../../../sass/vendors/fonts/#{$filename}.svg') format('svg');
+		font-weight: $weight;
+		font-style: $style;
+		font-display: swap;
+	}
+}

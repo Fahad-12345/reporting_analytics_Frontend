@@ -1,0 +1,232 @@
+<div class="front-desk-block mb-3">
+
+  <div class="row user-info pt-2 mb-2">
+      <div class="col-12">
+          <h4 class="my-0 color-green">All Prescription</h4>
+      </div>
+  </div>
+  <hr class="line-bottom">
+
+  <div class="row">
+      <div class="col-12">
+
+          <div class="mt-2 search-filter border-0 p-0 case-search">
+
+              <div class="search-filter-body">
+
+
+                  <form class="dynamic-form-block form">
+                      <div class="row dynamic-filter">
+                          <div class="row px-2 field-block">
+                              <div class="col-sm-6 col-md-3">
+                                  <div class="form-group field"
+                                      [ngClass]="{'focused':patientName!='' && patientName!=null}">
+                                      <label class="form-label" for="PatientName">Patient Name</label>
+                                      <input type="text" id="PatientName" class="form-control form-input"
+                                          maxlength="105" value={{patientName}}
+                                          (keyup)="patientName=$event.target.value"
+                                          (change)="patientName=$event.target.value">
+                                  </div>
+                              </div>
+                              <div class="col-sm-6 col-md-3">
+                                  <div class="form-group field" [ngClass]="{'focused':drugSchedule!=''}">
+                                      <label class="form-label" for="drugSchedule">Drug Schedule</label>
+                                      <ng-select [items]="deaCodesList" class="filled" bindLabel="federal_dea_class_code_desc" bindValue="federal_dea_class_code" [closeOnSelect]='true' [multiple]="true"
+                                          placeholder="" [(ngModel)]="drugSchedule" [ngModelOptions]="{standalone: true}">
+                                      </ng-select>
+                                  </div>
+                              </div>
+                              <div class="col-sm-6 col-md-3">
+                                  <div class="form-group field" [ngClass]="{'focused':type!='' && type!=null}">
+                                      <label class="form-label" for="Type">Type</label>
+                                      <select class="form-select form-input filled" [value]='type' name="type"
+                                          (change)="type=$event.target.value" id="Type">
+                                          <option [value]="0">Rx Order</option>
+                                          <option [value]="1">Rx Change</option>
+                                          <option [value]="2">Rx Refill</option>
+                                          <option [value]="3">Prescriber Authorization</option>
+                                          <option [value]="4">Rx Cancel</option>
+                                          <option [value]="5">Prior Authorization</option>
+                                      </select>
+                                  </div>
+
+                              </div>
+                              <div class="col-sm-3" [ngClass]="{'focused':orderId!='' && orderId!=null}">
+                                  <div class="form-group field">
+                                      <label class="form-label" for="OrderID">Order ID</label>
+                                      <input type="text" id="OrderID" maxlength="40" class="form-control form-input"
+                                          value={{orderId}} (keyup)="orderId=$event.target.value"
+                                          (change)="orderId=$event.target.value">
+                                  </div>
+                              </div>
+                              <div class="col-sm-6 col-md-3" [hidden]="!isOpenFilters">
+                                  <div class="form-group field">
+                                      <label class="form-label">From Date</label>
+                                      <input class="form-input form-control" type="date" [(ngModel)]="fromDate" [min]="min"
+                                          [ngModelOptions]="{standalone: true}" value={{fromDate}}
+                                          (change)="fromDate=$event.target.value" />
+                                  </div>
+                              </div>
+                              <div class="col-sm-6 col-md-3" [hidden]="!isOpenFilters">
+                                  <div class="form-group field">
+                                      <label class="form-label">To Date</label>
+                                      <input class="form-input form-control" type="date" [(ngModel)]="toDate" [min]="min"
+                                          [ngModelOptions]="{standalone: true}" value={{toDate}} [max]="max"
+                                          (change)="toDate=$event.target.value" />
+                                  </div>
+                              </div>
+                              <div class="col-12 search-filter-btn d-flex justify-content-center">
+                                  <button class="btn btn-success float-right me-3" type="submit"
+                                      (click)="offset=1;getTaskLog(true)" [hidden]="!isOpenFilters">Filter</button>
+                                  <button class="btn btn-primary" (click)="offset=1;resetFilters()"
+                                      type="button" [disabled]="checkFilterDisability()" [hidden]="!isOpenFilters">Reset</button>
+                              </div>
+
+                          </div>
+                          <div class="colps-btn-block">
+                              <div class="col-2">
+                                  <button class="btn btn-primary plus-btn float-right mt-0" type="button"><span
+                                          class="icon-plus"></span></button>
+                                  <button [hidden]="isOpenFilters" class="btn plus-btn float-right mt-0 btn-primary"
+                                      (click)="isOpenFilters=!isOpenFilters">
+                                      <span class="icon-plus"></span>
+                                  </button>
+                                  <button [hidden]="!isOpenFilters" class="btn plus-btn float-right mt-0 btn-success"
+                                      (click)="isOpenFilters=!isOpenFilters">
+                                      <span class="icon-minus"></span>
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                  </form>
+
+
+              </div>
+
+          </div>
+
+      </div>
+  </div>
+
+</div>
+
+
+
+<div class="row">
+  <div class="col-md-6 edit-block">
+      <div class="form-group field option-field mb-2 d-inline-block">
+          <ul>
+              <li>Show</li>
+              <li>
+
+                  <select class="custom-select" [value]='limit' name="limit"
+                      (change)="limitChange($event.target.value)" id="limit">
+                      <option [value]="10">10</option>
+                      <option [value]="20">20</option>
+                      <option [value]="30">30</option>
+                      <option [value]="40">40</option>
+                      <option [value]="50">50</option>
+                      <option [value]="100">100</option>
+                  </select>
+              </li>
+              <li>Entries</li>
+          </ul>
+      </div>
+  </div>
+  <div class="col-md-6 text-end">
+    <button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default ms-2">
+        Customize Columns
+    </button>
+    <button class="btn btn-success ms-2" type="submit" (click)="exportData()">
+        <i class="fa fa-file-excel"></i> Export To CSV
+    </button>
+  </div>
+</div>
+
+<div class="table-responsive mb-3">
+  <ngx-datatable class="bootstrap scroll-hide" #prescriptionLogsList [rows]="taskLogData?.data" [count]="taskLogData?.totalCount"
+      [columnMode]="'force'" [rowHeight]="'auto'" [scrollbarH]="true" [headerHeight]="50" [footerHeight]="50"
+      [externalPaging]="true" [offset]="taskLogData?.offset-1" [limit]="taskLogData?.limit"
+      (page)="onPageChange($event)">
+      <ngx-datatable-column name="Date" prop="task.date" [width]="75">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">{{value| date: 'MM-dd-yyyy'}}</span>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Case ID" prop="task.case_id" [width]="50">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">{{value}}</span>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Patient Details" prop="patient" [width]="180">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                  ngbTooltip="{{value.first_name}}&nbsp;{{value.middle_name}}&nbsp;{{value.last_name}}">
+                  {{value.first_name}} {{value.middle_name}} {{value.last_name}} <br>
+              </span>
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                  ngbTooltip="{{value.gender}}&nbsp;/&nbsp;{{value.age}}&nbsp;yrs&nbsp;/&nbsp;DOB&nbsp;:&nbsp;{{value.dob | date: 'MM-dd-yyyy'}}">
+                  {{value.gender}} / {{(value?.dob ? value?.dob : 'N/A')
+                  | calculateAge}} / DOB : {{value.dob | date: 'MM-dd-yyyy'}}
+              </span>
+
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Type" prop="task.type" [width]="50">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+            <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">{{value}}</span>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Medicine Description" prop="medication" [width]="150">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <div class="column-scroll" *ngIf="value.length>0">
+                  <div *ngFor="let item of value" class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                      ngbTooltip="{{item.drug_name}} - {{item.sig}} {{item.rxfill_note && item.rxfill_status!=''?'('+item.rxfill_status+')':''}}">
+                      {{item.drug_name}} - {{item.sig}} {{item.rxfill_note &&
+                      item.rxfill_status!=''?'('+item.rxfill_status+')':''}} <br>
+                  </div>
+              </div>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Order No." prop="task.order_id" [width]="150">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value}}">{{value}}</span>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="User Activity" [width]="75">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                  ngbTooltip="{{row.task.action}}">{{row.task.action}}
+              </span>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Status" [width]="75">
+          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+              <span class="tooltip-outer" tooltipClass="table-custom-tooltip"
+                  ngbTooltip="{{row.task.status=='Error'?row.error.error_message:row.task.status}}">{{row.task.status}}
+              </span>
+          </ng-template>
+      </ngx-datatable-column>
+  </ngx-datatable>
+</div>
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,432 @@
+<div class="modal-header">
+  <h5 class="modal-title">{{Title}} Fee Schedule</h5>
+  <button type="button" class="close" (click)="close()" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body create-task-modal fee-schedule-modal modal-pt-15 visitclass">
+  <form class="search-label" [formGroup]="form" (ngSubmit)="submit(form.value)">
+    <div class="row">
+      <div class="col-sm-6">
+		<app-ng-select-shareable   [filterFieldName]="'code_type_id'"
+		 [lableName]="'Code Type*'" [bindlable]="'name'"  [showSelectFieldList]="feeSchedule && feeSchedule.code_type ? [feeSchedule.code_type] : []"
+		 [showSelectFieldOnRefresh]="form ? form.get('code_type_id').value : null"
+		 [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeCodeTypeApipath"
+		 (valueChange)="selectionOnValueChange($event,'codeType')"
+		 (touched)="touchedNgSelect('codeType')" [ngSelectShow]="true"
+		 [multiple]="false"></app-ng-select-shareable>
+		 <span class="text-muted danger absolute-error-0" *ngIf="(form.get('code_type_id').errors?.required && form.get('code_type_id').value == '' || form.get('code_type_id').value == null) && (form.get('code_type_id').dirty || form.get('code_type_id').touched)">This field is
+            required</span>
+	</div>
+      <div class="col-sm-6">
+		<app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'code_id'"
+		[className]="codeNameClasses" [showSelectFieldList]="feeSchedule && feeSchedule.code ? [feeSchedule.code] : []" [isConcate]="isEditMode"
+		[showSelectFieldOnRefresh]="form ? form.get('code_id').value : null"
+		 [lableName]="'Code Name*'" [bindlable]="'NameDescription'" [conditionalExtraApiParams]="{'code_type_id': form ? form.get('code_type_id').value : null }"
+		 [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeCodeName"
+		 (valueChange)="selectionOnValueChange($event,'codeName')" 
+		 (touched)="touchedNgSelect('codeName')" [ngSelectShow]="true"
+		 [multiple]="false"></app-ng-select-shareable>  
+		 <span class="text-muted danger absolute-error-0" *ngIf="(form.get('code_id').errors?.required && form.get('code_id').value == '' || form.get('code_id').value == null) && (form.get('code_id').dirty || form.get('code_id').touched)">This field is
+            required</span>
+	</div>
+      <!-- <div class="col-sm-6 col-lg-4">
+        <div class="form-group field mb-1">
+          <label class="form-label">Description</label>
+          <input class="form-control mb-0" formControlName="description" type="text">
+        </div>
+      </div> -->
+    </div>
+    <div class="row">
+      <div class="col-sm-6 col-lg-4">
+		  <div class="form-group currency field">
+		  <label class="form-label">Base Price*</label>
+		  <input type="text"  class="form-control form-input mb-0"  (keydown.space)="$event.preventDefault()" currencyMask [options]="customCurrencyMaskConfig" formControlName="base_price">
+		  <i class="fa fa-dollar-sign"></i>
+		  <span class="text-muted danger" *ngIf="form.controls['base_price'].touched &&form.controls['base_price'].invalid">This field is
+            required</span>
+		  </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4">
+		<div class="form-group currency">
+		<label class="form-label">Expected Reimbursement</label>
+		<input type="text" class="form-control form-input"  currencyMask [options]="customCurrencyMaskConfig" formControlName="expected_reimbursement">
+		<i class="fa fa-dollar-sign"></i>
+		</div>
+      </div>
+
+      <div class="col-sm-6 col-lg-4">
+        <div class="form-group field mb-1">
+          <label class="form-label">Units*</label>
+          <input class="form-control mb-0" appOnlyNumeric formControlName="units" type="text" maxlength="3">
+          <span class="text-muted danger" *ngIf="form.controls['units'].touched &&form.controls['units'].invalid">This field is
+            required</span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 col-lg-4" *ngIf="form.get('code_type_id').value==ndcCodetype&& ndcCodetype!=undefined">
+        <div class="form-group field mb-1">
+          <label class="form-label" for="fax">NDC Quantity</label>
+          <!-- <label class="form-label">Units</label> -->
+          <input class="form-control mb-0" formControlName="ndc_quantity" type="text">
+        </div>
+      </div>
+      <div [ngClass]="form.get('code_type_id').value==ndcCodetype && ndcCodetype!=undefined?'col-sm-6 col-lg-4':'col-sm-6'">
+		<app-ng-select-shareable   [filterFieldName]="'fee_type_id'"
+		[lableName]="'Fee Type'" [bindlable]="'name'" 
+		[showSelectFieldList]="feeSchedule && feeSchedule.fee_type ? [feeSchedule.fee_type] : []"
+		[showSelectFieldOnRefresh]="form ? form.get('fee_type_id').value : null"
+		[bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeTypeApiPath"
+		(valueChange)="selectionOnValueChange($event)" [ngSelectShow]="true"
+		[multiple]="false"></app-ng-select-shareable>
+      </div>
+      <div [ngClass]="form.get('code_type_id').value==ndcCodetype && ndcCodetype!=undefined?'col-sm-6 col-lg-4':'col-sm-6'">
+		<app-ng-select-shareable   [filterFieldName]="'case_type_ids'" [showSelectFieldList]="feeSchedule && feeSchedule.case_type ? feeSchedule.case_type : []"
+		[showSelectFieldOnRefresh]="form ? form.get('case_type_ids').value : null"
+		[showSelectAll] ="true" [showGroupBy] = "true"
+		 [lableName]="'Case Type'" [bindlable]="'name'"  [multiple]="true" [closeOnSelect]="false"
+		 [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeCaseTypeApiPath"  
+		 (valueChange)="selectionOnValueChange($event,'caseTypes')"  [ngSelectShow]="true"
+		 [multiple]="true"[forceApiHitonOpen]="true"></app-ng-select-shareable>   
+	</div>
+      <div class="col-sm-6 col-lg-4">
+		<app-ng-select-shareable   [filterFieldName]="'visit_type_ids'"
+		[showSelectFieldList]="feeSchedule ? feeSchedule.visit_type : []"
+		[showSelectFieldOnRefresh]="form.get('visit_type_ids').value" 
+		 [lableName]="'Visit Type'"
+		 [showSelectAll] ="true"
+         [showGroupBy] = "true"
+		 [qulifierShown] ="true"
+		 [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeVisitTypeApiPath"  [multiple]="true" [closeOnSelect]="false"
+		 (valueChange)="selectionOnValueChange($event,'visitType')" 
+		 [ngSelectShow]="true"></app-ng-select-shareable> 
+      </div>
+
+      <div class="col-sm-6 col-lg-4">
+		<app-ng-select-shareable   [filterFieldName]="'provider_ids'"
+		[showSelectFieldList]="feeSchedule ? providerIdForFeeScheduler(feeSchedule.provider) : []"
+		[showSelectFieldOnRefresh]="form.get('provider_ids').value" 
+		[showSelectAll] ="true" [showGroupBy] = "false"
+		 [lableName]="'Provider'" [bindlable]="'full_name'" [searchLableName]="'doctor_name'"
+		 [bindId]="'id'" [apiPath]="EnumApiPath.providerApiPath"  [multiple]="true" [closeOnSelect]="false"
+		 (valueChange)="selectionOnValueChange($event,'provider')"  
+		 [ngSelectShow]="true"></app-ng-select-shareable> 
+      </div>
+      <div class="col-sm-6 col-lg-4">
+		<app-ng-select-shareable  [filterFieldName]="'speciality_ids'"
+		[showSelectFieldList]="feeSchedule ? feeSchedule.speciality : []"
+		 [showSelectFieldOnRefresh]="form.get('speciality_ids').value" 
+		 [qulifierShown] ="true" [ngSelectShow]="true"
+		 [showSelectAll] ="true"
+         [showGroupBy] = "true"
+		 [lableName]="'Specialty'" [bindlable]="'name'" [closeOnSelect]="false"
+		 [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+		 (valueChange)="selectionOnValueChange($event,'speciality')" 
+		 [multiple]="true"></app-ng-select-shareable>
+	</div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group field mb-0">
+          <!-- <label class="form-label">Modifiers</label> -->
+        </div>
+        <div class="row">
+          <div class="col-sm-6 col-lg-3">
+		  <app-ng-select-shareable   [filterFieldName]="'modifier1'"
+		  [lableName]="'Modifiers'" [bindlable]="'name'" [showSelectFieldList]="feeSchedule && feeSchedule.modifier[0] ? [feeSchedule.modifier[0]] : []"
+		  [showSelectFieldOnRefresh]="form ? form.get('modifier1').value : null"
+		  [showSelectAll] ="true"
+          [showGroupBy] = "false"
+		  [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeModifierApiPath" [ngSelectShow]="true"
+		  (valueChange)="selectionOnValueChange($event,'modifier1')"
+		   [bindlable]="'name'"
+		  [multiple]="false"></app-ng-select-shareable>  
+		</div>
+		<div class="col-sm-6 col-lg-3">
+			<app-ng-select-shareable   [filterFieldName]="'modifier2'"
+			 [bindlable]="'name'" [showSelectFieldList]="feeSchedule && feeSchedule.modifier[1] ? [feeSchedule.modifier[1]] : []"
+			 [showSelectFieldOnRefresh]="form ? form.get('modifier2').value : null"
+			[bindId]="'id'" 
+			[showSelectAll] ="true"
+            [showGroupBy] = "false" [apiPath]="EnumApiPath.scheduleFeeModifierApiPath"
+			(valueChange)="selectionOnValueChange($event,'modifier2')" [ngSelectShow]="true"
+			[multiple]="false"></app-ng-select-shareable>  
+		  </div>
+          <div class="col-sm-6 col-lg-3">
+		  <app-ng-select-shareable   [filterFieldName]="'modifier3'"
+		   [bindlable]="'name'" [showSelectFieldList]="feeSchedule && feeSchedule.modifier[2] ? [feeSchedule.modifier[2]] : []"
+		   [showSelectFieldOnRefresh]="form ? form.get('modifier3').value : null"
+		   [bindId]="'id'" 
+		   [showSelectAll] ="true"
+           [showGroupBy] = "false" [apiPath]="EnumApiPath.scheduleFeeModifierApiPath"
+		  (valueChange)="selectionOnValueChange($event,'modifier3')" [ngSelectShow]="true"
+		  [multiple]="false"></app-ng-select-shareable>  
+		</div>
+          <div class="col-sm-6 col-lg-3">
+		  <app-ng-select-shareable   [filterFieldName]="'modifier4'"
+		   [bindlable]="'name'" [showSelectFieldList]="feeSchedule && feeSchedule.modifier[3] ? [feeSchedule.modifier[3]] : []"
+		   [showSelectFieldOnRefresh]="form ? form.get('modifier4').value : null"
+		   [bindId]="'id'"
+		   [showSelectAll] ="true"
+           [showGroupBy] = "false"	 [apiPath]="EnumApiPath.scheduleFeeModifierApiPath"
+		  (valueChange)="selectionOnValueChange($event,'modifier4')" [ngSelectShow]="true"
+		  [multiple]="false"></app-ng-select-shareable>   
+		</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6 col-lg-4">
+          <!-- <label class="form-label">Practice</label>
+		  <mat-select (selectionChange)='getPOSandRegions($event.value)' formControlName="facility_location_ids"   [multiple]="true">
+			<mat-select-search [formControl]="formControls[4]" ></mat-select-search>
+			<mat-option *ngFor="let practice of subjects[4] | async" [value]="practice">
+				{{practice.name}}
+			  </mat-option>
+		  </mat-select> -->
+		<app-ng-select-shareable  [filterFieldName]="'facility_location_ids'"
+		 [qulifierShown] ="true"
+		 [lableName]="'Practice'" 
+		 [showSelectFieldList]="feeSchedule ? feeSchedule.facilities_locations : []"
+		 [showSelectFieldOnRefresh]="form.get('facility_location_ids').value"  [ngSelectShow]="true"
+		 [bindId]="'id'" 
+		 [showSelectAll] ="true"
+         [showGroupBy] = "true" [apiPath]="EnumApiPath.practiceLocationPath"
+		 (valueChange)="selectionOnValueChange($event,'practice-location'); selectionOfFacilityLocation($event)" 
+		 [multiple]="true"></app-ng-select-shareable>
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        <!-- <div class="form-group field mb-1">
+          <label class="form-label">Place of Service</label>
+          <ng-select formControlName="place_of_service_id" [items]="lstPlaceOfService"
+            (change)="getPracticeAndRegion($event)" [multiple]="false" bindLabel="name" bindValue="id">
+          </ng-select>
+        </div> -->
+		<app-ng-select-shareable #placeOfServiceNgSelect   [filterFieldName]="'place_of_service_id'"
+		[lableName]="'Place of Service'" [forceApiHitonOpen]="hitDefaultAPIPOS" [bindlable]="'place_of_service_name'" [showSelectFieldList]="feeSchedule?.fee_schedule_place_of_service ? feeSchedule?.fee_schedule_place_of_service : []"
+		[showSelectFieldOnRefresh]="form ? form.get('place_of_service_id').value : null"
+	   [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeePlaceSeriveApiPath" [ngSelectShow]="true"
+	   (valueChange)="selectionOnValueChange($event,'placeService')"
+	   [multiple]="true"></app-ng-select-shareable>   
+	</div>
+      <div class="col-sm-6 col-lg-4">
+        <!-- <div class="form-group field mb-1">
+          <label class="form-label">Region</label>
+          <ng-select formControlName="region_id" [items]="lstRegion" (change)="getPracticeAndPOS($event)"
+            [multiple]="false" bindLabel="name" bindValue="id">
+          </ng-select>
+        </div> -->
+		<app-ng-select-shareable #regionNgSelect   [filterFieldName]="'region_id'"
+		[lableName]="'Region'" [bindlable]="'name'"  [showSelectFieldList]="feeSchedule?.fee_schedule_region ? feeSchedule?.fee_schedule_region : []"
+		[showSelectFieldOnRefresh]="form ? form.get('region_id').value : null"
+	   [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeRegionApiPath" [ngSelectShow]="true"
+	   (valueChange)="selectionOnValueChange($event,'regionId')"
+	   [multiple]="true"></app-ng-select-shareable> 
+      </div>
+     </div>
+
+    <div class="row">
+      <div [ngClass]="showEmployersDates()?'col-sm-6 col-lg-4':'col-md-12'">
+    	<app-ng-select-shareable   [filterFieldName]="'employer_id'"
+		[lableName]="'Employer'" [bindlable]="'employer_name'" [showSelectFieldList]="feeSchedule && feeSchedule.employer ? [feeSchedule.employer] : []"
+		[showSelectFieldOnRefresh]="form ? form.get('employer_id').value : null"
+	   [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeEmployerApiPath" [ngSelectShow]="true"
+	   (valueChange)="selectionOnValueChange($event,'employer')"
+	   [multiple]="false"></app-ng-select-shareable>  
+	</div>
+      <div class="col-sm-6 col-lg-8" *ngIf="showEmployersDates()">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group field mb-1">
+              <label class="form-label" for="employer_start_date"> Start Date</label>
+			  <input matInput  class="form-control form-input mb-1" id="remindDate1" formControlName="employer_start_date" appInputDateMask 
+			
+			  [appMaskDate]=" form.get('employer_start_date').value" 
+			  [matDatepicker]="remindDatePicker" max="2099-01-01" [disabled]="!form.get('employer_id').value || form.get('employer_id').value?.length==0"
+			  [max]='minDate'>
+			  <mat-datepicker-toggle (click)="remindDatePicker.open()" matSuffix [for]="remindDatePicker"></mat-datepicker-toggle>
+			  <mat-datepicker #remindDatePicker></mat-datepicker>
+			  <small class="form-text text-muted danger" *ngIf="form.get('employer_start_date').errors?.invalid_date && form.get('employer_start_date').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+			  <span (click)="form.get('employer_start_date').reset()"
+			  *ngIf="form.get('employer_start_date').value != '' && form.get('employer_start_date').value != null"
+			  class="icon-plus select-cross-icon"></span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group field mb-1">
+              <!-- <input class="form-control mb-0" formControlName="employer_end_date" placeholder="To" type="date"> -->
+              <label class="form-label" for="employer_end_date"> End Date</label>
+			  <input matInput  class="form-control form-input mb-1" id="remindDate2" formControlName="employer_end_date" appInputDateMask 
+			  [appMaskDate]=" form.get('employer_end_date').value"  
+			  [matDatepicker]="remindDatePicker1" max="2099-01-01" [disabled]="!form.get('employer_id').value || form.get('employer_id').value?.length==0"
+			  >
+			  <mat-datepicker-toggle (click)="remindDatePicker1.open()" matSuffix [for]="remindDatePicker1"></mat-datepicker-toggle>
+			  <mat-datepicker #remindDatePicker1></mat-datepicker>
+			  <small class="form-text text-muted danger" *ngIf="form.get('employer_end_date').errors?.invalid_date && form.get('employer_end_date').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+			  <span (click)="form.get('employer_end_date').reset()"
+			  *ngIf="form.get('employer_end_date').value != '' && form.get('employer_end_date').value != null"
+			  class="icon-plus select-cross-icon"></span>
+              <small class="form-text text-muted danger"
+                *ngIf="compareDates(form.controls['employer_start_date'].value,form.controls['employer_end_date'].value)">
+			  End date cannot be older than start date.
+			  </small>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class='col-md-4'>
+		<app-ng-select-shareable   [filterFieldName]="'insurance_id'" [showSelectFieldList]="feeSchedule && feeSchedule.insurance ?   [feeSchedule.insurance] : []"
+		[showSelectFieldOnRefresh]="form ? form.get('insurance_id').value : null"
+		[lableName]="'Insurance'" [bindlable]="'insurance_name'" [mainApiPath]="requestServerpath.billing_api_url" [searchLableName]="'insurance_name'"
+	   [bindId]="'id'" [apiPath]="EnumApiPath.insuranceApiPath"
+	   (valueChange)="selectionOnValueChange($event,'insurance')" [ngSelectShow]="true"
+	   [multiple]="false"></app-ng-select-shareable>   
+	</div>
+
+      <div class="col-md-8">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group field mb-1">
+              <label class="form-label" for="insurance_start_date"> Start Date</label>
+			  <input matInput appInputDateMask   [appMaskDate]=" form.get('insurance_start_date').value"  [matDatepicker]="remindDatePicker2"  [disabled]="!form.get('insurance_id').value || form.get('insurance_id').value?.length==0"
+			  class="form-control form-input mb-1" id="remindDate3" formControlName="insurance_start_date"
+			  max="2099-01-01" [max]='minDate'>
+			  <mat-datepicker-toggle (click)="remindDatePicker2.open()" matSuffix [for]="remindDatePicker2"></mat-datepicker-toggle>
+			  <mat-datepicker #remindDatePicker2></mat-datepicker>
+			  <small class="form-text text-muted danger" *ngIf="form.get('insurance_start_date').errors?.invalid_date && form.get('insurance_start_date').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+			  <span (click)="form.get('insurance_start_date').reset()"
+			  *ngIf="form.get('insurance_start_date').value != '' && form.get('insurance_start_date').value != null"
+			  class="icon-plus select-cross-icon"></span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group field mb-1">
+              <label class="form-label" for="insurance_end_date"> End Date</label>
+			  <input #input1 matInput appInputDateMask  [appMaskDate]="form.get('insurance_end_date').value"  [matDatepicker]="remindDatePicker3"   class="form-control form-input mb-1" id="remindDate4" formControlName="insurance_end_date"
+			  [disabled]="!form.get('insurance_id').value || form.get('insurance_id').value?.length==0">
+			  <mat-datepicker-toggle (click)="remindDatePicker3.open()"  matSuffix [for]="remindDatePicker3"></mat-datepicker-toggle>
+			  <mat-datepicker #remindDatePicker3 (closed)="onMatDatePickerClosed(input1)"></mat-datepicker>
+			  <small class="form-text text-muted danger" *ngIf="form.get('insurance_end_date').errors?.invalid_date && form.get('insurance_end_date').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+			  <span (click)="form.get('insurance_end_date').reset()"
+			  *ngIf="form.get('insurance_end_date').value != '' && form.get('insurance_end_date').value != null"
+			  class="icon-plus select-cross-icon"></span>
+              <small class="form-text text-muted danger"
+                *ngIf="compareDates(form.controls['insurance_start_date'].value,form.controls['insurance_end_date'].value)">
+                End date cannot be older than start date.</small>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-6 col-lg-4">
+		<app-ng-select-shareable #plansName  [filterFieldName]="'plan_id'"  [bindlable]="'plan_name'" [showSelectFieldList]="all_plansName ? all_plansName: []"
+		[showSelectFieldOnRefresh]="form ? [form.get('plan_id').value] : null"
+		[lableName]="'Plan Name'"  [mainApiPath]="requestServerpath.billing_api_url" [searchLableName]="'plan_name'" 
+	   [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeePlanNameApiPath"
+	   (valueChange)="selectionOnValueChange($event,'planOfService')" [ngSelectShow]="true"
+	   [multiple]="false"></app-ng-select-shareable>  
+      </div>
+      <div class="col-sm-6 col-lg-4">
+        <div class="form-group field mb-1 ng-select-disable">
+          <label class="form-label">Type of Service</label>
+          <ng-select formControlName="type_of_service" [items]="lstTypeOfService" [closeOnSelect]='false'
+            [multiple]="true" bindLabel="name" bindValue="id">
+          </ng-select>
+        </div>
+      </div>
+
+
+      <div class="col-sm-6 col-lg-4">
+        <div class="form-group field mb-1">
+          <label class="form-label">Picklist Category</label>
+          <input disabled class="form-control mb-0" formControlName="picklist_category" type="text">
+        </div>
+      </div>
+    </div>
+
+	
+	<div class="row">
+		<div class="col-sm-6">
+		  <div class="form-group field mb-1">
+			<label class="form-label" for="start_date"> Start Date</label>
+			<input matInput  class="form-control form-input mb-1" id="remindDate1" formControlName="start_date" appInputDateMask 
+		  
+			[appMaskDate]=" form.get('start_date').value" 
+			[matDatepicker]="remindDatePicker4" max="2099-01-01"
+			[max]='minDate'>
+			<mat-datepicker-toggle (click)="remindDatePicker4.open()" matSuffix [for]="remindDatePicker4"></mat-datepicker-toggle>
+			<mat-datepicker #remindDatePicker4></mat-datepicker>
+			<small class="form-text text-muted danger" *ngIf="form.get('start_date').errors?.invalid_date && form.get('start_date').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+			<span (click)="form.get('start_date').reset()"
+			*ngIf="form.get('start_date').value != '' && form.get('start_date').value != null"
+			class="icon-plus select-cross-icon"></span>
+		  </div>
+		</div>
+		<div class="col-sm-6">
+		  <div class="form-group field mb-1">
+			<!-- <input class="form-control mb-0" formControlName="employer_end_date" placeholder="To" type="date"> -->
+			<label class="form-label" for="end_date"> End Date</label>
+			<input matInput  class="form-control form-input mb-1" id="remindDate2" formControlName="end_date" appInputDateMask 
+			[appMaskDate]=" form.get('end_date').value"  
+			[matDatepicker]="remindDatePicker5" max="2099-01-01"
+			>
+			<mat-datepicker-toggle (click)="remindDatePicker5.open()" matSuffix [for]="remindDatePicker5"></mat-datepicker-toggle>
+			<mat-datepicker #remindDatePicker5></mat-datepicker>
+			<small class="form-text text-muted danger" *ngIf="form.get('end_date').errors?.invalid_date && form.get('end_date').errors?.invalid_date?.text != DATEFORMAT  ">Date format should be accurate</small>
+			<span (click)="form.get('end_date').reset()"
+			*ngIf="form.get('end_date').value != '' && form.get('end_date').value != null"
+			class="icon-plus select-cross-icon"></span>
+			<small class="form-text text-muted danger"
+			  *ngIf="compareDates(form.controls['start_date'].value, form.controls['end_date'].value)">
+			End date cannot be older than start date.
+			</small>
+		  </div>
+		</div>
+
+
+	  </div>
+
+
+    <div class="row">
+      <div class="col-12">
+        <div class="form-group field">
+          <label class="form-label">Comments</label>
+          <textarea class="form-control" formControlName="comments" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+	<div class="row" *ngIf="this.form.get('facility_location_ids').value.length > 0 ||  this.form.get('place_of_service_id').value != null || this.form.get('region_id').value != null">
+		<div class="col-12">
+		  <div class="form-group field">
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<strong>Note:</strong> These fields Practice, Place of Service & Region are dependent on each other.
+			  </div>
+		  </div>
+		</div>
+	  </div>
+	<!-- {{form.value | json}} -->
+    <div class="row">
+      <div class="col-md-12 text-center modal-btn-width mt-1">
+        <button class="btn btn-primary me-3" (click)="close()" type="button">Cancel</button>
+        <button class="btn btn-success"
+        [disabled]="form.invalid || compareDates(form.controls['insurance_start_date'].value,form.controls['insurance_end_date'].value) || compareDates(form.controls['employer_start_date'].value,form.controls['employer_end_date'].value)
+			|| compareDates(form.controls['start_date'].value,form.controls['end_date'].value) || disableBtn"
+        type="submit">Save & Continue</button>
+
+      </div>
+    </div>
+
+  </form>
+</div>

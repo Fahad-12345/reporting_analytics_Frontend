@@ -1,0 +1,134 @@
+.form {
+  .invoice-title {
+    padding-bottom: 20px;
+    font-size: 20px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .invoice-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .invoice-logo {
+      width: 100px;
+      height: 50px;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+  }
+  .invoice-info {
+    .form-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0 0 -8px 0;
+    }
+    .invoice-sec-left {
+      .form-group {
+        margin-bottom: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: unset;
+        select {
+          margin: 0 0 0 7px;
+        }
+      }
+    }
+    .invoice-sec-right {
+      label {
+        font-size: 14px;
+      }
+      input {
+        font-size: 14px;
+        &.form-control {
+          margin-bottom: 1rem;
+          width: 75% !important;
+        }
+      }
+      .form-dob {
+        &.form-control {
+          margin-bottom: 0;
+        }
+      }
+      .pt-detail {
+        justify-content: space-between;
+      }
+    }
+    .invoice-icon {
+      position: relative;
+      width: 20px;
+      svg {
+        &.svg-inline--fa {
+          &.fa-phone {
+            transform: rotate(99deg);
+          }
+        }
+      }
+    }
+  }
+  .invoice-shipping-info {
+    .invoice-sec-right {
+      .form-group {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0 0 -8px 0;
+        select {
+          width: 65%;
+        }
+      }
+      label {
+        font-size: 14px;
+      }
+    }
+  }
+  .invoice-footer {
+    .footer-text {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 400;
+      font-family: "Times New Roman";
+      color: rgb(121, 121, 121);
+    }
+  }
+}
+.invoice-view-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.invoice-view-table {
+  th,
+  td {
+    padding: 0.5rem 0.5rem !important;
+  }
+}
+//modal styling
+::ng-deep.modal {
+  &.invoice-prev {
+    .modal-dialog {
+      .modal-content {
+        .modal-body {
+          background: #ebedeb !important;
+        }
+      }
+      &.modal-lg {
+        max-width: 1000px;
+      }
+    }
+  }
+}
+
+.invoice-to-block {
+  background-color: #ffff;
+  border-radius: 7px;
+  padding: 10px 15px;
+  .form-group {
+    margin-bottom: 10px !important;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+<!-- <div class="form-group" [ngClass]="field.classes" [formGroup]="group">
+	<label [for]="field.name">{{field.label}}</label>
+	<input [id]="field.name" type="checkbox" [formControlName]="field.name">
+</div> -->
+
+
+<div class="front-desk-block form" [formGroup]="group" [ngClass]="field.classes">
+	<label class="d-block chkbox position-relative m-0" [for]="id">
+		<input type="checkbox" [id]="id" [name]="id" [formControlName]="field.name">
+		<span class="fake-input position-absolute"></span>
+		<span class="fake-label d-block">{{field.label}}</span>
+	</label>
+</div>

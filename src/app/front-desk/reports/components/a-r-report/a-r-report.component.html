@@ -1,0 +1,543 @@
+<busy-loader [loaderSpin]="loadSpin"></busy-loader>
+<div class="row user-info pt-2">
+  <div class="col-12">
+    <h4 class="my-0 color-green mt-2">Account Receivable Report</h4>
+    <hr class="line-bottom mb-3" />
+  </div>
+</div>
+<div class="row pom-report">
+  <div class="col-12">
+    <div class="card text-center border-0">
+      <div class="card-body border-pumice border-top-0">
+        <div class="tab-content">
+          <app-filter-reports
+            #ReportFilterComponent
+            [filtersIncludes]="filtersIncludesReport"
+            [isArReport]="true"
+            [isArSummaryReport]="true"
+            [isArNewReport]="true"
+            [queryParams]="queryParams"
+            [mandatoryFields]="['date_type']"
+            (resetFilterEvent)="resetFilter($event)"
+            (reportFilter)="applyFilter($event)"
+            (groupDataEvent)="onCatchGroupDataEvent($event,$event)"
+          ></app-filter-reports>
+
+          <div *ngTemplateOutlet="accountReceivableReportTemplate"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--------------Account Receivable Report------------->
+<ng-template #accountReceivableReportTemplate>
+  <div class="report buttons d-flex justify-content-end mb-3">
+    <div class="export-reports-button">
+      <button
+        type="button"
+        (click)="generateExcel()"
+        class="btn btn-success mx-2 mb-2 mb-sm-0"
+        [disabled]="rowData?.length == 0"
+      >
+        <i class="fa fa-file-excel"></i> Export Report
+      </button>
+    </div>
+  </div>
+  <div class="nf-reports">
+    
+    
+      <ngx-datatable 
+      class="bootstrap"
+      [headerHeight]="50"
+      [rowHeight]="50"
+      [columnMode]="'force'"
+      [scrollbarH]="false"
+      [scrollbarV]="true"
+      [reorderable]="false"
+      #accountReceivableReportTable
+      [virtualization]="true"
+      [externalPaging]="false"
+      [rows]="rowData"
+      [style.height]="tableHeight1"
+      >
+      
+        <ngx-datatable-column
+          *ngIf="recipient == false && !groupBy"
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="Bill/Invoice Recipient"
+          prop="bill_recipient_type_name"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              class="tooltip-outer"
+              container="body"
+              tooltipClass="table-custom-tooltip"
+              ngbTooltip="{{ value }}"
+              [ngClass]="{
+                'text-bold':
+                  secondLastRowIndex == rowIndex || lastRowIndex == rowIndex
+              }"
+            >
+              {{
+                secondLastRowIndex == rowIndex
+                  ? "Grand Total"
+                  : lastRowIndex == rowIndex
+                  ? "Total %"
+                  : value
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+        *ngIf="groupBy"
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          [name]="groupBy"
+          prop="group_by_name"
+          [width]="50"
+          >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              class="tooltip-outer"
+              container="body"
+              tooltipClass="table-custom-tooltip"
+              ngbTooltip="{{ value }}"
+              [ngClass]="{ 'text-bold': rowIndex == lastIndex }"
+            >
+              {{
+                rowIndex == lastIndex && !subGroupBy
+                  ? "Total"
+                  : subGroupBy && rowIndex == lastIndex
+                  ? null
+                  : value
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+        *ngIf="subGroupBy"
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          [name]="subGroupBy"
+          prop="subgroup_by_name"
+          [width]="50"
+          >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              class="tooltip-outer"
+              container="body"
+              tooltipClass="table-custom-tooltip"
+              ngbTooltip="{{ value }}"
+              [ngClass]="{ 'text-bold': rowIndex == lastIndex }"
+            >
+              {{
+                rowIndex == lastIndex && !subGroupBy
+                  ? "Total"
+                  : subGroupBy && rowIndex == lastIndex
+                  ? null
+                  : value
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          *ngIf="recipient == true"
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="Bill/Invoice Recipient"
+          prop="recipient_combined"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              class="tooltip-outer"
+              container="body"
+              tooltipClass="table-custom-tooltip"
+              ngbTooltip="{{ value }}"
+              [ngClass]="{
+                'text-bold':
+                  secondLastRowIndex == rowIndex || lastRowIndex == rowIndex
+              }"
+            >
+              {{
+                secondLastRowIndex == rowIndex
+                  ? "Grand Total"
+                  : lastRowIndex == rowIndex
+                  ? "Total %"
+                  : value
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+
+        <ngx-datatable-column
+        [canAutoResize]="true"
+        [draggable]="false"
+        [resizeable]="false"
+        name="Category"
+        prop="category"
+        [width]="50"
+      >
+        <ng-template
+          let-value="value"
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+        >
+          <div
+            class="tooltip-outer"
+            container="body"
+            tooltipClass="table-custom-tooltip"
+            ngbTooltip="{{ value }}"
+            [ngClass]="{
+              'text-bold':
+                secondLastRowIndex == rowIndex || lastRowIndex == rowIndex
+            }"
+          >
+            {{
+              secondLastRowIndex == rowIndex
+                ? "Grand Total"
+                : lastRowIndex == rowIndex
+                ? "Total %"
+                : value
+            }}
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+
+        
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="Billed/Invoice Amount"
+          prop="billed_amount"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold':
+                  secondLastRowIndex == rowIndex || lastRowIndex == rowIndex
+              }"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="Check Amount"
+          prop="check_amount"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold':
+                  secondLastRowIndex == rowIndex || lastRowIndex == rowIndex
+              }"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="Bill/Invoice Write off"
+          prop="write_off_amount"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold':
+                  secondLastRowIndex == rowIndex || lastRowIndex == rowIndex
+              }"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="30 days"
+          prop="balance_0_to_29_days"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold': secondLastRowIndex == rowIndex || lastRowIndex == rowIndex,
+                'cell-content' :normalizeValue(value) !== 0
+              }"
+              (click)="onCellClick(rowIndex, 'Balance_0_to_29_Days',normalizeValue(value) !== 0)"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="60 Days"
+          prop="balance_30_to_59_days"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold': secondLastRowIndex == rowIndex || lastRowIndex == rowIndex,
+                'cell-content' :normalizeValue(value) !== 0
+              }"
+              (click)="onCellClick(rowIndex, 'Balance_30_to_59_Days',normalizeValue(value) !== 0)"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="90 Days"
+          prop="balance_60_to_89_days"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold': secondLastRowIndex == rowIndex || lastRowIndex == rowIndex,
+                'cell-content' :normalizeValue(value) !== 0
+              }"
+              (click)="onCellClick(rowIndex, 'Balance_60_to_89_Days',normalizeValue(value) !== 0)"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="120 Days"
+          prop="balance_90_to_119_days"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold': secondLastRowIndex == rowIndex || lastRowIndex == rowIndex,
+                'cell-content' :normalizeValue(value) !== 0
+              }"
+              (click)="onCellClick(rowIndex, 'Balance_90_to_119_Days',normalizeValue(value) !== 0)"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="150 Days"
+          prop="balance_120_to_149_days"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold': secondLastRowIndex == rowIndex || lastRowIndex == rowIndex,
+                'cell-content' :normalizeValue(value) !== 0
+              }"
+              (click)="onCellClick(rowIndex, 'Balance_120_to_149_Days',normalizeValue(value) !== 0)"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="150+ Days"
+          prop="balance_150plusdays"
+          [width]="50"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold': secondLastRowIndex == rowIndex || lastRowIndex == rowIndex,
+                'cell-content' :normalizeValue(value) !== 0
+              }"
+              (click)="onCellClick(rowIndex, 'Balance_150PlusDays', normalizeValue(value) !== 0 )"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+
+        <ngx-datatable-column
+          [canAutoResize]="true"
+          [draggable]="false"
+          [resizeable]="false"
+          name="Bill/Invoice Total Outstanding"
+          prop="total_outstanding_amount"
+          [width]="80"
+        >
+          <ng-template
+            let-value="value"
+            ngx-datatable-cell-template
+            let-rowIndex="rowIndex"
+          >
+            <div
+              [ngClass]="{
+                'text-bold': secondLastRowIndex == rowIndex || lastRowIndex == rowIndex,
+                'cell-content' :normalizeValue(value) !== 0
+              }"
+              (click)="onCellClick(rowIndex, 'total_outstanding_amount', normalizeValue(value) !== 0)"
+            >
+              {{
+                lastRowIndex != rowIndex
+                  ? (value || 0 | currency)
+                  : (value || 0 | number : "1.2-2") + "%"
+              }}
+            </div>
+          </ng-template>
+        </ngx-datatable-column>
+      </ngx-datatable>
+  </div>
+  <div>
+      <div *ngIf="showSummaryTable" class="summary-footer">
+
+        <ng-container *ngFor="let column of Summarycolumns; let isFirst = first">
+          <div class="summary-column" [ngClass]="column?.prop" [style.margin-left.%]="calculateLeftMargin(column?.prop)">
+            <div class="summary-row top " >
+              {{ isFirst ?
+                summarydata[0][column?.prop] :
+                (summarydata[0][column?.prop] || 0 | currency) }}
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div *ngIf="showSummaryTable" class="summary-footer1">
+        <ng-container *ngFor="let column of Summarycolumns; let isFirst = first">
+          <div class="summary-column" [ngClass]="column?.prop" [style.margin-left.%]="calculateLeftMargin(column?.prop)">
+            <div class="summary-row bottom">
+              {{ isFirst ?
+                Percentdata[0][column?.prop] :
+                (Percentdata[0][column?.prop] || 0 | number: '1.2-2') + '%' }}
+            </div>
+          </div>
+        </ng-container>
+      </div>
+  </div>
+</ng-template>

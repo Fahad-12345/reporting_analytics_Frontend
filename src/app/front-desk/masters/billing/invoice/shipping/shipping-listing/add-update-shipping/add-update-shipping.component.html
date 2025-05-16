@@ -1,0 +1,43 @@
+<form [formGroup]="shippingForm" (ngSubmit)="onSubmit(shippingForm)">
+  <div class="row ">
+    <div class="col-12">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': shippingForm.get('shipping_detail').value != '' && shippingForm.get('shipping_detail').value != null }">
+        <label class="form-label">Shipping Details*</label>
+        <input type="text" formControlName="shipping_detail" class="form-control form-input mb-0" notFirstCharactorSpace />
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group currency mb-1"
+        [ngClass]="{'focused': shippingForm.get('unit_price').value != '' && shippingForm.get('unit_price').value != null }">
+        <label class="form-label">Delivery Charges*</label>
+        <input type="text" formControlName="unit_price" class="form-control form-input mb-0" [options]="customCurrencyMaskConfig" (keydown.space)="$event.preventDefault()" currencyMask />
+        <i class="fa fa-dollar-sign"></i>
+        <small class="form-text text-muted danger" *ngIf="shippingForm.get('unit_price').errors?.required && 
+        (shippingForm.get('unit_price').dirty ||
+        shippingForm.get('unit_price').touched)">
+        This field is required</small>
+        <small class="form-text text-muted danger"
+        *ngIf="shippingForm.get('unit_price').errors?.max">
+        Delievery charges cannot be greater than 999999.99
+      </small>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-group mb-1"
+        [ngClass]="{'focused': shippingForm.get('comment').value != '' && shippingForm.get('comment').value != null }">
+        <label class="form-label">Comment</label>
+        <textarea rows="6" formControlName="comment" class="form-control form-input mb-0" notFirstCharactorSpace></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 modal-btn-width text-center mt-3">
+      <button class="btn btn-primary me-2" (click)="closeModal()" type="button"
+          >Cancel</button>
+      <button class="btn btn-success" type="submit"
+         [disabled]="isDisabled()">{{hasId?'Update':'Save'}} </button>
+    </div>
+  </div>
+</form>
+

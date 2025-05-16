@@ -1,0 +1,25 @@
+<!-- <h1>{{ "not-found.title" | translate }}</h1>
+<p>404</p> -->
+
+
+<div id="notfound">
+    <div *ngIf="redirect_page=='login'" class="notfound">
+        <div class="notfound-404">
+            <h1>4<span>0</span>4</h1>
+        </div>
+        <h2><img src="assets/images/emoji.png"> Oops! {{ "not-found.title" | translate }}</h2>
+        <p *ngIf="redirect_page=='login'">Redirecting to <a href="javascript:void(0)"
+                (click)="redirectTo('login')">Login</a> page in {{counter}}
+            seconds
+        </p>
+     </div>
+     <div  class="notfound">
+     <p *ngIf="redirect_page=='dashboard'">Redirecting to <a href="javascript:void(0)"
+        (click)="redirectTo('dashboard')">Dashboard</a> in {{counter}}
+    seconds
+    </p>
+</div>
+</div>
+
+<div>
+</div>

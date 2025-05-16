@@ -1,0 +1,274 @@
+<!-- ********************************************************************************************************************************************** -->
+<!-- *******************************************************DONOT REMOVE COMMENTED CODE *********************************************************** -->
+<!-- ********************************************************************************************************************************************** -->
+<!-- <busy-loader [loaderSpin]="loading"></busy-loader> -->
+<div class="section-frame reduce-height border-0 pb-md-5">
+	<form class="form h-100" [formGroup]="form" (ngSubmit)="submit()">
+		<!-- <strong class="section-title position-absolute">Medical History</strong> -->
+		<!-- <perfect-scrollbar> -->
+		<div class="custom-scrollbar">
+			<div class="row">
+				<div class="col-12 types-box mb-3">
+					<!-- <ul class="types-list list-inline">
+					<li class="list-inline-item" >
+						<label for="diseases" class="d-block chkbox position-relative m-0" >
+							<input id="diseases" [name]="checked"    type="checkbox" formControlName="diseasesChecked">
+							<span class="fake-input position-absolute"></span>
+							<span class="fake-label d-block">Diseases</span>
+						</label>
+					</li>
+				</ul> -->
+					<strong class="sub-title">Past Medical History</strong>
+					<!-- <div class="notes-box position-relative" *ngIf="form.controls['diseasesChecked'].value"> -->
+					<div class="notes-box position-relative">
+						<div class="types-box bg-white ad-border p-2" style="border-radius: 0;">
+							<ul class="types-list list-inline grid-list">
+								<li class="list-inline-item" formArrayName="diseases"
+									*ngFor="let item of form.controls['diseases']['controls']; let i = index">
+									<label for="check-1{{i}}" class="d-block chkbox position-relative m-0"
+										[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}"
+										[formGroupName]="i">
+										<input id="check-1{{i}}" type="checkbox" formControlName="checked">
+										<span class="fake-input position-absolute"></span>
+										<span class="fake-label d-block">{{item.value.name}}</span>
+									</label>
+								</li>
+							</ul>
+							<div class="form-group field mt-3 mb-0"
+								[ngClass]="{'focused': form.get('diseasesComment').value != '' && form.get('diseasesComment').value != null }"
+								style="overflow: visible;">
+								<label for="diseasesComment" class="form-label">Comments </label>
+								<textarea [ngClass]="{'bg-light-pink':checkCarryForward(form,'diseasesComment')}"
+									class="form-control form-input" rows="3" style="min-height:70px !important"
+									formControlName="diseasesComment"></textarea>
+								<small class="form-text text-muted danger"
+									*ngIf="form.get('diseasesComment').errors?.required && (form.get('diseasesComment').dirty || form.get('diseasesComment').touched)">Please
+									enter diseases comment!</small> <small class="form-text text-muted danger"
+									*ngIf=" (form.get('diseasesComment').errors?.maxlength) && form.get('diseasesComment').dirty">Maximum
+									characters should be {{maxLength}}!</small>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 types-box mb-3">
+					<!-- <ul class="types-list list-inline">
+					<li class="list-inline-item" >
+						<label for="previousInjuries" class="d-block chkbox position-relative m-0" >
+							<input id="previousInjuries" [name]="checked"    type="checkbox" formControlName="previousInjuriesChecked">
+							<span class="fake-input position-absolute"></span>
+							<span class="fake-label d-block">Previous Injuries</span>
+						</label>
+					</li>
+				</ul> -->
+					<strong class="sub-title">Previous Injuries</strong>
+					<!-- <div class="notes-box position-relative"  *ngIf="form.controls['previousInjuriesChecked'].value"> -->
+					<div class="notes-box position-relative">
+						<div class="messaging-block p-2 bg-white">
+							<textarea class="form-control"
+								[ngClass]="{'bg-light-pink':checkCarryForward(form,'previousInjuries')}" rows="3"
+								formControlName="previousInjuries" style="min-height:70px !important"></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 types-box mb-3">
+					<!-- <ul class="types-list list-inline">
+				<li class="list-inline-item" >
+					<label for="allerties" class="d-block chkbox position-relative m-0" >
+						<input id="allerties" [name]="checked"    type="checkbox" formControlName="allergiesChecked">
+						<span class="fake-input position-absolute"></span>
+						<span class="fake-label d-block">Allergies</span>
+					</label>
+				</li>
+			</ul> -->
+					<strong class="sub-title">Allergies</strong>
+					<!-- <div class="notes-box position-relative" *ngIf="form.controls['allergiesChecked'].value"> -->
+					<div class="notes-box position-relative">
+						<div class="types-box bg-white ad-border p-2" style="border-radius: 0;">
+							<ul class="types-list list-inline grid-list">
+								<li class="list-inline-item" formArrayName="allergies"
+									*ngFor="let item of getAllergiesControl(); let i = index">
+									<label for="other_allergies{{i}}" class="d-block chkbox position-relative m-0"
+										[formGroupName]="i"
+										[ngClass]="{'checkbox-light-pink':checkCarryForward(item,'checked')}">
+										<input id="other_allergies{{i}}" type="checkbox" formControlName="checked">
+										<span class="fake-input position-absolute"></span>
+										<span class="fake-label d-block">{{item.value.name}}</span>
+									</label>
+								</li>
+								<li class="list-inline-item">
+									<label for="other_allergies" class="d-block chkbox position-relative m-0"
+										[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'hasOtherAllergies')}">
+										<input id="other_allergies" name="hasOtherAllergies" type="checkbox"
+											formControlName="hasOtherAllergies">
+										<span class="fake-input position-absolute"></span>
+										<span class="fake-label d-block">Other</span>
+									</label>
+								</li>
+							</ul>
+							<div class="p-1" *ngIf="form.controls['hasOtherAllergies'].value">
+								<textarea class="form-control" rows="3" placeholder="Other"
+									[ngClass]="{'bg-light-pink':checkCarryForward(form,'otherAllergies')}"
+									formControlName="otherAllergies" style="min-height:70px !important"></textarea>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-6 types-box mb-3">
+					<strong class="sub-title custom-checkbox-tools py-1">Medications
+						<label for="medication" class="float-right chkbox position-relative m-0"
+							[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'noMedications')}">
+							<input id="medication" type="checkbox" formControlName="noMedications">
+							<span class="fake-input position-absolute"></span>
+							<span class="fake-label d-block py-1">None</span>
+						</label>
+					</strong>
+
+					<!-- <div class="notes-box position-relative" *ngIf="form.controls['medicationsChecked'].value"> -->
+					<!-- <div class="notes-box position-relative">
+					<div class="messaging-block p-2">
+						<tag-input [placeholder]="'Enter Medication'" [secondaryPlaceholder]="'Enter Medication'" class="form-control ps-2 pe-2 pt-0 pb-0 d-inline-block w-auto" formControlName="medications" [onlyFromAutocomplete]="false">
+							<tag-input-dropdown [showDropdownIfEmpty]="true" [autocompleteItems]="drugs"></tag-input-dropdown>
+						</tag-input>
+					</div>
+				</div> -->
+					<div class="notes-box position-relative w-100">
+						<div class="messaging-block bg-white p-2">
+							<textarea class="form-control" placeholder="" rows="3"
+								[ngClass]="{'bg-light-pink':checkCarryForward(form,'medications')}"
+								[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || (form.get('noMedications').value==true)?true:null"
+								formControlName="medications" style="min-height:70px !important"></textarea>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-6 types-box mb-3">
+					<strong class="sub-title custom-checkbox-tools py-1">Previous Surgeries And Hospitalizations
+						<label for="previousSurgeries" class="float-right chkbox position-relative m-0"
+							[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'noPreviousSurgeries')}">
+							<input id="previousSurgeries" type="checkbox" formControlName="noPreviousSurgeries">
+							<span class="fake-input position-absolute"></span>
+							<span class="fake-label d-block py-1">None</span>
+						</label>
+					</strong>
+
+					<!-- <div class="notes-box position-relative" *ngIf="form.controls['previousSurgeriesChecked'].value"> -->
+					<div class="notes-box position-relative w-100">
+						<div class="messaging-block bg-white p-2">
+							<textarea class="form-control" rows="3" placeholder=""
+								[ngClass]="{'bg-light-pink':checkCarryForward(form,'previousSurgeries')}"
+								[attr.disabled]="!mainService.isenableSaveRecordMedicalDoctor() || (form.get('noPreviousSurgeries').value==true)?true:null"
+								formControlName="previousSurgeries" style="min-height:70px !important"></textarea>
+							<!-- <div class="message-holder receiving">
+						<div class="message-box w-100">
+							<div class="frame p-2 no-rborder position-relative">
+								<textarea class="form-control" rows="3" formControlName="previousSurgeries" style="min-height:30px !important" ></textarea>
+							</div>
+							<ul class="tools list-unstyled position-absolute">
+								<li><a href="#"><span class="icon-cross"></span></a></li>
+								<li><a href="#"><span class="icon-pencil"></span></a></li>
+								<li><a href="#"><span class="icon-saved"></span></a></li>
+							</ul>
+							<div class="meta d-flex">
+							<a class="author flex-grow-1 me-1">Dr. John</a>
+							<time datetime="2018-10-20">20-10-2018</time>
+							<time datetime="08:30" class="ml-1">8:30 AM</time>
+							</div>
+						</div>
+					</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-6 types-box mb-3">
+					<strong class="sub-title custom-checkbox-tools py-1">Family History
+						<label for="familyHistoryNoncontributory" class="chkbox position-relative m-0 float-right"
+							[ngClass]="{'checkbox-light-pink':checkCarryForward(form,'familyHistoryNoncontributory')}">
+							<input id="familyHistoryNoncontributory" type="checkbox"
+								formControlName="familyHistoryNoncontributory">
+							<span class="fake-input position-absolute"></span>
+							<span class="fake-label d-block py-1">Noncontributory</span>
+						</label>
+					</strong>
+					<div class="notes-box position-relative w-100">
+						<div class="messaging-block bg-white p-2">
+							<textarea class="form-control" rows="3" placeholder="" formControlName="familyHistory"
+								style="min-height:70px !important"
+								[ngClass]="{'bg-light-pink':checkCarryForward(form,'familyHistory')}"></textarea>
+							<!-- <div class="message-holder receiving">
+						<div class="message-box w-100">
+							<div class="frame p-2 no-rborder position-relative">
+								
+							</div>
+							<ul class="tools list-unstyled position-absolute">
+							<li><a href="#"><span class="icon-cross"></span></a></li>
+							<li><a href="#"><span class="icon-pencil"></span></a></li>
+							<li><a href="#"><span class="icon-saved"></span></a></li>
+							</ul>
+						</div>
+						<div class="meta d-flex">
+							<a class="author flex-grow-1 me-1">Dr. John</a>
+							<time datetime="2018-10-20">20-10-2018</time>
+							<time datetime="08:30" class="ml-1">8:30 AM</time>
+						</div>
+					</div> -->
+						</div>
+					</div>
+				</div>
+				<div class="col-6 types-box">
+					<strong class="sub-title py-2">Social History</strong>
+					<div class="notes-box position-relative">
+						<div class="messaging-block bg-white p-2">
+							<textarea class="form-control" rows="3" placeholder="" formControlName="socialHistory"
+								style="min-height:70px !important"
+								[ngClass]="{'bg-light-pink':checkCarryForward(form,'socialHistory')}"></textarea>
+							<!-- <div class="message-holder receiving">
+						<div class="message-box w-100">
+							<div class="frame p-2 no-rborder position-relative">
+								<textarea class="form-control" rows="3" formControlName="socialHistory" style="min-height:30px !important" ></textarea>
+							</div>
+							<ul class="tools list-unstyled position-absolute">
+							<li><a href="#"><span class="icon-cross"></span></a></li>
+							<li><a href="#"><span class="icon-pencil"></span></a></li>
+							<li><a href="#"><span class="icon-saved"></span></a></li>
+							</ul>
+						</div>
+						<div class="meta d-flex">
+							<a class="author flex-grow-1 me-1">Dr. John</a>
+							<time datetime="2018-10-20">20-10-2018</time>
+							<time datetime="08:30" class="ml-1">8:30 AM</time>
+						</div>
+						</div>-->
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- </perfect-scrollbar> -->
+		<div class="row form-btn mt-2">
+			<div class="col-lg-12 text-center">
+				<a href="javascript:void(0)" (click)="back()" class="btn btn-primary d-inline-block me-1"><span
+						class="icon-left-arrow me-1"></span> Back</a>
+				<a *ngIf="mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-info mx-2" (click)="saveForLater()"><span
+						class="icon-save-continue me-1"></span> Save For Later</a>
+				<button *ngIf="mainService.isenableSaveRecordMedicalDoctor()" class="btn btn-success d-inline-block ms-1" (click)="next()"><span
+						class="icon-save-continue me-1"></span> Save &
+					Continue</button>
+			</div>
+		</div>
+		<!-- <div class="paging-bar d-flex justify-content-between mb-1">
+	<button href="javascript:void(0)" class="btn btn-primary" (click)="back()"><span class="icon-arrow-left-filled d-block"></span>Back</button>
+	<a href="#" class="btn btn-primary"><span class="icon-arrow-left-filled d-block"></span>Back</a>
+	<button href="javascript:void(0)" type="submit" class="btn btn-primary"><span class="icon-arrow-right-filled d-block"></span>Next</button>
+</div> -->
+	</form>
+</div>

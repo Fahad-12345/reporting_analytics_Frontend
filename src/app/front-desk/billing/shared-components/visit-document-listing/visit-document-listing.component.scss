@@ -1,0 +1,13 @@
+
+
+.btn-outline-dark {
+    border:1px solid #918c8c !important;
+    &:hover {
+        background: #34c3ee !important;
+        border-color: #34c3ee !important;
+    }
+}
+.width-auto {
+    width: auto;
+}
+

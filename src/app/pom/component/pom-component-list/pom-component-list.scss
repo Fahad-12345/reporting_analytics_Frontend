@@ -1,0 +1,26 @@
+.table-hold{
+    button{
+        &.btn{
+            .icon-remove{
+                vertical-align: unset;
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+::ng-deep .g-pom-listing {
+    &.fixed-header {
+      .datatable-header {
+        .datatable-header-cell {
+          white-space: pre-wrap !important;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .datatable-header-cell-label {
+            line-height: normal;
+          }
+        }
+      }
+    }
+  }

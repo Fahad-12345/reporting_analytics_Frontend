@@ -1,0 +1,137 @@
+<div class="card">
+	<div class="card-header mt-2">
+		<div class="col-md-12 text-center text-truncate"> {{patientData.patientName}} </div>
+	</div>
+	<div class="card-body px-4">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-4 profile-outer">
+						<img class="profile-image" [src]="patientData.picture">
+					</div>
+					<div class="col-md-8 ps-1 appoint-details">
+						<div class="row bg-light py-1">
+							<a class="hyperlink color-blue w-100 color-patient"
+								[routerLink]="'/front-desk/cases/edit/' + patientData.caseId +'/patient/patient_summary'">
+								<label class="col-6 font-bold mb-0">Case No:</label>
+								<div class="col-6 text text-tab d-inline-block"><span>{{patientData.caseId}}</span>
+								</div>
+							</a>
+						</div>
+						<div class="row d-flex align-items-center bg-white py-1">
+							<label class="col-6 font-bold mb-0">Case Type:</label>
+							<div class="col-6 text text-tab"><span>{{patientData.caseType}}</span></div>
+						</div>
+						<div class="row d-flex align-items-center bg-light py-1">
+							<label class="col-6 font-bold mb-0">Visit Type:</label>
+							<div class="col-6"><span>{{patientData.appointmentTypeDescription}}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="row bg-white">
+					<div class="col-md-12 details-text text-truncate form pt-1 pb-2 ps-0">
+						<label class="d-inline-block chkbox position-relative m-0">
+							<input type="checkbox" id="details" [(ngModel)]="patientData.isShowDetails">
+							<span class="fake-input position-absolute"></span>
+							<label class="fake-label clinic_name text-truncate d-block py-0 mb-0" for="details"> Details
+							</label>
+						</label>
+					</div>
+				</div>
+				<div class="row" *ngIf="patientData.isShowDetails">
+					<div class="col-md-12">
+						<div class="row bg-light">
+							<div class="col-md-12 details-text text-truncate py-1">
+								<label class="font-bold w-50 mb-0">Appt. Time:</label>
+								<span class="ps-1">{{patientData.startTime}}</span>
+							</div>
+						</div>
+						<div class="row bg-white">
+							<div *ngIf="patientData.DOB!=='N/A'" class="col-md-12 details-text text-truncate py-1">
+								<label class="font-bold w-50 mb-0">DOB:</label>
+								<span class="ps-1">{{patientData.DOB | date: datePipeService.slashDateFormat_MM_dd_yyyy()}}</span>
+							</div>
+							<div *ngIf="patientData.DOB==='N/A'" class="col-md-12 details-text text-truncate py-1">
+								<label class="font-bold w-50 mb-0">DOB:</label>
+								<span class="ps-1">{{patientData.DOB}}</span>
+							</div>
+						</div>
+						<div class="row bg-light">
+							<div class="col-md-12 details-text text-truncate py-1">
+								<label class="font-bold w-50 mb-0">Status:</label>
+								<span class="ps-1">{{patientData.status}}</span>
+							</div>
+						</div>
+						<!-- <div class="row">
+							<div *ngIf="patientData.checkedIn!=='N/A'"
+								class="col-md-12 details-text text-truncate py-1">
+								<label class="font-bold w-50 mb-0">Checked In:</label>
+								<span> {{patientData.checkedIn | date: 'MM/dd/yyyy hh:mm a'}}</span>
+							</div>
+							<div *ngIf="patientData.checkedIn==='N/A'"
+								class="col-md-12 details-text text-truncate py-1">
+								<label class="font-bold w-50 mb-0">Checked In:</label>
+								<span>{{patientData.checkedIn}}</span>
+							</div>
+						</div> -->
+						<div class="row py-1">
+							<label class="col-md-6 font-bold details-text mb-0">Insurance:</label>
+							<div class="col-md-6 details-text ps-0">
+								<ul class="custom-btn-tooltip list-unstyled ms-0">
+									<a class="text-truncate d-block insuarance-patient" href="javascript:void(0)"><span
+											class="ps-1">{{patientData.companyName}}</span></a>
+									<li class="btn-tooltip-top patient-data">
+										<span class="ps-1">{{patientData.companyName}}</span>
+										<i></i>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row bg-light">
+					<div class="col-md-12 form pt-1 pb-2 ps-0">
+						<label class="d-inline-block chkbox position-relative m-0">
+							<input type="checkbox" id="comments" [(ngModel)]="patientData.isShowComments">
+							<span class="fake-input position-absolute"></span>
+							<label class="fake-label clinic_name text-truncate d-block py-0 mb-0" for="comments">
+								Comments
+							</label>
+						</label>
+					</div>
+				</div>
+				<div class="row" *ngIf="patientData.isShowComments">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-12 details-text text-truncate py-1">
+								<span class="word-break" title="{{patientData.comments}}">
+									{{patientData.comments}}
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="row row justify-content-center mt-3">
+			<div class="col-md-4">
+				<button class="btn btn-outline-secondary w-100" data-dismiss="modal" type="button"
+					(click)="hidePatientRecord.emit('true')">Cancel</button>
+			</div>
+			<div class="col-md-4"
+				*ngIf="patientData.startEval && (!patientData.hasApp || patientData.specialityKey === 'medical_doctor')">
+				<button class="btn btn-success color-white w-100" type="submit"
+					[disabled]="patientData.appointmentStatus==='no show'"
+					(click)="startEvaluation.emit(patientData)">Start</button>
+			</div>
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,40 @@
+@import './../../../../../assets/sass/components/new-search-filters';
+.hyperlink{
+	cursor: pointer;
+}
+.w-sm-100{
+	@media only screen and (max-width: 768.98px) {
+		width: 100%;
+	}
+}
+
+
+::ng-deep .waiting-list-scroll {
+	.datatable-body {
+		@media screen and (max-width:1024px) {
+			overflow-x: unset !important;
+            overflow-y: unset !important;
+		}
+	}
+}
+
+.search-filter {
+	.search-filter-body {
+		.colps-btn-block {
+			.plus-btn {
+				position: static;
+			}
+		}
+	}
+}
+.cpt-ls{
+	text-align: left;
+	overflow: hidden;
+	width: 95%;
+	text-overflow: ellipsis;
+}
+.refresh-cls{
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: bold ;
+}

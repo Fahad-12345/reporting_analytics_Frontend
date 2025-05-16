@@ -1,0 +1,19 @@
+
+<div class="row user-info pt-2">
+    <div class='col-md-12'>
+        <h4 class="my-0 color-green">Customize</h4>
+    </div>
+</div>
+<hr class="line-bottom">
+<div class="row">
+    <div class="col-md-12">
+        <nav class="left-nav p-0 mt-2">
+            <ul class="list-unstyled">
+					<li *ngFor="let customizeTabs of customizeTabs" class="button--wayra {{customizeTabs.class}}" (click)="activeSelectedTab(customizeTabs)" >
+						<a *ngIf='aclService.hasPermission(customizeTabs.permission)' class="d-block">{{customizeTabs['name']}}</a>
+					</li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<router-outlet></router-outlet>

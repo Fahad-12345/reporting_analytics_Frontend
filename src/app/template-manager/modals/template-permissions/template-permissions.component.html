@@ -1,0 +1,172 @@
+
+<div id="manage-permissions">
+    <div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Manage Template Permissions</h4>
+                <button aria-label="Close" class="close" type="button" (click)="permissionModal.close()" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+
+
+
+                <nav>
+                    <div class="nav nav-tabs nav-justified">
+                        <a class="nav-item nav-link active" data-bs-toggle="tab" href="#clinicstab" role="tab">Clinics</a>
+                        <a class="nav-item nav-link" data-bs-toggle="tab" href="#doctortab" role="tab">Doctors</a>
+                    </div>
+                </nav>
+                <div class="tab-content pt-2">
+                    <div class="tab-pane fade show active" id="clinicstab">
+
+                        <div class="form-group">
+                            <label class="control-label">Add Clinic</label>
+                            <div>
+                                <ng-autocomplete [data]="searchClinicList" [searchKeyword]="keyword" (selected)='selectEvent($event)' (inputChanged)='onChangeSearch($event)' (inputFocused)='onFocused($event)' [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+                                </ng-autocomplete>
+
+                                <ng-template #itemTemplate let-item>
+                                    <a [innerHTML]="item.facility_full_name">{{item.facility_full_name}}</a>
+                                    <hr>
+                                </ng-template>
+
+                                <ng-template class="not-found" #notFoundTemplate let-notFound>
+                                    <div class="not-found" [innerHTML]="notFound"></div>
+                                </ng-template>
+                            </div>
+                        </div>
+
+
+                        
+                        <div>
+                            <ngx-datatable style="margin-top: 13px;" class="bootstrap custom-scroll-x table-border" (page)="changePage($event)" [count]="counter" [rows]="clinicList" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="counter"
+                                [scrollbarH]="true" [offset]="pageNumber-1">
+
+                                <ngx-datatable-column [attr.canAutoResize]="true" name="  Sr." prop="id" [width]="100">
+                                    <ng-template let-column="column" ngx-dattable-header-template>
+                                        Sr.
+                                    </ng-template>
+                                    <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                        {{rowIndex+1}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column name="Name" prop="Comments" [width]="450">
+                                    <ng-template let-column="column" ngx-dattable-header-template>
+                                        Name
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.facility_name}}">
+                                            {{row.facility_name}}
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column name=" Read" prop="Comments" [width]="100">
+                                    <ng-template let-column="column" ngx-dattable-header-template>
+                                        Read
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <label class="checkbox">
+												<input type="checkbox" [checked]="true" disabled>
+												<span class="l-0 fake-input position-absolute"></span>
+
+										</label>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                
+
+                                <ngx-datatable-column [attr.canAutoResize]="true" name="Action" prop="id" [width]="100" cellClass="action-icon">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Actions
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <a title="Delete" (click)="deleteFacilityPermissions(row.id)"><i
+														class="fa fa-trash-alt color-delete"></i></a>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                            </ngx-datatable>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="doctortab">
+
+                        <div class="form-group">
+                            <label class="control-label">Add Doctor</label>
+                            <div>
+                                <ng-autocomplete [data]="completeDoctorName" [searchKeyword]="keywordDoc" (selected)='selectEventDoctor($event)' (inputChanged)='onChangeSearchDoctor($event)' (inputFocused)='onFocused($event)' [itemTemplate]="itemTemplateDoc" [notFoundTemplate]="notFoundTemplate">
+                                </ng-autocomplete>
+
+                                <ng-template #itemTemplateDoc let-item>
+                                    <a [innerHTML]="item.completeName">{{item.first_name}}</a>
+                                    <hr>
+                                </ng-template>
+
+                                <ng-template #notFoundTemplate let-notFound>
+                                    <div [innerHTML]="notFound"></div>
+                                </ng-template>
+                            </div>
+                        </div>
+
+
+                        
+
+                        <div>
+                            <ngx-datatable style="margin-top: 13px;" class="bootstrap custom-scroll-x table-border" (page)="changePage($event)" [count]="counter" [rows]="doctorList" [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [limit]="counter"
+                                [scrollbarH]="true" [offset]="pageNumber-1">
+
+                                <ngx-datatable-column [attr.canAutoResize]="true" name="  Sr." prop="id" [width]="100">
+                                    <ng-template let-column="column" ngx-dattable-header-template>
+                                        Sr.
+                                    </ng-template>
+                                    <ng-template let-row="row" let-rowIndex="rowIndex" let-value="value" ngx-datatable-cell-template>
+                                        {{rowIndex+1}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                <ngx-datatable-column [attr.canAutoResize]="true" name="Name" prop="Comments" [width]="450">
+                                    <ng-template let-column="column" ngx-dattable-header-template>
+                                        Name
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+
+                                        <div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.doctor_name}}">
+                                            {{row.doctor_name}}
+                                        </div>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column [attr.canAutoResize]="true" name=" Read" prop="Comments" [width]="100">
+                                    <ng-template let-column="column" ngx-dattable-header-template>
+                                        Read
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <label class="checkbox">
+												<input type="checkbox" [checked]="true" disabled>
+												<span class="l-0 fake-input position-absolute"></span>
+
+										</label>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                
+
+                                <ngx-datatable-column [attr.canAutoResize]="true" name="Action" prop="id" [width]="100" cellClass="action-icon">
+                                    <ng-template let-column="column" ngx-datatable-header-template>
+                                        Actions
+                                    </ng-template>
+                                    <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                                        <a title="Delete" (click)="deleteDoctorPermissions(row.id)"><i
+														class="fa fa-trash-alt color-delete"></i></a>
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                            </ngx-datatable>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>

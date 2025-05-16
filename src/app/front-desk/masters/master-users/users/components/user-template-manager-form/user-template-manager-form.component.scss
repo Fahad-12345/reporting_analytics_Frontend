@@ -1,0 +1,13 @@
+
+
+	::ng-deep .template-form .cdk-overlay-pane {
+		transform: unset !important;
+	}
+
+	::ng-deep .mat-mdc-select-panel.template-panel {
+		min-width: calc(100% + 22px) !important;
+		margin-left: 27px;
+		margin-top: 35px !important;
+	}
+
+

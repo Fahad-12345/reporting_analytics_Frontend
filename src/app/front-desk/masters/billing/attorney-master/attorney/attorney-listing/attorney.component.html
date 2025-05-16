@@ -1,0 +1,604 @@
+<div *ngIf="loadSpin" class="lds-roller">
+	<img src="assets/images/spinner.gif" alt="spinner">
+</div>
+<div class="tab-pane fade show active" id="attorney" role="tabpanel" aria-labelledby="attorney-tab"
+	*ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_view)">
+
+	<div class="d-block text-end" *ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_add)">
+		<button type="button" (keydown.enter)="$event.preventDefault()" href="javascript:void(0)"
+			(click)="addAttorneyFirm(attorney)" data-bs-toggle="modal" class="btn btn-default round-btn">
+			<span class="icon-plus-circle"></span> Add New 
+		</button>
+	</div>
+	<form class="form" autocomplete="off" [formGroup]="attorneyFilterForm" *ngIf="aclService.hasPermission(userPermissions.master_practice_filter)">
+		<div class="search-filter search-filter-bg-light filter-grid grid-4" [class.hide-remaining-search-filter]="!isCollapsed">
+			<div class="filter-grid-container">
+				<div class="form-group field" [ngClass]="{'focused': attorneyFilterForm.get('firm_name').value != '' && attorneyFilterForm.get('firm_name').value != null }">
+					<label class="form-label" for="AttorneyFirmName">Firm Name</label>
+					<input type="text" id="AttorneyFirmName" formControlName="firm_name" class="form-control form-input">
+				</div>
+				<div class="form-group field" [ngClass]="{'focused': attorneyFilterForm.get('name').value != '' && attorneyFilterForm.get('name').value != null }">
+					<label class="form-label" for="name">Attorney Name</label>
+					<input type="text" formControlName="name" id="name" class="form-control form-input">
+				</div>
+				<div class="form-group field" [ngClass]="{'focused': attorneyFilterForm.get('phone_no').value != '' && attorneyFilterForm.get('phone_no').value != null }">
+					<label class="form-label" for="phone_no">Phone No.</label>
+					<input type="text" formControlName="phone_no" mask="000-000-0000" id="phone_no" class="form-control form-input">
+				</div>
+				<div class="form-group field" [ngClass]="{'focused': attorneyFilterForm.get('email').value != '' && attorneyFilterForm.get('email').value != null }">
+					<label class="form-label" for="email">Email</label>
+					<input type="text" id="email" formControlName="email" class="form-control form-input">
+				</div>
+				<div class="form-group field" [ngClass]="{'focused': attorneyFilterForm.get('fax').value != '' && attorneyFilterForm.get('fax').value != null }">
+					<label class="form-label" for="fax">Fax</label>
+					<input type="text" id="fax" formControlName="fax" mask="000-000-0000"
+						class="form-control form-input">
+				</div>
+			</div>
+			<div class="collape-btn">
+				<button class="btn plus-btn mt-0" (click)="isCollapsed = !isCollapsed"
+				[attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+				[class.btn-success]="isCollapsed" type="button">
+					<span class="" [class.icon-plus]="!isCollapsed" [class.icon-minus]="isCollapsed"></span>
+				</button>
+			</div>
+			<div class="search-filter-btn-group text-center" [class.btn-group-mrgin-top]="isCollapsed">
+				<button class="btn btn-success" (click)="setPage({ offset: 0 })">Filter</button>
+				<button class="btn btn-primary" [disabled]="checkInputs()" (click)="resetAttorneyFilters()">Reset</button>
+			</div>
+		</div>
+   </form>
+
+	<!-- <div class="search-filter mt-2">
+		<div class="d-block" *ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_add)">
+			<button type="button" (keydown.enter)="$event.preventDefault()" href="javascript:void(0)"
+				(click)="addAttorneyFirm(attorney)" data-bs-toggle="modal" class="btn btn-default round-btn float-right">
+				<span class="icon-plus-circle"></span> Add New 
+			</button>
+		</div>
+		<div *ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_filter)">
+			<form [formGroup]="attorneyFilterForm" (ngSubmit)="setPage({ offset: 0 });">
+				<div class="form">
+					<div class="search-filter-body">
+						<div class="row ">
+							<div class="col-xl-10">
+								<div class="row ma-billing-input col-width-20">
+									<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+										<div class="form-group field"
+											[ngClass]="{'focused': attorneyFilterForm.get('firm_name').value != '' && attorneyFilterForm.get('firm_name').value != null }">
+											<label class="form-label" for="AttorneyFirmName">Firm Name nafees</label>
+											<input type="text" id="AttorneyFirmName" formControlName="firm_name"
+												class="form-control form-input">
+										</div>
+									</div>
+
+									<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+										<div class="form-group field"
+											[ngClass]="{'focused': attorneyFilterForm.get('name').value != '' && attorneyFilterForm.get('name').value != null }">
+											<label class="form-label" for="name">Attorney Name</label>
+											<input type="text" formControlName="name" id="name"
+												class="form-control form-input">
+										</div>
+									</div>
+
+									<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+										<div class="form-group field"
+											[ngClass]="{'focused': attorneyFilterForm.get('phone_no').value != '' && attorneyFilterForm.get('phone_no').value != null }">
+											<label class="form-label" for="phone_no">Phone No.</label>
+											<input type="text" formControlName="phone_no" mask="000-000-0000"
+												id="phone_no" class="form-control form-input">
+										</div>
+									</div>
+
+									<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+										<div class="form-group field"
+											[ngClass]="{'focused': attorneyFilterForm.get('email').value != '' && attorneyFilterForm.get('email').value != null }">
+											<label class="form-label" for="email">Email</label>
+											<input type="text" id="email" formControlName="email"
+												class="form-control form-input">
+										</div>
+									</div>
+
+									<div class="col-12 col-sm-6 col-md-4 col-lg-2">
+										<div class="form-group field"
+											[ngClass]="{'focused': attorneyFilterForm.get('fax').value != '' && attorneyFilterForm.get('fax').value != null }">
+											<label class="form-label" for="fax">Fax</label>
+											<input type="text" id="fax" formControlName="fax" mask="000-000-0000"
+												class="form-control form-input">
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+						<div class="col-xl-2 text-center">
+							<div class="row justify-content-center mb-3 mb-xl-0">
+								<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+									<button type="submit" class="btn btn-success w-100 mt-0">Filter</button>
+								</div>
+								<div class="col-5 col-sm-3 col-md-2 col-xl-6 align-self-center">
+									<button type="button" (click)="resetAttorneyFilters()"
+										class="btn btn-primary w-100 mt-0" [disabled]="checkInputs()">Reset</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div> -->
+
+	<div class="card data-table border-0 mb-0 p-0 mt-2">
+		<div class="row">
+			<div class="col-12 col-sm-6 edit-block text-start">
+				<div class="form-group field option-field mb-2 d-inline-block">
+					<ul>
+						<li>Show</li>
+						<li>
+							<select class="custom-select" name="limit" id="limit"
+								(change)="AttorneyPageLimit($event.target.value)" [(ngModel)]="page.size">
+								<option [value]="10" selected>10</option>
+								<option [value]="20">20</option>
+								<option [value]="30">30</option>
+								<option [value]="40">40</option>
+								<option [value]="50">50</option>
+								<option [value]="100">100</option>
+							</select>
+						</li>
+						<li>Entries</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-12 col-sm-6 text-end mt-0 mt-sm-2 mb-2">
+				<button type="button" (click)="openCustomoizeColumn(CustomizeColumnModal)" class="btn btn-default">
+					Customize Columns
+				</button>
+	
+				<!-- <button type="button" class="btn btn-default round-btn" *ngIf="selectionAttorney.selected.length"
+                  (click)="deleteMultipleAttorney()"><i class="icon-remove me-1"></i>Delete
+                  {{[selectionAttorney.selected.length]}}</button> -->
+			</div>
+		</div>
+
+		<ngx-datatable #attorneyList [rows]="allAttorney" [columnMode]='"force"' class='bootstrap'
+			[footerHeight]="50" [rowHeight]="'auto'"  [scrollbarH]="true" [limit]="attorneyPage.size"
+			[count]="attorneyPage.totalElements" [offset]="attorneyPage.pageNumber" (page)="setPage($event)"
+			[externalPaging]="true" [virtualization]="false">
+
+			<ngx-datatable-column name="Firm Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<!--  old code written starts from here  -->
+					<!-- <label *ngFor="let i of row.firm_locations"> {{i.locations?.firm?.name}},</label> -->
+					<!-- {{row.first_name}} {{row.middle_name}} {{row.last_name}} -->
+					<!-- <span *ngIf="row.firm[0]">
+            [<span *ngFor="let location of row.firm[0].firm_locations; let i = index">
+              <span *ngIf="location.location_name"> {{location.location_name}}
+                <span *ngIf="i!=row.firm[0].firm_locations.length-1">,</span>
+              </span></span>]
+		  </span> -->
+					<!-- old code ends here -->
+					
+					<span *ngFor="let firm of row.firms;let i = index">
+						<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{firm.name ||'N/A'}}" container="body">
+						{{firm.name ||'N/A'}}{{i == row.firms.length -1 ? '' : ',&nbsp;'}}
+					</div>
+					</span>
+				</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Attorney Name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{row.first_name ||'N/A'}} {{row.middle_name}} {{row.last_name}}" container="body">
+						<ng-container>
+							<span *ngIf="row.first_name || row.middle_name || row.last_name">
+								{{ row.first_name}} {{row.middle_name}} {{row.last_name}}
+							</span>
+							<span *ngIf="!row.first_name && !row.middle_name && !row.last_name">
+								N/A
+							</span>
+							  
+						</ng-container>
+					</div>
+
+				</ng-template>
+
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Phone No" [sortable]="false" prop="phone_no" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					Phone No.
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A' |phoneFormatPipe}}" container="body">
+						<ng-container>
+							{{value ||'N/A' |phoneFormatPipe}}
+						</ng-container>
+					</div>
+				</ng-template>
+
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Email" [sortable]="false" prop="email" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A'}}" container="body">
+						<span>{{value ||'N/A'}}</span>
+					</div>
+				</ng-template>
+			</ngx-datatable-column>
+
+			<ngx-datatable-column name="Fax" [sortable]="false" prop="fax" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+				<ng-template let-column="column" ngx-datatable-header-template>
+					Fax
+				</ng-template>
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A' |phoneFormatPipe}}" container="body">
+						<ng-container>
+							{{value ||'N/A' |phoneFormatPipe}}
+						</ng-container>
+					</div>
+				</ng-template>
+
+
+			</ngx-datatable-column>
+			<!-- <ngx-datatable-column name="Address" [sortable]="false">
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div *ngIf="row.street_address || row.suit_floor">
+            {{row.street_address? row.street_address + ',' : ''}}
+            {{row.suit_floor?row.suit_floor + '' :''}}
+            <br>
+          </div>
+          {{row.city?row.city+',' : ''}} {{row.state?row.state + ',':''}}
+        </ng-template>
+      </ngx-datatable-column> -->
+
+	  <ngx-datatable-column name="Comments" [sortable]="false" prop="comments" [canAutoResize]="true" [draggable]="false" [resizeable]="false">
+		<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value ||'N/A'}}" container="body">
+				<span>{{value ||'N/A'}}</span>
+			</div>
+		</ng-template>
+	</ngx-datatable-column>
+  	  
+			<ngx-datatable-column name="Actions" [width]="150" [sortable]="false">
+				<ng-template ngx-datatable-header-template name="Actions">
+
+					<mat-checkbox *ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_edit)"
+						(change)="$event ? masterToggleAttorney() : null"
+						[checked]="selectionAttorney.hasValue() && isAllSelectedAttorney()"
+						[indeterminate]="selectionAttorney.hasValue() && !isAllSelectedAttorney()" disabled>
+					</mat-checkbox>
+					Actions
+
+				</ng-template>
+
+				<ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-row="row">
+
+					<mat-checkbox (click)="$event.stopPropagation()"
+						(change)="$event ? selectionAttorney.toggle(row) : null"
+						[checked]="selectionAttorney.isSelected(row)"
+						*ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_edit)" disabled>
+					</mat-checkbox>
+
+					<a class="edit-hov mx-1" ngbTooltip="Edit" container="body" (click)="editAttorneyFirm(attorney, row)"
+						href="javascript:void(0)" role="button"><i class="icon-pencil"
+							*ngIf="aclService.hasPermission(userPermissions.master_billing_attorney_edit)"></i></a>
+              <a class="edit-hov mx-1" ngbTooltip="History" container="body" (click)="attorneyHistoryStats(row)">
+                <i class="fa fa-history"></i>
+              </a>
+					<!-- <lib-task-manager selectedProps="{{stringfy([row])}}" type="icon" id="{{row.id}}" page="Attorney">
+					</lib-task-manager> -->
+
+					<!-- <a class="remove-hov mx-1" tooltip="Delete" href="javascript:void(0)" role="button"
+                    (click)="deleteAttorney(row.id)">
+                    <span class="icon-remove"></span></a> -->
+
+				</ng-template>
+			</ngx-datatable-column>
+
+		</ngx-datatable>
+	</div>
+</div>
+<ng-template #attorney let-modal>
+	<div class="modal-header">
+		<h5 *ngIf="!isEdit" class="modal-title" id="exampleModalLabel">Add Attorney</h5>
+		<h5 *ngIf="isEdit" class="modal-title" id="exampleModalLabel">Edit Attorney</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"
+			(click)="closeModalDiscard()">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<form action="" [formGroup]="attorneyAttachFirmForm" (ngSubmit)="onSubmitAttorney(modal)">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group field mb-1">
+						<label class="form-label">Firm Name*</label>
+						<ng-select [multiple]="true" [closeOnSelect]="false" [items]="firmLocations" [virtualScroll]="true"
+							formControlName="firm_ids" bindLabel="name" bindValue="id">
+						</ng-select>
+						<small class="form-text text-muted danger"
+							*ngIf="attorneyAttachFirmForm?.get('firm_ids').errors?.required && (attorneyAttachFirmForm.get('firm_ids').dirty || attorneyAttachFirmForm.get('firm_ids').touched)">
+							This field is required.</small>
+
+						<!-- <ng-multiselect-dropdown [placeholder]="'Select Firm'" [data]="firmLocations" formControlName="firm_ids"
+              [settings]="dropdownSettings">
+            </ng-multiselect-dropdown> -->
+					</div>
+					<!-- <div class="form-group mb-1"><label class="form-label">Firm Name</label>
+                    <input class="form-control mb-0" type="text">
+                  </div> -->
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label">First Name*</label>
+						<input class="form-control mb-0" type="text" formControlName="first_name" notFirstCharactorSpace>
+						<small class="form-text text-muted danger"
+							*ngIf="attorneyAttachFirmForm.get('first_name').errors?.required && (attorneyAttachFirmForm.get('first_name').dirty || attorneyAttachFirmForm.get('first_name').touched)">
+							This field is required.</small>
+					</div>
+				</div>
+
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">Middle Name</label>
+						<input class="form-control mb-0" type="text" formControlName="middle_name">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">Last Name*</label>
+						<input class="form-control mb-0" type="text" formControlName="last_name">
+						<small class="form-text text-muted danger"
+							*ngIf="attorneyAttachFirmForm.get('last_name').errors?.required && (attorneyAttachFirmForm.get('last_name').dirty || attorneyAttachFirmForm.get('last_name').touched)">
+							This field is required.</small>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group field mb-0" [ngClass]="{'focused':
+						 attorneyAttachFirmForm.get('street_address').value != ''}">
+						<label class="form-label" for="Street">Street Address*</label>
+						<input style="display: none" type="text" name="fakeaddress" autocomplete="off" />
+						<input ngx-google-places-autocomplete [options]="{
+							types: [],
+							componentRestrictions: { country: 'US' }
+							}" #placesRef="ngx-places" placeholder="" (onAddressChange)="handleAddressChange($event, 'attorney')"
+						formControlName="street_address" type="text" id="address"
+						class="form-control form-input mb-0">
+						<!-- <small class="form-text text-muted danger"
+						*ngIf="attorneyAttachFirmForm.get('street_address').errors?.required && (attorneyAttachFirmForm.get('street_address').dirty || attorneyAttachFirmForm.get('street_address').touched)">
+						This field is required.</small> -->
+						<!-- <div class="form-group mb-1"><label class="form-label">Street Address</label>
+						<input class="form-control mb-0" type="text" >
+						</div> -->
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">Suite / Floor</label>
+						<input class="form-control mb-0" type="text" formControlName="suit_floor">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">City*</label>
+						<input class="form-control mb-0" type="text" formControlName="city">
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">State*</label>
+
+						<!-- <input class="form-control mb-0" type="text" formControlName="state"> -->
+						<ng-select formControlName="state" class="ng-value-label border-0 tooltip-outer"  ngbTooltip="{{selectedState}}" (change)="stateChange($event)" tooltipClass="table-custom-tooltip" [items]="allStates" container="body" bindLabel="name" bindValue="name">
+							<ng-template ng-option-tmp let-item="item">
+							  <span class="ng-value-label border-0 tooltip-outer"  tooltipClass="table-custom-tooltip" ngbTooltip="{{item.fullName}}" container="body">{{item.name}}</span>
+							</ng-template>
+						  </ng-select>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<!-- <div class="form-group mb-1"><label class="form-label">Zip</label>
+						<input class="form-control mb-0" maxlength="10" minlength="2" appOnlyNumeric type="text"
+							formControlName="zip" appOnlyNumeric maxlength="5" minlength="2">
+						<label class="form-text text-muted danger"
+							*ngIf="attorneyAttachFirmForm.get('zip').value && attorneyAttachFirmForm.get('zip').value.length > 0 && attorneyAttachFirmForm.get('zip').value.length < 5 && attorneyAttachFirmForm.get('zip').touched">
+							Invalid Format: 00000
+						</label>
+					</div> -->
+					<div class="form-group mb-1"><label class="form-label">Zip*</label>
+						<input class="form-control mb-0"  type="text"
+							formControlName="zip" >
+						<label class="form-text text-muted danger"
+							*ngIf="attorneyAttachFirmForm.get('zip').value && attorneyAttachFirmForm.get('zip').errors?.pattern && attorneyAttachFirmForm.get('zip').touched">
+							{{zipFormatMessage.format_usa}}
+						</label>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">Phone No.</label>
+						<input class="form-control mb-0" type="text" formControlName="phone_no" mask='000-000-0000'>
+							
+						<!-- <label class="form-text text-muted danger"
+						*ngIf="attorneyAttachFirmForm.get('phone_no').value && attorneyAttachFirmForm.get('phone_no').value.length > 0 && attorneyAttachFirmForm.get('phone_no').value.length < 10  && attorneyAttachFirmForm.get('phone_no').touched">							
+						Invalid Format: 000-000-0000	
+						</label> -->
+							<label class="form-text text-muted danger"
+						*ngIf="attorneyAttachFirmForm.get('phone_no').errors?.minlength&& attorneyAttachFirmForm.get('phone_no').value.length > 0 && attorneyAttachFirmForm.get('phone_no').touched">							
+						Invalid Format: 000-000-0000	
+						</label>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">Extension</label>
+						<input class="form-control mb-0" type="text" formControlName="ext" appOnlyNumeric maxlength="10"
+							minlength="1">
+						<!-- <label class="form-text text-muted danger"
+              *ngIf="attorneyAttachFirmForm.get('ext').value && attorneyAttachFirmForm.get('ext').value.length > 0 && attorneyAttachFirmForm.get('ext').value.length < 1 ">Incorrect
+              Length of
+              Extension
+            </label> -->
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">Cell No.</label>
+						<input class="form-control mb-0" type="text" formControlName="cell_no" mask='000-000-0000'>													
+						<!-- <label class="form-text text-muted danger"
+						*ngIf="attorneyAttachFirmForm.get('cell_no').value && attorneyAttachFirmForm.get('cell_no').value.length > 0 && attorneyAttachFirmForm.get('cell_no').value.length < 10  && attorneyAttachFirmForm.get('cell_no').touched">
+						Invalid Format: 000-000-0000
+						</label> -->
+						<label class="form-text text-muted danger"
+						*ngIf="attorneyAttachFirmForm.get('cell_no').errors?.minlength && attorneyAttachFirmForm.get('cell_no').value.length > 0 &&  attorneyAttachFirmForm.get('cell_no').touched">
+						Invalid Format: 000-000-0000
+						</label>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1"><label class="form-label">Fax</label>
+						<input class="form-control mb-0" type="text" formControlName="fax" mask='000-000-0000'>
+							
+						<!-- <label class="form-text text-muted danger"
+							*ngIf="attorneyAttachFirmForm.get('fax').value && attorneyAttachFirmForm.get('fax').value.length > 0 && attorneyAttachFirmForm.get('fax').value.length < 10  && attorneyAttachFirmForm.get('fax').touched">
+							Invalid Format: 000-000-0000
+						</label> -->
+						<label class="form-text text-muted danger"
+							*ngIf="attorneyAttachFirmForm.get('fax').errors?.minlength && attorneyAttachFirmForm.get('fax').value.length > 0 && attorneyAttachFirmForm.get('fax').touched">
+							Invalid Format: 000-000-0000
+						</label>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="form-group mb-1">
+						<label class="form-label">Email</label>
+						<input class="form-control mb-0" type="email" formControlName="email">
+						<small class="form-text text-muted danger"
+							*ngIf="attorneyAttachFirmForm.get('email').errors?.email && (attorneyAttachFirmForm.get('email').dirty && attorneyAttachFirmForm.get('email').touched)">
+							Email is not valid</small>
+					</div>
+				</div>
+			</div>
+			<!-- newly added field  -->
+			<!-- end new code -->
+
+			<div class="row">
+				<div class="col-12">
+					<h6 class="color-green mb-0 mt-1">Contact Person Information</h6>
+				</div>
+			</div>
+			<div formGroupName="contact_person">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group mb-1"><label class="form-label">First Name</label>
+							<input class="form-control mb-0" type="text" formControlName="first_name">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group mb-1"><label class="form-label">Middle Name</label>
+							<input class="form-control mb-0" type="text" formControlName="middle_name">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group mb-1"><label class="form-label">Last Name</label>
+							<input class="form-control mb-0" type="text" formControlName="last_name">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group mb-1"><label class="form-label">Phone No</label>
+							<input class="form-control mb-0" type="text" formControlName="phone_no" mask='000-000-0000'>
+							
+							<!-- <label class="form-text text-muted danger"
+								*ngIf="attorneyAttachFirmForm.controls['contact_person'].get('phone_no').value && attorneyAttachFirmForm.controls['contact_person'].get('phone_no').value.length>0 && attorneyAttachFirmForm.controls['contact_person'].get('phone_no').value.length<10  && attorneyAttachFirmForm.controls['contact_person'].get('phone_no').touched">
+								Invalid Format: 000-000-0000</label> -->
+								<label class="form-text text-muted danger"
+								*ngIf="attorneyAttachFirmForm.controls['contact_person'].get('phone_no').errors?.minlength && attorneyAttachFirmForm.controls['contact_person'].get('phone_no').value.length>0  && attorneyAttachFirmForm.controls['contact_person'].get('phone_no').touched">
+								Invalid Format: 000-000-0000</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group mb-1"><label class="form-label">Extension</label>
+							<input class="form-control mb-0" type="text" formControlName="extension" appOnlyNumeric
+								maxlength="10">
+							<!-- <label class="form-text text-muted danger"
+								*ngIf="attorneyAttachFirmForm.controls['contact_person'].get('extension').value && attorneyAttachFirmForm.controls['contact_person'].get('extension').value.length>0 && attorneyAttachFirmForm.controls['contact_person'].get('extension').value.length<1">
+									</label> -->
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group mb-1">
+							<label class="form-label">Cell No.</label>
+							<input class="form-control mb-0" type="text" formControlName="cell_no" mask='000-000-0000'>
+								
+							<!-- <label class="form-text text-muted danger"
+								*ngIf="attorneyAttachFirmForm.controls['contact_person'].get('cell_no').value && attorneyAttachFirmForm.controls['contact_person'].get('cell_no').value.length>0 && attorneyAttachFirmForm.controls['contact_person'].get('cell_no').value.length<10 && attorneyAttachFirmForm.controls['contact_person'].get('cell_no').touched">
+								Invalid Format: 000-000-0000</label> -->
+								<label class="form-text text-muted danger"
+								*ngIf="attorneyAttachFirmForm.controls['contact_person'].get('cell_no').errors?.minlength && attorneyAttachFirmForm.controls['contact_person'].get('cell_no').value.length>0  && attorneyAttachFirmForm.controls['contact_person'].get('cell_no').touched">
+								Invalid Format: 000-000-0000</label>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group mb-1"><label class="form-label">Fax</label>
+							<input class="form-control mb-0" type="text" formControlName="fax" mask='000-000-0000'>
+								
+							<!-- <label class="form-text text-muted danger"
+								*ngIf="attorneyAttachFirmForm.controls['contact_person'].get('fax').value && attorneyAttachFirmForm.controls['contact_person'].get('fax').value.length > 0 && attorneyAttachFirmForm.controls['contact_person'].get('fax').value.length < 10 && attorneyAttachFirmForm.controls['contact_person'].get('fax').touched">
+								Invalid Format: 000-000-0000</label> -->
+								<label class="form-text text-muted danger"
+								*ngIf="attorneyAttachFirmForm.controls['contact_person'].get('fax').errors?.minlength && attorneyAttachFirmForm.controls['contact_person'].get('fax').value.length > 0  && attorneyAttachFirmForm.controls['contact_person'].get('fax').touched">
+								Invalid Format: 000-000-0000</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group mb-1">
+							<label class="form-label">Email</label>
+							<input class="form-control mb-0" type="email" formControlName="email">
+							<small class="form-text text-muted danger"
+								*ngIf="attorneyAttachFirmForm.get('contact_person').controls['email'].errors && attorneyAttachFirmForm.get('contact_person').controls['email'].touched">
+								Email is not valid</small>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-group mb-3">
+						<label class="form-label">Comments</label>
+						<textarea class="form-control" formControlName="comments"></textarea>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-12 modal-btn-width text-center">
+					<button class="btn btn-primary me-3" data-dismiss="modal" type="button"
+						(click)="closeModalDiscard()">Cancel</button>
+					<button *ngIf="!isEdit" class="btn btn-success" [disabled]="attorneyAttachFirmForm.invalid || attorneyBtnDisable" type="submit">Save & Continue</button>
+					<button *ngIf="isEdit" class="btn btn-success" [disabled]="attorneyAttachFirmForm.invalid || attorneyBtnDisable" type="submit">Update</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</ng-template>
+
+<div class="modal fade modal-scroll" bsModal #CustomizeColumnModal="bs-modal"
+  [config]="{backdrop:'static',keyboard:false}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title text-center" style="padding-top: 4px;">Customize Columns</h4>
+        <button type="button" class="close ms-0" aria-label="Close" (click)="onCancel()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-customize-column [modalCols]="modalCols" (event)="onSelectHeaders($event)" (singleSelection)="onSingleSelection($event)"></app-customize-column>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary me-2"(click)="onCancel()">Cancel</button>
+        <button type="button" class="btn btn-success " (click)="onConfirm(true)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

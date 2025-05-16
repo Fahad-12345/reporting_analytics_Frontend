@@ -1,0 +1,22 @@
+@import './../../../../../assets/sass/components/custom-checkbox.scss';
+.ng-select {
+	padding: 0px !important;
+}
+
+@keyframes example {
+	from {background-color: transparent;border:transparent}
+	to {box-shadow: 0 0 3px rgb(255, 55, 55);	border: 1px solid rgb(255, 55, 55);}
+  }
+.glow {
+	ng-select{
+		animation-name: example;
+		animation-duration: 3s;
+	}
+}
+
+  
+
+::ng-deep .ng-dropdown-panel .scroll-host {
+		min-height: 34px !important;
+	}
+

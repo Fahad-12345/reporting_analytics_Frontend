@@ -1,0 +1,78 @@
+<div [ngClass]="field.classes">
+	<div class="form-group" [formGroup]="group"
+		[class.focused]="(group.get(field.name).value != '' && group.get(field.name).value != null) || labelCheck">
+		<label class="form-label" *ngIf="field.label" [for]="id">{{field.label}}</label>
+		<ng-select *ngIf="field.configs?.max" [closeOnSelect]="!field.multiple" [virtualScroll]="true" (clear)="onClearEvent($event)"  (keyup)="keyDownEvent($event)" [id]="id"
+			 [formControlName]="field.name" [items]="field.items" [multiple]="field.multiple"
+			 (open)="feildAction(true)"
+			 (close)="feildAction(false)"
+			[bindLabel]="field.bindLabel" [bindValue]="field.bindValue" [ngClass]="field.classes" [maxSelectedItems]="field.configs?.max">
+			<ng-template *ngIf="field.multiple" ng-label-tmp ng-multi-label-tmp let-items="items" let-clear="clear">
+				<div class="ng-value ng-label"
+				*ngFor="let item of items | slice:0:1">
+				<span class="ng-value-label tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ field?.bindLabelForTooltips ?  item[field?.bindLabelForTooltips] : item[field?.bindLabel]}}" container="body">
+					{{
+						field?.qualifierBoolean?item[field?.bindQualifierLabel]:
+						(item[field?.bindLabel] && item[field?.bindLabel].length > 12) ? 
+						item[field?.bindLabel]  : item[field?.bindLabel]   }}
+				</span>
+				<span class="ng-value-icon right" (click)="clear(item)"
+				  aria-hidden="true">×</span>
+			  </div>
+			  <div class="ng-value bg-none ng-numbers" *ngIf="items?.length > 1">
+				<span class="ng-value-label border-0 tooltip-outer" >+{{items?.length -
+					1}}</span>
+			  </div>
+		</ng-template>
+		<ng-template *ngIf="!field.multiple" ng-option-tmp let-item="item" let-search="searchTerm">
+			<span class="ng-option-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip" [ngbTooltip]=" field?.bindLabelForTooltips ?  item[field?.bindLabelForTooltips] : item[field?.bindLabel]" container="body" [ngOptionHighlight]="search">
+							
+				 {{field?.qualifierBoolean?item[field?.bindQualifierLabel]:item[field?.bindLabel]}}
+			</span>
+		  </ng-template>
+		</ng-select>
+		<ng-select *ngIf="!field.configs?.max  && !field.configs?.add_tag" [closeOnSelect]="!field.multiple" [virtualScroll]="true" (clear)="onClearEvent($event)" (focus)="onFocusEvent($event)"  (keyup)="keyDownEvent($event)" [id]="id"
+		 [formControlName]="field.name" [items]="field.items" [multiple]="field.multiple" 
+		 (open)="feildAction(true)"  
+		 (close)="feildAction(false)"
+		[bindLabel]="field.bindLabel" [bindValue]="field.bindValue" [ngClass]="field.classes" >
+		<ng-template *ngIf="field.multiple" ng-label-tmp ng-multi-label-tmp let-items="items" let-clear="clear">
+			<div class="ng-value ng-label"
+			*ngFor="let item of items | slice:0:1">
+			<span class="ng-value-label tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{ field?.bindLabelForTooltips ?  item[field?.bindLabelForTooltips] : item[field?.bindLabel] }}" container="body">
+				{{
+					field?.qualifierBoolean?item[field?.bindQualifierLabel]:
+					(item[field?.bindLabel] && item[field?.bindLabel].length > 12) ? 
+					item[field?.bindLabel]  : item[field?.bindLabel]   }}
+			</span>
+			<span class="ng-value-icon right" (click)="clear(item)"
+			  aria-hidden="true">×</span>
+		  </div>
+		  <div class="ng-value bg-none ng-numbers" *ngIf="items?.length > 1">
+			<span class="ng-value-label border-0 tooltip-outer">+{{items?.length -
+				1}}</span>
+		  </div>
+    </ng-template>
+	<ng-template *ngIf="!field.multiple" ng-option-tmp let-item="item" let-search="searchTerm">
+        <span class="ng-option-label border-0 tooltip-outer" tooltipClass="table-custom-tooltip" [ngbTooltip]=" field?.bindLabelForTooltips ?  item[field?.bindLabelForTooltips] : item[field?.bindLabel]" container="body" [ngOptionHighlight]="search">
+						
+			 {{field?.qualifierBoolean?item[field?.bindQualifierLabel]:item[field?.bindLabel]}}
+		</span>
+      </ng-template>
+	</ng-select>
+
+	<ng-select *ngIf="!field.configs?.max && field.configs?.add_tag" [closeOnSelect]="!field.multiple" [virtualScroll]="true" (clear)="onClearEvent($event)" (focus)="onFocusEvent($event)"  (keyup)="keyDownEvent($event)" [id]="id"
+	[formControlName]="field.name" [items]="field.items" [multiple]="field.multiple" 
+	(open)="feildAction(true)"  [addTag]="addTagFn"
+	(close)="feildAction(false)"
+   [bindLabel]="field.bindLabel" [bindValue]="field.bindValue" [ngClass]="field.classes" >
+</ng-select>
+		<!-- <span *ngIf="group.controls[field.name].errors">
+      {{group.controls[field.name].errors | json}}
+  </span> -->
+		<div *ngFor="let validation of field.validations">
+			<small class="form-text text-muted danger"
+				*ngIf="group.get(field.name).hasError(validation.name) && group.get(field.name).touched">{{validation.message}}</small>
+		</div>
+	</div>
+</div>

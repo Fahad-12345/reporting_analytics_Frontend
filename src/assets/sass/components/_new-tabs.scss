@@ -1,0 +1,86 @@
+.tab-container {
+    // when tabs with btn on right side then this style use
+	&.tab-with-btn {
+		.tab-header {
+			display: flex;
+			align-items: flex-end;
+			justify-content: space-between;
+			.nav-tabs {
+				overflow: auto;
+				white-space: nowrap;
+				overflow-y: hidden;
+				flex-wrap: inherit;
+				max-width: 75%;
+				border: 0 !important;
+                margin-right: 10px;
+                &::-webkit-scrollbar {
+                    height: 4px;
+                }
+			}
+			// .btn {
+			// 	max-width: 25%;
+			// }
+		}
+	}
+    // when icon with tab then this style use
+	&.tab-with-icon {
+        .tab-header {
+            .nav-tabs {
+                .nav-item {
+                    display: flex;
+                    align-items: center;
+                    border: 1px solid transparent;
+                    border-bottom: 1px solid transparent;
+                    &:hover, 
+                    &.active {
+                        border: 1px solid #c3c4c3;
+                        border-bottom: 1px solid #fff;
+                        border-radius: 0.3125rem 0.3125rem 0 0;
+                    }
+                    // Extra part when tabs css new write then remove this part
+                    .nav-link {
+                        border: 0 !important;
+                        border-radius: 0 !important;
+                        &:hover, 
+                        &.active {
+                            @extend .nav-link;
+                        }
+                    }
+                    // When Icon add with tabs then this style use
+                    .tab-icon {
+                        padding: 0.1875rem 0.3125rem;
+                        cursor: pointer;
+                        &.bg-hover-danger {
+                            color:#c1272d;
+                            &:hover {
+                                background-color: #c1272d;
+                            }
+                        }
+                        &.bg-hover-success {
+                            color:#00a650;
+                            &:hover {
+                                background-color: #00a650;
+                            }
+                        }
+                        &:hover {
+					        &:last-child {
+                                border-top-right-radius: 3px;
+                            }
+                            .icon-remove, 
+                            svg {
+                                color: #fff !important;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+	}
+	.tab-body{
+		border: 1px solid #c3c4c3;
+        margin-top: -1px;
+        &.border-bottom-1 {
+            border-width: 0 1px 1px;
+        }
+	}
+}

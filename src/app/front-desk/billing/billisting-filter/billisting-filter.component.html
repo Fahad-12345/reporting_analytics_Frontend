@@ -1,0 +1,481 @@
+<form action="" autocomplete="off" [formGroup]="searchForm" (key.enter)="setpage({offset: 0})"
+*ngIf="aclService.hasPermission(userPermissions.patient_case_list_billing_view)">
+<div class="form">
+  <div class="card-body">
+    <div class="row mx-0">
+      <div class="field-block">
+        <div class="row" [class.dynamic-collapse]="!isCollapsed">
+        <div class="col-sm-6 col-lg-4 col-xl-3" *ngIf="!adminBilling" >
+      <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'bill_ids'"
+      [showSelectFieldList]="selectedMultipleFieldFiter['bill_ids']"
+       [showSelectFieldOnRefresh]="searchForm.get('bill_ids').value" 
+       [lableName]="'Bill ID'" [bindlable]="'label_id'" 
+       [showSelectAll]="true" [showGroupBy]="false" [conditionalExtraApiParams]="getConditionalCaseIds"
+       [bindId]="'id'" [apiPath]="EnumApiPath.BillIdPath" [searchLableName]="'bill_no'"
+       (valueChange)="selectionOnValueChange($event,'bill_ids')" 
+       [multiple]="true"></app-ng-select-shareable> 
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3" *ngIf="adminBilling" >
+    <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'bill_ids'"
+    [showSelectFieldList]="selectedMultipleFieldFiter['bill_ids']"
+     [showSelectFieldOnRefresh]="searchForm.get('bill_ids').value" 
+     [lableName]="'Bill ID'" [showSelectAll]="true" [bindlable]="'label_id'" 
+     [bindId]="'id'" [apiPath]="EnumApiPath.BillIdPath" [searchLableName]="'bill_no'"
+     (valueChange)="selectionOnValueChange($event,'bill_ids')" 
+     [multiple]="true"></app-ng-select-shareable> 
+  </div>
+  
+            <div class="col-sm-6 col-lg-4 col-xl-3" *ngIf="adminBilling" > 
+              <div class="form-group field mb-lg-1" 
+              [ngClass]="{'focused': (searchForm.get('case_ids').value != '' && searchForm.get('case_ids').value != null) || eorService.filter_Field.getCaseId()}">
+              <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'case_ids'"
+                                    [showSelectFieldList]="selectedMultipleFieldFiter['case_ids']"
+                                   [showSelectFieldOnRefresh]="searchForm.get('case_ids').value" 
+                                   [lableName]="'Case ID'" [bindlable]="'id'" 
+                                   [showSelectAll] ="true"
+                                   [showGroupBy] = "false" [conditionalExtraApiParams]="getOrderBy"
+                                   [mainApiPath]="requestServerpath.kios_api_path"
+                                   [bindId]="'id'" [apiPath]="EnumApiPath.NF2PomCaseIdApiPath" [searchLableName]="'id'"
+                                 (valueChange)="selectionOnValueChange($event,'case_ids')" 
+                                  [multiple]="true"></app-ng-select-shareable> 
+            
+              </div>
+            </div>
+  
+            <div class="col-sm-6 col-lg-4 col-xl-3" *ngIf="adminBilling">
+              <div class="form-group field"
+                  [ngClass]="{'focused': (searchForm.get('name').value != '' && searchForm.get('name').value != null)}">
+                  <label class="form-label" for="name">Patient Name</label>
+                  <input type="text" class="form-control form-input" id="name"
+                    formControlName="name">
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-4 col-xl-3" *ngIf="adminBilling">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'case_type_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['case_type_ids']"
+                  [lableName]="'Case Type'" [bindlable]="'name'" [showSelectAll] ="true" [showGroupBy] = "true"
+                  [bindId]="'id'" [apiPath]="EnumApiPath.CaseTypeUrlsEnumList"  
+                  (valueChange)="selectionOnValueChange($event,'case_type_ids')" 
+                  [multiple]="true"></app-ng-select-shareable> 
+            </div>
+            <!-- for future use do not remove this -->
+            <!-- <div class="col-sm-6 col-lg-4 col-xl-3">
+                <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'appointment_type_ids'"
+                [showSelectFieldList]="selectedMultipleFieldFiter['appointment_type_ids']"
+                 [showSelectFieldOnRefresh]="searchForm.get('appointment_type_ids').value" 
+                 [lableName]="'Visit Type'" 
+                 [showSelectAll]="true" [conditionalExtraApiParams]="{order:'asc'}"
+                 [showGroupBy]="true" [bindlable]="'name'" 
+                 [qulifierShown]="true"
+                 [bindId]="'id'" [apiPath]="EnumApiPath.scheduleFeeVisitTypeApiPath"  
+                 (valueChange)="selectionOnValueChange($event,'appointment_type_ids')" 
+                 [multiple]="true"></app-ng-select-shareable> 
+            </div> -->
+            <div class="col-sm-6 col-lg-4 col-xl-3"> 
+              <div class="form-group field"
+              [ngClass]="{'focused': searchForm.get('bill_date_range1').value != '' && searchForm.get('bill_date_range1').value != null || (searchForm.get('bill_date_range1').errors?.invalid_date) || ( searchForm.get('bill_date_range1').errors?.matDatepickerParse  && searchForm.get('bill_date_range1').errors?.matDatepickerParse?.text != DATEFORMAT) }">
+              <label class="form-label" for="bill_date_range1">Bill Date From (mm/dd/yyyy)</label>
+              <input  appInputDateMask [matDatepicker]="bill_date_range1" [appMaskDate]="searchForm.get('bill_date_range1').value" type="text" id="bill_date_range1" formControlName="bill_date_range1" [min]="min"
+                class="form-control form-input" [max]="2099-01-01">
+              <span *ngIf=" searchForm.get('bill_date_range1').value != '' && searchForm.get('bill_date_range1').value != null || (searchForm.get('bill_date_range1').errors?.invalid_date) || ( searchForm.get('bill_date_range1').errors?.matDatepickerParse  && searchForm.get('bill_date_range1').errors?.matDatepickerParse?.text != DATEFORMAT)"
+                (click)="searchForm?.get('bill_date_range1')?.reset()" class="icon-plus date-cross-icon"></span>
+              <mat-datepicker-toggle [for]="bill_date_range1"></mat-datepicker-toggle>
+              <mat-datepicker #bill_date_range1></mat-datepicker>
+              <small class="form-text text-muted danger"
+                *ngIf="searchForm.get('bill_date_range1').errors?.invalid_date || searchForm.get('bill_date_range1').errors?.matDatepickerParse  && searchForm.get('bill_date_range1').errors?.matDatepickerParse?.text != DATEFORMAT">
+                Date format should be accurate
+                </small>
+              </div>
+            </div>
+      
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+              <div class="form-group field"
+                [ngClass]="{'focused': searchForm.get('bill_date_range2').value != '' && searchForm.get('bill_date_range2').value != null || (searchForm.get('bill_date_range2').errors?.invalid_date) || ( searchForm.get('bill_date_range2').errors?.matDatepickerParse  && searchForm.get('bill_date_range2').errors?.matDatepickerParse?.text != DATEFORMAT) }">
+                <label class="form-label" for="bill_date_range2">Bill Date To (mm/dd/yyyy)</label>
+                <input  [appMaskDate]="searchForm.get('bill_date_range2').value" class="form-control form-input date-field"
+                  appInputDateMask [matDatepicker]="bill_date_range2" id="bill_date_range2"
+                  formControlName="bill_date_range2" [min]="searchForm.get('bill_date_range1').value || min ">
+                  <span *ngIf="searchForm.get('bill_date_range2').value != '' && searchForm.get('bill_date_range2').value != null || (searchForm.get('bill_date_range2').errors?.invalid_date) || ( searchForm.get('bill_date_range2').errors?.matDatepickerParse  && searchForm.get('bill_date_range2').errors?.matDatepickerParse?.text != DATEFORMAT)"
+                  (click)="searchForm?.get('bill_date_range2')?.reset()" class="icon-plus date-cross-icon"></span>
+                <mat-datepicker-toggle matSuffix [for]="bill_date_range2"></mat-datepicker-toggle>
+                <mat-datepicker #bill_date_range2></mat-datepicker>
+                <small class="form-text text-muted danger"
+                  *ngIf="searchForm.get('bill_date_range2').errors?.invalid_date || searchForm.get('bill_date_range2').errors?.matDatepickerParse  && searchForm.get('bill_date_range2').errors?.matDatepickerParse?.text != DATEFORMAT ">
+                  Date format should be accurate
+                </small>
+                <small class="form-text text-muted danger"
+                *ngIf="searchForm.get('bill_date_range1').value && searchForm.get('bill_date_range2').value  && (searchForm.get('bill_date_range1').value > searchForm.get('bill_date_range2').value) ">
+                Bill date to should be greater than to bill date from.
+              </small>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-4 col-xl-3" *ngIf="adminBilling">
+              <div class="form-group field"
+              [ngClass]="{'focused': searchForm.get('date_of_accident_from').value != '' && searchForm.get('date_of_accident_from').value != null || ( searchForm.get('date_of_accident_from').errors?.invalid_date) || (searchForm.get('date_of_accident_from').errors?.matDatepickerParse  && searchForm.get('date_of_accident_from').errors?.matDatepickerParse?.text != DATEFORMAT) }">
+              <label class="form-label" for="date_of_accident_from">DOA From (mm/dd/yyyy)</label>
+              <input [appMaskDate]="searchForm.get('date_of_accident_from').value" appInputDateMask [matDatepicker]="date_of_accident_from" [min]="min" type="text" id="date_of_accident_from" formControlName="date_of_accident_from"
+                class="form-control form-input" [max]="2099-01-01">
+              <span *ngIf="searchForm.get('date_of_accident_from').value != '' && searchForm.get('date_of_accident_from').value != null"
+                (click)="searchForm?.get('date_of_accident_from')?.reset()" class="icon-plus date-cross-icon"></span>
+              <mat-datepicker-toggle [for]="date_of_accident_from"></mat-datepicker-toggle>
+              <mat-datepicker #date_of_accident_from></mat-datepicker>
+              <small class="form-text text-muted danger"
+                *ngIf="searchForm.get('date_of_accident_from').errors?.invalid_date || searchForm.get('date_of_accident_from').errors?.matDatepickerParse  && searchForm.get('date_of_accident_from').errors?.matDatepickerParse?.text != DATEFORMAT">
+                Date format should be accurate
+                </small>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-4 col-xl-3" *ngIf="adminBilling">
+              <div class="form-group field"
+              [ngClass]="{'focused': searchForm.get('date_of_accident_to').value != '' && searchForm.get('date_of_accident_to').value != null || ( searchForm.get('date_of_accident_to').errors?.invalid_date) || (searchForm.get('date_of_accident_to').errors?.matDatepickerParse  && searchForm.get('date_of_accident_to').errors?.matDatepickerParse?.text != DATEFORMAT) }">
+              <label class="form-label" for="date_of_accident_to">DOA To (mm/dd/yyyy)</label>
+              <input [appMaskDate]="searchForm.get('date_of_accident_to').value" appInputDateMask [matDatepicker]="date_of_accident_to" type="text" id="date_of_accident_to" formControlName="date_of_accident_to"
+                class="form-control form-input" [min]=" searchForm.get('date_of_accident_to').value || min" >
+              <span *ngIf="searchForm.get('date_of_accident_to').value != '' && searchForm.get('date_of_accident_to').value != null"
+                (click)="searchForm?.get('date_of_accident_to')?.reset()" class="icon-plus date-cross-icon"></span>
+              <mat-datepicker-toggle [for]="date_of_accident_to"></mat-datepicker-toggle>
+              <mat-datepicker #date_of_accident_to></mat-datepicker>
+              <small class="form-text text-muted danger"
+                *ngIf="searchForm.get('date_of_accident_to').errors?.invalid_date || searchForm.get('date_of_accident_to').errors?.matDatepickerParse  && searchForm.get('date_of_accident_to').errors?.matDatepickerParse?.text != DATEFORMAT">
+                Date format should be accurate
+                </small>
+                <small class="form-text text-muted danger"
+                *ngIf="searchForm.get('date_of_accident_from').value && searchForm.get('date_of_accident_to').value  && (searchForm.get('date_of_accident_from').value > searchForm.get('date_of_accident_to').value) ">
+                DOA to should be greater than DOA from.
+              </small>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'facility_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['facility_ids']"
+           [showSelectFieldOnRefresh]="searchForm.get('facility_ids').value" 
+           [qulifierShown] = "true"
+           [lableName]="'Practice - Location'" [bindlable]="'facility_full_name'" 
+           [showSelectAll] ="true"
+           [showGroupBy] = "true"
+           [bindId]="'id'" [apiPath]="EnumApiPath.practiceLocationPath"  
+           (valueChange)="selectionOnValueChange($event,'facility_ids')" 
+           [multiple]="true"></app-ng-select-shareable> 
+        </div>
+          
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'insurance_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['insurance_ids']" [mainApiPath]="requestServerpath.billing_api_url"
+           [showSelectFieldOnRefresh]="searchForm.get('insurance_ids').value" 
+           [showSelectAll] ="true"
+           [showGroupBy] = "false"
+           [lableName]="'Insurance Name'" [bindlable]="'insurance_name'" [searchLableName]="'insurance_name'"
+           [bindId]="'id'" [apiPath]="EnumApiPath.insuranceApiPath"  
+           (valueChange)="selectionOnValueChange($event,'insurance_ids')" 
+           [multiple]="true"></app-ng-select-shareable>  
+        </div>
+      
+            
+            <!-- <div class="col-sm-6 col-lg-3 d-inline-block">
+              <div class="form-group field"
+              [ngClass]="{'focused': searchForm.get('claim_no').value != '' && searchForm.get('claim_no').value != null }">
+              <label class="form-label" for="claim_no">Claim No</label>
+              <input type="text" id="claim_no" class="form-control form-input" formControlName="claim_no">
+              </div>
+            </div> -->
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'firm_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['firm_ids']"
+           [showSelectFieldOnRefresh]="searchForm.get('firm_ids').value" 
+           [lableName]="'Firm Name'" [bindlable]="'full_name'" [searchLableName]="'name'"
+           [showSelectAll] ="true"
+           [showGroupBy] = "false"
+           [bindId]="'id'" [apiPath]="EnumApiPath.firmurlApiPath"  
+           (valueChange)="selectionOnValueChange($event,'firm_ids')" 
+           [multiple]="true"></app-ng-select-shareable>    
+        </div>
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'attorney_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['attorney_ids']"
+           [showSelectFieldOnRefresh]="searchForm.get('attorney_ids').value" 
+           [lableName]="'Attorney Name'" [bindlable]="'full_name'" [searchLableName]="'name'"
+           [showSelectAll] ="true"
+           [showGroupBy] = "false"
+           [bindId]="'id'" [apiPath]="EnumApiPath.attorneyApiPath"  
+           (valueChange)="selectionOnValueChange($event,'attorney_ids')" 
+           [multiple]="true"></app-ng-select-shareable>    
+        </div>
+            <!-- <div class="col-sm-6 col-lg-3 d-inline-block">
+              <div class="form-group field"
+              [ngClass]="{'focused': searchForm.get('bill_amount').value != '' && searchForm.get('bill_amount').value != null }">
+              <label class="form-label" for="bill_amount">Billing Amount</label>
+              <input type="text" id="bill_amount" class="form-control form-input" currencyMask [options]="customCurrencyMaskConfig" formControlName="bill_amount">
+              </div>
+            </div> -->
+         
+            <!-- //// -->
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+              <div class="form-group currency field"
+              [ngClass]="{'focused': searchForm.get('bill_amount_from').value != '' && searchForm.get('bill_amount_from').value != null }">
+              <label class="form-label" for="bill_amount_from">Bill Amount From</label>
+              <input type="text" id="bill_amount_from"  (keydown.enter)="setpage({offset: 0})" class="form-control form-input" currencyMask [options]="customCurrencyMaskConfig" formControlName="bill_amount_from">
+              <i class="fa fa-dollar-sign"></i>
+              </div>
+            </div>
+      
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+              <div class="form-group currency field"
+              [ngClass]="{'focused': searchForm.get('bill_amount_to').value != '' && searchForm.get('bill_amount_to').value != null }">
+              <label class="form-label" for="bill_amount_to">Bill Amount To </label>
+              <input type="text" id="bill_amount_to"   (keydown.enter)="setpage({offset: 0})" class="form-control form-input" currencyMask [options]="customCurrencyMaskConfig" formControlName="bill_amount_to">
+              <i class="fa fa-dollar-sign"></i>
+              </div>
+            </div>
+      
+          <div class="col-sm-6 col-lg-4 col-xl-3">
+              <div class="form-group field">
+  
+              <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'bill_status_ids'"
+                        [showSelectFieldList]="selectedMultipleFieldFiter['bill_status_ids']"
+                         [showSelectFieldOnRefresh]="searchForm.get('bill_status_ids').value" 
+                         [lableName]="'Bill Status'" [bindlable]="'name'" 
+                         [showSelectAll] ="true"
+                         [showGroupBy] = "true"
+                         [bindId]="'id'" [apiPath]="EnumApiPath.billStatusApiPath"  
+                         (valueChange)="selectionOnValueChange($event,'bill_status_ids')" 
+                         [multiple]="true">
+              </app-ng-select-shareable>
+              </div>
+            </div>
+      
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'doctor_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['doctor_ids']"
+           [showSelectFieldOnRefresh]="searchForm.get('doctor_ids').value" 
+           [lableName]="'Provider'" [bindlable]="'full_name'" [searchLableName]="'doctor_name'"
+           [showSelectAll] ="true"
+           [showGroupBy] = "false"
+           [bindId]="'id'" [apiPath]="EnumApiPath.providerApiPath"  
+           (valueChange)="selectionOnValueChange($event,'doctor_ids')" 
+           [multiple]="true"></app-ng-select-shareable> 
+        </div>
+      
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'denial_status_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['denial_status_ids']"
+           [showSelectFieldOnRefresh]="searchForm.get('denial_status_ids').value" 
+           [lableName]="'Denial Status'" [bindlable]="'name'" 
+           [showSelectAll] ="true"
+           [showGroupBy] = "true"
+           [bindId]="'id'" [apiPath]="EnumApiPath.denialStatusApiPath"  
+           (valueChange)="selectionOnValueChange($event,'denial_status_ids')" 
+           [multiple]="true"></app-ng-select-shareable>   
+        </div>
+      
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'eor_status_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['eor_status_ids']"
+           [showSelectFieldOnRefresh]="searchForm.get('eor_status_ids').value" 
+           [lableName]="'Eor Status'" [bindlable]="'name'" 
+           [showSelectAll] ="true"
+           [showGroupBy] = "true"
+           [bindId]="'id'" [apiPath]="EnumApiPath.eorStatusApiPath"  
+           (valueChange)="selectionOnValueChange($event,'eor_status_ids')" 
+           [multiple]="true"></app-ng-select-shareable>     
+        </div>
+      
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'verification_status_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['verification_status_ids']"
+           [showSelectFieldOnRefresh]="searchForm.get('verification_status_ids').value" 
+           [lableName]="'Verification Status'" [bindlable]="'name'" 
+           [showSelectAll] ="true"
+           [showGroupBy] = "true"
+           [bindId]="'id'" [apiPath]="EnumApiPath.verificationApiPath"  
+           (valueChange)="selectionOnValueChange($event,'verification_status_ids')" 
+           [multiple]="true"></app-ng-select-shareable>    
+        </div>
+      
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'payment_status_ids'"
+          [showSelectFieldList]="selectedMultipleFieldFiter['payment_status_ids']"
+           [showSelectFieldOnRefresh]="searchForm.get('payment_status_ids').value" 
+           [lableName]="'Payment Status'" [bindlable]="'name'" 
+           [showSelectAll] ="true"
+           [showGroupBy] = "true"
+           [bindId]="'id'" [apiPath]="EnumApiPath.paymentStatuApiPath"  
+           (valueChange)="selectionOnValueChange($event,'payment_status_ids')" 
+           [multiple]="true"></app-ng-select-shareable>   
+        </div>
+            <!-- /// -->
+        <div class="col-sm-6 col-lg-4 col-xl-3"> 
+          <div class="form-group field"
+          [ngClass]="{'focused': searchForm.get('visit_date_range_1').value != '' && searchForm.get('visit_date_range_1').value != null || (searchForm.get('visit_date_range_1').errors?.invalid_date) || ( searchForm.get('visit_date_range_1').errors?.matDatepickerParse  && searchForm.get('visit_date_range_1').errors?.matDatepickerParse?.text != DATEFORMAT) }">
+          <label class="form-label" for="visit_date_range_1">Visit Date From (mm/dd/yyyy)</label>
+          <input [appMaskDate]="searchForm.get('visit_date_range_1').value" appInputDateMask [matDatepicker]="visit_date_range_1" [min]="min" type="text" id="visit_date_range_1" formControlName="visit_date_range_1"
+            class="form-control form-input">
+          <span *ngIf=" searchForm.get('visit_date_range_1').value != '' && searchForm.get('visit_date_range_1').value != null || (searchForm.get('visit_date_range_1').errors?.invalid_date) || ( searchForm.get('visit_date_range_1').errors?.matDatepickerParse  && searchForm.get('visit_date_range_1').errors?.matDatepickerParse?.text != DATEFORMAT)"
+            (click)="searchForm?.get('visit_date_range_1')?.reset()" class="icon-plus date-cross-icon"></span>
+          <mat-datepicker-toggle [for]="visit_date_range_1"></mat-datepicker-toggle>
+          <mat-datepicker #visit_date_range_1></mat-datepicker>
+          <small class="form-text text-muted danger"
+            *ngIf="searchForm.get('visit_date_range_1').errors?.invalid_date || searchForm.get('visit_date_range_1').errors?.matDatepickerParse  && searchForm.get('visit_date_range_1').errors?.matDatepickerParse?.text != DATEFORMAT">
+            Date format should be accurate
+            </small>
+          </div>
+        </div>
+      
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <div class="form-group field"
+            [ngClass]="{'focused': searchForm.get('visit_date_range_2').value != '' && searchForm.get('visit_date_range_2').value != null || (searchForm.get('visit_date_range_2').errors?.invalid_date) || ( searchForm.get('visit_date_range_2').errors?.matDatepickerParse  && searchForm.get('visit_date_range_2').errors?.matDatepickerParse?.text != DATEFORMAT) }">
+            <label class="form-label" for="visit_date_range_2">Visit Date To (mm/dd/yyyy)</label>
+            <input [appMaskDate]="searchForm.get('visit_date_range_2').value" class="form-control form-input date-field"
+              appInputDateMask [matDatepicker]="visit_date_range_2" id="visit_date_range_2" [min]="min"
+              formControlName="visit_date_range_2" [min]="searchForm.get('visit_date_range_1').value || min ">
+              <span *ngIf="searchForm.get('visit_date_range_2').value != '' && searchForm.get('visit_date_range_2').value != null || (searchForm.get('visit_date_range_2').errors?.invalid_date) || ( searchForm.get('visit_date_range_2').errors?.matDatepickerParse  && searchForm.get('visit_date_range_2').errors?.matDatepickerParse?.text != DATEFORMAT)"
+              (click)="searchForm?.get('visit_date_range_2')?.reset()" class="icon-plus date-cross-icon"></span>
+            <mat-datepicker-toggle matSuffix [for]="visit_date_range_2"></mat-datepicker-toggle>
+            <mat-datepicker #visit_date_range_2></mat-datepicker>
+            <small class="form-text text-muted danger"
+              *ngIf="searchForm.get('visit_date_range_2').errors?.invalid_date || searchForm.get('visit_date_range_2').errors?.matDatepickerParse  && searchForm.get('visit_date_range_2').errors?.matDatepickerParse?.text != DATEFORMAT ">
+              Date format should be accurate
+            </small>
+            <small class="form-text text-muted danger"
+            *ngIf="searchForm.get('visit_date_range_1').value && searchForm.get('visit_date_range_2').value  && (searchForm.get('visit_date_range_1').value > searchForm.get('visit_date_range_2').value) ">
+            Bill date to should be greater than bill date from.
+          </small>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+            <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'speciality_ids'"
+            [showSelectFieldList]="selectedMultipleFieldFiter['speciality_ids']"
+            [showSelectFieldOnRefresh]="searchForm.get('speciality_ids').value" 
+            [lableName]="'Specialty'" [bindlable]="'name'" 
+            [qulifierShown] = "true" [showSelectAll] ="true"
+            [showGroupBy] = "true"
+            [bindId]="'id'" [apiPath]="EnumApiPath.specialityApi"  
+            (valueChange)="selectionOnValueChange($event,'speciality_ids')" 
+            [multiple]="true"></app-ng-select-shareable>  
+        </div> 
+      
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'denial_type_ids'"
+        [showSelectFieldList]="selectedMultipleFieldFiter['denial_type_ids']"
+         [showSelectFieldOnRefresh]="searchForm.get('denial_type_ids').value" 
+         [lableName]="'Denial Type'" [bindlable]="'name'" 
+         [showSelectAll] ="true"
+         [showGroupBy] = "true"
+         [bindId]="'id'" [apiPath]="EnumApiPath.denialTypeApiPath"  
+         (valueChange)="selectionOnValueChange($event,'denial_type_ids')" 
+         [multiple]="true"></app-ng-select-shareable>   
+      </div>
+      <div class="col-sm-6 col-lg-4 col-xl-3">
+        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [filterFieldName]="'clearing_house_ids'"
+        [showSelectFieldOnRefresh]="searchForm.get('clearing_house_ids').value" [showSelectFieldList]="selectedMultipleFieldFiter['clearing_house_ids']" 
+          [lableName]="'Clearinghouse Name'" [forceApiHitonOpen]="true" [bindlable]="'name'" [searchLableName]="'name'"
+          [showSelectAll] ="true"
+          [showGroupBy] = "true"
+          [bindId]="'id'" [apiPath]="EnumApiPath.CH_name_List" [charaterLimit]="true"
+          (valueChange)="selectionOnValueChange($event,'clearing_house_ids')"
+          [multiple]="true"></app-ng-select-shareable>
+      </div>
+      <div class="col-sm-6 col-lg-4 col-xl-3">
+        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'Payer ID'" [filterFieldName]="'payer_ids'"
+          [bindlable]="'payer_id'" [forceApiHitonOpen]="true" [searchLableName]="'payer_id'" [bindId]="'payer_id'" [charaterLimit]="true"
+          (valueChange)="selectionOnValueChange($event,'payer_ids')" [showSelectFieldOnRefresh]="searchForm.get('payer_ids').value" 
+          [showSelectAll] ="true"
+          [showGroupBy] = "false"
+          [apiPath]="EnumApiPath.CH_Payers_List" [multiple]="true" [showSelectFieldList]="selectedMultipleFieldFiter['payer_ids']"></app-ng-select-shareable>
+      </div>
+      <div class="col-sm-6 col-lg-4 col-xl-3">
+        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'Bill Type'" [filterFieldName]="'bill_type_ids'"
+          [bindlable]="'name'" [showSelectAll] ="true" [forceApiHitonOpen]="true"
+          [showGroupBy] = "true" [searchLableName]="'name'" [bindId]="'id'" [charaterLimit]="true"
+          (valueChange)="selectionOnValueChange($event,'bill_type_ids')" [showSelectFieldOnRefresh]="searchForm.get('bill_type_ids').value" 
+          [apiPath]="EnumApiPath.CH_Bill_Type_List" [multiple]="true" [showSelectFieldList]="selectedMultipleFieldFiter['bill_type_ids']"></app-ng-select-shareable>
+      </div>
+      <div class="col-sm-6 col-lg-4 col-xl-3">
+        <app-ng-select-shareable [events]="eventsSubject.asObservable()" [lableName]="'E-Bill Status'" [filterFieldName]="'ebill_status_ids'"
+          [bindlable]="'name'" [forceApiHitonOpen]="true" [searchLableName]="'name'" [showSelectAll] ="true"
+          [showGroupBy] = "true" [bindId]="'id'" [charaterLimit]="true"
+          (valueChange)="selectionOnValueChange($event,'ebill_status_ids')" [showSelectFieldOnRefresh]="searchForm.get('ebill_status_ids').value" 
+          [apiPath]="EnumApiPath.CH_EBill_Status_List" [multiple]="true" [showSelectFieldList]="selectedMultipleFieldFiter['ebill_status_ids']"></app-ng-select-shareable>
+      </div>
+      <div class="col-sm-6 col-lg-4 col-xl-3">
+          <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'created_by_ids'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['created_by_ids']"
+              [showSelectFieldOnRefresh]="searchForm.get('created_by_ids').value" 
+              [lableName]="'Created By'" [bindlable]="'full_name'" 
+              [showSelectAll] ="true"
+              [showGroupBy] = "false"
+              [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"  
+              (valueChange)="selectionOnValueChange($event,'created_by_ids')" 
+              [multiple]="true">
+        </app-ng-select-shareable>    
+      </div>
+      <div class="col-sm-6 col-lg-4 col-xl-3">
+        <app-ng-select-shareable [events]="eventsSubject.asObservable()"  [filterFieldName]="'updated_by_ids'"
+              [showSelectFieldList]="selectedMultipleFieldFiter['updated_by_ids']"
+              [showSelectFieldOnRefresh]="searchForm.get('updated_by_ids').value" 
+              [lableName]="'Updated By'" [bindlable]="'full_name'" 
+              [showSelectAll] ="true"
+              [showGroupBy] = "false"
+              [bindId]="'id'" [apiPath]="EnumApiPath.createdByApiPath"  
+              (valueChange)="selectionOnValueChange($event,'updated_by_ids')" 
+              [multiple]="true">
+        </app-ng-select-shareable>      
+      </div>
+      <div class="col-sm-6 col-lg-4 col-xl-3"> 
+        <div class="form-group field"
+            [ngClass]="{'focused': searchForm.get('created_at').value != '' && searchForm.get('created_at').value != null || (searchForm.get('created_at').errors?.invalid_date) || ( searchForm.get('created_at').errors?.matDatepickerParse  && searchForm.get('created_at').errors?.matDatepickerParse?.text != DATEFORMAT) }">
+            <label class="form-label" for="created_at">Created At (mm/dd/yyyy)</label>
+            <input [appMaskDate]="searchForm.get('created_at').value" appInputDateMask [matDatepicker]="created_at" [min]="min" type="text" id="created_at" formControlName="created_at"
+              class="form-control form-input" [max]="2099-01-01">
+            <span *ngIf=" searchForm.get('created_at').value != '' && searchForm.get('created_at').value != null || (searchForm.get('created_at').errors?.invalid_date) || ( searchForm.get('created_at').errors?.matDatepickerParse  && searchForm.get('created_at').errors?.matDatepickerParse?.text != DATEFORMAT)"
+              (click)="searchForm?.get('created_at')?.reset()" class="icon-plus date-cross-icon"></span>
+            <mat-datepicker-toggle [for]="created_at"></mat-datepicker-toggle>
+            <mat-datepicker #created_at></mat-datepicker>
+            <small class="form-text text-muted danger"
+              *ngIf="searchForm.get('created_at').errors?.invalid_date || searchForm.get('created_at').errors?.matDatepickerParse  && searchForm.get('created_at').errors?.matDatepickerParse?.text != DATEFORMAT">
+              Date format should be accurate
+              </small>
+        </div>
+      </div>
+      <div class="col-sm-6 col-lg-4 col-xl-3"> 
+        <div class="form-group field"
+            [ngClass]="{'focused': searchForm.get('updated_at').value != '' && searchForm.get('updated_at').value != null || (searchForm.get('updated_at').errors?.invalid_date) || ( searchForm.get('updated_at').errors?.matDatepickerParse  && searchForm.get('updated_at').errors?.matDatepickerParse?.text != DATEFORMAT) }">
+            <label class="form-label" for="updated_at">Updated At (mm/dd/yyyy)</label>
+            <input [matDatepicker]="updated_at" [appMaskDate]="searchForm.get('updated_at').value" appInputDateMask [min]="min" class="form-control form-input" id="dueDate"
+              formControlName="updated_at">
+            <span
+              *ngIf="searchForm.get('updated_at').value != '' && searchForm.get('updated_at').value != null || (searchForm.get('updated_at').errors?.invalid_date) || ( searchForm.get('updated_at').errors?.matDatepickerParse  && searchForm.get('updated_at').errors?.matDatepickerParse?.text != DATEFORMAT)"
+              (click)="searchForm?.get('updated_at')?.reset()" class="icon-plus date-cross-icon"></span>
+            <mat-datepicker-toggle matSuffix [for]="updated_at"></mat-datepicker-toggle>
+            <mat-datepicker #updated_at></mat-datepicker>
+            <small class="form-text text-muted danger text-start ng-star-inserted"
+              *ngIf="searchForm.get('updated_at').errors?.invalid_date || searchForm.get('updated_at').errors?.matDatepickerParse  && searchForm.get('updated_at').errors?.matDatepickerParse?.text != DATEFORMAT ">
+              Date format should be accurate
+            </small>
+        </div>
+      </div>
+            <div class="col-12">
+              <div class="row justify-content-center mb-3">
+              <div class="col-6 col-sm-3 col-md-2 col-xl-1 align-self-center">
+                <button class="btn btn-success w-100 me-3" (click)="setpage({offset: 0})"> Filter
+                </button>
+              </div>
+              <div class="col-6 col-sm-3 col-md-2 col-xl-1 align-self-center">
+                <button class="btn btn-primary w-100" (click)="resetCase()" [disabled]="checkInputs()">Reset</button>
+              </div>
+              </div>
+            </div>
+      
+            </div>
+          </div>
+      
+          <div class="colps-btn-block">
+            <button class="btn plus-btn float-right mt-0" (click)="isCollapsed = !isCollapsed"
+            [attr.aria-expanded]="!isCollapsed" aria-controls="collapseBasic" [class.btn-primary]="!isCollapsed"
+            [class.btn-success]="isCollapsed" type="button"><span class="" [class.icon-plus]="!isCollapsed"
+              [class.icon-minus]="isCollapsed"></span></button>
+          </div>
+        </div>
+      </div>
+
+</div>
+</form>

@@ -1,0 +1,100 @@
+<div class="row"> 
+	<div class="col-md-12 datatable-footer-none scroll-controll-lg">
+		<ngx-datatable class="bootstrap" [rows]="[currentInvoice]" [columnMode]='"force"' [footerHeight]="50" [rowHeight]="'auto'" 
+		[scrollbarH]="isTablet" [virtualization]="false" >
+  
+		<ngx-datatable-column name="Invoice ID" [width]="160" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="invoice_id"[width]="168">
+				<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+						{{value}}
+					</div>
+				</ng-template>
+		</ngx-datatable-column>
+		  <ngx-datatable-column name="Invoice Date" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="invoice_date" [width]="163">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+					{{value | date: commonService.slashDateFormat_MM_dd_yyyy()}}
+				  </div>
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="Specialty" prop="speciality_name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="190">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}?{{value}}:'N/A'">
+				{{value}}
+				</div>
+			</ng-template>
+			</ngx-datatable-column>
+			<ngx-datatable-column name="Provider" prop="doctor_name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="190">
+				<ng-template ngx-datatable-cell-template let-value="value" let-row="row">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+				{{value}}
+				</div>
+				</ng-template> 
+			</ngx-datatable-column>
+		  <!-- <ngx-datatable-column name="Practice-Loc" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="row" [width]="183">
+			<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="{{value?.facility_location_name}}" container="body">
+					{{value?.facility_location_name}}
+				</div>
+			</ng-template>
+		  </ngx-datatable-column> -->
+		  <ngx-datatable-column name="Practice-Loc" prop="facility_location_name" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" [width]="190">
+			<ng-template ngx-datatable-cell-template let-row="row" let-value="value">
+			<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+			{{value}}
+
+			</div>
+			</ng-template>
+		</ngx-datatable-column>
+		  <ngx-datatable-column name="Payment Status" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="" [width]="210" cellClass="white-space-wrap">
+				<ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+					<div class="tooltip-outer" tooltipClass="table-custom-tooltip" ngbTooltip="" container="body" ngbTooltip="{{row?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy()}} {{commonService.signBetweenDates()}} {{row?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy()}}">
+						<!-- {{row?.from_date | date: commonService.slashDateFormat_MM_dd_yyyy()}} {{commonService.signBetweenDates()}} {{row?.to_date | date: commonService.slashDateFormat_MM_dd_yyyy()}} -->
+            N/A
+					</div>
+				</ng-template>
+		  </ngx-datatable-column>
+		  <!-- <ngx-datatable-column name="Bill Status" [width]="160" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="bill_status_name">
+			<ng-template let-row="row" ngx-datatable-cell-template let-value="value">
+				<div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value}}">
+					{{value}}
+				</div>
+			</ng-template>
+		</ngx-datatable-column> -->
+		  <ngx-datatable-column name="Invoice Amount" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="amount_due" [width]="190">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="Paid Amount" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="paid_amount" [width]="190">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		
+		  <ngx-datatable-column name="Outstanding" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="outstanding_amount" [width]="195">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="Write-off" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="write_off_amount" [width]="173">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="OverPayment" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="over_amount" [width]="182">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  {{value || 0 | currency}}
+				</ng-template>
+		  </ngx-datatable-column>
+		  <ngx-datatable-column name="Interest" [sortable]="false" [canAutoResize]="true" [draggable]="false" [resizeable]="false" prop="interest_amount" [width]="163">
+			  <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+				  <div class="tooltip-outer" tooltipClass="table-custom-tooltip" container="body" ngbTooltip="{{value || 0 | currency}}">
+					{{value || 0 | currency}}
+					</div>
+				</ng-template>
+		  </ngx-datatable-column>
+  
+		</ngx-datatable>
+	</div>
+  </div>

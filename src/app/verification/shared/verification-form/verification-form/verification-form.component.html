@@ -1,0 +1,47 @@
+  <div class = "row"> 
+	<div class="col-12 text-sm-end mt-3">
+		<button  type="button" (click)="generateBillEnvelopePacketPom('envelope')" class="btn btn-success mx-2 mb-2 mb-sm-0"
+		>
+			Generate Envelope
+		</button>  
+		<button type="button" (click)="generateBillEnvelopePacketPom('pom')" class="btn btn-warning text-white ms-2 me-0 mb-2 mb-sm-0">
+			Generate POM
+		</button>
+	</div> 
+ </div>
+  <div class="row pt-3 bill_modal_hold">
+	<div class="col-md-12">
+		
+		<tabset>
+			<tab heading="Verification Received" id="tab1" (selectTab) = "selectVerficationRecivedTab($event)">
+				<div class="row">
+				<div class="col-lg-3">
+					<app-verification-form-split #verificationFormComponent [currentBill]="currentBill" [verificationMediaFile]="false" ></app-verification-form-split>
+				</div>
+				<div class="col-lg-9 pt-3 pt-lg-0">
+				  <div class="row pt-1">
+					<div class="col-12">
+						<app-verification-list-split #verificationSplitListComponent  (addManualAppealEmitter) = "addManualAppealEmitter($event)"  (onChangeDataVerification) = "onChangeDataVerification($event)" [denialFormSplit]="false"></app-verification-list-split>
+						
+					</div>
+				  </div>
+				</div>
+			</div>
+			</tab>
+			<tab heading="Verification Sent" (selectTab)="selectVerificationSentTab($event)">
+				<div class="row">
+				<ng-template [ngIf]="showVerificationSentForm">
+					<div class="col-lg-3">
+						<app-verification-form-sent   [currentBill]="currentBill"  [verificationEditDetail]="verificationSentInfo" (editVerificationEmitter)="editVerificationEmitter($event)"></app-verification-form-sent>	
+					</div>
+				</ng-template>
+				<div [ngClass]="colGrid" class="pt-3 pt-lg-0">
+					<app-verification-sent-list-split #verficiationSentList (verificationSentDetail)="displayVerificationSentDetail($event)"  ></app-verification-sent-list-split>
+			      </div>
+				</div>
+			</tab>
+		</tabset>
+	
+</div>
+	
+  </div> 

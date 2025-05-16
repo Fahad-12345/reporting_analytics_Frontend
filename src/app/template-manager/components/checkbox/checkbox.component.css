@@ -1,0 +1,36 @@
+.column-content p.gridster-item-content {
+    margin-bottom: 5px;
+}
+.checkboxes-list {
+    /* column-count: 2; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.checkboxes-list .gridster-item-content {
+    flex: 1;
+    margin: 0 5px 0 0;
+}
+.checkboxes-list .gridster-item-content .checkbox {
+    display: block;
+}
+.checkboxes-list .gridster-item-content .checkbox .fake-label{
+    white-space: nowrap;
+}
+.checkboxes-list .gridster-item-content .checkbox-value{
+    margin-bottom: 5px;
+}
+::ng-deep .text-area-checkbox{
+	overflow:hidden;
+  /* demo only: */
+  padding:10px;
+  width:250px;
+  font-size:14px;
+  margin:50px auto;
+  display:block;
+}
+
+.required-checkbox {
+    border: 1px solid red;
+	background-color: #dd9da3;
+}

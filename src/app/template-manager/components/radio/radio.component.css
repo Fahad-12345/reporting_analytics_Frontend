@@ -1,0 +1,28 @@
+.column-content p.gridster-item-content {
+    margin-bottom: 5px;
+}
+.checkboxes-list {
+    /* column-count: 2; */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.checkboxes-list .gridster-item-content {
+    flex: 1;
+    margin: 0 5px 0 0;
+}
+.checkboxes-list .gridster-item-content .radiobox {
+    display: block;
+}
+.checkboxes-list .gridster-item-content .radiobox .fake-label{
+    white-space: nowrap;
+}
+.checkboxes-list .gridster-item-content .checkbox-value{
+    margin-bottom: 5px;
+}
+
+.required-radio {
+    border: 1px solid red;
+	background-color: #dd9da3;
+
+}
